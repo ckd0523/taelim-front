@@ -44,43 +44,79 @@ const QRCodeDisplay = ({ assetCode, assetName }) => {
     const printWindow = window.open("", "", "height=600,width=800");
 
     // 인쇄할 내용을 HTML로 작성
-    printWindow.document.write("<html><head><title>Print QR Code</title>");
-    printWindow.document.write("<style>");
-    printWindow.document.write(
-      "body { font-family: Arial, sans-serif; text-align: center; }"
-    );
-    printWindow.document.write(
-      ".qr-container { border: 1px solid #000; padding: 20px; display: inline-block; }"
-    );
-    printWindow.document.write(
-      ".qr-container img { width: 200px; height: 200px; }"
-    );
-    printWindow.document.write(".info { margin-top: 20px; font-size: 16px; }");
-    printWindow.document.write("</style>");
-    printWindow.document.write("</head><body>");
+    const htmlContent = `
+      <html>
+<head>
+    <title>Print QR Code</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .qr-container {
+            border: 5px solid #000;
+            padding: 20px;
+            display: inline-block;
+            text-align: left;
+            width: 100%;
+            height:120px;
+            max-width: 200px; /* 원하는 최대 너비 설정 */
+            box-sizing: border-box;
+        }
+        .qr-container img {
+            width: 100%; /* 이미지는 너비에 맞게 조정 */
+            height: auto;
+        }
+        .qr-container .content {
+            display: flex; /* Flexbox 레이아웃 적용 */
+            align-items: center; /* 아이템을 수직 가운데 정렬 */
+            justify-content: space-between; /* 요소 사이의 여백을 균등하게 배치 */
 
-    // QR 코드와 추가 정보를 포함한 HTML 작성
-    printWindow.document.write('<div class="qr-container">');
-    printWindow.document.write("<p><strong>자산식별표</strong></p>");
-    printWindow.document.write('<img src="' + qrCodeUrl + '" alt="QR Code"/>');
-    printWindow.document.write('<div class="info">');
-    printWindow.document.write(
-      "<p><strong>자산명:</strong> " + assetName + "</p>" // 자산명 표시
-    );
-    printWindow.document.write(
-      "<p><strong>자산코드:</strong> " + assetCode + "</p>" // 자산코드 표시
-    );
-    printWindow.document.write(
-      "<p><strong>관리책임 :</strong> 정보보안 관리책임자 </p>" // 관리책임자 정보
-    );
-    printWindow.document.write(
-      "<p>이 자산은 태림산업㈜의 소중한 자산입니다.</p>" // 자산 소속 정보
-    );
-    printWindow.document.write("</div>");
-    printWindow.document.write("</div>");
-    printWindow.document.write("</body></html>");
+        }
+        .info {
+            flex: 2; /* info는 전체 너비의 66% */
+            margin-right: 20px; /* 요소 간 간격 설정 */
+        }
+        .QR {
+            flex: 1; /* QR은 전체 너비의 33% */
+            text-align: center; /* QR 코드 가운데 정렬 */
+        }
+        .qr-container p {
+            margin: 0;
+            padding: 3px 0;
+            font-size: 5px;
+        }
+        h4 {
+            text-align: center; /* 제목과 설명을 가운데 정렬 */
+            margin-bottom: 5px;
+            margin-top: 0;
+        }
+        .de{
+            text-align: center;
+            font-size: 3px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="qr-container">
+        <h4><strong>자산식별표</strong></h2>
+        <div class="content">
+            <div class="info">
+                <p><strong>자산명&nbsp;&nbsp;&nbsp;:</strong> ${assetName}</p>
+                <p><strong>자산코드:</strong> ${assetCode}</p>
+                <p><strong>관리책임:</strong> 정보보안 관리책임자</p>
+            </div>
+            <div class="QR">
+                <img src="${qrCodeUrl}" alt="QR Code"/>
+            </div>
+        </div>
+        <div class="de">이 자산은 태림산업㈜의 소중한 자산입니다.</div>
+    </div>
+</body>
+</html>
+    `;
 
-    // 문서 작성 완료 후 인쇄
+    printWindow.document.write(htmlContent);
     printWindow.document.close();
     printWindow.focus(); // 새 창에 포커스 설정
     printWindow.print(); // 인쇄 대화 상자 표시

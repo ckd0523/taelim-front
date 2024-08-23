@@ -4,7 +4,7 @@ import "datatables.net-dt/css/dataTables.dataTables.min.css";
 import { useEffect, useRef } from "react";
 import { GoTrash } from "react-icons/go";
 import { renderToString } from "react-dom/server";
-const AssetRegister = () => {
+const AssetCheck = () => {
   const tableRef = useRef();
   const trashIcon = renderToString(<GoTrash />);
 
@@ -52,4 +52,4 @@ const AssetRegister = () => {
   );
 };
 
-export default AssetRegister;
+export default AssetCheck;

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+
 const AssetRegister = () => {
   const [assetCategories, setAssetCategories] = useState("");
   const handelChangeCategories = (e) => {
@@ -205,6 +206,25 @@ const AssetRegister = () => {
         );
       default:
         return null;
+    }
+  };
+  // 폼 제출 핸들러
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await fetch("http://localhost:8080/asset/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+      if (!response.ok) {
+        throw new Error("네트워크 응답이 올바르지 않습니다.");
+      }
+      alert("자산이 성공적으로 등록되었습니다!");
+    } catch (error) {
+      console.error("데이터 전송 중 문제가 발생했습니다:", error);
     }
   };
   //   useEffect(() => {
@@ -413,6 +433,8 @@ const AssetRegister = () => {
         <h2>자산분류별 컬럼</h2>
         {renderAdditionalFields()}
       </div>
+
+      <button type="submit">제출</button>
     </form>
   );
 };

@@ -1,10 +1,10 @@
 import Recat, { useEffect, useRef, useState } from "react";
-import "datatables.net-dt";
 import $ from "jquery";
+import DataTable from "datatables.net-dt";
 import "datatables.net-dt/css/dataTables.dataTables.min.css";
-import axios from "axios";
 import { GoTrash } from "react-icons/go";
 import { renderToString } from "react-dom/server";
+import axios from "axios";
 
 // 자산 목록을 가져오는 함수
 const fetchAssets = async () => {
@@ -84,4 +84,4 @@ const AssetRegister = () => {
   );
 };
 
-export default AssetRegister;
+export default AssetCheck;

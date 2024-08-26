@@ -1,8 +1,4 @@
 import "./App.css";
-import AssetTable from "./jsx/QR/assetTable";
-
-//import { BrowserRouter, Route, Routes } from "react-router-dom";
-//import React, { Component } from "react";
 import React from "react";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import Home from "./jsx/assetUpdate/Home";

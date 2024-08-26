@@ -4,26 +4,12 @@ import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import Home from "./jsx/assetUpdate/Home";
 import About from "./jsx/assetUpdate/About";
 import Contact from "./jsx/assetUpdate/Contact";
-import AssetRegister from "./jsx/assetCheck/AssetCheck";
 import AssetUpdate from "./jsx/assetUpdate/AssetUpdate";
+import AssetCheck from "./jsx/assetCheck/AssetRegister";
+import AssetRegister from "./jsx/assetCheck/AssetCheck";
 
 function App() {
   return (
-    // <>
-    //   TAELIM
-    //   <div className="App">
-    //     <h1>Asset Management</h1>
-    //     <BrowserRouter>
-    //       <Routes>
-    //         <Route path="/" element={<AssetTable />}></Route>
-    //       </Routes>
-    //       <Routes>
-    //         <Route path="/" element={<AssetRegister />}></Route>
-    //       </Routes>
-    //     </BrowserRouter>
-    //   </div>
-    // </>
-
     <Router>
       <nav>
         <ul>
@@ -49,8 +35,10 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
-        <Route path="/check" element={<AssetRegister />} />
+        <Route path="/check" element={<AssetCheck />} />
         <Route path="/update" element={<AssetUpdate />} />
+        <Route path="/asset/categories" element={<AssetCheck />} />
+        <Route path="/asset/register" element={<AssetRegister />} />
       </Routes>
     </Router>
   );

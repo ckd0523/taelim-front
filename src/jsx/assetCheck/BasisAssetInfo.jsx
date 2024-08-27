@@ -2,18 +2,19 @@
 import { useState } from "react";
 import AssetCategories from "./AssetCategories";
 import PurchasingInfo from "./PurchasingInfo";
+
+//기본 자산 정보 및 관리 정보 컬럼
 const BasisAssetInfo = ({ formData, handleChange }) => {
   return (
     <div>
       <label>
         자산분류
         <select
+          name="assetClassification"
+          value={formData.assetClassification}
           onChange={handleChange}
-          value={formData.assetCategories}
-          name="assetCategories"
         >
-          <option></option>
-          <option value="정보보호시스템">정보보호시스템</option>
+          <option value="INFORMATION_PROTECTION_SYSTEM">정보보호시스템</option>
           <option value="APPLICATION_PROGRAM">응용프로그램</option>
           <option value="SOFTWARE">소프트웨어</option>
           <option value="ELECTRONIC_INFORMATION">전자정보</option>
@@ -242,8 +243,8 @@ const BasisAssetInfo = ({ formData, handleChange }) => {
       <br />
       <h2>자산분류별 컬럼</h2>
       <AssetCategories
-        assetCategories={formData.assetCategories}
         formData={formData}
+        assetClassification={formData.assetClassification}
         handleChange={handleChange}
       />
     </div>

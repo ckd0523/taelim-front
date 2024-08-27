@@ -9,11 +9,12 @@ function App() {
   return (
     <>
       <div className="App">
-        {/* <h1>Asset Management</h1> */}
-        {/* <AssetTable /> */}
         <BrowserRouter>
           <Routes>
+            {/* 자산조회 */}
             <Route path="/asset/categories" element={<AssetCheck />} />
+
+            {/* 자산등록 */}
             <Route path="/asset/register" element={<AssetRegister />} />
           </Routes>
         </BrowserRouter>

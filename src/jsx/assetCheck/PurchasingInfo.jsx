@@ -1,4 +1,5 @@
-import { useState } from "react";
+//재무 및 구매정보 컬럼
+
 const PurchasingInfo = ({ formData, handleChange }) => {
   return (
     <div>

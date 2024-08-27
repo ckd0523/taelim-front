@@ -1,20 +1,22 @@
 import axios from "axios";
 import BasisAssetInfo from "./BasisAssetInfo";
 import { useState } from "react";
+
+//자산등록
 const AssetRegister = () => {
   const [formData, setFormData] = useState({
-    assetCategories: "정보보호시스템",
+    assetClassification: "INFORMATION_PROTECTION_SYSTEM",
     assetName: "",
     assetBasis: "COMMON",
     manufacturingCompany: "",
     purpose: "",
     department: "IT_DEPARTMENT",
-    assetLocation: "",
+    assetLocation: "MAIN_B1_DOCUMENT_STORAGE",
     assetUser: "",
     assetOwner: "",
     assetSecurityManager: "",
     quantity: 1,
-    ownership: "",
+    ownership: "OWNED",
     operationStatus: "OPERATING",
     introducedDate: "",
     confidentiality: 0,
@@ -34,16 +36,16 @@ const AssetRegister = () => {
     relatedDB: "",
     IP: "",
     screenNumber: 0,
-    documentGrade: "",
-    documentType: "",
+    documentGrade: "CONFIDENTIAL",
+    documentType: "GENERAL_DOCUMENT",
     documentLink: "",
     applicationDate: "",
     registrationDate: "",
     expirationDate: "",
-    patentTrademarkStatus: "",
-    countryApplication: "",
-    patentClassification: "",
-    patentItem: "",
+    patentTrademarkStatus: "PCT_APPLICATION",
+    countryApplication: "KOREA",
+    patentClassification: "NEW_MATERIALS",
+    patentItem: "COMPOSITE_MATERIALS",
     applicationNo: "",
     inventor: "",
     assignee: "",
@@ -54,8 +56,8 @@ const AssetRegister = () => {
     powerSpecifications: "",
     displacement: 0,
     doorsCount: 0,
-    engineType: "",
-    carType: "",
+    engineType: "GASOLINE",
+    carType: "SEDAN",
     identificationNo: "",
     carColor: "",
     modelYear: 0,
@@ -64,45 +66,50 @@ const AssetRegister = () => {
     usageFrequency: "",
   });
 
-  const fetchAssetRegister = async (e) => {
-    e.preventDefault();
+  const handleSubmit = (e) => {
+    e.preventDefault(); // 페이지 새로고침 방지
 
-    try {
-      const response = await axios.post(
-        "http://localhost:8080/asset/register",
-        formData, // 요청 본문에 보낼 데이터
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
+    // 서버로 데이터 전송
+    fetch("http://localhost:8080/asset/register", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formData), // JSON으로 변환하여 전송
+    })
+      .then((response) => {
+        if (response.ok) {
+          alert("자산이 성공적으로 등록되었습니다.");
+        } else {
+          alert("자산 등록에 실패했습니다.");
         }
-      );
-      console.log(response.data);
-      alert("자산이 성공적으로 등록되었습니다.");
-    } catch (error) {
-      console.error("에러 발생:", error);
-      alert("자산 등록 중 오류가 발생했습니다.");
-    }
+      })
+      .catch((error) => {
+        console.error("에러 발생:", error);
+        alert("자산 등록 중 에러가 발생했습니다.");
+      });
   };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevState) => ({
       ...prevState,
-      [name]: value === "" ? null : value,
+      [name]: value,
     }));
   };
 
   return (
-    <form method="post">
+    // <form method="post">
+    <div>
       <div>
         <h2>기본 자산 정보 및 관리 정보</h2>
         <BasisAssetInfo formData={formData} handleChange={handleChange} />
       </div>
-      <button type="submit" onClick={fetchAssetRegister}>
+      <button type="submit" onClick={handleSubmit}>
         저장
       </button>
-    </form>
+    </div>
+    // </form>
   );
 };
 

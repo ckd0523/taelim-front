@@ -1,8 +1,9 @@
-import { useState } from "react";
-const AssetCategories = ({ assetCategories, formData, handleChange }) => {
+//자산분류별 컬럼
+
+const AssetCategories = ({ assetClassification, formData, handleChange }) => {
   const renderAdditionalFields = () => {
-    switch (assetCategories) {
-      case "정보보호시스템":
+    switch (assetClassification) {
+      case "INFORMATION_PROTECTION_SYSTEM":
         return (
           <div>
             <label>
@@ -16,7 +17,8 @@ const AssetCategories = ({ assetCategories, formData, handleChange }) => {
             </label>
           </div>
         );
-      case "응용프로그램":
+
+      case "APPLICATION_PROGRAM":
         return (
           <div>
             <label>
@@ -50,7 +52,7 @@ const AssetCategories = ({ assetCategories, formData, handleChange }) => {
             </label>
           </div>
         );
-      case "소프트웨어":
+      case "SOFTWARE":
         return (
           <div>
             <label>
@@ -79,7 +81,7 @@ const AssetCategories = ({ assetCategories, formData, handleChange }) => {
             </label>
           </div>
         );
-      case "전자정보":
+      case "ELECTRONIC_INFORMATION":
         return (
           <div>
             <label>
@@ -98,7 +100,7 @@ const AssetCategories = ({ assetCategories, formData, handleChange }) => {
             </label>
           </div>
         );
-      case "문서":
+      case "DOCUMENT":
         return (
           <div>
             <label>
@@ -126,7 +128,7 @@ const AssetCategories = ({ assetCategories, formData, handleChange }) => {
             </label>
           </div>
         );
-      case "특허 및 상표":
+      case "PATENTS_AND_TRADEMARKS":
         return (
           <div>
             <label>
@@ -202,7 +204,7 @@ const AssetCategories = ({ assetCategories, formData, handleChange }) => {
             </label>
           </div>
         );
-      case "IT장비-시스템":
+      case "ITSYSTEM_EQUIPMENT":
         return (
           <div>
             <label>

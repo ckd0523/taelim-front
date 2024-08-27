@@ -3,6 +3,7 @@ import React from "react";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import Home from "./jsx/assetUpdate/Home";
 import About from "./jsx/assetUpdate/About";
+import Contact2 from "./jsx/assetUpdate/Contact2";
 import Contact from "./jsx/assetUpdate/Contact";
 import AssetTable from "./jsx/QR/assetTable";
 import AssetRegister from "./jsx/assetCheck/AssetRegister";
@@ -22,6 +23,9 @@ function App() {
             </li>
             <li>
               <Link to="/about">자산조회예시</Link>
+            </li>
+            <li>
+              <Link to="/contact2">작업중이창현</Link>
             </li>
             <li>
               <Link to="/contact">자산조회작업중</Link>

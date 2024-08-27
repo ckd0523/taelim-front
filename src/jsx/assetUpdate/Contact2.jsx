@@ -300,7 +300,7 @@ const Contact = () => {
                     {selectedRowData ? selectedRowData.purchaseDate : "N/A"}
                   </StyledTableCell>
                   <StyledTableCell>
-                    {selectedRowData ? selectedRowData.usefulLife : "N/A"}
+                    {selectedRowData ? selectedRowData.serviceLife : "N/A"}
                   </StyledTableCell>
                   <StyledTableCell>
                     {selectedRowData
@@ -308,15 +308,13 @@ const Contact = () => {
                       : "N/A"}
                   </StyledTableCell>
                   <StyledTableCell>
-                    {selectedRowData ? selectedRowData.purchaseSource : "N/A"}
+                    {selectedRowData ? selectedRowData.purchaseLocation : "N/A"}
                   </StyledTableCell>
                   <StyledTableCell>
-                    {selectedRowData
-                      ? selectedRowData.contactInformation
-                      : "N/A"}
+                    {selectedRowData ? selectedRowData.purchaseContact : "N/A"}
                   </StyledTableCell>
                   <StyledTableCell>
-                    {selectedRowData ? selectedRowData.acquisitionRoute : "N/A"}
+                    {selectedRowData ? selectedRowData.acquisitionPath : "N/A"}
                   </StyledTableCell>
                   <StyledTableCell>
                     {selectedRowData

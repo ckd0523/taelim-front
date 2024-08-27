@@ -33,22 +33,41 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
             <br />
             <label>
               OS
-              <input type="text" name="os" />
+              <input
+                type="text"
+                name="os"
+                value={formData.os}
+                onChange={handleChange}
+              />
             </label>
             <br />
             <label>
               관련DB
-              <input type="text" />
+              <input
+                type="text"
+                name="relatedDB"
+                value={formData.relatedDB}
+                onChange={handleChange}
+              />
             </label>
             <br />
             <label>
               IP
-              <input type="text" />
+              <input
+                type="text"
+                name="ip"
+                value={formData.ip}
+                onChange={handleChange}
+              />
             </label>
             <br />
             <label>
               화면수
-              <input type="number" />
+              <input
+                type="number"
+                value={formData.screenNumber}
+                onChange={handleChange}
+              />
             </label>
           </div>
         );
@@ -57,27 +76,52 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
           <div>
             <label>
               IP
-              <input type="text" />
+              <input
+                type="text"
+                name="ip"
+                value={formData.ip}
+                onChange={handleChange}
+              />
             </label>
             <br />
             <label>
               ID
-              <input type="text" />
+              <input
+                type="text"
+                name="serverId"
+                value={formData.serverId}
+                onChange={handleChange}
+              />
             </label>
             <br />
             <label>
               PW
-              <input type="text" />
+              <input
+                type="text"
+                name="serverPassword"
+                value={formData.serverPassword}
+                onChange={handleChange}
+              />
             </label>
             <br />
             <label>
               담당업체
-              <input type="text" />
+              <input
+                type="text"
+                name="companyManager"
+                value={formData.companyManager}
+                onChange={handleChange}
+              />
             </label>
             <br />
             <label>
               OS
-              <input type="text" />
+              <input
+                type="text"
+                name="os"
+                value={formData.os}
+                onChange={handleChange}
+              />
             </label>
           </div>
         );

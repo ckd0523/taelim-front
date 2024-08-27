@@ -12,8 +12,9 @@ import AssetUpdate from "./jsx/assetUpdate/AssetUpdate";
 
 function App() {
   return (
-    <Router>
-      <div className="sidebar">
+    <div className="App">
+      <Router>
+        {/* <div className="sidebar">
         <ul>
           <li>
             <Link to="/">Home</Link>
@@ -35,25 +36,19 @@ function App() {
             <Link to="/update">예시용</Link>
           </li>
         </ul>
-      </div>
-
-      <div className="App">
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/check" element={<AssetRegister />} />
-            <Route path="/regist" element={<Regist />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/update" element={<AssetUpdate />} />
-            {/* 자산조회 */}
-            <Route path="/asset/categories" element={<AssetCheck />} />
-            {/* 자산등록 */}
-            <Route path="/asset/register" element={<AssetRegister />} />
-          </Routes>
-        </BrowserRouter>
-      </div>
-    </Router>
+      </div> */}
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/check" element={<AssetRegister />} />
+          <Route path="/regist" element={<Regist />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/update" element={<AssetUpdate />} />
+          {/* 자산등록 */}
+          <Route path="/asset/register" element={<AssetRegister />} />
+        </Routes>
+      </Router>
+    </div>
   );
 }
 

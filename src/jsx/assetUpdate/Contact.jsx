@@ -56,6 +56,7 @@ const Contact = () => {
   // Popover를 위한 상태 관리
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedRowData, setSelectedRowData] = useState(null);
+
   const handleEditRequest = () => {
     // 수정요청 로직
   };
@@ -80,6 +81,29 @@ const Contact = () => {
     fetchData();
   }, []);
 
+  // 자산 폐기 처리 함수
+  const handleDisposeAsset = async (assetCode) => {
+    try {
+      const response = await fetch(`http://localhost:8080/dispose/${assetCode}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (response.ok) {
+        console.log("Asset disposed successfully:", assetCode);
+        // 성공적으로 폐기되었으면 데이터를 다시 불러와 테이블을 업데이트
+        const updatedData = data.filter(asset => asset.assetCode !== assetCode);
+        setData(updatedData);
+      } else {
+        console.error("Failed to dispose asset:", assetCode);
+      }
+    } catch (error) {
+      console.error("Error disposing asset:", error);
+    }
+  };
+
   // Popover 열기
   const handleRowClick = (event, rowData) => {
     setAnchorEl(event.currentTarget); // Popover를 열기 위한 엘리먼트 설정
@@ -103,11 +127,8 @@ const Contact = () => {
           {
             title: "선택",
             data: null,
-            render: (data, type, row, meta) => {
-              // 체크박스 HTML 문자열 반환
-              return `
-                <input type="checkbox" class="select-checkbox" />
-              `;
+            render: () => {
+              return `<input type="checkbox" class="select-checkbox" />`;
             },
           },
           { title: "번호", data: "assetNo" },
@@ -120,7 +141,16 @@ const Contact = () => {
           { title: "부서", data: "department" },
           { title: "사용자", data: "assetUser" },
           { title: "소유자", data: "assetOwner" },
-          { title: "Action", data: "manufacturingCompany" },
+          {
+            title: "Action",
+            data: null, 
+            render: (data, type, row) => {
+              // Action 열에 trashIcon 추가
+              return  `<div class="action-cell" data-asset-code="${row.assetCode}">
+              ${trashIcon}
+            </div>`;
+            },
+          },
         ],
         paging: true, // 페이징 활성화
         pageLength: 10, // 페이지당 10개의 row
@@ -145,8 +175,14 @@ const Contact = () => {
         console.log(`Row ${rowIndex} checkbox checked: ${isChecked}`);
         // 필요한 경우 여기에 체크박스 상태를 처리하는 로직 추가
       });
+      
+      // Action 열의 trash icon 클릭 이벤트
+      $(tableRef.current).on("click", ".action-cell", function () {
+        const assetCode = $(this).data("asset-code");        
+        handleDisposeAsset(assetCode); // 폐기 처리 함수 호출
+      });
     }
-  }, [data]); // data가 바뀔 때마다 테이블을 다시 렌더링
+  }, [data]);// data가 바뀔 때마다 테이블을 다시 렌더링
 
   return (
     <div>

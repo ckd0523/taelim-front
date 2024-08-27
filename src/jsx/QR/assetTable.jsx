@@ -10,38 +10,70 @@ const AssetTable = () => {
   const tableRef = useRef();
 
   useEffect(() => {
-    // 샘플 자산 데이터
-    const assets = [
-      { code: "ASSET123", name: "Asset 1" },
-      { code: "ASSET456", name: "Asset 2" },
-    ];
-
     // DataTable 초기화
     const table = $(tableRef.current).DataTable({
-      // DataTable에 사용될 데이터 배열
-      data: assets.map((asset) => [
-        asset.code, // 자산 코드
-        asset.name, // 자산 이름
-        `<div id="qrcode-${asset.code}"></div>`, // QR 코드를 렌더링할 div
-      ]),
-      // 테이블의 각 열에 대한 설정
+      ajax: {
+        type: "GET",
+        url: "http://localhost:8080/assets/approved-not-disposed", // Ensure the URL is correct
+        dataSrc: "", // Assuming the data is an array at the root of the response
+      },
       columns: [
-        { title: "Asset Code" }, // 첫 번째 열: 자산 코드
-        { title: "Asset Name" }, // 두 번째 열: 자산 이름
-        { title: "QR Code", orderable: false }, // 세 번째 열: QR 코드 (정렬 비활성화)
+        { data: "assetCode", title: "Asset Code" },
+        { data: "assetName", title: "Asset Name" },
+        {
+          data: null,
+          title: "QR Code",
+          orderable: false,
+          render: function (data, type, row) {
+            // Return a placeholder div for the QR code
+            return `<div id="qrcode-${row.assetCode}"></div>`;
+          },
+        },
+        {
+          data: null,
+          title: "폐기",
+          orderable: false,
+          render: function (data, type, row) {
+            // Return a button for the "Dispose" action
+            return `<button id="dispose-${row.assetCode}" class="dispose-button">Dispose</button>`;
+          },
+        },
       ],
-      // 행이 생성된 후 호출되는 콜백 함수
       createdRow: function (row, data, dataIndex) {
-        // ReactDOM.render를 사용하여 QRCodeDisplay 컴포넌트를 동적으로 렌더링
+        // Render the QRCodeDisplay component into the placeholder div
         ReactDOM.render(
           <QRCodeDisplay
-            assetCode={assets[dataIndex].code} // 현재 행의 자산 코드
-            assetName={assets[dataIndex].name} // 현재 행의 자산 이름
+            assetCode={data.assetCode} // Use the assetCode from the fetched data
+            assetName={data.assetName} // Use the assetName from the fetched data
           />,
-          $(row).find(`#qrcode-${assets[dataIndex].code}`)[0] // 해당 셀에 컴포넌트 렌더링
+          $(row).find(`#qrcode-${data.assetCode}`)[0] // Find the placeholder div by its ID
         );
+
+        // Attach a click event handler to the "Dispose" button
+        $(row)
+          .find(`#dispose-${data.assetCode}`)
+          .on("click", function () {
+            // Handle the disposal logic
+            disposeAsset(data.assetCode);
+          });
       },
     });
+
+    // Function to handle disposal
+    const disposeAsset = (assetCode) => {
+      $.ajax({
+        type: "POST",
+        url: `http://localhost:8080/dispose/${assetCode}`,
+        success: function () {
+          alert(`Asset ${assetCode} has been successfully disposed.`);
+          // Optionally, you can refresh the table data
+          table.ajax.reload();
+        },
+        error: function (xhr, status, error) {
+          alert(`Failed to dispose asset ${assetCode}: ${error}`);
+        },
+      });
+    };
 
     // 컴포넌트 언마운트 시 DataTable 파괴
     return () => {

@@ -38,6 +38,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/about" element={<About />} />
+            <Route path="/contact2" element={<Contact2 />} />
             <Route path="/contact" element={<Contact />} />
             {/* 자산등록 */}
             <Route path="/asset/register" element={<AssetRegister />} />

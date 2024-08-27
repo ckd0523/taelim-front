@@ -68,7 +68,9 @@ const Contact = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://localhost:8080/asset/get");
+        const response = await axios.get(
+          "http://localhost:8080/assets/approved-not-disposed"
+        );
         setData(response.data); // API로부터 받은 데이터 설정
       } catch (error) {
         console.error("Error fetching data:", error);

@@ -1,5 +1,6 @@
 /* App.css */
 
+/* 기본 사이드바 스타일 */
 .sidebar {
   position: fixed;
   top: 0;
@@ -16,6 +17,7 @@
 .sidebar ul {
   list-style: none;
   padding: 0;
+  margin: 0;
 }
 
 .sidebar li {
@@ -32,7 +34,30 @@
   text-decoration: underline;
 }
 
+/* 하위 메뉴 스타일 */
+.sub-menu {
+  list-style: none;
+  padding-left: 20px; /* 기본 메뉴보다 밀린 형태 */
+  margin: 0;
+}
+
+.sub-menu li {
+  margin: 0.5rem 0; /* 상하 여백 조정 */
+}
+
+.sub-menu a {
+  color: white;
+  text-decoration: none;
+  font-size: 0.8rem; /* 기본 메뉴 글자 크기의 60% */
+  padding-left: 10px; /* 하위 메뉴 글자가 오른쪽으로 밀리도록 패딩 추가 */
+}
+
+.sub-menu a:hover {
+  text-decoration: underline;
+}
+
+/* 콘텐츠 영역 스타일 */
 .content {
-  margin-left: 250px; /* 사이드바의 너비만큼 여백 추가 */
+  margin-left: 220px; /* 사이드바 너비와 패딩 여백 추가 */
   padding: 1rem;
 }

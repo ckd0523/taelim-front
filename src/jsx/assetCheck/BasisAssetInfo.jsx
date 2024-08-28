@@ -155,7 +155,6 @@ const BasisAssetInfo = ({ formData, handleChange }) => {
       <label>
         소유권
         <select
-          type="text"
           name="ownership"
           value={formData.ownership}
           onChange={handleChange}

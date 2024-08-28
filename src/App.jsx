@@ -2,53 +2,52 @@ import "./App.css";
 import React from "react";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import Home from "./jsx/assetUpdate/Home";
-import AssetRegister from "./jsx/assetCheck/AssetRegister";
-import Regist from "./jsx/assetUpdate/Regist";
 import About from "./jsx/assetUpdate/About";
+import Contact2 from "./jsx/assetUpdate/Contact2";
 import Contact from "./jsx/assetUpdate/Contact";
-import AssetUpdate from "./jsx/assetUpdate/AssetUpdate";
-
-//import AssetRegister from "./jsx/assetCheck/AssetCheck";
+import AssetTable from "./jsx/QR/assetTable";
+import AssetRegister from "./jsx/assetCheck/AssetRegister";
 
 function App() {
   return (
-    <div className="App">
-      <Router>
-        {/* <div className="sidebar">
-        <ul>
-          <li>
-            <Link to="/">Home</Link>
-          </li>
-          <li>
-            <Link to="/check">자산등록화면</Link>
-          </li>
-          <li>
-            <Link to="/regist">자산등록 예시화면</Link>
-          </li>
-          <li>
-            <Link to="/about">자산조회예시</Link>
-          </li>
-          <li>
-            <Link to="/contact">자산조회작업중</Link>
-          </li>
+    <Router>
+      <div className="App">
+        {/* 사이드바 */}
+        <div className="sidebar">
+          <ul>
+            <li>
+              <Link to="/">Home</Link>
+            </li>
+            <li>
+              <Link to="/asset/register">자산등록화면</Link>
+            </li>
+            <li>
+              <Link to="/about">자산조회예시</Link>
+            </li>
+            <li>
+              <Link to="/contact2">작업중이창현</Link>
+            </li>
+            <li>
+              <Link to="/contact">자산조회작업중</Link>
+            </li>
+          </ul>
+        </div>
 
-          <li>
-            <Link to="/update">예시용</Link>
-          </li>
-        </ul>
-      </div> */}
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/check" element={<AssetRegister />} />
-          <Route path="/regist" element={<Regist />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/update" element={<AssetUpdate />} />
-          {/* 자산등록 */}
-          <Route path="/asset/register" element={<AssetRegister />} />
-        </Routes>
-      </Router>
-    </div>
+        {/* 메인 컨텐츠 */}
+        <div className="content">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/contact2" element={<Contact2 />} />
+            <Route path="/contact" element={<Contact />} />
+            {/* 자산등록 */}
+            <Route path="/asset/register" element={<AssetRegister />} />
+            {/* 자산 조회 */}
+            <Route path="/asset" element={<AssetTable />} />
+          </Routes>
+        </div>
+      </div>
+    </Router>
   );
 }
 

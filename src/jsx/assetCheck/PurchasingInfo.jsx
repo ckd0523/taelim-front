@@ -6,7 +6,7 @@ const PurchasingInfo = ({ formData, handleChange }) => {
       <label>
         구매비용
         <input
-          type="text"
+          type="number"
           name="purchaseCost"
           value={formData.purchaseCost}
           onChange={handleChange}
@@ -78,7 +78,7 @@ const PurchasingInfo = ({ formData, handleChange }) => {
       <label>
         유지기간
         <input
-          type="number"
+          type="date"
           name="maintenancePeriod"
           value={formData.maintenancePeriod}
           onChange={handleChange}

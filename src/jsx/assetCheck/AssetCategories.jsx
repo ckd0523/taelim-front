@@ -153,8 +153,8 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
               DB종류
               <input
                 type="text"
-                name="DBType"
-                value={formData.DBType}
+                name="dbtype"
+                value={formData.dbtype}
                 onChange={handleChange}
               />
             </label>
@@ -166,9 +166,9 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
             <label>
               문서등급
               <select
-                  name="documentGrade"
-                  value={formData.documentGrade}
-                  onChange={handleChange}
+                name="documentGrade"
+                value={formData.documentGrade}
+                onChange={handleChange}
               >
                 <option value="CONFIDENTIAL">대외비</option>
                 <option value="INTERNAL">내부용</option>
@@ -179,13 +179,17 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
             <label>
               문서형태
               <select
-                  name="documentType"
-                  value={formData.documentType}
-                  onChange={handleChange}
+                name="documentType"
+                value={formData.documentType}
+                onChange={handleChange}
               >
                 <option value="GENERAL_DOCUMENT">일반문서</option>
-                <option value="CONTRACTS_AND_LEGAL_DOCUMENTS">계약 및 법적문서</option>
-                <option value="REPORTS_AND_PRESENTATIONS">보고서 및 프레젠테이션</option>
+                <option value="CONTRACTS_AND_LEGAL_DOCUMENTS">
+                  계약 및 법적문서
+                </option>
+                <option value="REPORTS_AND_PRESENTATIONS">
+                  보고서 및 프레젠테이션
+                </option>
                 <option value="FORMS_AND_TEMPLATES">양식 및 서식</option>
               </select>
             </label>
@@ -237,9 +241,9 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
             <label>
               특허/상표 상태
               <select
-                  name="patentTrademarkStatus"
-                  value={formData.patentTrademarkStatus}
-                  onChange={handleChange}
+                name="patentTrademarkStatus"
+                value={formData.patentTrademarkStatus}
+                onChange={handleChange}
               >
                 <option value="PCT_APPLICATION">PCT 출원</option>
                 <option value="APPLICATION">출원</option>
@@ -251,9 +255,9 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
             <label>
               출원국가
               <select
-                  name="countryApplication"
-                  value={formData.countryApplication}
-                  onChange={handleChange}
+                name="countryApplication"
+                value={formData.countryApplication}
+                onChange={handleChange}
               >
                 <option value="KOREA">한국</option>
                 <option value="USA">미국</option>
@@ -266,9 +270,9 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
             <label>
               특허분류
               <select
-                  name="patentClassification"
-                  value={formData.patentClassification}
-                  onChange={handleChange}
+                name="patentClassification"
+                value={formData.patentClassification}
+                onChange={handleChange}
               >
                 <option value="NEW_MATERIALS">신소재</option>
                 <option value="INCUBATION">인큐베이션</option>
@@ -278,9 +282,9 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
             <label>
               특허세목
               <select
-                  name="patentItem"
-                  value={formData.patentItem}
-                  onChange={handleChange}
+                name="patentItem"
+                value={formData.patentItem}
+                onChange={handleChange}
               >
                 <option value="COMPOSITE_MATERIALS">복합재</option>
                 <option value="CORPORATE_VENTURE">신소재</option>
@@ -425,24 +429,28 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
               모니터 포함여부
               <br />
               <label>
-               <input type="radio" value="포함" 
-                 checked={formData.monitorIncluded === true} 
-                 onChange={handleChange}
+                <input
+                  type="radio"
+                  value="포함"
+                  checked={formData.monitorIncluded === true}
+                  onChange={handleChange}
                 />
                 포함
               </label>
               <br />
               <label>
-                <input type="radio" value="미포함"  
-                 checked={formData.monitorIncluded === false} 
-                 onChange={handleChange}                
+                <input
+                  type="radio"
+                  value="미포함"
+                  checked={formData.monitorIncluded === false}
+                  onChange={handleChange}
                 />
                 미포함
               </label>
             </label>
           </div>
         );
-        case "ITNETWORK_EQUIPMENT":
+      case "ITNETWORK_EQUIPMENT":
         return (
           <div>
             <label>
@@ -507,7 +515,7 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
             <br />
           </div>
         );
-        case "TERMINAL":
+      case "TERMINAL":
         return (
           <div>
             <label>
@@ -543,9 +551,9 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
             <label>
               보안관제
               <select
-                  name="securityControl"
-                  value={formData.securityControl}
-                  onChange={handleChange}
+                name="securityControl"
+                value={formData.securityControl}
+                onChange={handleChange}
               >
                 <option value="MONITORING">관제중</option>
                 <option value="ANOMALY_DETECTED">이상감지</option>
@@ -595,7 +603,7 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
             <br />
           </div>
         );
-        case "FURNITURE":
+      case "FURNITURE":
         return (
           <div>
             <label>
@@ -610,7 +618,7 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
             <br />
           </div>
         );
-        case "DEVICES":
+      case "DEVICES":
         return (
           <div>
             <label>
@@ -655,7 +663,7 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
             <br />
           </div>
         );
-        case "CAR":
+      case "CAR":
         return (
           <div>
             <label>
@@ -681,9 +689,9 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
             <label>
               엔진 형식
               <select
-                  name="engineType"
-                  value={formData.engineType}
-                  onChange={handleChange}
+                name="engineType"
+                value={formData.engineType}
+                onChange={handleChange}
               >
                 <option value="GASOLINE">가솔린</option>
                 <option value="DIESEL">디젤</option>
@@ -695,9 +703,9 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
             <label>
               차량 종류
               <select
-                  name="carType"
-                  value={formData.carType}
-                  onChange={handleChange}
+                name="carType"
+                value={formData.carType}
+                onChange={handleChange}
               >
                 <option value="SEDAN">승용차</option>
                 <option value="SUV">SUV</option>
@@ -738,7 +746,7 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
             <br />
           </div>
         );
-        case "OTHERASSETS":
+      case "OTHERASSETS":
         return (
           <div>
             <label>
@@ -762,7 +770,7 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
             </label>
             <br />
           </div>
-        );    
+        );
 
       default:
         return null;

@@ -13,6 +13,7 @@ import Contact2 from "./jsx/assetUpdate/Contact2";
 import Contact from "./jsx/assetUpdate/Contact";
 import AssetTable from "./jsx/QR/assetTable";
 import AssetRegister from "./jsx/assetCheck/AssetRegister";
+import Infoprotection from "./jsx/assetUpdate/Infoprotection";
 
 function Sidebar() {
   const location = useLocation();
@@ -122,6 +123,10 @@ function App() {
             <Route path="/contact" element={<Contact />} />
             <Route path="/asset/register" element={<AssetRegister />} />
             <Route path="/asset" element={<AssetTable />} />
+            <Route
+              path="/assset/info-protection"
+              element={<Infoprotection />}
+            />
             {/* 추가적인 라우트 필요 시 여기에 추가 */}
           </Routes>
         </div>

@@ -7,6 +7,7 @@ import Contact2 from "./jsx/assetUpdate/Contact2";
 import Contact from "./jsx/assetUpdate/Contact";
 import AssetTable from "./jsx/QR/assetTable";
 import AssetRegister from "./jsx/assetCheck/AssetRegister";
+// import "bootstrap/dist/css/bootstrap.min.css";
 
 function App() {
   return (

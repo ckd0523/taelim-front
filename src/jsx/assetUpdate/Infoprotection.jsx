@@ -5,8 +5,51 @@ import "datatables.net-dt";
 import axios from "axios";
 import { GoTrash } from "react-icons/go";
 import { renderToString } from "react-dom/server";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  styled,
+  Box,
+  Button,
+} from "@mui/material";
 
-const Contact = () => {
+// 스타일 적용된 TableCell
+const StyledTableCell = styled(TableCell, {
+  shouldForwardProp: (prop) => prop !== "isHeader",
+})(({ theme, isHeader }) => ({
+  textAlign: "center",
+  border: "1px solid #ddd",
+  ...(isHeader && {
+    backgroundColor: "#e3f2fd", // 파란색 배경
+    fontWeight: "bold",
+  }),
+}));
+
+// 스타일 적용된 TableRow
+const StyledTableRow = styled(TableRow)(({ theme }) => ({
+  "&:nth-of-type(even)": {
+    backgroundColor: "#f5f5f5", // 배경색 지정 (선택적)
+  },
+}));
+
+// 스타일 적용된 TableContainer
+const PaddedTableContainer = styled(TableContainer)(({ theme }) => ({
+  padding: "0 1cm", // 좌우 여백 1cm
+  maxWidth: "100%", // 최대 너비를 화면 너비에 맞추기
+  overflowX: "auto", // 수평 스크롤 활성화
+}));
+
+// 스타일 적용된 Table
+const StyledTable = styled(Table)(({ theme }) => ({
+  width: "calc(100% - 2cm)", // 테이블의 너비를 조정
+}));
+
+const Infoprotection = () => {
   const tableRef = useRef(null);
   const trashIcon = renderToString(<GoTrash />);
   const [data, setData] = useState([]);
@@ -129,17 +172,92 @@ const Contact = () => {
   };
 
   // 상세 정보 HTML 생성
-  const generateRowDetails = (rowData) => `
-    <div style="padding: 10px;">
-      <h4>상세 정보</h4>
-      <p><strong>자산코드:</strong> ${rowData.assetCode}</p>
-      <p><strong>자산명:</strong> ${rowData.assetName}</p>
-      <p><strong>자산위치:</strong> ${rowData.assetLocation}</p>
-      <p><strong>부서:</strong> ${rowData.department}</p>
-      <button id="edit-button-${rowData.index}">수정 요청</button>
-      <button id="maintenance-button-${rowData.index}">유지보수 등록</button>
-    </div>
-  `;
+  const generateRowDetails = (rowData) => {
+    // React Table을 HTML로 변환
+    const detailsHtml = renderToString(
+      <PaddedTableContainer component={Paper}>
+        <StyledTable>
+          <TableHead>
+            <StyledTableRow>
+              <StyledTableCell isHeader>자산코드</StyledTableCell>
+              <StyledTableCell isHeader>자산명</StyledTableCell>
+              <StyledTableCell isHeader>자산기준</StyledTableCell>
+              <StyledTableCell isHeader>제조사</StyledTableCell>
+              <StyledTableCell isHeader>목적</StyledTableCell>
+              <StyledTableCell isHeader>부서</StyledTableCell>
+              <StyledTableCell isHeader>위치</StyledTableCell>
+              <StyledTableCell isHeader>사용자</StyledTableCell>
+              <StyledTableCell isHeader>소유자</StyledTableCell>
+              <StyledTableCell isHeader>보안담당자</StyledTableCell>
+              <StyledTableCell isHeader>사용상태</StyledTableCell>
+              <StyledTableCell isHeader>가동여부</StyledTableCell>
+              <StyledTableCell isHeader>도입일자</StyledTableCell>
+              <StyledTableCell isHeader>기밀성</StyledTableCell>
+              <StyledTableCell isHeader>무결성</StyledTableCell>
+              <StyledTableCell isHeader>가용성</StyledTableCell>
+              <StyledTableCell isHeader>중요성점수</StyledTableCell>
+              <StyledTableCell isHeader>중요성등급</StyledTableCell>
+              <StyledTableCell isHeader>비고</StyledTableCell>
+            </StyledTableRow>
+          </TableHead>
+          <TableBody>
+            <StyledTableRow>
+              <StyledTableCell>{rowData.assetCode || "N/A"}</StyledTableCell>
+              <StyledTableCell>{rowData.assetName || "N/A"}</StyledTableCell>
+              <StyledTableCell>{rowData.assetBasis || "N/A"}</StyledTableCell>
+              <StyledTableCell>
+                {rowData.manufacturingCompany || "N/A"}
+              </StyledTableCell>
+              <StyledTableCell>{rowData.purpose || "N/A"}</StyledTableCell>
+              <StyledTableCell>{rowData.department || "N/A"}</StyledTableCell>
+              <StyledTableCell>
+                {rowData.assetLocation || "N/A"}
+              </StyledTableCell>
+              <StyledTableCell>{rowData.assetUser || "N/A"}</StyledTableCell>
+              <StyledTableCell>{rowData.assetOwner || "N/A"}</StyledTableCell>
+              <StyledTableCell>
+                {rowData.assetSecurityManager || "N/A"}
+              </StyledTableCell>
+              <StyledTableCell>{rowData.useState || "N/A"}</StyledTableCell>
+              <StyledTableCell>
+                {rowData.operationStatus || "N/A"}
+              </StyledTableCell>
+              <StyledTableCell>
+                {rowData.introducedDate || "N/A"}
+              </StyledTableCell>
+              <StyledTableCell>
+                {rowData.confidentiality || "N/A"}
+              </StyledTableCell>
+              <StyledTableCell>{rowData.integrity || "N/A"}</StyledTableCell>
+              <StyledTableCell>{rowData.availability || "N/A"}</StyledTableCell>
+              <StyledTableCell>
+                {rowData.importanceScore || "N/A"}
+              </StyledTableCell>
+              <StyledTableCell>
+                {rowData.importanceRating || "N/A"}
+              </StyledTableCell>
+              <StyledTableCell>{rowData.note || "N/A"}</StyledTableCell>
+            </StyledTableRow>
+          </TableBody>
+        </StyledTable>
+      </PaddedTableContainer>
+    );
+
+    return `
+      <div style="padding: 10px;">
+        <h4>상세 정보</h4>
+        <p><strong>자산코드:</strong> ${rowData.assetCode}</p>
+        <p><strong>자산명:</strong> ${rowData.assetName}</p>
+        <p><strong>자산위치:</strong> ${rowData.assetLocation}</p>
+        <p><strong>부서:</strong> ${rowData.department}</p>
+        <div style="margin-top: 10px;">
+          <button id="edit-button-${rowData.index}">수정 요청</button>
+          <button id="maintenance-button-${rowData.index}">유지보수 등록</button>
+        </div>
+        ${detailsHtml}
+      </div>
+    `;
+  };
 
   // 수정 요청 핸들러
   const handleEditRequest = () => {
@@ -174,4 +292,4 @@ const Contact = () => {
   );
 };
 
-export default Contact;
+export default Infoprotection;

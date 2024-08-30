@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import DataTable from "datatables.net-dt";
 import $ from "jquery";
 import "datatables.net-dt/css/dataTables.dataTables.min.css";
@@ -6,16 +6,15 @@ import QRCodeDisplay from "./QRCodeDisplay";
 import ReactDOM from "react-dom";
 
 const AssetTable = () => {
-  // useRef 훅을 사용하여 테이블 요소를 참조
   const tableRef = useRef();
+  const [selectedAssets, setSelectedAssets] = useState([]);
 
   useEffect(() => {
-    // DataTable 초기화
     const table = $(tableRef.current).DataTable({
       ajax: {
         type: "GET",
-        url: "http://localhost:8080/assets/approved-not-disposed", // Ensure the URL is correct
-        dataSrc: "", // Assuming the data is an array at the root of the response
+        url: "http://localhost:8080/assets/approved-not-disposed",
+        dataSrc: "",
       },
       columns: [
         { data: "assetCode", title: "Asset Code" },
@@ -25,7 +24,6 @@ const AssetTable = () => {
           title: "QR Code",
           orderable: false,
           render: function (data, type, row) {
-            // Return a placeholder div for the QR code
             return `<div id="qrcode-${row.assetCode}"></div>`;
           },
         },
@@ -34,39 +32,33 @@ const AssetTable = () => {
           title: "폐기",
           orderable: false,
           render: function (data, type, row) {
-            // Return a button for the "Dispose" action
             return `<button id="dispose-${row.assetCode}" class="dispose-button">Dispose</button>`;
           },
         },
       ],
       createdRow: function (row, data, dataIndex) {
-        // Render the QRCodeDisplay component into the placeholder div
         ReactDOM.render(
           <QRCodeDisplay
-            assetCode={data.assetCode} // Use the assetCode from the fetched data
-            assetName={data.assetName} // Use the assetName from the fetched data
+            assetCode={data.assetCode}
+            assetName={data.assetName}
           />,
-          $(row).find(`#qrcode-${data.assetCode}`)[0] // Find the placeholder div by its ID
+          $(row).find(`#qrcode-${data.assetCode}`)[0]
         );
 
-        // Attach a click event handler to the "Dispose" button
         $(row)
           .find(`#dispose-${data.assetCode}`)
           .on("click", function () {
-            // Handle the disposal logic
             disposeAsset(data.assetCode);
           });
       },
     });
 
-    // Function to handle disposal
     const disposeAsset = (assetCode) => {
       $.ajax({
         type: "POST",
         url: `http://localhost:8080/dispose/${assetCode}`,
         success: function () {
           alert(`Asset ${assetCode} has been successfully disposed.`);
-          // Optionally, you can refresh the table data
           table.ajax.reload();
         },
         error: function (xhr, status, error) {
@@ -75,15 +67,41 @@ const AssetTable = () => {
       });
     };
 
-    // 컴포넌트 언마운트 시 DataTable 파괴
     return () => {
       table.destroy();
     };
   }, []);
 
+  // Handle fetching QR codes and displaying in modal
+  const fetchQRCodeBatch = async () => {
+    const selectedRows = $(tableRef.current)
+      .DataTable()
+      .rows(".selected")
+      .data();
+    const assetCodes = selectedRows.map((row) => row.assetCode).toArray();
+
+    if (assetCodes.length === 0) {
+      alert("선택된 항목이 없습니다.");
+      return;
+    }
+
+    try {
+      const response = await axios.post(
+        "http://localhost:8080/generateQRCodeBatch",
+        assetCodes,
+        { responseType: "blob" }
+      );
+      const qrCodeUrl = URL.createObjectURL(response.data);
+      setQrCodeUrl(qrCodeUrl);
+      setModalIsOpen(true);
+    } catch (error) {
+      console.error("Error generating QR codes:", error);
+    }
+  };
+
   return (
     <div>
-      {/* 테이블 요소에 참조를 연결 */}
+      <button onClick={fetchQRCodeBatch}>QR 출력</button>
       <table ref={tableRef} style={{ width: "100%" }}></table>
     </div>
   );

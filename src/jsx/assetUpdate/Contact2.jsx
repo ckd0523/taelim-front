@@ -62,27 +62,46 @@ const Contact2 = () => {
 
   const printQRCodeBatch = async () => {
     try {
-      if (selectedAssetCodes.length > 0) {
-        const response = await axios.post(
-          `http://localhost:8080/generateQRCodeBatch`,
-          selectedAssetCodes,
-          {
-            responseType: "blob",
-          }
-        );
+        if (selectedAssetCodes.length > 0) {
+            const response = await axios.post(
+                `http://localhost:8080/generateQRCodePDF`,
+                selectedAssetCodes,
+                {
+                    responseType: "blob",
+                }
+            );
 
-        const url = window.URL.createObjectURL(new Blob([response.data]));
-        const printWindow = window.open(url, "_blank");
-        printWindow.onload = () => {
-          printWindow.print();
-        };
-      } else {
-        alert("선택된 자산이 없습니다.");
-      }
+            // URL 생성
+            const url = window.URL.createObjectURL(new Blob([response.data], { type: 'application/pdf' }));
+
+            // 새 창에서 PDF 열기
+            const printWindow = window.open(url, "_blank");
+
+            // 브라우저가 창을 닫지 않도록 하고, 인쇄를 수동으로 유도
+            printWindow.onload = () => {
+                printWindow.focus(); // 창을 포커스
+            };
+
+            // 메모리 누수를 방지하기 위해 URL 해제
+            printWindow.onunload = () => {
+                window.URL.revokeObjectURL(url);
+            };
+
+            // 선택된 자산 코드 리스트 초기화
+            setSelectedAssetCodes([]);
+
+            // 체크박스 해제
+            $(tableRef.current)
+                .find('.select-checkbox')
+                .prop('checked', false);
+
+        } else {
+            alert("선택된 자산이 없습니다.");
+        }
     } catch (error) {
-      console.error("Error printing QR codes:", error);
+        console.error("Error printing QR codes:", error);
     }
-  };
+};
 
   useEffect(() => {
     const fetchData = async () => {

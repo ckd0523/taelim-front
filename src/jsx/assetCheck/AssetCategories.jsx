@@ -1,20 +1,51 @@
 //자산분류별 컬럼
+import { Accordion, Card } from "react-bootstrap";
+import { useAccordionButton } from "react-bootstrap";
+import "./ButtonStyle.css";
 
+function CustomToggle({ children, eventKey }) {
+  const decoratedOnClick = useAccordionButton(eventKey, () =>
+    console.log("totally custom")
+  );
+  return (
+    <button
+      className="custom-button"
+      type="button"
+      style={{ backgroundColor: "white" }}
+      onClick={decoratedOnClick}
+    >
+      {children}
+    </button>
+  );
+}
 const AssetCategories = ({ assetClassification, formData, handleChange }) => {
   const renderAdditionalFields = () => {
     switch (assetClassification) {
       case "INFORMATION_PROTECTION_SYSTEM":
         return (
           <div>
-            <label>
-              서비스범위
-              <input
-                type="text"
-                name="serviceScope"
-                value={formData.serviceScope}
-                onChange={handleChange}
-              />
-            </label>
+            <Accordion defaultActiveKey="0" flush>
+              <Card>
+                <Card.Header>
+                  <CustomToggle eventKey="0">
+                    기본 자산 정보 및 관리 정보
+                  </CustomToggle>
+                </Card.Header>
+                <Accordion.Collapse eventKey="0">
+                  <Card.Body>
+                    <label>
+                      서비스범위
+                      <input
+                        type="text"
+                        name="serviceScope"
+                        value={formData.serviceScope}
+                        onChange={handleChange}
+                      />
+                    </label>
+                  </Card.Body>
+                </Accordion.Collapse>
+              </Card>
+            </Accordion>
           </div>
         );
 

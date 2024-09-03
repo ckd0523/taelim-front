@@ -3,6 +3,7 @@ import $ from "jquery";
 import "datatables.net-dt/css/dataTables.dataTables.min.css";
 import "datatables.net-dt";
 import axios from "axios";
+import "./style.css";
 import { GoTrash } from "react-icons/go";
 import { renderToString } from "react-dom/server";
 import {
@@ -22,37 +23,6 @@ const Software = () => {
   const trashIcon = renderToString(<GoTrash />);
   const [data, setData] = useState([]);
   const [selectedRowData, setSelectedRowData] = useState(null);
-
-  // 스타일 적용된 TableCell
-  const StyledTableCell = styled(TableCell, {
-    shouldForwardProp: (prop) => prop !== "isHeader",
-  })(({ theme, isHeader }) => ({
-    textAlign: "center",
-    border: "1px solid #ddd",
-    ...(isHeader && {
-      backgroundColor: "#e3f2fd", // 파란색 배경
-      fontWeight: "bold",
-    }),
-  }));
-
-  // 스타일 적용된 TableRow
-  const StyledTableRow = styled(TableRow)(({ theme }) => ({
-    "&:nth-of-type(even)": {
-      backgroundColor: "#f5f5f5", // 배경색 지정 (선택적)
-    },
-  }));
-
-  // 스타일 적용된 TableContainer
-  const PaddedTableContainer = styled(TableContainer)(({ theme }) => ({
-    padding: "0 1cm", // 좌우 여백 1cm
-    maxWidth: "100%", // 최대 너비를 화면 너비에 맞추기
-    overflowX: "auto", // 수평 스크롤 활성화
-  }));
-
-  // 스타일 적용된 Table
-  const StyledTable = styled(Table)(({ theme }) => ({
-    width: "calc(100% - 2cm)", // 테이블의 너비를 조정
-  }));
 
   // 수정 요청 핸들러
   const handleEditRequest = () => {
@@ -351,170 +321,173 @@ const Software = () => {
     const columns = getClassificationColumns(classification);
 
     return renderToString(
-      <PaddedTableContainer component={Paper}>
-        <Typography variant="h2" sx={{ p: 2, fontWeight: "bold" }}>
+      <TableContainer component={Paper} className="table-container">
+        <Typography variant="h2" className="typography-header">
           기본 자산 정보 및 관리정보
         </Typography>
-        <StyledTable>
+        <Table className="table">
           <TableHead>
-            <StyledTableRow>
-              <StyledTableCell isHeader>자산코드</StyledTableCell>
-              <StyledTableCell isHeader>자산명</StyledTableCell>
-              <StyledTableCell isHeader>자산기준</StyledTableCell>
-              <StyledTableCell isHeader>제조사</StyledTableCell>
-              <StyledTableCell isHeader>목적</StyledTableCell>
-              <StyledTableCell isHeader>부서</StyledTableCell>
-              <StyledTableCell isHeader>위치</StyledTableCell>
-              <StyledTableCell isHeader>사용자</StyledTableCell>
-              <StyledTableCell isHeader>소유자</StyledTableCell>
-              <StyledTableCell isHeader>보안담당자</StyledTableCell>
-              <StyledTableCell isHeader>사용상태</StyledTableCell>
-              <StyledTableCell isHeader>가동여부</StyledTableCell>
-              <StyledTableCell isHeader>도입일자</StyledTableCell>
-              <StyledTableCell isHeader>기밀성</StyledTableCell>
-              <StyledTableCell isHeader>무결성</StyledTableCell>
-              <StyledTableCell isHeader>가용성</StyledTableCell>
-              <StyledTableCell isHeader>중요성점수</StyledTableCell>
-              <StyledTableCell isHeader>중요성등급</StyledTableCell>
-              <StyledTableCell isHeader>비고</StyledTableCell>
-            </StyledTableRow>
+            <TableRow className="table-row">
+              <TableCell className="table-cell header">자산코드</TableCell>
+              <TableCell className="table-cell header">자산명</TableCell>
+              <TableCell className="table-cell header">자산기준</TableCell>
+              <TableCell className="table-cell header">제조사</TableCell>
+              <TableCell className="table-cell header">목적</TableCell>
+              <TableCell className="table-cell header">부서</TableCell>
+              <TableCell className="table-cell header">위치</TableCell>
+              <TableCell className="table-cell header">사용자</TableCell>
+              <TableCell className="table-cell header">소유자</TableCell>
+              <TableCell className="table-cell header">보안담당자</TableCell>
+              <TableCell className="table-cell header">사용상태</TableCell>
+              <TableCell className="table-cell header">가동여부</TableCell>
+              <TableCell className="table-cell header">도입일자</TableCell>
+              <TableCell className="table-cell header">기밀성</TableCell>
+              <TableCell className="table-cell header">무결성</TableCell>
+              <TableCell className="table-cell header">가용성</TableCell>
+              <TableCell className="table-cell header">중요성점수</TableCell>
+              <TableCell className="table-cell header">중요성등급</TableCell>
+              <TableCell className="table-cell header">비고</TableCell>
+            </TableRow>
           </TableHead>
           <TableBody>
-            <StyledTableRow>
-              <StyledTableCell>
+            <TableRow className="table-row">
+              <TableCell className="table-cell">
                 {selectedRowData.assetCode || "N/A"}
-              </StyledTableCell>
-              <StyledTableCell>
+              </TableCell>
+              <TableCell className="table-cell">
                 {selectedRowData.assetName || "N/A"}
-              </StyledTableCell>
-              <StyledTableCell>
+              </TableCell>
+              <TableCell className="table-cell">
                 {selectedRowData.assetBasis || "N/A"}
-              </StyledTableCell>
-              <StyledTableCell>
+              </TableCell>
+              <TableCell className="table-cell">
                 {selectedRowData.manufacturingCompany || "N/A"}
-              </StyledTableCell>
-              <StyledTableCell>
+              </TableCell>
+              <TableCell className="table-cell">
                 {selectedRowData.purpose || "N/A"}
-              </StyledTableCell>
-              <StyledTableCell>
+              </TableCell>
+              <TableCell className="table-cell">
                 {selectedRowData.department || "N/A"}
-              </StyledTableCell>
-              <StyledTableCell>
+              </TableCell>
+              <TableCell className="table-cell">
                 {selectedRowData.assetLocation || "N/A"}
-              </StyledTableCell>
-              <StyledTableCell>
+              </TableCell>
+              <TableCell className="table-cell">
                 {selectedRowData.assetUser || "N/A"}
-              </StyledTableCell>
-              <StyledTableCell>
+              </TableCell>
+              <TableCell className="table-cell">
                 {selectedRowData.assetOwner || "N/A"}
-              </StyledTableCell>
-              <StyledTableCell>
+              </TableCell>
+              <TableCell className="table-cell">
                 {selectedRowData.assetSecurityManager || "N/A"}
-              </StyledTableCell>
-              <StyledTableCell>
+              </TableCell>
+              <TableCell className="table-cell">
                 {selectedRowData.useState || "N/A"}
-              </StyledTableCell>
-              <StyledTableCell>
+              </TableCell>
+              <TableCell className="table-cell">
                 {selectedRowData.operationStatus || "N/A"}
-              </StyledTableCell>
-              <StyledTableCell>
+              </TableCell>
+              <TableCell className="table-cell">
                 {selectedRowData.introducedDate || "N/A"}
-              </StyledTableCell>
-              <StyledTableCell>
+              </TableCell>
+              <TableCell className="table-cell">
                 {selectedRowData.confidentiality || "N/A"}
-              </StyledTableCell>
-              <StyledTableCell>
+              </TableCell>
+              <TableCell className="table-cell">
                 {selectedRowData.integrity || "N/A"}
-              </StyledTableCell>
-              <StyledTableCell>
+              </TableCell>
+              <TableCell className="table-cell">
                 {selectedRowData.availability || "N/A"}
-              </StyledTableCell>
-              <StyledTableCell>{importanceScore}</StyledTableCell>
-              <StyledTableCell>{importanceRating}</StyledTableCell>
-              <StyledTableCell>{selectedRowData.note || "N/A"}</StyledTableCell>
-            </StyledTableRow>
+              </TableCell>
+              <TableCell className="table-cell">{importanceScore}</TableCell>
+              <TableCell className="table-cell">{importanceRating}</TableCell>
+              <TableCell className="table-cell">
+                {selectedRowData.note || "N/A"}
+              </TableCell>
+            </TableRow>
           </TableBody>
-        </StyledTable>
-        <Typography variant="h2" sx={{ p: 2, fontWeight: "bold" }}>
+        </Table>
+        <Typography variant="h2" className="typography-header">
           재무 및 구매 정보
         </Typography>
-        <StyledTable>
+        <Table className="table">
           <TableHead>
-            <StyledTableRow>
-              <StyledTableCell isHeader>구매비용</StyledTableCell>
-              <StyledTableCell isHeader>구매날짜</StyledTableCell>
-              <StyledTableCell isHeader>내용연수</StyledTableCell>
-              <StyledTableCell isHeader>감가상각방법</StyledTableCell>
-              <StyledTableCell isHeader>구입처</StyledTableCell>
-              <StyledTableCell isHeader>구입처 연락처</StyledTableCell>
-              <StyledTableCell isHeader>취득경로</StyledTableCell>
-              <StyledTableCell isHeader>유지기간</StyledTableCell>
-              <StyledTableCell isHeader>잔존가치</StyledTableCell>
-              <StyledTableCell isHeader>현재가치</StyledTableCell>
-            </StyledTableRow>
+            <TableRow className="table-row">
+              <TableCell className="table-cell header">구매비용</TableCell>
+              <TableCell className="table-cell header">구매날짜</TableCell>
+              <TableCell className="table-cell header">내용연수</TableCell>
+              <TableCell className="table-cell header">감가상각방법</TableCell>
+              <TableCell className="table-cell header">구입처</TableCell>
+              <TableCell className="table-cell header">구입처 연락처</TableCell>
+              <TableCell className="table-cell header">취득경로</TableCell>
+              <TableCell className="table-cell header">유지기간</TableCell>
+              <TableCell className="table-cell header">잔존가치</TableCell>
+              <TableCell className="table-cell header">현재가치</TableCell>
+            </TableRow>
           </TableHead>
           <TableBody>
-            <StyledTableCell>
-              {selectedRowData ? selectedRowData.purchaseCost : "N/A"}
-            </StyledTableCell>
-            <StyledTableCell>
-              {selectedRowData ? selectedRowData.purchaseDate : "N/A"}
-            </StyledTableCell>
-            <StyledTableCell>
-              {selectedRowData ? selectedRowData.usefulLife : "N/A"}
-            </StyledTableCell>
-            <StyledTableCell>
-              {selectedRowData ? selectedRowData.depreciationMethod : "N/A"}
-            </StyledTableCell>
-            <StyledTableCell>
-              {selectedRowData ? selectedRowData.purchaseSource : "N/A"}
-            </StyledTableCell>
-            <StyledTableCell>
-              {selectedRowData ? selectedRowData.contactInformation : "N/A"}
-            </StyledTableCell>
-            <StyledTableCell>
-              {selectedRowData ? selectedRowData.acquisitionRoute : "N/A"}
-            </StyledTableCell>
-            <StyledTableCell>
-              {selectedRowData ? selectedRowData.maintenancePeriod : "N/A"}
-            </StyledTableCell>
-            <StyledTableCell>
-              {selectedRowData ? selectedRowData.residualValue : "N/A"}
-            </StyledTableCell>
-            <StyledTableCell>
-              {selectedRowData ? selectedRowData.currentValue : "N/A"}
-            </StyledTableCell>
+            <TableRow className="table-row">
+              <TableCell className="table-cell">
+                {selectedRowData ? selectedRowData.purchaseCost : "N/A"}
+              </TableCell>
+              <TableCell className="table-cell">
+                {selectedRowData ? selectedRowData.purchaseDate : "N/A"}
+              </TableCell>
+              <TableCell className="table-cell">
+                {selectedRowData ? selectedRowData.usefulLife : "N/A"}
+              </TableCell>
+              <TableCell className="table-cell">
+                {selectedRowData ? selectedRowData.depreciationMethod : "N/A"}
+              </TableCell>
+              <TableCell className="table-cell">
+                {selectedRowData ? selectedRowData.purchaseSource : "N/A"}
+              </TableCell>
+              <TableCell className="table-cell">
+                {selectedRowData ? selectedRowData.contactInformation : "N/A"}
+              </TableCell>
+              <TableCell className="table-cell">
+                {selectedRowData ? selectedRowData.acquisitionRoute : "N/A"}
+              </TableCell>
+              <TableCell className="table-cell">
+                {selectedRowData ? selectedRowData.maintenancePeriod : "N/A"}
+              </TableCell>
+              <TableCell className="table-cell">
+                {selectedRowData ? selectedRowData.residualValue : "N/A"}
+              </TableCell>
+              <TableCell className="table-cell">
+                {selectedRowData ? selectedRowData.currentValue : "N/A"}
+              </TableCell>
+            </TableRow>
           </TableBody>
-        </StyledTable>
-        {/* 자산 분류에 따른 세 번째 테이블 추가 */}
+        </Table>
         {classification && (
           <>
-            <Typography variant="h2" sx={{ p: 2, fontWeight: "bold" }}>
+            <Typography variant="h2" className="typography-header">
               {classification} 정보
             </Typography>
-            <StyledTable>
+            <Table className="table">
               <TableHead>
-                <StyledTableRow>
+                <TableRow className="table-row">
                   {columns.map((col) => (
-                    <StyledTableCell key={col.title} isHeader>
+                    <TableCell key={col.title} className="table-cell header">
                       {col.title}
-                    </StyledTableCell>
+                    </TableCell>
                   ))}
-                </StyledTableRow>
+                </TableRow>
               </TableHead>
               <TableBody>
-                <StyledTableRow>
+                <TableRow className="table-row">
                   {columns.map((col) => (
-                    <StyledTableCell key={col.title}>
+                    <TableCell key={col.title} className="table-cell">
                       {selectedRowData ? selectedRowData[col.data] : "N/A"}
-                    </StyledTableCell>
+                    </TableCell>
                   ))}
-                </StyledTableRow>
+                </TableRow>
               </TableBody>
-            </StyledTable>
+            </Table>
           </>
         )}
-      </PaddedTableContainer>
+      </TableContainer>
     );
   };
 

@@ -1,0 +1,32 @@
+/* style.css */
+
+/* TableCell 스타일 */
+.table-cell {
+  text-align: center;
+  border: 1px solid #ddd;
+  padding: 10px; /* 셀 내부 여백 조정 */
+}
+
+.table-cell.header {
+  text-align: center;
+  background-color: #e3f2fd; /* 파란색 배경 */
+  font-weight: bold;
+}
+
+/* TableRow 스타일 */
+.table-row:nth-of-type(even) {
+  background-color: #f5f5f5; /* 배경색 지정 (선택적) */
+}
+
+/* TableContainer 스타일 */
+.table-container {
+  padding: 1cm 1cm; /* 좌우 여백 1cm */
+  max-width: 100%; /* 최대 너비를 화면 너비에 맞추기 */
+  overflow-x: auto; /* 수평 스크롤 활성화 */
+}
+
+/* Table 스타일 */
+.table {
+  border-collapse: collapse; /* 테이블 셀 경계 겹치기 */
+  width: calc(100% - 2cm); /* 테이블의 너비를 조정 */
+}

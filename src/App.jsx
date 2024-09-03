@@ -1,9 +1,12 @@
-import "./App.css";
+//import "./App.css";
 import React, { useState } from 'react';
 import AssetSurveyHistory from "./components/AssetSurveyHistory";
 import AssetSurveyRegister from "./components/AssetSurveyRegister";
 import BackUpHistory from "./components/BackUpHistory";
 import axios from 'axios';
+import LeftSidebar from "./layouts/LeftSidebar";
+import { ThemeProvider } from "./common";
+import './assets/scss/Saas.scss';
 
 const App = () => {
   const [selectedIds, setSelectedIds] = useState([]);
@@ -25,13 +28,24 @@ const App = () => {
   }
 
   return <>
-    TAELIM
-    자산 조사 등록 버튼
-    <AssetSurveyRegister />
-    <button onClick={handleDelete}>자산조사 삭제</button>
-    <AssetSurveyHistory setSelectedIds={setSelectedIds} />
-    여기 위는 아무것도 없나?
-    <BackUpHistory />
+  <div>
+    {/* ThemeProvider 안에 LeftSider가 있어야 오류가 안남*/}
+      <ThemeProvider>
+        {/* <LeftSidebar leftbarDark={ 여기에 무슨 값 } />  저기 무슨 값을 넣으면 HYPER 로고 사라짐 */}
+        <LeftSidebar />
+      </ThemeProvider>
+
+      {/* className을 content가 아니라 content-page로 해야 사이드바가 본문과 겹치지 않음 */}
+    <div className='content-page'>
+      TAELIM
+      자산 조사 등록 버튼
+      <AssetSurveyRegister />
+      <button onClick={handleDelete}>자산조사 삭제</button>
+      <AssetSurveyHistory setSelectedIds={setSelectedIds} />
+      여기 위는 아무것도 없나?
+      <BackUpHistory />
+    </div>
+  </div>
   </>;
 };
 

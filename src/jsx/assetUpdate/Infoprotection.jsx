@@ -23,6 +23,7 @@ const Infoprotection = () => {
   const trashIcon = renderToString(<GoTrash />);
   const [data, setData] = useState([]);
   const [selectedRowData, setSelectedRowData] = useState(null);
+  const [details, setDetails] = useState({});
 
   // 수정 요청 핸들러
   const handleEditRequest = () => {
@@ -348,7 +349,7 @@ const Infoprotection = () => {
 
         return renderToString(
           <PaddedTableContainer component={Paper}>
-            {/* <Typography variant="h2" sx={{ p: 2, fontWeight: "bold" }}>
+            <Typography variant="h2" sx={{ p: 2, fontWeight: "bold" }}>
               기본 자산 정보 및 관리정보
             </Typography>
             <StyledTable>
@@ -487,7 +488,7 @@ const Infoprotection = () => {
                   {selectedRowData ? selectedRowData.currentValue : "N/A"}
                 </StyledTableCell>
               </TableBody>
-            </StyledTable> */}
+            </StyledTable>
 
             {/* 자산 분류에 따른 세 번째 테이블 추가 */}
             {classification && (

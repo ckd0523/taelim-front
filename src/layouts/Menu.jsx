@@ -212,6 +212,8 @@ const AppMenu = ({ menuItems }) => {
         );
       })}
 
+{/* 여기는 쓸데없는 help box랑 버튼 */}
+{/* 
       <div className="help-box text-white text-center">
         <Link to="" className="float-end close-btn text-white">
           <i className="mdi mdi-close" />
@@ -227,6 +229,7 @@ const AppMenu = ({ menuItems }) => {
           Upgrade
         </Link>
       </div>
+      */}
     </ul>
   );
 };

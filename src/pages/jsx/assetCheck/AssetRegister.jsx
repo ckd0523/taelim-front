@@ -2,7 +2,6 @@ import axios from 'axios';
 import BasisAssetInfo from './BasisAssetInfo';
 import { useState } from 'react';
 import FileUpload from './FileUpload';
-import 'bootstrap/dist/css/bootstrap.min.css';
 
 //자산등록
 const AssetRegister = () => {

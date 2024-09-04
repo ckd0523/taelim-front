@@ -1,4 +1,5 @@
 {
+<<<<<<< Updated upstream
   // "compilerOptions": {
   //   // /* import alias */
   //   "baseUrl": ".",
@@ -15,4 +16,14 @@
       "@/assets/*": ["assets/*"]
     }
   }
+=======
+  "compilerOptions": {
+    // /* import alias */
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    }
+  },
+  "include": ["src"]
+>>>>>>> Stashed changes
 }

@@ -1,14 +1,20 @@
+<<<<<<< Updated upstream
 import { createContext, useCallback, useContext, useState } from "react";
 // import i18n, { isValidLanguage, Languages } from "./common/languages/i18n";
 import i18n, {
   isValidLanguage,
   Languages,
 } from "./../../common/languages/i18n";
+=======
+import { createContext, useCallback, useContext, useState } from 'react';
+import i18n, { isValidLanguage, Languages } from '@/common/languages/i18n';
+>>>>>>> Stashed changes
 
 const ThemeContext = createContext({});
 
 export const ThemeSettings = {
   layout: {
+<<<<<<< Updated upstream
     type: { vertical: "vertical", horizontal: "horizontal" },
     mode: { fluid: "fluid", boxed: "boxed", detached: "detached" },
     menuPosition: { scrollable: "scrollable", fixed: "fixed" },
@@ -27,6 +33,26 @@ export const ThemeSettings = {
       showOnHover: "sm-hover",
       full: "full",
       fullscreen: "fullscreen",
+=======
+    type: { vertical: 'vertical', horizontal: 'horizontal' },
+    mode: { fluid: 'fluid', boxed: 'boxed', detached: 'detached' },
+    menuPosition: { scrollable: 'scrollable', fixed: 'fixed' },
+  },
+  theme: { light: 'light', dark: 'dark' },
+  topbar: {
+    theme: { light: 'light', dark: 'dark', brand: 'brand' },
+    logo: { hidden: 'fullscreen', show: '' },
+  },
+  sidebar: {
+    theme: { light: 'light', dark: 'dark', brand: 'brand' },
+    size: {
+      default: 'default',
+      compact: 'compact',
+      condensed: 'condensed',
+      showOnHover: 'sm-hover',
+      full: 'full',
+      fullscreen: 'fullscreen',
+>>>>>>> Stashed changes
     },
     user: { show: true, hidden: false },
   },
@@ -36,7 +62,11 @@ export const ThemeSettings = {
 export function useThemeContext() {
   const context = useContext(ThemeContext);
   if (context === undefined) {
+<<<<<<< Updated upstream
     throw new Error("useThemeContext must be used within an ThemeProvider");
+=======
+    throw new Error('useThemeContext must be used within an ThemeProvider');
+>>>>>>> Stashed changes
   }
   return context;
 }

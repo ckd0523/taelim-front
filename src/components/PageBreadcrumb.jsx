@@ -1,6 +1,12 @@
+<<<<<<< Updated upstream
 import { ReactNode } from "react";
 import { Row, Col, Breadcrumb } from "react-bootstrap";
 import { Helmet } from "react-helmet";
+=======
+import { ReactNode } from 'react';
+import { Row, Col, Breadcrumb } from 'react-bootstrap';
+import { Helmet } from 'react-helmet';
+>>>>>>> Stashed changes
 
 const PageBreadcrumb = ({ subName, title, children }) => {
   return (
@@ -13,9 +19,16 @@ const PageBreadcrumb = ({ subName, title, children }) => {
           <Col>
             <div className="page-title-box">
               <div className="page-title-right">
+<<<<<<< Updated upstream
                 <Breadcrumb listProps={{ className: "m-0" }}>
                   <Breadcrumb.Item as={"li"}>{subName}</Breadcrumb.Item>
                   <Breadcrumb.Item as={"li"} active>
+=======
+                <Breadcrumb listProps={{ className: 'm-0' }}>
+                  <Breadcrumb.Item as={'li'}>Hyper</Breadcrumb.Item>
+                  <Breadcrumb.Item as={'li'}>{subName}</Breadcrumb.Item>
+                  <Breadcrumb.Item as={'li'} active>
+>>>>>>> Stashed changes
                     {title}
                   </Breadcrumb.Item>
                 </Breadcrumb>
@@ -32,4 +45,8 @@ const PageBreadcrumb = ({ subName, title, children }) => {
   );
 };
 
+<<<<<<< Updated upstream
 export { PageBreadcrumb };
+=======
+export default PageBreadcrumb;
+>>>>>>> Stashed changes

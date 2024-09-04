@@ -3,11 +3,17 @@ import $ from 'jquery';
 import 'datatables.net-dt/css/dataTables.dataTables.min.css';
 import 'datatables.net-dt';
 import axios from 'axios';
+import { Card, Col, Row } from 'react-bootstrap';
+import TextInput from '@/components/Form/TextInput';
+import { useForm, FormProvider } from 'react-hook-form';
+import { DateInput } from '@/components';
 
 const AssetSurveyHistory = () => {
 	const tableRef = useRef(null);
 	const [data, setData] = useState([]);
-	const [selectedIds, setSelectedIds] = useState([]);
+	const [selectedIds, setSelectedIds] = useState([]); //어떤 자산 조사 선택했는지 저장
+
+	const [] = useState('');
 
 	// 서버로부터 데이터를 가져오는 함수
 	useEffect(() => {
@@ -135,9 +141,65 @@ const AssetSurveyHistory = () => {
 		}
 	};
 
+	const methods = useForm();
 	return (
 		<div>
-			<h1>Asset Survey List</h1>
+			<br></br>
+			<Card>
+				<FormProvider {...methods}>
+					<Card.Body>
+						<Row>
+							<Col lg={1}>
+								<TextInput
+									label="회차"
+									type="text"
+									placeholder=""
+									name=""
+									containerClass={'mb-3'}
+								/>
+							</Col>
+							<Col lg={1}>
+								<TextInput
+									label="조사자"
+									type="text"
+									placeholder=""
+									name=""
+									containerClass={'mb-3'}
+									value=""
+								/>
+							</Col>
+
+							<Col lg={3}>
+								<TextInput
+									label="위치"
+									type="text"
+									placeholder=""
+									name=""
+									containerClass={'mb-3'}
+								/>
+							</Col>
+
+							<Col lg={5}>
+								<DateInput
+									label="조사일자"
+									name=""
+									type="date"
+									containerClass={'col-3'}
+								></DateInput>
+
+
+								<DateInput
+									label=""
+									name=""
+									type="date"
+									containerClass={'col-3'}
+								></DateInput>
+							</Col>
+						</Row>
+					</Card.Body>
+				</FormProvider>
+			</Card>
+			<div className='card-body'></div>
 			<button onClick={handleDelete}>자산조사 삭제</button>
 			<AssetSurveyRegister />
 			<table ref={tableRef} className="display" style={{ width: '100%' }}></table>

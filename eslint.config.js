@@ -17,7 +17,41 @@ export default [
         sourceType: "module",
       },
     },
-    settings: { react: { version: "18.3" } },
+    env: {
+      browser: true,
+      es2021: true,
+    },
+    extends: [
+      "eslint:recommended",
+      "plugin:import/recommended",
+      "plugin:react/recommended",
+      "plugin:react-hooks/recommended",
+      "plugin:react/jsx-runtime",
+      "prettier",
+      "plugin:prettier/recommended",
+    ],
+    overrides: [],
+    parserOptions: {
+      ecmaVersion: "latest",
+      sourceType: "module",
+    },
+    settings: {
+      react: { version: "18.3" },
+      "import/resolver": {
+        node: {
+          paths: ["src"],
+          extensions: [".js", ".jsx", ".ts", ".tsx"],
+        },
+        alias: {
+          map: [
+            ["@", "./src"],
+            ["@components", "./src/components"],
+            ["@assets", "./src/assets"],
+          ],
+          extensions: [".js", ".jsx", ".ts", ".tsx"],
+        },
+      },
+    },
     plugins: {
       react,
       "react-hooks": reactHooks,
@@ -34,6 +68,7 @@ export default [
         { allowConstantExport: true },
       ],
     },
+
     "no-unused-vars": "off",
     "react/prop-types": "off",
   },

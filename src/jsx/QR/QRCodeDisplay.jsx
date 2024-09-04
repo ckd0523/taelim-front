@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import Modal from "react-modal";
+// import Modal from "react-modal";
 
 // QRCodeDisplay 컴포넌트 정의
 const QRCodeDisplay = ({ assetCode, assetName }) => {

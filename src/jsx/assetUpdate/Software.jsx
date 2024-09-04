@@ -15,7 +15,7 @@ import {
   TableRow,
   Paper,
   Typography,
-  styled,
+  Button,
 } from "@mui/material";
 
 const Software = () => {
@@ -24,15 +24,20 @@ const Software = () => {
   const [data, setData] = useState([]);
   const [selectedRowData, setSelectedRowData] = useState(null);
 
-  // 수정 요청 핸들러
-  const handleEditRequest = () => {
-    console.log("수정 요청 버튼 클릭됨");
-  };
+  // // 닫기 버튼 로직을 여기에 작성
+  // const handleCloseClick = () => {
+  //   console.log("닫기 버튼이 클릭되었습니다.");
+  // };
+  // // 수정 요청 핸들러
+  // const handleEditClick = () => {
+  //   console.log("수정 모드로 전환되었습니다.");
+  // };
 
-  // 유지보수 등록 핸들러
-  const handleMaintenanceRegistration = () => {
-    console.log("유지보수 등록 버튼 클릭됨");
-  };
+  // // 유지보수 등록 핸들러
+  // const handleMaintenanceClick = () => {
+  //   // 유지보수 등록 로직을 여기에 작성
+  //   console.log("유지보수 등록 버튼이 클릭되었습니다.");
+  // };
 
   // 데이터 로드 및 DataTable 초기화
   useEffect(() => {
@@ -144,15 +149,15 @@ const Software = () => {
                   row.child(details).show();
                   tr.addClass("shown");
 
-                  // 상세 정보 버튼 이벤트 리스너 추가
-                  $(`#edit-button-${row.index()}`).on(
-                    "click",
-                    handleEditRequest
-                  );
-                  $(`#maintenance-button-${row.index()}`).on(
-                    "click",
-                    handleMaintenanceRegistration
-                  );
+                  // // 상세 정보 버튼 이벤트 리스너 추가
+                  // $(`#edit-button-${row.index()}`).on(
+                  //   "click",
+                  //   handleEditRequest
+                  // );
+                  // $(`#maintenance-button-${row.index()}`).on(
+                  //   "click",
+                  //   handleMaintenanceRegistration
+                  // );
                 } catch (error) {
                   console.error("자산 상세 정보 가져오기 오류:", error);
                 }
@@ -321,173 +326,205 @@ const Software = () => {
     const columns = getClassificationColumns(classification);
 
     return renderToString(
-      <TableContainer component={Paper} className="table-container">
-        <Typography variant="h2" className="typography-header">
-          기본 자산 정보 및 관리정보
-        </Typography>
-        <Table className="table">
-          <TableHead>
-            <TableRow className="table-row">
-              <TableCell className="table-cell header">자산코드</TableCell>
-              <TableCell className="table-cell header">자산명</TableCell>
-              <TableCell className="table-cell header">자산기준</TableCell>
-              <TableCell className="table-cell header">제조사</TableCell>
-              <TableCell className="table-cell header">목적</TableCell>
-              <TableCell className="table-cell header">부서</TableCell>
-              <TableCell className="table-cell header">위치</TableCell>
-              <TableCell className="table-cell header">사용자</TableCell>
-              <TableCell className="table-cell header">소유자</TableCell>
-              <TableCell className="table-cell header">보안담당자</TableCell>
-              <TableCell className="table-cell header">사용상태</TableCell>
-              <TableCell className="table-cell header">가동여부</TableCell>
-              <TableCell className="table-cell header">도입일자</TableCell>
-              <TableCell className="table-cell header">기밀성</TableCell>
-              <TableCell className="table-cell header">무결성</TableCell>
-              <TableCell className="table-cell header">가용성</TableCell>
-              <TableCell className="table-cell header">중요성점수</TableCell>
-              <TableCell className="table-cell header">중요성등급</TableCell>
-              <TableCell className="table-cell header">비고</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            <TableRow className="table-row">
-              <TableCell className="table-cell">
-                {selectedRowData.assetCode || "N/A"}
-              </TableCell>
-              <TableCell className="table-cell">
-                {selectedRowData.assetName || "N/A"}
-              </TableCell>
-              <TableCell className="table-cell">
-                {selectedRowData.assetBasis || "N/A"}
-              </TableCell>
-              <TableCell className="table-cell">
-                {selectedRowData.manufacturingCompany || "N/A"}
-              </TableCell>
-              <TableCell className="table-cell">
-                {selectedRowData.purpose || "N/A"}
-              </TableCell>
-              <TableCell className="table-cell">
-                {selectedRowData.department || "N/A"}
-              </TableCell>
-              <TableCell className="table-cell">
-                {selectedRowData.assetLocation || "N/A"}
-              </TableCell>
-              <TableCell className="table-cell">
-                {selectedRowData.assetUser || "N/A"}
-              </TableCell>
-              <TableCell className="table-cell">
-                {selectedRowData.assetOwner || "N/A"}
-              </TableCell>
-              <TableCell className="table-cell">
-                {selectedRowData.assetSecurityManager || "N/A"}
-              </TableCell>
-              <TableCell className="table-cell">
-                {selectedRowData.useState || "N/A"}
-              </TableCell>
-              <TableCell className="table-cell">
-                {selectedRowData.operationStatus || "N/A"}
-              </TableCell>
-              <TableCell className="table-cell">
-                {selectedRowData.introducedDate || "N/A"}
-              </TableCell>
-              <TableCell className="table-cell">
-                {selectedRowData.confidentiality || "N/A"}
-              </TableCell>
-              <TableCell className="table-cell">
-                {selectedRowData.integrity || "N/A"}
-              </TableCell>
-              <TableCell className="table-cell">
-                {selectedRowData.availability || "N/A"}
-              </TableCell>
-              <TableCell className="table-cell">{importanceScore}</TableCell>
-              <TableCell className="table-cell">{importanceRating}</TableCell>
-              <TableCell className="table-cell">
-                {selectedRowData.note || "N/A"}
-              </TableCell>
-            </TableRow>
-          </TableBody>
-        </Table>
-        <Typography variant="h2" className="typography-header">
-          재무 및 구매 정보
-        </Typography>
-        <Table className="table">
-          <TableHead>
-            <TableRow className="table-row">
-              <TableCell className="table-cell header">구매비용</TableCell>
-              <TableCell className="table-cell header">구매날짜</TableCell>
-              <TableCell className="table-cell header">내용연수</TableCell>
-              <TableCell className="table-cell header">감가상각방법</TableCell>
-              <TableCell className="table-cell header">구입처</TableCell>
-              <TableCell className="table-cell header">구입처 연락처</TableCell>
-              <TableCell className="table-cell header">취득경로</TableCell>
-              <TableCell className="table-cell header">유지기간</TableCell>
-              <TableCell className="table-cell header">잔존가치</TableCell>
-              <TableCell className="table-cell header">현재가치</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            <TableRow className="table-row">
-              <TableCell className="table-cell">
-                {selectedRowData ? selectedRowData.purchaseCost : "N/A"}
-              </TableCell>
-              <TableCell className="table-cell">
-                {selectedRowData ? selectedRowData.purchaseDate : "N/A"}
-              </TableCell>
-              <TableCell className="table-cell">
-                {selectedRowData ? selectedRowData.usefulLife : "N/A"}
-              </TableCell>
-              <TableCell className="table-cell">
-                {selectedRowData ? selectedRowData.depreciationMethod : "N/A"}
-              </TableCell>
-              <TableCell className="table-cell">
-                {selectedRowData ? selectedRowData.purchaseSource : "N/A"}
-              </TableCell>
-              <TableCell className="table-cell">
-                {selectedRowData ? selectedRowData.contactInformation : "N/A"}
-              </TableCell>
-              <TableCell className="table-cell">
-                {selectedRowData ? selectedRowData.acquisitionRoute : "N/A"}
-              </TableCell>
-              <TableCell className="table-cell">
-                {selectedRowData ? selectedRowData.maintenancePeriod : "N/A"}
-              </TableCell>
-              <TableCell className="table-cell">
-                {selectedRowData ? selectedRowData.residualValue : "N/A"}
-              </TableCell>
-              <TableCell className="table-cell">
-                {selectedRowData ? selectedRowData.currentValue : "N/A"}
-              </TableCell>
-            </TableRow>
-          </TableBody>
-        </Table>
-        {classification && (
-          <>
-            <Typography variant="h2" className="typography-header">
-              {classification} 정보
-            </Typography>
-            <Table className="table">
-              <TableHead>
-                <TableRow className="table-row">
-                  {columns.map((col) => (
-                    <TableCell key={col.title} className="table-cell header">
-                      {col.title}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                <TableRow className="table-row">
-                  {columns.map((col) => (
-                    <TableCell key={col.title} className="table-cell">
-                      {selectedRowData ? selectedRowData[col.data] : "N/A"}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              </TableBody>
-            </Table>
-          </>
-        )}
-      </TableContainer>
+      <>
+        <TableContainer component={Paper} className="table-container">
+          <Typography variant="h2" className="typography-header">
+            기본 자산 정보 및 관리정보
+          </Typography>
+          <Table className="table">
+            <TableHead>
+              <TableRow className="table-row">
+                <TableCell className="table-cell header">자산코드</TableCell>
+                <TableCell className="table-cell header">자산명</TableCell>
+                <TableCell className="table-cell header">자산기준</TableCell>
+                <TableCell className="table-cell header">제조사</TableCell>
+                <TableCell className="table-cell header">목적</TableCell>
+                <TableCell className="table-cell header">부서</TableCell>
+                <TableCell className="table-cell header">위치</TableCell>
+                <TableCell className="table-cell header">사용자</TableCell>
+                <TableCell className="table-cell header">소유자</TableCell>
+                <TableCell className="table-cell header">보안담당자</TableCell>
+                <TableCell className="table-cell header">사용상태</TableCell>
+                <TableCell className="table-cell header">가동여부</TableCell>
+                <TableCell className="table-cell header">도입일자</TableCell>
+                <TableCell className="table-cell header">기밀성</TableCell>
+                <TableCell className="table-cell header">무결성</TableCell>
+                <TableCell className="table-cell header">가용성</TableCell>
+                <TableCell className="table-cell header">중요성점수</TableCell>
+                <TableCell className="table-cell header">중요성등급</TableCell>
+                <TableCell className="table-cell header">비고</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              <TableRow className="table-row">
+                <TableCell className="table-cell">
+                  {selectedRowData.assetCode || "N/A"}
+                </TableCell>
+                <TableCell className="table-cell">
+                  {selectedRowData.assetName || "N/A"}
+                </TableCell>
+                <TableCell className="table-cell">
+                  {selectedRowData.assetBasis || "N/A"}
+                </TableCell>
+                <TableCell className="table-cell">
+                  {selectedRowData.manufacturingCompany || "N/A"}
+                </TableCell>
+                <TableCell className="table-cell">
+                  {selectedRowData.purpose || "N/A"}
+                </TableCell>
+                <TableCell className="table-cell">
+                  {selectedRowData.department || "N/A"}
+                </TableCell>
+                <TableCell className="table-cell">
+                  {selectedRowData.assetLocation || "N/A"}
+                </TableCell>
+                <TableCell className="table-cell">
+                  {selectedRowData.assetUser || "N/A"}
+                </TableCell>
+                <TableCell className="table-cell">
+                  {selectedRowData.assetOwner || "N/A"}
+                </TableCell>
+                <TableCell className="table-cell">
+                  {selectedRowData.assetSecurityManager || "N/A"}
+                </TableCell>
+                <TableCell className="table-cell">
+                  {selectedRowData.useState || "N/A"}
+                </TableCell>
+                <TableCell className="table-cell">
+                  {selectedRowData.operationStatus || "N/A"}
+                </TableCell>
+                <TableCell className="table-cell">
+                  {selectedRowData.introducedDate || "N/A"}
+                </TableCell>
+                <TableCell className="table-cell">
+                  {selectedRowData.confidentiality || "N/A"}
+                </TableCell>
+                <TableCell className="table-cell">
+                  {selectedRowData.integrity || "N/A"}
+                </TableCell>
+                <TableCell className="table-cell">
+                  {selectedRowData.availability || "N/A"}
+                </TableCell>
+                <TableCell className="table-cell">{importanceScore}</TableCell>
+                <TableCell className="table-cell">{importanceRating}</TableCell>
+                <TableCell className="table-cell">
+                  {selectedRowData.note || "N/A"}
+                </TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
+          <Typography variant="h2" className="typography-header">
+            재무 및 구매 정보
+          </Typography>
+          <Table className="table">
+            <TableHead>
+              <TableRow className="table-row">
+                <TableCell className="table-cell header">구매비용</TableCell>
+                <TableCell className="table-cell header">구매날짜</TableCell>
+                <TableCell className="table-cell header">내용연수</TableCell>
+                <TableCell className="table-cell header">
+                  감가상각방법
+                </TableCell>
+                <TableCell className="table-cell header">구입처</TableCell>
+                <TableCell className="table-cell header">
+                  구입처 연락처
+                </TableCell>
+                <TableCell className="table-cell header">취득경로</TableCell>
+                <TableCell className="table-cell header">유지기간</TableCell>
+                <TableCell className="table-cell header">잔존가치</TableCell>
+                <TableCell className="table-cell header">현재가치</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              <TableRow className="table-row">
+                <TableCell className="table-cell">
+                  {selectedRowData ? selectedRowData.purchaseCost : "N/A"}
+                </TableCell>
+                <TableCell className="table-cell">
+                  {selectedRowData ? selectedRowData.purchaseDate : "N/A"}
+                </TableCell>
+                <TableCell className="table-cell">
+                  {selectedRowData ? selectedRowData.usefulLife : "N/A"}
+                </TableCell>
+                <TableCell className="table-cell">
+                  {selectedRowData ? selectedRowData.depreciationMethod : "N/A"}
+                </TableCell>
+                <TableCell className="table-cell">
+                  {selectedRowData ? selectedRowData.purchaseSource : "N/A"}
+                </TableCell>
+                <TableCell className="table-cell">
+                  {selectedRowData ? selectedRowData.contactInformation : "N/A"}
+                </TableCell>
+                <TableCell className="table-cell">
+                  {selectedRowData ? selectedRowData.acquisitionRoute : "N/A"}
+                </TableCell>
+                <TableCell className="table-cell">
+                  {selectedRowData ? selectedRowData.maintenancePeriod : "N/A"}
+                </TableCell>
+                <TableCell className="table-cell">
+                  {selectedRowData ? selectedRowData.residualValue : "N/A"}
+                </TableCell>
+                <TableCell className="table-cell">
+                  {selectedRowData ? selectedRowData.currentValue : "N/A"}
+                </TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
+          {classification && (
+            <>
+              <Typography variant="h2" className="typography-header">
+                {classification} 정보
+              </Typography>
+              <Table className="table">
+                <TableHead>
+                  <TableRow className="table-row">
+                    {columns.map((col) => (
+                      <TableCell key={col.title} className="table-cell header">
+                        {col.title}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  <TableRow className="table-row">
+                    {columns.map((col) => (
+                      <TableCell key={col.title} className="table-cell">
+                        {selectedRowData ? selectedRowData[col.data] : "N/A"}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                </TableBody>
+              </Table>
+            </>
+          )}
+        </TableContainer>
+        {/* 버튼 섹션
+        <div style={{ marginTop: "20px", textAlign: "right" }}>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleEditClick}
+            style={{ marginRight: "10px" }}
+          >
+            수정
+          </Button>
+          <Button
+            variant="contained"
+            color="secondary"
+            onClick={handleMaintenanceClick}
+            style={{ marginRight: "10px" }}
+          >
+            유지보수 등록
+          </Button>
+          <Button
+            variant="contained"
+            color="default"
+            onClick={handleCloseClick}
+          >
+            닫기
+          </Button>
+        </div> */}
+      </>
     );
   };
 

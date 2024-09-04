@@ -21,19 +21,19 @@ const AssetRegister = () => {
     quantity: 1,
     ownership: "OWNED",
     operationStatus: "OPERATING",
-    introducedDate: "",
+    introducedDate: new Date(),
     confidentiality: 0,
     integrity: 0,
     availability: 0,
     note: "",
     purchaseCost: 0,
-    purchaseDate: "",
+    purchaseDate: new Date(),
     usefulLife: 0,
     depreciationMethod: "FIXED_AMOUNT",
     purchaseSource: "",
     contactInformation: "",
     acquisitionRoute: "",
-    maintenancePeriod: "",
+    maintenancePeriod: new Date(),
     serviceScope: "",
     os: "",
     relatedDB: "",
@@ -47,9 +47,9 @@ const AssetRegister = () => {
     documentGrade: "CONFIDENTIAL",
     documentType: "GENERAL_DOCUMENT",
     documentLink: "",
-    applicationDate: "",
-    registrationDate: "",
-    expirationDate: "",
+    applicationDate: new Date(),
+    registrationDate: new Date(),
+    expirationDate: new Date(),
     patentTrademarkStatus: "PCT_APPLICATION",
     countryApplication: "KOREA",
     patentClassification: "NEW_MATERIALS",
@@ -67,6 +67,7 @@ const AssetRegister = () => {
     expansionSlots: "",
     graphicsCard: "",
     portConfiguration: "",
+    monitorIncluded: true,
     numberOfPorts: "",
     supportedProtocols: "",
     firmwareVersion: "",
@@ -74,9 +75,9 @@ const AssetRegister = () => {
     productSerialNumber: "",
     securityControl: "MONITORING",
     kaitsKeeper: "",
-    V3OfficeSecurity: "",
-    appCheckPro: "",
-    tgate: "",
+    V3OfficeSecurity: new Date(),
+    appCheckPro: new Date(),
+    tgate: new Date(),
     furnitureSize: "",
     deviceType: "",
     modelNumber: "",
@@ -149,6 +150,8 @@ const AssetRegister = () => {
       ...prevState,
       [name]: value,
     }));
+    console.log("name: ", name);
+    console.log("value: ", value);
   };
 
   return (
@@ -156,8 +159,9 @@ const AssetRegister = () => {
       <div>
         <BasisAssetInfo formData={formData} handleChange={handleChange} />
       </div>
-      <h2>파일 등록</h2>
-      <FileUpload files={files} setFiles={setFiles} />
+      <div>
+        <FileUpload files={files} setFiles={setFiles} />
+      </div>
       <button type="submit" onClick={handleSubmit}>
         저장
       </button>

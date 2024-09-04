@@ -7,7 +7,9 @@ import Contact2 from "./jsx/assetUpdate/Contact2";
 import Contact from "./jsx/assetUpdate/Contact";
 import AssetTable from "./jsx/QR/assetTable";
 import AssetRegister from "./jsx/assetCheck/AssetRegister";
+import ExcelRegister from "./jsx/assetCheck/ExcelRegister";
 // import "bootstrap/dist/css/bootstrap.min.css";
+import "./assets/scss/Saas.scss";
 
 function App() {
   return (
@@ -43,6 +45,7 @@ function App() {
             <Route path="/contact" element={<Contact />} />
             {/* 자산등록 */}
             <Route path="/asset/register" element={<AssetRegister />} />
+            <Route path="/asset/ExcelRegister" element={<ExcelRegister />} />
             {/* 자산 조회 */}
             <Route path="/asset" element={<AssetTable />} />
           </Routes>

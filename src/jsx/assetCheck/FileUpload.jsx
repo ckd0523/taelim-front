@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useDropzone } from "react-dropzone";
 import { BsPlus } from "react-icons/bs";
-
+import { Accordion, Card } from "react-bootstrap";
+import { useAccordionButton } from "react-bootstrap";
 const thumbsContainer = {
   display: "flex",
   flexDirection: "row",
@@ -33,6 +34,21 @@ const img = {
   height: "100%",
 };
 
+function CustomToggle({ children, eventKey }) {
+  const decoratedOnClick = useAccordionButton(eventKey, () =>
+    console.log("totally custom")
+  );
+  return (
+    <button
+      className="custom-button"
+      type="button"
+      style={{ backgroundColor: "white" }}
+      onClick={decoratedOnClick}
+    >
+      {children}
+    </button>
+  );
+}
 const FileUpload = ({ files = [], setFiles }) => {
   const onDrop = useCallback(
     (acceptedFiles) => {
@@ -66,13 +82,24 @@ const FileUpload = ({ files = [], setFiles }) => {
   );
 
   return (
-    <section className="container">
-      <div {...getRootProps({ className: "dropzone" })}>
-        <input {...getInputProps()} />
-        <BsPlus style={{ fontSize: "50px" }} />
-      </div>
-      <aside style={thumbsContainer}>{thumbs}</aside>
-    </section>
+    // <section className="container">
+    <Accordion defaultActiveKey="0">
+      <Card>
+        <Card.Header>
+          <CustomToggle eventKey="0">이미지 등록</CustomToggle>
+        </Card.Header>
+        <Accordion.Collapse eventKey="0">
+          <Card.Body>
+            <div {...getRootProps({ className: "dropzone" })}>
+              <input {...getInputProps()} />
+              <BsPlus style={{ fontSize: "50px" }} />
+            </div>
+            <aside style={thumbsContainer}>{thumbs}</aside>
+          </Card.Body>
+        </Accordion.Collapse>
+      </Card>
+    </Accordion>
+    // </section>
   );
 };
 

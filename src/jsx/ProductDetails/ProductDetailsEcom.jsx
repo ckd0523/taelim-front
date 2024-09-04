@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { Row, Col, Card } from 'react-bootstrap';
-import PageBreadcrumb from '../components/PageBreadcrumb';
+import { PageBreadcrumb } from '../../components/PageBreadcrumb';
 import Stocks from './Stocks';
 
 // images

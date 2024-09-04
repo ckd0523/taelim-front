@@ -1,6 +1,5 @@
 import { createContext, useCallback, useContext, useState } from 'react';
-// import i18n, { isValidLanguage, Languages } from "./common/languages/i18n";
-import i18n, { isValidLanguage, Languages } from './../../common/languages/i18n';
+import i18n, { isValidLanguage, Languages } from '@/common/languages/i18n';
 
 const ThemeContext = createContext({});
 
@@ -53,7 +52,7 @@ export function ThemeProvider({ children }) {
 			logo: ThemeSettings.topbar.logo.show,
 		},
 		sidebar: {
-			theme: ThemeSettings.sidebar.theme.dark,
+			theme: ThemeSettings.sidebar.theme.brand,
 			size: ThemeSettings.sidebar.size.default,
 			user: ThemeSettings.sidebar.user.hidden,
 		},

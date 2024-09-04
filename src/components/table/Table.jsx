@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, forwardRef, useState } from "react";
+import React, { useRef, useEffect, forwardRef, useState } from 'react';
 import {
   useTable,
   useSortBy,
@@ -7,9 +7,9 @@ import {
   useGlobalFilter,
   useAsyncDebounce,
   useExpanded,
-} from "react-table";
-import classNames from "classnames";
-import { Pagination } from "./Pagination";
+} from 'react-table';
+import classNames from 'classnames';
+import { Pagination } from './Pagination';
 
 const GlobalFilter = ({
   preGlobalFilteredRows,
@@ -28,7 +28,7 @@ const GlobalFilter = ({
       <span className="d-flex align-items-center">
         Search :
         <input
-          value={value || ""}
+          value={value || ''}
           onChange={(e) => {
             setValue(e.target.value);
             onChange(e.target.value);
@@ -41,80 +41,74 @@ const GlobalFilter = ({
   );
 };
 
-const IndeterminateCheckbox = forwardRef(({ indeterminate, ...rest }, ref) => {
-  const defaultRef = useRef();
-  const resolvedRef = ref || defaultRef;
+const IndeterminateCheckbox = forwardRef(
+  ({ indeterminate, ...rest }, ref) => {
+    const defaultRef = useRef();
+    const resolvedRef = ref || defaultRef;
 
-  useEffect(() => {
-    resolvedRef.current.indeterminate = indeterminate;
-  }, [resolvedRef, indeterminate]);
+    useEffect(() => {
+      resolvedRef.current.indeterminate = indeterminate;
+    }, [resolvedRef, indeterminate]);
 
-  return (
-    <div className="form-check">
-      <input
-        type="checkbox"
-        className="form-check-input"
-        ref={resolvedRef}
-        {...rest}
-      />
-      <label htmlFor="form-check-input" className="form-check-label"></label>
-    </div>
-  );
-});
+    return (
+      <div className="form-check">
+        <input type="checkbox" className="form-check-input" ref={resolvedRef} {...rest} />
+        <label htmlFor="form-check-input" className="form-check-label"></label>
+      </div>
+    );
+  }
+);
 
 const Table = (props) => {
-  const isSearchable = props["isSearchable"] || false;
-  const isSortable = props["isSortable"] || false;
-  const pagination = props["pagination"] || false;
-  const isSelectable = props["isSelectable"] || false;
-  const isExpandable = props["isExpandable"] || false;
-  const sizePerPageList = props["sizePerPageList"] || [];
+  const isSearchable = props['isSearchable'] || false;
+  const isSortable = props['isSortable'] || false;
+  const pagination = props['pagination'] || false;
+  const isSelectable = props['isSelectable'] || false;
+  const isExpandable = props['isExpandable'] || false;
+  const sizePerPageList = props['sizePerPageList'] || [];
 
   let otherProps = {};
 
   if (isSearchable) {
-    otherProps["useGlobalFilter"] = useGlobalFilter;
+    otherProps['useGlobalFilter'] = useGlobalFilter;
   }
   if (isSortable) {
-    otherProps["useSortBy"] = useSortBy;
+    otherProps['useSortBy'] = useSortBy;
   }
   if (isExpandable) {
-    otherProps["useExpanded"] = useExpanded;
+    otherProps['useExpanded'] = useExpanded;
   }
   if (pagination) {
-    otherProps["usePagination"] = usePagination;
+    otherProps['usePagination'] = usePagination;
   }
   if (isSelectable) {
-    otherProps["useRowSelect"] = useRowSelect;
+    otherProps['useRowSelect'] = useRowSelect;
   }
 
   const dataTable = useTable(
     {
       columns: props.columns,
-      data: props["data"],
-      initialState: { pageSize: props["pageSize"] || 10 },
+      data: props['data'],
+      initialState: { pageSize: props['pageSize'] || 10 },
     },
 
-    otherProps.hasOwnProperty("useGlobalFilter") &&
-      otherProps["useGlobalFilter"],
-    otherProps.hasOwnProperty("useSortBy") && otherProps["useSortBy"],
-    otherProps.hasOwnProperty("useExpanded") && otherProps["useExpanded"],
-    otherProps.hasOwnProperty("usePagination") && otherProps["usePagination"],
-    otherProps.hasOwnProperty("useRowSelect") && otherProps["useRowSelect"],
+    otherProps.hasOwnProperty('useGlobalFilter') && otherProps['useGlobalFilter'],
+    otherProps.hasOwnProperty('useSortBy') && otherProps['useSortBy'],
+    otherProps.hasOwnProperty('useExpanded') && otherProps['useExpanded'],
+    otherProps.hasOwnProperty('usePagination') && otherProps['usePagination'],
+    otherProps.hasOwnProperty('useRowSelect') && otherProps['useRowSelect'],
 
     (hooks) => {
       isSelectable &&
         hooks.visibleColumns.push((columns) => [
           // Let's make a column for selection
           {
-            id: "selection",
+            id: 'selection',
             // The header can use the table's getToggleAllRowsSelectedProps method
             // to render a checkbox
             Header: ({ getToggleAllPageRowsSelectedProps }) => (
               <div>
-                <IndeterminateCheckbox
-                  {...getToggleAllPageRowsSelectedProps()}
-                />
+                <IndeterminateCheckbox {...getToggleAllPageRowsSelectedProps()} />
               </div>
             ),
             // The cell can use the individual row's getToggleRowSelectedProps method
@@ -133,10 +127,10 @@ const Table = (props) => {
           // Let's make a column for selection
           {
             // Build our expander column
-            id: "expander", // Make sure it has an ID
+            id: 'expander', // Make sure it has an ID
             Header: ({ getToggleAllRowsExpandedProps, isAllRowsExpanded }) => (
               <span {...getToggleAllRowsExpandedProps()}>
-                {isAllRowsExpanded ? "-" : "+"}
+                {isAllRowsExpanded ? '-' : '+'}
               </span>
             ),
             Cell: ({ row }) =>
@@ -153,7 +147,7 @@ const Table = (props) => {
                     },
                   })}
                 >
-                  {row.isExpanded ? "-" : "+"}
+                  {row.isExpanded ? '-' : '+'}
                 </span>
               ) : null,
           },
@@ -171,18 +165,16 @@ const Table = (props) => {
           preGlobalFilteredRows={dataTable.preGlobalFilteredRows}
           globalFilter={dataTable.state.globalFilter}
           setGlobalFilter={dataTable.setGlobalFilter}
-          searchBoxClass={props["searchBoxClass"]}
+          searchBoxClass={props['searchBoxClass']}
         />
       )}
+
       <div className="table-responsive">
         <table
           {...dataTable.getTableProps()}
-          className={classNames(
-            "table table-centered react-table",
-            props["tableClass"]
-          )}
+          className={classNames('table table-centered react-table', props['tableClass'])}
         >
-          <thead className={props["theadClass"]}>
+          <thead className={props['theadClass']}>
             {dataTable.headerGroups.map((headerGroup, index) => (
               <tr {...headerGroup.getHeaderGroupProps()} key={index}>
                 {headerGroup.headers.map((column, index) => (
@@ -197,7 +189,7 @@ const Table = (props) => {
                     })}
                     key={index}
                   >
-                    {column.render("Header")}
+                    {column.render('Header')}
                   </th>
                 ))}
               </tr>
@@ -210,7 +202,7 @@ const Table = (props) => {
                 <tr {...row.getRowProps()} key={index}>
                   {row.cells.map((cell) => {
                     return (
-                      <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
+                      <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
                     );
                   })}
                 </tr>
@@ -219,9 +211,8 @@ const Table = (props) => {
           </tbody>
         </table>
       </div>
-      {pagination && (
-        <Pagination tableProps={dataTable} sizePerPageList={sizePerPageList} />
-      )}
+
+      {pagination && <Pagination tableProps={dataTable} sizePerPageList={sizePerPageList} />}
     </>
   );
 };

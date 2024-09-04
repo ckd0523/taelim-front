@@ -44,6 +44,43 @@ const MENU_ITEMS = [
 		],
 	},
 	{
+		key: 'jsx',
+		label: 'jsx',
+		isTitle: true,
+	},
+	{
+		key: 'jsx',
+		label: 'jsx',
+		isTitle: false,
+		icon: 'uil-home-alt',
+		children: [
+			{
+				key: 'ds-ProductDetailsEcom',
+				label: 'QR조회',
+				url: '/jsx/ProductDetailsEcom',
+				parentKey: 'jsx',
+			},
+			{
+				key: 'ds-AssetRegister',
+				label: '자산등록',
+				url: '/jsx/AssetRegister',
+				parentKey: 'jsx',
+			},
+			{
+				key: 'ds-BackUpHistory',
+				label: '백업이력',
+				url: '/jsx/BackUpHistory',
+				parentKey: 'jsx',
+			},
+			{
+				key: 'ds-AssetSurveyHistory',
+				label: '자산조사',
+				url: '/jsx/AssetSurveyHistory',
+				parentKey: 'jsx',
+			},
+		],
+	},
+	{
 		key: 'apps',
 		label: 'Apps',
 		isTitle: true,

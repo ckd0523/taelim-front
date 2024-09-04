@@ -14,6 +14,7 @@ const PageBreadcrumb = ({ subName, title, children }) => {
 						<div className="page-title-box">
 							<div className="page-title-right">
 								<Breadcrumb listProps={{ className: 'm-0' }}>
+									<Breadcrumb.Item as={'li'}>Hyper</Breadcrumb.Item>
 									<Breadcrumb.Item as={'li'}>{subName}</Breadcrumb.Item>
 									<Breadcrumb.Item as={'li'} active>
 										{title}
@@ -32,4 +33,4 @@ const PageBreadcrumb = ({ subName, title, children }) => {
 	);
 };
 
-export { PageBreadcrumb };
+export default PageBreadcrumb;

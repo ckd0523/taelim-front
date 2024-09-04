@@ -23,6 +23,97 @@ function CustomToggle({ children, eventKey }) {
     </button>
   );
 }
+const documentGrade = [
+  { value: "CONFIDENTIAL", label: "대외비" },
+  { value: "INTERNAL", label: "내부용" },
+  { value: "PUBLIC", label: "일반" },
+];
+const documentType = [
+  { value: "GENERAL_DOCUMENT", label: "일반문서" },
+  {
+    value: "CONTRACTS_AND_LEGAL_DOCUMENTS",
+    label: "계약 및 법적문서",
+  },
+  {
+    value: "REPORTS_AND_PRESENTATIONS",
+    label: "보고서 및 프레젠테이션",
+  },
+  {
+    value: "FORMS_AND_TEMPLATES",
+    label: "양식 및 서식",
+  },
+];
+const patentTrademarkStatus = [
+  { value: "PCT_APPLICATION", label: "PCT 출원" },
+  {
+    value: "APPLICATION",
+    label: "출원",
+  },
+  {
+    value: "REGISTERED",
+    label: "등록",
+  },
+  {
+    value: "EXPIRED",
+    label: "만료",
+  },
+];
+const countryApplication = [
+  { value: "KOREA", label: "한국" },
+  {
+    value: "USA",
+    label: "미국",
+  },
+  {
+    value: "JAPAN",
+    label: "일본",
+  },
+  {
+    value: "CHINA",
+    label: "중국",
+  },
+  {
+    value: "GERMANY",
+    label: "독일",
+  },
+];
+const patentClassification = [
+  { value: "NEW_MATERIALS", label: "신소재" },
+  {
+    value: "INCUBATION",
+    label: "인큐베이션",
+  },
+];
+const patentItem = [
+  { value: "COMPOSITE_MATERIALS", label: "복합재" },
+  {
+    value: "CORPORATE_VENTURE",
+    label: "신소재",
+  },
+];
+const securityControl = [
+  { value: "MONITORING", label: "관제중" },
+  {
+    value: "ANOMALY_DETECTED",
+    label: "이상감지",
+  },
+  {
+    value: "MONITORING_COMPLETED",
+    label: "관제완료",
+  },
+];
+const engineType = [
+  { value: "GASOLINE", label: "가솔린" },
+  { value: "DIESEL", label: "디젤" },
+  { value: "HYBRID", label: "하이브리드" },
+  { value: "ELECTRIC", label: "전기" },
+];
+const carType = [
+  { value: "SEDAN", label: "승용차" },
+  { value: "SUV", label: "SUV" },
+  { value: "TRUCK", label: "트럭" },
+  { value: "VAN", label: "밴" },
+];
 const AssetCategories = ({ assetClassification, formData, handleChange }) => {
   const methods = useForm();
   const renderAdditionalFields = () => {
@@ -260,7 +351,10 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
                             className="mb-3"
                             placeholder="문서등급을 선택해주세요"
                             name="documentGrade"
-                            value={formData.documentGrade}
+                            value={documentGrade.find(
+                              (option) =>
+                                option.value === formData.documentGrade
+                            )}
                             onChange={(selectedOption) =>
                               handleChange({
                                 target: {
@@ -269,18 +363,16 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
                                 },
                               })
                             }
-                            options={[
-                              { value: "CONFIDENTIAL", label: "대외비" },
-                              { value: "INTERNAL", label: "내부용" },
-                              { value: "PUBLIC", label: "일반" },
-                            ]}
+                            options={documentGrade}
                           ></Select>
                           <p className="mb-2 c fw-bold">문서형태</p>
                           <Select
                             className="mb-3"
                             placeholder="문서형태 선택해주세요"
                             name="documentType"
-                            value={formData.documentType}
+                            value={documentType.find(
+                              (option) => option.value === formData.documentType
+                            )}
                             onChange={(selectedOption) =>
                               handleChange({
                                 target: {
@@ -289,21 +381,7 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
                                 },
                               })
                             }
-                            options={[
-                              { value: "GENERAL_DOCUMENT", label: "일반문서" },
-                              {
-                                value: "CONTRACTS_AND_LEGAL_DOCUMENTS",
-                                label: "계약 및 법적문서",
-                              },
-                              {
-                                value: "REPORTS_AND_PRESENTATIONS",
-                                label: "보고서 및 프레젠테이션",
-                              },
-                              {
-                                value: "FORMS_AND_TEMPLATES",
-                                label: "양식 및 서식",
-                              },
-                            ]}
+                            options={documentType}
                           ></Select>
                           <TextInput
                             label="문서링크"
@@ -345,11 +423,11 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
                               hideAddon={true}
                               dateFormat="yyyy-MM-dd"
                               value={formData.applicationDate}
-                              onChange={(selectedOption) =>
+                              onChange={(date) =>
                                 handleChange({
                                   target: {
                                     name: "applicationDate",
-                                    value: selectedOption.value.toStringDate(),
+                                    value: date ? date : null,
                                   },
                                 })
                               }
@@ -364,11 +442,11 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
                               hideAddon={true}
                               dateFormat="yyyy-MM-dd"
                               value={formData.registrationDate}
-                              onChange={(selectedOption) =>
+                              onChange={(date) =>
                                 handleChange({
                                   target: {
                                     name: "registrationDate",
-                                    value: selectedOption.value.toStringDate(),
+                                    value: date ? date : null,
                                   },
                                 })
                               }
@@ -383,11 +461,11 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
                               hideAddon={true}
                               dateFormat="yyyy-MM-dd"
                               value={formData.expirationDate}
-                              onChange={(selectedOption) =>
+                              onChange={(date) =>
                                 handleChange({
                                   target: {
                                     name: "expirationDate",
-                                    value: selectedOption.value.toStringDate(),
+                                    value: date ? date : null,
                                   },
                                 })
                               }
@@ -398,7 +476,10 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
                             className="mb-3"
                             placeholder="특허/상표 상태를 선택해주세요"
                             name="patentTrademarkStatus"
-                            value={formData.patentTrademarkStatus}
+                            value={patentTrademarkStatus.find(
+                              (option) =>
+                                option.value === formData.patentTrademarkStatus
+                            )}
                             onChange={(selectedOption) =>
                               handleChange({
                                 target: {
@@ -407,28 +488,17 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
                                 },
                               })
                             }
-                            options={[
-                              { value: "PCT_APPLICATION", label: "PCT 출원" },
-                              {
-                                value: "APPLICATION",
-                                label: "출원",
-                              },
-                              {
-                                value: "REGISTERED",
-                                label: "등록",
-                              },
-                              {
-                                value: "EXPIRED",
-                                label: "만료",
-                              },
-                            ]}
+                            options={patentTrademarkStatus}
                           ></Select>
                           <p className="mb-2 c fw-bold">출원국가</p>
                           <Select
                             className="mb-3"
                             placeholder="출원국가를 선택해주세요"
                             name="countryApplication"
-                            value={formData.countryApplication}
+                            value={countryApplication.find(
+                              (option) =>
+                                option.value === formData.countryApplication
+                            )}
                             onChange={(selectedOption) =>
                               handleChange({
                                 target: {
@@ -437,32 +507,17 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
                                 },
                               })
                             }
-                            options={[
-                              { value: "KOREA", label: "한국" },
-                              {
-                                value: "USA",
-                                label: "미국",
-                              },
-                              {
-                                value: "JAPAN",
-                                label: "일본",
-                              },
-                              {
-                                value: "CHINA",
-                                label: "중국",
-                              },
-                              {
-                                value: "GERMANY",
-                                label: "독일",
-                              },
-                            ]}
+                            options={countryApplication}
                           ></Select>
                           <p className="mb-2 c fw-bold">특허분류</p>
                           <Select
                             className="mb-3"
                             placeholder="특허분류를 선택해주세요"
                             name="patentClassification"
-                            value={formData.patentClassification}
+                            value={patentClassification.find(
+                              (option) =>
+                                option.value === formData.patentClassification
+                            )}
                             onChange={(selectedOption) =>
                               handleChange({
                                 target: {
@@ -471,20 +526,16 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
                                 },
                               })
                             }
-                            options={[
-                              { value: "NEW_MATERIALS", label: "신소재" },
-                              {
-                                value: "INCUBATION",
-                                label: "인큐베이션",
-                              },
-                            ]}
+                            options={patentClassification}
                           ></Select>
                           <p className="mb-2 c fw-bold">특허세목</p>
                           <Select
                             className="mb-3"
                             placeholder="특허세목을 선택해주세요"
                             name="patentItem"
-                            value={formData.patentItem}
+                            value={patentItem.find(
+                              (option) => option.value === formData.patentItem
+                            )}
                             onChange={(selectedOption) =>
                               handleChange({
                                 target: {
@@ -493,13 +544,7 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
                                 },
                               })
                             }
-                            options={[
-                              { value: "COMPOSITE_MATERIALS", label: "복합재" },
-                              {
-                                value: "CORPORATE_VENTURE",
-                                label: "신소재",
-                              },
-                            ]}
+                            options={patentItem}
                           ></Select>
                           <TextInput
                             label="출원번호"
@@ -809,7 +854,10 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
                             className="mb-3"
                             placeholder="보안관제를 선택해주세요"
                             name="securityControl"
-                            value={formData.securityControl}
+                            value={securityControl.find(
+                              (option) =>
+                                option.value === formData.securityControl
+                            )}
                             onChange={(selectedOption) =>
                               handleChange({
                                 target: {
@@ -818,17 +866,7 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
                                 },
                               })
                             }
-                            options={[
-                              { value: "MONITORING", label: "관제중" },
-                              {
-                                value: "ANOMALY_DETECTED",
-                                label: "이상감지",
-                              },
-                              {
-                                value: "MONITORING_COMPLETED",
-                                label: "관제완료",
-                              },
-                            ]}
+                            options={securityControl}
                           ></Select>
                           <TextInput
                             label="내부정보 유출 방지"
@@ -850,11 +888,11 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
                               hideAddon={true}
                               dateFormat="yyyy-MM-dd"
                               value={formData.V3OfficeSecurity}
-                              onChange={(selectedOption) =>
+                              onChange={(date) =>
                                 handleChange({
                                   target: {
                                     name: "V3OfficeSecurity",
-                                    value: selectedOption.value.toStringDate(),
+                                    value: date ? date : null,
                                   },
                                 })
                               }
@@ -869,11 +907,11 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
                               hideAddon={true}
                               dateFormat="yyyy-MM-dd"
                               value={formData.appCheckPro}
-                              onChange={(selectedOption) =>
+                              onChange={(date) =>
                                 handleChange({
                                   target: {
                                     name: "appCheckPro",
-                                    value: selectedOption.value.toStringDate(),
+                                    value: date ? date : null,
                                   },
                                 })
                               }
@@ -888,11 +926,11 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
                               hideAddon={true}
                               dateFormat="yyyy-MM-dd"
                               value={formData.tgate}
-                              onChange={(selectedOption) =>
+                              onChange={(date) =>
                                 handleChange({
                                   target: {
                                     name: "tgate",
-                                    value: selectedOption.value.toStringDate(),
+                                    value: date ? date : null,
                                   },
                                 })
                               }
@@ -1032,7 +1070,9 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
                             className="mb-3"
                             placeholder="엔진 형식을 선택해주세요"
                             name="engineType"
-                            value={formData.engineType}
+                            value={engineType.find(
+                              (option) => option.value === formData.engineType
+                            )}
                             onChange={(selectedOption) =>
                               handleChange({
                                 target: {
@@ -1041,19 +1081,16 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
                                 },
                               })
                             }
-                            options={[
-                              { value: "GASOLINE", label: "가솔린" },
-                              { value: "DIESEL", label: "디젤" },
-                              { value: "HYBRID", label: "하이브리드" },
-                              { value: "ELECTRIC", label: "전기" },
-                            ]}
+                            options={engineType}
                           ></Select>
                           <p className="mb-2 c fw-bold">차량 종류</p>
                           <Select
                             className="mb-3"
                             placeholder="차량 종류를 선택해주세요"
                             name="carType"
-                            value={formData.carType}
+                            value={carType.find(
+                              (option) => option.value === formData.carType
+                            )}
                             onChange={(selectedOption) =>
                               handleChange({
                                 target: {
@@ -1062,12 +1099,7 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
                                 },
                               })
                             }
-                            options={[
-                              { value: "SEDAN", label: "승용차" },
-                              { value: "SUV", label: "SUV" },
-                              { value: "TRUCK", label: "트럭" },
-                              { value: "VAN", label: "밴" },
-                            ]}
+                            options={carType}
                           ></Select>
                           <TextInput
                             label="차량 식별번호"

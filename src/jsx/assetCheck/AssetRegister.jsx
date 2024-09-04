@@ -92,6 +92,9 @@ const AssetRegister = () => {
     modelYear: 0,
     otherDescription: "",
     usageFrequency: "",
+    // image: "",
+    // warrantyDocument: "",
+    // userDocument : ""
   });
 
   const handleSubmit = async (e) => {

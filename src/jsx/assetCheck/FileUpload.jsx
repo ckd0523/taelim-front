@@ -3,6 +3,7 @@ import { useDropzone } from "react-dropzone";
 import { BsPlus } from "react-icons/bs";
 import { Accordion, Card } from "react-bootstrap";
 import { useAccordionButton } from "react-bootstrap";
+import { FileUploader } from "@/components/FileUploader";
 const thumbsContainer = {
   display: "flex",
   flexDirection: "row",
@@ -86,15 +87,21 @@ const FileUpload = ({ files = [], setFiles }) => {
     <Accordion defaultActiveKey="0">
       <Card>
         <Card.Header>
-          <CustomToggle eventKey="0">이미지 등록</CustomToggle>
+          <CustomToggle eventKey="0">첨부파일 등록</CustomToggle>
         </Card.Header>
         <Accordion.Collapse eventKey="0">
-          <Card.Body>
+          <Card.Body style={{ paddingLeft: 80 }}>
+            <p className="mb-2 c fw-bold">이미지 등록</p>
             <div {...getRootProps({ className: "dropzone" })}>
               <input {...getInputProps()} />
               <BsPlus style={{ fontSize: "50px" }} />
             </div>
             <aside style={thumbsContainer}>{thumbs}</aside>
+
+            <p className="mb-2 c fw-bold">보증 세부사항</p>
+            <FileUploader />
+            <p className="mb-2 c fw-bold">사용자 메뉴얼 및 기술문서</p>
+            <FileUploader />
           </Card.Body>
         </Accordion.Collapse>
       </Card>

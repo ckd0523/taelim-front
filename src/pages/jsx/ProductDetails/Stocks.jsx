@@ -1,65 +1,163 @@
-import { ProgressBar } from 'react-bootstrap';
+import React, { useEffect, useState } from 'react';
+import { Table } from '@/components/table';
+import Tabs from './Tab';
+import QuickAccess from '@/pages/apps/FileManager/QuickAccess';
+import { quickAccessFiles } from './data';
+import { Row, Col, Card } from 'react-bootstrap';
 
 const Stocks = () => {
+	const [commonData, setCommonData] = useState({});
+	const [subData, setSubData] = useState({});
+	const [commonColumns, setCommonColumns] = useState([]);
+	const [subColumns, setSubColumns] = useState([]);
+	const [loading, setLoading] = useState(true);
+	const [error, setError] = useState(null);
+
+	// columns 저장
+	const generateColumns = (data) => {
+		if (Object.keys(data).length === 0) {
+			return [];
+		}
+		console.log('Data for columns:', data);
+		return Object.keys(data || {}).map((key) => ({
+			Header: key.charAt(0).toUpperCase() + key.slice(1),
+			accessor: key,
+		}));
+	};
+
+	// 데이터 가져오기
+	const fetchData = async (assetCode) => {
+		try {
+			const response = await fetch(`http://localhost:8080/asset/${assetCode}`);
+			if (!response.ok) {
+				throw new Error(`HTTP error! Status: ${response.status}`);
+			}
+			const data = await response.json();
+			console.log('Fetched data:', data);
+			setCommonData(data.assetDto);
+
+			// 서브 데이터 처리
+			const subDataMap = {};
+			if (data.softwareDto) {
+				subDataMap.softwareDto = data.softwareDto;
+			}
+			if (data.carDto) {
+				subDataMap.carDto = data.carDto;
+			}
+			if (data.devicesDto) {
+				subDataMap.devicesDto = data.devicesDto;
+			}
+			if (data.documentDto) {
+				subDataMap.documentDto = data.documentDto;
+			}
+			if (data.terminalDto) {
+				subDataMap.terminalDto = data.terminalDto;
+			}
+			if (data.furnitureDto) {
+				subDataMap.furnitureDto = data.furnitureDto;
+			}
+			if (data.otherAssetsDto) {
+				subDataMap.otherAssetsDto = data.otherAssetsDto;
+			}
+			if (data.itSystemEquipmentDto) {
+				subDataMap.itSystemEquipmentDto = data.itSystemEquipmentDto;
+			}
+			if (data.applicationProgramDto) {
+				subDataMap.applicationProgramDto = data.applicationProgramDto;
+			}
+			if (data.itNetworkEquipmentDto) {
+				subDataMap.itNetworkEquipmentDto = data.itNetworkEquipmentDto;
+			}
+			if (data.electronicInformationDto) {
+				subDataMap.electronicInformationDto = data.electronicInformationDto;
+			}
+			if (data.patentsAndTrademarksDto) {
+				subDataMap.patentsAndTrademarksDto = data.patentsAndTrademarksDto;
+			}
+			if (data.informationProtectionSystemDto) {
+				subDataMap.informationProtectionSystemDto = data.informationProtectionSystemDto;
+			}
+
+			setSubData(subDataMap);
+			setCommonColumns(generateColumns(data.assetDto));
+
+			// 서브 데이터의 columns 생성
+			const subColumnsMap = {};
+			for (const [key, value] of Object.entries(subDataMap)) {
+				subColumnsMap[key] = generateColumns(value);
+			}
+			setSubColumns(subColumnsMap);
+
+			setLoading(false);
+		} catch (error) {
+			console.error('Fetch data error:', error);
+			setError(error);
+			setLoading(false);
+		}
+	};
+
+	useEffect(() => {
+		fetchData('ASSET002').catch((error) => {
+			console.error('Fetch data error in useEffect:', error);
+			setError(error);
+			setLoading(false);
+		});
+	}, []);
+
+	if (loading) {
+		return <div>Loading...</div>;
+	}
+
+	if (error) {
+		return <div>Error: {error.message}</div>;
+	}
+
 	return (
-		<div className="table-responsive mt-4">
-			<table className="table table-bordered table-centered mb-0">
-				<thead className="table-light">
-					<tr>
-						<th>Outlets</th>
-						<th>Price</th>
-						<th>Stock</th>
-						<th>Revenue</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-						<td>ASOS Ridley Outlet - NYC</td>
-						<td>$139.58</td>
-						<td>
-							<div className="progress-w-percent mb-0">
-								<span className="progress-value">478 </span>
-								<ProgressBar now={56} className="progress-sm" variant="success" />
+		<>
+			<Row className="mb-3">
+				<h2>자산 정보</h2>
+				<Table
+					columns={commonColumns}
+					data={[commonData]} // 데이터는 배열로 전달
+					isSortable={true}
+					pagination={false}
+					isExpandable={false}
+					isSearchable={false}
+					isSelectable={false}
+				/>
+			</Row>
+			<Row className="mb-3">
+				{Object.keys(subData).map(
+					(key) =>
+						subData[key] && (
+							<div key={key}>
+								<h2>{key.replace('Dto', '')} 세부 정보</h2>
+								<Table
+									columns={subColumns[key]}
+									data={[subData[key]]} // 데이터는 배열로 전달
+									isSortable={true}
+									pagination={false}
+									isExpandable={false}
+									isSearchable={false}
+									isSelectable={false}
+								/>
 							</div>
-						</td>
-						<td>$1,89,547</td>
-					</tr>
-					<tr>
-						<td>Marco Outlet - SRT</td>
-						<td>$149.99</td>
-						<td>
-							<div className="progress-w-percent mb-0">
-								<span className="progress-value">73 </span>
-								<ProgressBar now={16} className="progress-sm" variant="danger" />
-							</div>
-						</td>
-						<td>$87,245</td>
-					</tr>
-					<tr>
-						<td>Chairtest Outlet - HY</td>
-						<td>$135.87</td>
-						<td>
-							<div className="progress-w-percent mb-0">
-								<span className="progress-value">781 </span>
-								<ProgressBar now={72} className="progress-sm" variant="success" />
-							</div>
-						</td>
-						<td>$5,87,478</td>
-					</tr>
-					<tr>
-						<td>Nworld Group - India</td>
-						<td>$159.89</td>
-						<td>
-							<div className="progress-w-percent mb-0">
-								<span className="progress-value">815 </span>
-								<ProgressBar now={89} className="progress-sm" variant="success" />
-							</div>
-						</td>
-						<td>$55,781</td>
-					</tr>
-				</tbody>
-			</table>
-		</div>
+						)
+				)}
+			</Row>
+			<Row className="mb-3">
+				<Col>
+					<h2>보증세부사항</h2>
+					<QuickAccess quickAccessFiles={quickAccessFiles} />
+					{commonData.warrantyDetails}
+				</Col>
+				<Col>
+					<h2>사용자 메뉴얼</h2>
+					<QuickAccess quickAccessFiles={quickAccessFiles} />
+					{commonData.attachment}
+				</Col>
+			</Row>
+		</>
 	);
 };
 

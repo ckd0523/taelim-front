@@ -4,8 +4,6 @@ import { Row, Col, Card } from 'react-bootstrap';
 const QuickAccess = ({ quickAccessFiles }) => {
 	return (
 		<div className="mt-3">
-			<h5 className="mb-2">Quick Access</h5>
-
 			<Row className="mx-n1 g-0">
 				{quickAccessFiles.map((f, index) => {
 					return (
@@ -21,7 +19,10 @@ const QuickAccess = ({ quickAccessFiles }) => {
 											</div>
 										</Col>
 										<Col className="ps-0">
-											<Link to="" className="text-muted fw-bold">
+											<Link
+												to={`${f.location}`}
+												className="text-muted fw-bold"
+											>
 												{f.name}
 											</Link>
 											<p className="mb-0 font-13">{f.size}</p>

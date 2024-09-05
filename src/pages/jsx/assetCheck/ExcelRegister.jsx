@@ -1,6 +1,6 @@
 import { Row, Col, Card } from 'react-bootstrap';
-import { PageBreadcrumb } from './../../components/PageBreadcrumb';
-import { Table } from '../../components/table';
+import { PageBreadcrumb } from '@/components/PageBreadcrumb';
+import { Table } from '@/components/table';
 import { records as data } from './data';
 import 'regenerator-runtime';
 const columns = [

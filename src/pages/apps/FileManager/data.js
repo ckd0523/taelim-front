@@ -9,7 +9,7 @@ import Avatar8 from '@/assets/images/users/avatar-8.jpg';
 import Avatar9 from '@/assets/images/users/avatar-9.jpg';
 import Avatar10 from '@/assets/images/users/avatar-10.jpg';
 
-const quickAccessFiles= [
+const quickAccessFiles = [
 	{
 		icon: 'mdi mdi-folder-zip font-16',
 		name: 'Hyper-sketch.zip',

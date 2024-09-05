@@ -78,6 +78,24 @@ const MENU_ITEMS = [
 				url: '/jsx/AssetSurveyHistory',
 				parentKey: 'jsx',
 			},
+			{
+				key: 'ds-Software',
+				label: '소프트웨어',
+				url: '/jsx/Software',
+				parentKey: 'jsx',
+			},
+			{
+				key: 'ds-Contact',
+				label: '컨택트',
+				url: '/jsx/Contact',
+				parentKey: 'jsx',
+			},
+			{
+				key: 'ds-AssetPage',
+				label: '테스트용',
+				url: '/jsx/AssetPage',
+				parentKey: 'jsx',
+			},
 		],
 	},
 	{

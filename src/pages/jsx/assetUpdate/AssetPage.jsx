@@ -309,13 +309,44 @@ const AssetPage = () => {
 										{row.isExpanded && selectedRowData && (
 											<tr>
 												<td colSpan={columns.length}>
-													<RowDetails
-														row={row}
-														selectedRowData={selectedRowData}
-														importanceScore={importanceScore}
-														importanceRating={importanceRating}
-														dynamicColumns={dynamicColumns}
-													/>
+													<div
+														style={{
+															display: 'flex',
+															alignItems: 'center',
+														}}
+													>
+														{/* 이미지 표시 부분 */}
+														<div style={{ marginRight: '20px' }}>
+															{selectedRowData.files &&
+																selectedRowData.files.length >
+																	0 && (
+																	<img
+																		src={
+																			selectedRowData.files[0]
+																				.fileURL
+																		}
+																		alt={
+																			selectedRowData.files[0]
+																				.oriFileName
+																		}
+																		style={{
+																			width: '300px',
+																			height: 'auto',
+																		}}
+																	/>
+																)}
+														</div>
+														{/* 우측의 세부 정보 */}
+														<div style={{ flexGrow: 1 }}>
+															<RowDetails
+																row={row}
+																selectedRowData={selectedRowData}
+																importanceScore={importanceScore}
+																importanceRating={importanceRating}
+																dynamicColumns={dynamicColumns}
+															/>
+														</div>
+													</div>
 												</td>
 											</tr>
 										)}

@@ -3,6 +3,7 @@ import BasisAssetInfo from './BasisAssetInfo';
 import { useState } from 'react';
 import FileUpload from './FileUpload';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { Button } from 'react-bootstrap';
 
 //자산등록
 const AssetRegister = () => {
@@ -96,7 +97,6 @@ const AssetRegister = () => {
 
 	const handleSubmit = async (e) => {
 		e.preventDefault(); // 페이지 새로고침 방지
-
 		try {
 			const assetResponse = await fetch('http://localhost:8080/asset/register', {
 				method: 'POST',
@@ -113,20 +113,29 @@ const AssetRegister = () => {
 				console.log(typeof assetNo);
 
 				if (files.length > 0) {
-					const fileFormData = new FormData();
-					fileFormData.append('assetNo', assetNo);
-					fileFormData.append('file', files[0]);
-					console.log(fileFormData.assetNo);
+					for (let { file, fileType } of files) {
+						const fileFormData = new FormData();
+						fileFormData.append('assetNo', assetNo);
+						fileFormData.append('file', file[0]);
+						fileFormData.append('fileType', fileType);
+						// console.log(fileFormData.assetNo);
+						console.log('fileFormData:', fileFormData.get('file'));
+						console.log('assetNo:', fileFormData.get('assetNo'));
+						console.log('fileType:', fileFormData.get('fileType'));
 
-					const fileResponse = await fetch('http://localhost:8080/asset/file/upload', {
-						method: 'POST',
-						body: fileFormData,
-					});
+						const fileResponse = await fetch(
+							'http://localhost:8080/asset/file/upload',
+							{
+								method: 'POST',
+								body: fileFormData,
+							}
+						);
 
-					if (fileResponse.ok) {
-						alert('파일이 성공적으로 업로드됨');
-					} else {
-						alert('파일 업로드 실패');
+						if (fileResponse.ok) {
+							alert('파일이 성공적으로 업로드됨');
+						} else {
+							alert('파일 업로드 실패');
+						}
 					}
 				}
 			} else {
@@ -150,15 +159,24 @@ const AssetRegister = () => {
 
 	return (
 		<div>
-			<div>
+			<div className="d-flex justify-content-center" style={{ padding: 50 }}>
 				<BasisAssetInfo formData={formData} handleChange={handleChange} />
 			</div>
-			<div>
+			<div className="d-flex justify-content-center" style={{ padding: 50 }}>
 				<FileUpload files={files} setFiles={setFiles} />
 			</div>
-			<button type="submit" onClick={handleSubmit}>
-				저장
-			</button>
+			<div
+				className="d-flex justify-content-center"
+				style={{ padding: '0px 50px 50px 50px' }}
+			>
+				<Button size="lg" variant="primary" type="submit" onClick={handleSubmit}>
+					저장
+				</Button>
+				<p style={{ padding: 5 }}></p>
+				<Button size="lg" variant="secondary" type="button">
+					취소
+				</Button>
+			</div>
 		</div>
 	);
 };

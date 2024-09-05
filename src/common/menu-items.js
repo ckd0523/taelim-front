@@ -67,6 +67,12 @@ const MENU_ITEMS = [
 				parentKey: 'jsx',
 			},
 			{
+				key: 'ds-ExcelRegister',
+				label: '엑셀등록',
+				url: '/jsx/ExcelRegister',
+				parentKey: 'jsx',
+			},
+			{
 				key: 'ds-BackUpHistory',
 				label: '백업이력',
 				url: '/jsx/BackUpHistory',

@@ -9,6 +9,11 @@ import { CustomDatePicker } from '@/components/Form';
 import Select from 'react-select';
 
 import './ButtonStyle.css';
+
+const depreciationMethod = [
+	{ value: 'FIXED_AMOUNT', label: '정액법' },
+	{ value: 'FIXED_RATE', label: '정률법' },
+];
 function CustomToggle({ children, eventKey }) {
 	const decoratedOnClick = useAccordionButton(eventKey, () => console.log('totally custom'));
 	return (
@@ -27,10 +32,10 @@ const PurchasingInfo = ({ formData, handleChange }) => {
 	return (
 		<div>
 			<Accordion defaultActiveKey="1">
-				<Card>
-					<Card.Header>
-						<CustomToggle eventKey="1">재무 및 구매정보</CustomToggle>
-					</Card.Header>
+				<Card style={{ width: '120rem' }}>
+					<CustomToggle eventKey="1">
+						<Card.Header>재무 및 구매정보</Card.Header>
+					</CustomToggle>
 					<Accordion.Collapse eventKey="1">
 						<FormProvider {...methods}>
 							<Card.Body>
@@ -54,11 +59,11 @@ const PurchasingInfo = ({ formData, handleChange }) => {
 												hideAddon={true}
 												dateFormat="yyyy-MM-dd"
 												value={formData.purchaseDate}
-												onChange={(selectedOption) =>
+												onChange={(date) =>
 													handleChange({
 														target: {
 															name: 'purchaseDate',
-															value: selectedOption.value.toStringDate(),
+															value: date ? date : null,
 														},
 													})
 												}
@@ -78,7 +83,10 @@ const PurchasingInfo = ({ formData, handleChange }) => {
 											className="mb-3"
 											placeholder="감가상각방법을 선택해주세요"
 											name="depreciationMethod"
-											value={formData.depreciationMethod}
+											value={depreciationMethod.find(
+												(option) =>
+													option.value === formData.depreciationMethod
+											)}
 											onChange={(selectedOption) =>
 												handleChange({
 													target: {
@@ -87,10 +95,7 @@ const PurchasingInfo = ({ formData, handleChange }) => {
 													},
 												})
 											}
-											options={[
-												{ value: 'FIXED_AMOUNT', label: '정액법' },
-												{ value: 'FIXED_RATE', label: '정률법' },
-											]}
+											options={depreciationMethod}
 										></Select>
 										<TextInput
 											containerClass={'mb-3'}
@@ -125,11 +130,11 @@ const PurchasingInfo = ({ formData, handleChange }) => {
 												hideAddon={true}
 												dateFormat="yyyy-MM-dd"
 												value={formData.maintenancePeriod}
-												onChange={(selectedOption) =>
+												onChange={(date) =>
 													handleChange({
 														target: {
 															name: 'maintenancePeriod',
-															value: selectedOption.value.toStringDate(),
+															value: date ? date : null,
 														},
 													})
 												}

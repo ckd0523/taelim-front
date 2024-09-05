@@ -46,16 +46,91 @@ const assetClassification = [
 	{ value: 'CAR', label: '차량' },
 	{ value: 'OTHERASSETS', label: '기타' },
 ];
+const assetBasis = [
+	{ value: 'COMMON', label: '일반' },
+	{ value: 'TISAX', label: 'TISAX' },
+];
+const department = [
+	{ value: 'IT_DEPARTMENT', label: 'IT부' },
+	{
+		value: 'ADMINISTRATIVE_DEPARTMENT',
+		label: '관리부',
+	},
+	{ value: 'SALES_DEPARTMENT', label: '영업부' },
+	{ value: 'MARKETING_DEPARTMENT', label: '마케팅부' },
+	{ value: 'PRODUCTION_DEPARTMENT', label: '생산부' },
+	{ value: 'OPERATIONS_DEPARTMENT', label: '운영부' },
+	{
+		value: 'HUMAN_RESOURCES_DEPARTMENT',
+		label: '인사부',
+	},
+];
+const assetLocation = [
+	{
+		value: 'MAIN_B1_DOCUMENT_STORAGE',
+		label: '본관 지하 문서고',
+	},
+	{ value: 'MAIN_1F', label: '본관 1층' },
+	{
+		value: 'MAIN_1F_RECEPTION_ROOM',
+		label: '본관 1층 접견실',
+	},
+	{ value: 'MAIN_2F', label: '본관 2층' },
+	{
+		value: 'MAIN_2F_PRESIDENT_OFFICE',
+		label: ' 본관 2층 사장실',
+	},
+	{
+		value: 'MAIN_2F_RESEARCH_OFFICE',
+		label: '본관 2층 기술연구소 사무실',
+	},
+	{
+		value: 'MAIN_2F_CONFERENCE_ROOM',
+		label: '본관 2층 대회의실',
+	},
+	{
+		value: 'MAIN_2F_CEO_OFFICE',
+		label: '본관 2층 대표이사실',
+	},
+	{
+		value: 'MAIN_3F_STORAGE',
+		label: '본관 3층 창고',
+	},
+	{
+		value: 'MDCG',
+		label: 'MDCG',
+	},
+	{
+		value: 'FACTORY_BUILDING',
+		label: '공장동',
+	},
+];
+const ownership = [
+	{ value: 'OWNED', label: '소유' },
+	{ value: 'LEASED', label: '임대' },
+];
+const useState = [
+	{ value: 'NEW', label: '신규' },
+	{ value: 'IN_USE', label: '사용중' },
+	{ value: 'UNDER_MAINTENANCE', label: '유지관리 중' },
+	{ value: 'RESERVED', label: '예비' },
+	{ value: 'RETIRED_DISCARDED', label: '퇴직/폐기' },
+];
+const operationStatus = [
+	{ value: 'OPERATING', label: '가동중' },
+	{ value: 'NOT_OPERATING', label: '미가동' },
+	{ value: 'MALFUNCTION', label: '고장' },
+];
 //기본 자산 정보 및 관리 정보 컬럼
 const BasisAssetInfo = ({ formData, handleChange }) => {
 	const methods = useForm();
 	return (
 		<div>
 			<Accordion defaultActiveKey="0">
-				<Card>
-					<Card.Header>
-						<CustomToggle eventKey="0">기본 자산 정보 및 관리 정보</CustomToggle>
-					</Card.Header>
+				<Card style={{ width: '120rem' }}>
+					<CustomToggle eventKey="0">
+						<Card.Header>기본 자산 정보 및 관리 정보</Card.Header>
+					</CustomToggle>
 					<Accordion.Collapse eventKey="0">
 						<FormProvider {...methods}>
 							<Card.Body>
@@ -66,7 +141,10 @@ const BasisAssetInfo = ({ formData, handleChange }) => {
 											className="mb-3"
 											placeholder="자산분류를 선택해주세요"
 											name="assetClassification"
-											value={formData.assetClassification}
+											value={assetClassification.find(
+												(option) =>
+													option.value === formData.assetClassification
+											)}
 											onChange={(selectedOption) =>
 												handleChange({
 													target: {
@@ -91,7 +169,9 @@ const BasisAssetInfo = ({ formData, handleChange }) => {
 											className="mb-3"
 											placeholder="자산기준을 선택해주세요"
 											name="assetBasis"
-											value={formData.assetBasis}
+											value={assetBasis.find(
+												(option) => option.value === formData.assetBasis
+											)}
 											onChange={(selectedOption) =>
 												handleChange({
 													target: {
@@ -100,10 +180,7 @@ const BasisAssetInfo = ({ formData, handleChange }) => {
 													},
 												})
 											}
-											options={[
-												{ value: 'COMMON', label: '일반' },
-												{ value: 'TISAX', label: 'TISAX' },
-											]}
+											options={assetBasis}
 										></Select>
 										<TextInput
 											label="제조사"
@@ -128,7 +205,9 @@ const BasisAssetInfo = ({ formData, handleChange }) => {
 											className="mb-3"
 											placeholder="부서를 선택해주세요"
 											name="department"
-											value={formData.department}
+											value={department.find(
+												(option) => option.value === formData.department
+											)}
 											onChange={(selectedOption) =>
 												handleChange({
 													target: {
@@ -137,31 +216,16 @@ const BasisAssetInfo = ({ formData, handleChange }) => {
 													},
 												})
 											}
-											options={[
-												{ value: 'IT_DEPARTMENT', label: 'IT부' },
-												{
-													value: 'ADMINISTRATIVE_DEPARTMENT',
-													label: '관리부',
-												},
-												{ value: 'SALES_DEPARTMENT', label: '영업부' },
-												{
-													value: 'MARKETING_DEPARTMENT',
-													label: '마케팅부',
-												},
-												{ value: 'PRODUCTION_DEPARTMENT', label: '생산부' },
-												{ value: 'OPERATIONS_DEPARTMENT', label: '운영부' },
-												{
-													value: 'HUMAN_RESOURCES_DEPARTMENT',
-													label: '인사부',
-												},
-											]}
+											options={department}
 										></Select>
 										<p className="mb-2 c fw-bold">위치</p>
 										<Select
 											className="mb-3"
 											placeholder="위치를 선택해주세요"
 											name="assetLocation"
-											value={formData.assetLocation}
+											value={assetLocation.find(
+												(option) => option.value === formData.assetLocation
+											)}
 											onChange={(selectedOption) =>
 												handleChange({
 													target: {
@@ -170,46 +234,7 @@ const BasisAssetInfo = ({ formData, handleChange }) => {
 													},
 												})
 											}
-											options={[
-												{
-													value: 'MAIN_B1_DOCUMENT_STORAGE',
-													label: '본관 지하 문서고',
-												},
-												{ value: 'MAIN_1F', label: '본관 1층' },
-												{
-													value: 'MAIN_1F_RECEPTION_ROOM',
-													label: '본관 1층 접견실',
-												},
-												{ value: 'MAIN_2F', label: '본관 2층' },
-												{
-													value: 'MAIN_2F_PRESIDENT_OFFICE',
-													label: ' 본관 2층 사장실',
-												},
-												{
-													value: 'MAIN_2F_RESEARCH_OFFICE',
-													label: '본관 2층 기술연구소 사무실',
-												},
-												{
-													value: 'MAIN_2F_CONFERENCE_ROOM',
-													label: '본관 2층 대회의실',
-												},
-												{
-													value: 'MAIN_2F_CEO_OFFICE',
-													label: '본관 2층 대표이사실',
-												},
-												{
-													value: 'MAIN_3F_STORAGE',
-													label: '본관 3층 창고',
-												},
-												{
-													value: 'MDCG',
-													label: 'MDCG',
-												},
-												{
-													value: 'FACTORY_BUILDING',
-													label: '공장동',
-												},
-											]}
+											options={assetLocation}
 										></Select>
 										<TextInput
 											label="사용자"
@@ -257,7 +282,9 @@ const BasisAssetInfo = ({ formData, handleChange }) => {
 											className="mb-3"
 											placeholder="소유권을 선택해주세요"
 											name="ownership"
-											value={formData.ownership}
+											value={ownership.find(
+												(option) => option.value === formData.ownership
+											)}
 											onChange={(selectedOption) =>
 												handleChange({
 													target: {
@@ -266,17 +293,16 @@ const BasisAssetInfo = ({ formData, handleChange }) => {
 													},
 												})
 											}
-											options={[
-												{ value: 'OWNED', label: '소유' },
-												{ value: 'LEASED', label: '임대' },
-											]}
+											options={ownership}
 										></Select>
 										<p className="mb-2 c fw-bold">사용상태</p>
 										<Select
 											className="mb-3"
 											placeholder="사용상태를 선택해주세요"
 											name="useState"
-											value={formData.useState}
+											value={useState.find(
+												(option) => option.value === formData.useState
+											)}
 											onChange={(selectedOption) =>
 												handleChange({
 													target: {
@@ -285,23 +311,17 @@ const BasisAssetInfo = ({ formData, handleChange }) => {
 													},
 												})
 											}
-											options={[
-												{ value: 'NEW', label: '신규' },
-												{ value: 'IN_USE', label: '사용중' },
-												{
-													value: 'UNDER_MAINTENANCE',
-													label: '유지관리 중',
-												},
-												{ value: 'RESERVED', label: '예비' },
-												{ value: 'RETIRED_DISCARDED', label: '퇴직/폐기' },
-											]}
+											options={useState}
 										></Select>
 										<p className="mb-2 c fw-bold">가동여부</p>
 										<Select
 											className="mb-3"
 											placeholder="가동여부를 선택해주세요"
 											name="operationStatus"
-											value={formData.operationStatus}
+											value={operationStatus.find(
+												(option) =>
+													option.value === formData.operationStatus
+											)}
 											onChange={(selectedOption) =>
 												handleChange({
 													target: {
@@ -310,11 +330,7 @@ const BasisAssetInfo = ({ formData, handleChange }) => {
 													},
 												})
 											}
-											options={[
-												{ value: 'OPERATING', label: '가동중' },
-												{ value: 'NOT_OPERATING', label: '미가동' },
-												{ value: 'MALFUNCTION', label: '고장' },
-											]}
+											options={operationStatus}
 										></Select>
 										<div className="form-group mb-3">
 											<label className="form-label">도입일자</label> <br />
@@ -322,13 +338,12 @@ const BasisAssetInfo = ({ formData, handleChange }) => {
 												type="date"
 												name="introducedDate"
 												hideAddon={true}
-												dateFormat="yyyy-MM-dd"
 												value={formData.introducedDate}
-												onChange={(selectedOption) =>
+												onChange={(date) =>
 													handleChange({
 														target: {
 															name: 'introducedDate',
-															value: selectedOption.value.toStringDate(),
+															value: date ? date : null,
 														},
 													})
 												}
@@ -377,14 +392,17 @@ const BasisAssetInfo = ({ formData, handleChange }) => {
 					</Accordion.Collapse>
 				</Card>
 			</Accordion>
-			<br />
-			<PurchasingInfo formData={formData} handleChange={handleChange} />
-			<br />
-			<AssetCategories
-				formData={formData}
-				assetClassification={formData.assetClassification}
-				handleChange={handleChange}
-			/>
+
+			<div className="d-flex justify-content-center">
+				<PurchasingInfo formData={formData} handleChange={handleChange} />
+			</div>
+			<div className="d-flex justify-content-center">
+				<AssetCategories
+					formData={formData}
+					assetClassification={formData.assetClassification}
+					handleChange={handleChange}
+				/>
+			</div>
 		</div>
 	);
 };

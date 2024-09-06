@@ -14,16 +14,16 @@ const BackUpHistory = () => {
 	const [backUpDate, setBackUpDate] = useState('');
 	const [backUpScope, setackUpScope] = useState('');
 
-	// useEffect(() => {
-	// 	// 백엔드에서 데이터를 가져오는 API 호출
-	// 	fetch('http://localhost:8080/backUpHistory')
-	// 		.then((response) => response.json())
-	// 		.then((data) => {
-	// 			// 데이터 상태 업데이트
-	// 			setData(data);
-	// 		})
-	// 		.catch((error) => console.error('Error fetching data:', error));
-	// }, []);
+	useEffect(() => {
+		// 백엔드에서 데이터를 가져오는 API 호출
+		fetch('http://localhost:8080/backUpHistory')
+			.then((response) => response.json())
+			.then((data) => {
+				// 데이터 상태 업데이트
+				setData(data);
+			})
+			.catch((error) => console.error('Error fetching data:', error));
+	}, []);
 
 	useEffect(() => {
 		// 데이터가 있을 때만 DataTables 초기화 또는 갱신
@@ -66,7 +66,10 @@ const BackUpHistory = () => {
 
 	return (
 		<div>
-			<table ref={tableRef} className="display" style={{ width: '100%' }}></table>
+			<div>
+				<table ref={tableRef} className="display" style={{ width: '100%' }}></table>
+			</div>
+
 		</div>
 	);
 };

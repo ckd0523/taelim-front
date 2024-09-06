@@ -170,7 +170,8 @@ const ModalsWithPages = () => {
 								</label>
 								<input
 									className="form-control"
-									type="email"
+									type="number"
+									min={0}
 									id="username"
 									required
 									placeholder="Michael Zenaty"

@@ -6,6 +6,7 @@ const ProductDetailsEcom = lazy(() => import('./ProductDetails'));
 const AssetRegister = lazy(() => import('./assetCheck'));
 const BackupHistory = lazy(() => import('./BackupHistory'));
 const AssetSurveyHistory = lazy(() => import('./AssetSurvey'));
+const DemandHistory = lazy(() => import('./Demand'));
 
 export default function jsx() {
 	return (
@@ -17,6 +18,7 @@ export default function jsx() {
 				<Route path="ProductDetailsEcom" element={<ProductDetailsEcom />} />
 				<Route path="BackupHistory" element={<BackupHistory />} />
 				<Route path="AssetSurveyHistory" element={<AssetSurveyHistory />} />
+				<Route path="DemandHistory" element={<DemandHistory />} />
 			</Route>
 		</Routes>
 	);

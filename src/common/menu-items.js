@@ -78,6 +78,12 @@ const MENU_ITEMS = [
 				url: '/jsx/AssetSurveyHistory',
 				parentKey: 'jsx',
 			},
+			{
+				key: 'ds-DemandHistory',
+				label: '요청이력',
+				url: '/jsx/DemandHistory',
+				parentKey: 'jsx',
+			},
 		],
 	},
 	{

@@ -96,6 +96,12 @@ const MENU_ITEMS = [
 				url: '/jsx/DeleteHistory',
 				parentKey: 'jsx',
 			},
+			{
+				key: 'ds-Expand',
+				label: '확장',
+				url: '/jsx/Expand',
+				parentKey: 'jsx',
+			},
 		],
 	},
 	{

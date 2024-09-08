@@ -7,6 +7,8 @@ const AssetRegister = lazy(() => import('./assetCheck'));
 const BackupHistory = lazy(() => import('./BackupHistory'));
 const AssetSurveyHistory = lazy(() => import('./AssetSurvey'));
 const DemandHistory = lazy(() => import('./Demand'));
+const UpdateHistory = lazy(() => import('./UpdateHistory'));
+const DeleteHistory = lazy(() => import('./DeleteHistory'));
 
 export default function jsx() {
 	return (
@@ -19,6 +21,8 @@ export default function jsx() {
 				<Route path="BackupHistory" element={<BackupHistory />} />
 				<Route path="AssetSurveyHistory" element={<AssetSurveyHistory />} />
 				<Route path="DemandHistory" element={<DemandHistory />} />
+				<Route path="UpdateHistory" element={<UpdateHistory />} />
+				<Route path="DeleteHistory" element={<DeleteHistory />} />
 			</Route>
 		</Routes>
 	);

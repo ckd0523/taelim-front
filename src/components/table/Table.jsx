@@ -123,7 +123,11 @@ const Table = (props) => {
 						id: 'expander', // Make sure it has an ID
 						Header: ({ getToggleAllRowsExpandedProps, isAllRowsExpanded }) => (
 							<span {...getToggleAllRowsExpandedProps()}>
-								{isAllRowsExpanded ? '-' : '+'}
+								{isAllRowsExpanded ? (
+									<i className={`ri-arrow-up-s-fill`} />
+								) : (
+									<i className={`ri-arrow-down-s-fill`} />
+								)}
 							</span>
 						),
 						Cell: ({ row }) =>
@@ -140,7 +144,11 @@ const Table = (props) => {
 										},
 									})}
 								>
-									{row.isExpanded ? '-' : '+'}
+									{row.isExpanded ? (
+										<i className={`ri-arrow-up-s-fill`} />
+									) : (
+										<i className={`ri-arrow-down-s-fill`} />
+									)}
 								</span>
 							) : null,
 					},

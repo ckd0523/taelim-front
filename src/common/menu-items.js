@@ -84,6 +84,18 @@ const MENU_ITEMS = [
 				url: '/jsx/DemandHistory',
 				parentKey: 'jsx',
 			},
+			{
+				key: 'ds-UpdateHistory',
+				label: '수정이력',
+				url: '/jsx/UpdateHistory',
+				parentKey: 'jsx',
+			},
+			{
+				key: 'ds-DeleteHistory',
+				label: '폐기이력',
+				url: '/jsx/DeleteHistory',
+				parentKey: 'jsx',
+			},
 		],
 	},
 	{

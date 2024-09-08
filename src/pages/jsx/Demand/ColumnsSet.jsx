@@ -1,14 +1,6 @@
 import { Link } from 'react-router-dom';
 import classNames from 'classnames';
-
-/* order column render */
-const OrderColumn = ({ row }) => {
-	return (
-		<Link to="" className="text-body fw-bold">
-			{row.original.order_id}
-		</Link>
-	);
-};
+import { useCallback } from 'react';
 
 /* status column render */
 const StatusColumn = ({ row }) => {
@@ -29,11 +21,23 @@ const StatusColumn = ({ row }) => {
 };
 
 // get all columns
-const columns = [
+const columns = (setModalData, setShowModal) => [
 	{
 		Header: '요청구분',
 		accessor: 'demandType',
 		defaultCanSort: true,
+		Cell: ({ row }) => {
+			const handleRowClick = useCallback(() => {
+				setModalData(row.original);
+				setShowModal(true);
+			}, [row.original]);
+
+			return (
+				<span onClick={handleRowClick} style={{ cursor: 'pointer', color: 'blue' }}>
+					{row.original.demandType}
+				</span>
+			);
+		},
 	},
 	{
 		Header: '요청일자',

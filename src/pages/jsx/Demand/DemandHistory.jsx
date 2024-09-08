@@ -1,8 +1,9 @@
-import { Row, Col, Card, Button } from 'react-bootstrap';
+import { Row, Col, Card, Button, Modal } from 'react-bootstrap';
 import { Table, PageBreadcrumb, CustomDatePicker, TextInput, Form as RHForm } from '@/components';
 import { columns } from './ColumnsSet';
 import { useState } from 'react';
 import { demands } from './data';
+import { InfoModal, ActionModal } from './DemandModal';
 
 import Select from 'react-select';
 
@@ -13,9 +14,34 @@ const DemandHistory = () => {
 	const [selectedStatus, setSelectedStatus] = useState('');
 	const [selectedStartDate, setSelectedStartDate] = useState(null);
 	const [selectedEndDate, setSelectedEndDate] = useState(null);
+	const [showModal, setShowModal] = useState(false);
+	const [modalData, setModalData] = useState(null);
+	const [showActModal, setShowActModal] = useState(false);
+	const [actionType, setActionType] = useState(null); // 'approve' or 'reject'
+
+	const handleOpenModal = (type) => {
+		setActionType(type);
+		setShowActModal(true);
+	};
+
+	const handleModalSubmit = (reason) => {
+		if (actionType === 'approve') {
+			// 승인 처리 로직
+			console.log('승인 사유:', reason);
+		} else if (actionType === 'reject') {
+			// 거절 처리 로직
+			console.log('거절 사유:', reason);
+		}
+		setShowActModal(false);
+	};
 
 	const handleChange = (e) => {
 		setSelectedRequester(e.target.value);
+	};
+
+	const handleRowClick = (rowData) => {
+		setModalData(rowData);
+		setShowModal(true);
 	};
 
 	const handleSearch = () => {
@@ -25,7 +51,7 @@ const DemandHistory = () => {
 				(selectedRequester === '' || demands.demandBy.includes(selectedRequester)) &&
 				(selectedStatus === '' || demands.demandStatus.includes(selectedStatus)) &&
 				(selectedStartDate === null || new Date(demands.demandDate) >= selectedStartDate) &&
-				(selectedEndDate === null || new Date(demands.demandDate) >= selectedEndDate)
+				(selectedEndDate === null || new Date(demands.demandDate) <= selectedEndDate)
 			);
 		});
 		console.log(selectedOrderType);
@@ -134,17 +160,24 @@ const DemandHistory = () => {
 							</RHForm>
 							<Row className="g-0">
 								<Col className="d-flex align-items-center justify-content-end mb-2">
-									<Button variant="secondary" type="button" className="me-2">
+									<Button
+										variant="secondary"
+										onClick={() => handleOpenModal('approve')}
+										className="me-2"
+									>
 										승인
 									</Button>
-									<Button variant="danger" type="button">
+									<Button
+										variant="danger"
+										onClick={() => handleOpenModal('reject')}
+									>
 										거절
 									</Button>
 								</Col>
 							</Row>
 							<Row>
 								<Table
-									columns={columns}
+									columns={columns(setModalData, setShowModal)}
 									data={demandsList}
 									pageSize={10}
 									isExpandable={true}
@@ -155,6 +188,18 @@ const DemandHistory = () => {
 									searchBoxClass="mb-2"
 								/>
 							</Row>
+							{/* Modal */}
+							<InfoModal
+								show={showModal}
+								handleClose={() => setShowModal(false)}
+								modalData={modalData}
+							/>
+							<ActionModal
+								show={showActModal}
+								handleClose={() => setShowActModal(false)}
+								actionType={actionType}
+								handleSubmit={handleModalSubmit}
+							/>
 						</Card.Body>
 					</Card>
 				</Col>

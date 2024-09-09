@@ -11,8 +11,8 @@ import {
 import classNames from 'classnames';
 import axios from 'axios';
 import { Pagination } from '@/components';
-import Stocks from './Stocks';
-//import RowDetails from './RowDetails';
+//import Stocks from './Stocks';
+import RowDetails from './RowDetails';
 
 const GlobalFilter = ({ preGlobalFilteredRows, globalFilter, setGlobalFilter, searchBoxClass }) => {
 	const count = preGlobalFilteredRows.length;
@@ -212,9 +212,10 @@ const Table = (props) => {
 	const fetchRowData = async (assetCode) => {
 		try {
 			const response = await axios.get(`http://localhost:8080/asset/${assetCode}`);
-			setSelectedRowData(response.data);
+			return response.data;
 		} catch (error) {
 			console.error('자산 데이터를 가져오는 중 오류 발생:', error);
+			return null;
 		}
 	};
 
@@ -304,6 +305,18 @@ const Table = (props) => {
 
 	const rows = pagination ? dataTable.page : dataTable.rows;
 
+	useEffect(() => {
+		const expandedRows = rows.filter((row) => row.isExpanded);
+		if (expandedRows.length > 0) {
+			const assetCode = expandedRows[0]?.original?.assetCode;
+			if (assetCode) {
+				fetchRowData(assetCode).then((data) => {
+					setSelectedRowData(data); // 선택된 행 데이터 상태 업데이트
+				});
+			}
+		}
+	}, [rows]); // rows 변경시마다 실행됨 (특히 row.isExpanded 변경시 실행)
+
 	return (
 		<>
 			{isSearchable && (
@@ -352,10 +365,9 @@ const Table = (props) => {
 										))}
 									</tr>
 									{/* 확장된 내용 렌더링 */}
-									{row.isExpanded && isExpandable && (
+									{row.isExpanded && (
 										<tr>
 											<td colSpan={dataTable.headerGroups[0].headers.length}>
-												{/* 확장된 내용 */}
 												<div>
 													<RowDetails
 														row={row}
@@ -364,7 +376,6 @@ const Table = (props) => {
 														importanceRating={importanceRating}
 														dynamicColumns={dynamicColumns}
 													/>
-													{/* <Stocks /> */}
 												</div>
 											</td>
 										</tr>

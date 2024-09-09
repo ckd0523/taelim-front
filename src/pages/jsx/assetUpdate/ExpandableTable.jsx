@@ -12,7 +12,7 @@ import classNames from 'classnames';
 import axios from 'axios';
 import { Pagination } from '@/components';
 import Stocks from './Stocks';
-import RowDetails from './RowDetails';
+//import RowDetails from './RowDetails';
 
 const GlobalFilter = ({ preGlobalFilteredRows, globalFilter, setGlobalFilter, searchBoxClass }) => {
 	const count = preGlobalFilteredRows.length;

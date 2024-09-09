@@ -184,6 +184,7 @@ const AssetPage = () => {
 		try {
 			const response = await axios.get(`http://localhost:8080/asset/${assetCode}`);
 			setSelectedRowData(response.data);
+			console.log(response.data);
 		} catch (error) {
 			console.error('자산 데이터를 가져오는 중 오류 발생:', error);
 		}

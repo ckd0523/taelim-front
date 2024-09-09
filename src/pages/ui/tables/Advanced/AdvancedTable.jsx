@@ -71,6 +71,7 @@ const AdvancedTable = () => {
                 isSortable={true}
                 pagination={true}
               />
+
             </Card.Body>
           </Card>
         </Col>

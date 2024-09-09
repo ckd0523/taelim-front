@@ -1,1 +1,1 @@
-export { AssetSurveyHistory as default } from './AssetSurveyHistory';
+export { AssetSurveyHistory2 as default } from './AssetSurveyHistory2';

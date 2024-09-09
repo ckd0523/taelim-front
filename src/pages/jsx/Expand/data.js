@@ -1,10 +1,11 @@
 const assetUpdates = [
 	{
 		UpdateNo: 1,
-		AssetCode: 'A001',
+		AssetCode: 'ASSET001',
 		AssetName: '프린터',
 		UpdateDate: '2024-09-06',
 		UpdateBy: '이창현',
+		AssetClassification: 'SOFTWARE',
 		UpdateReason: '펌웨어 업데이트',
 	},
 	{
@@ -161,4 +162,13 @@ const assetUpdates = [
 	},
 ];
 
-export { assetUpdates };
+const quickAccessFiles = [
+	{
+		icon: 'mdi mdi-file-pdf-box font-16',
+		name: 'Docs PDF',
+		size: '7.5 MB',
+		location: '[태림]화면설계서_V4_240813.pdf',
+	},
+];
+
+export { assetUpdates, quickAccessFiles };

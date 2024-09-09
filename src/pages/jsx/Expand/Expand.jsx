@@ -1,11 +1,9 @@
-import { Row, Col, Card, Button, Modal } from 'react-bootstrap';
-import { Table, PageBreadcrumb, CustomDatePicker, TextInput, Form as RHForm } from '@/components';
+import { Row, Col, Card, Button } from 'react-bootstrap';
+import { PageBreadcrumb, CustomDatePicker, TextInput, Form as RHForm } from '@/components';
 import { columns } from './ColumnsSet';
 import { useState } from 'react';
 import { assetUpdates } from './data';
-import { InfoModal } from './UpdateHistoryModal';
-
-import Select from 'react-select';
+import { Table } from './ExpandableTable';
 
 const Expand = () => {
 	const [UpdateList, setUpdateList] = useState(assetUpdates);
@@ -15,7 +13,6 @@ const Expand = () => {
 	const [UpdateBy, setUpdateBy] = useState('');
 	const [selectedStartDate, setSelectedStartDate] = useState(null);
 	const [selectedEndDate, setSelectedEndDate] = useState(null);
-	const [expandedRow, setExpandedRow] = useState(null); // 클릭된 행 상태
 
 	const handleFormChange = (e) => {
 		const { name, value } = e.target;
@@ -51,11 +48,6 @@ const Expand = () => {
 		});
 
 		setUpdateList(filteredData);
-	};
-
-	const handleRowClick = (rowId) => {
-		setExpandedRow(expandedRow === rowId ? null : rowId); // 같은 행 클릭 시 닫기
-		console.log('123');
 	};
 
 	return (
@@ -154,43 +146,14 @@ const Expand = () => {
 
 							<Row>
 								<Table
-									columns={columns(handleRowClick)}
-									data={UpdateList.map((row) => ({
-										...row,
-										isExpanded: expandedRow === row.UpdateNo, // 확장 여부 추가
-									}))}
+									columns={columns}
+									data={UpdateList}
 									pageSize={10}
 									isSortable={true}
 									pagination={true}
 									theadClass="table-light"
 									searchBoxClass="mb-2"
-									rowRenderer={(row) => (
-										<>
-											<tr key={row.UpdateNo}>
-												{/* 기본 데이터 행 */}
-												<td>{row.UpdateNo}</td>
-												<td>{row.AssetCode}</td>
-												<td>{row.AssetName}</td>
-												<td>{row.UpdateDate}</td>
-												<td>{row.UpdateBy}</td>
-												<td>{row.UpdateReason}</td>
-											</tr>
-
-											{/* 확장된 내용이 있으면 그 아래에 추가적으로 렌더링 */}
-											{row.isExpanded && (
-												<tr>
-													<td colSpan={6}>
-														<div>
-															<p>AssetCode: {row.AssetCode}</p>
-															<p>수정일자: {row.UpdateDate}</p>
-															<p>수정요청자: {row.UpdateBy}</p>
-															<p>수정사유: {row.UpdateReason}</p>
-														</div>
-													</td>
-												</tr>
-											)}
-										</>
-									)}
+									isExpandable={true} // 확장 가능
 								/>
 							</Row>
 						</Card.Body>

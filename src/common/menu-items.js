@@ -97,6 +97,12 @@ const MENU_ITEMS = [
 				parentKey: 'jsx',
 			},
 			{
+				key: 'ds-AssetPage',
+				label: '테스트용',
+				url: '/jsx/AssetPage',
+				parentKey: 'jsx',
+			},
+			{
 				key: 'ds-Expand',
 				label: '확장',
 				url: '/jsx/Expand',

@@ -9,10 +9,10 @@ import {
 	useExpanded,
 } from 'react-table';
 import classNames from 'classnames';
+import axios from 'axios';
 import { Pagination } from '@/components';
 import Stocks from './Stocks';
 import RowDetails from './RowDetails';
-import axios from 'axios';
 
 const GlobalFilter = ({ preGlobalFilteredRows, globalFilter, setGlobalFilter, searchBoxClass }) => {
 	const count = preGlobalFilteredRows.length;
@@ -159,7 +159,6 @@ const getClassificationColumns = (classification) => {
 			return [];
 	}
 };
-
 // 중요성 점수를 계산
 const calculateImportanceScore = (selectedRowData) => {
 	if (selectedRowData) {
@@ -200,31 +199,24 @@ const Table = (props) => {
 	const isSelectable = props['isSelectable'] || false;
 	const isExpandable = props['isExpandable'] || false;
 	const sizePerPageList = props['sizePerPageList'] || [];
-	// 선택된 행 데이터
+	const [selectedRowData, setSelectedRowData] = useState(null); // 선택된 행 데이터
 
-	// 선택된 행 데이터와 로딩 상태
-	// const [expandedRowData, setExpandedRowData] = useState({});
-	// const [loadingRow, setLoadingRow] = useState(null);
+	const importanceScore = calculateImportanceScore(selectedRowData);
+	const importanceRating = calculateImportanceRating(importanceScore);
+	const classification = selectedRowData?.assetClassification;
+	const dynamicColumns = React.useMemo(
+		() => getClassificationColumns(classification),
+		[classification]
+	);
 
-	// const fetchRowData = async (assetCode) => {
-	// 	try {
-	// 		setLoadingRow(assetCode);
-	// 		const response = await axios.get(`http://localhost:8080/asset/${assetCode}`);
-	// 		setExpandedRowData((prev) => ({ ...prev, [assetCode]: response.data }));
-	// 	} catch (error) {
-	// 		console.error('자산 데이터를 가져오는 중 오류 발생:', error);
-	// 	} finally {
-	// 		setLoadingRow(null);
-	// 	}
-	// };
-
-	// const importanceScore = calculateImportanceScore(selectedRowData);
-	// const importanceRating = calculateImportanceRating(importanceScore);
-	// const classification = selectedRowData?.assetClassification;
-	// const dynamicColumns = React.useMemo(
-	// 	() => getClassificationColumns(classification),
-	// 	[classification]
-	// );
+	const fetchRowData = async (assetCode) => {
+		try {
+			const response = await axios.get(`http://localhost:8080/asset/${assetCode}`);
+			setSelectedRowData(response.data);
+		} catch (error) {
+			console.error('자산 데이터를 가져오는 중 오류 발생:', error);
+		}
+	};
 
 	let otherProps = {};
 
@@ -300,15 +292,7 @@ const Table = (props) => {
 								{row.isExpanded ? (
 									<i className={`ri-arrow-up-s-fill`} />
 								) : (
-									<i
-										className={`ri-arrow-down-s-fill`}
-										// onClick={() => {
-										// 	if (!row.isExpanded) {
-										// 		// 행이 확장되지 않은 경우에만 데이터 요청
-										// 		fetchRowData(row.original.AssetCode);
-										// 	}
-										// }}
-									/>
+									<i className={`ri-arrow-down-s-fill`} />
 								)}
 							</span>
 						),
@@ -322,7 +306,6 @@ const Table = (props) => {
 
 	return (
 		<>
-			{/* 검색 필터 */}
 			{isSearchable && (
 				<GlobalFilter
 					preGlobalFilteredRows={dataTable.preGlobalFilteredRows}
@@ -332,7 +315,6 @@ const Table = (props) => {
 				/>
 			)}
 
-			{/* 테이블 */}
 			<div className="table-responsive">
 				<table
 					{...dataTable.getTableProps()}
@@ -373,17 +355,16 @@ const Table = (props) => {
 									{row.isExpanded && isExpandable && (
 										<tr>
 											<td colSpan={dataTable.headerGroups[0].headers.length}>
+												{/* 확장된 내용 */}
 												<div>
 													<RowDetails
 														row={row}
-														//selectedRowData={selectedRowData}
-														// importanceScore={importanceScore}
-														// importanceRating={importanceRating}
-														dynamicColumns={getClassificationColumns(
-															row.original.AssetClassification
-														)}
-														AssetCode={row.original.AssetCode}
+														selectedRowData={selectedRowData}
+														importanceScore={importanceScore}
+														importanceRating={importanceRating}
+														dynamicColumns={dynamicColumns}
 													/>
+													{/* <Stocks /> */}
 												</div>
 											</td>
 										</tr>

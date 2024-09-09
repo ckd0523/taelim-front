@@ -1,0 +1,13 @@
+/* src/assets/css/custom-table.css */
+
+/* 선택적으로 세부정보 표의 가운데 정렬을 추가로 정의할 수 있습니다. */
+.table-detail th {
+	text-align: center;
+	background-color: #e3f2fd !important; /* 파란색 배경 */
+	font-weight: bold;
+}
+
+.table-detail td {
+	text-align: center;
+	background-color: #e3f2fd !important; /* 파란색 배경 */
+}

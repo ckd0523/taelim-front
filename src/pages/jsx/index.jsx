@@ -10,6 +10,7 @@ const DemandHistory = lazy(() => import('./Demand'));
 const UpdateHistory = lazy(() => import('./UpdateHistory'));
 const DeleteHistory = lazy(() => import('./DeleteHistory'));
 const Expand = lazy(() => import('./Expand'));
+const AssetPage = lazy(() => import('./assetUpdate'));
 
 export default function jsx() {
 	return (
@@ -25,6 +26,7 @@ export default function jsx() {
 				<Route path="UpdateHistory" element={<UpdateHistory />} />
 				<Route path="DeleteHistory" element={<DeleteHistory />} />
 				<Route path="Expand" element={<Expand />} />
+				<Route path="AssetPage" element={<AssetPage />} />
 			</Route>
 		</Routes>
 	);

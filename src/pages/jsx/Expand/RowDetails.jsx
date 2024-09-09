@@ -1,21 +1,19 @@
 import React, { useState } from 'react';
 import { Table as BootstrapTable, Row, Col, Button, Form, Modal } from 'react-bootstrap';
-import './style.css';
 
 const RowDetails = ({
-	row, // row 객체가 제대로 전달되는지 확인
-	selectedRowData, // 선택된 행의 데이터
-	importanceScore, // 중요성 점수
-	importanceRating, // 중요성 등급
-	dynamicColumns, // 동적 열 정보
-	onClose, // 닫기 버튼 동작
+	row,
+	selectedRowData,
+	importanceScore,
+	importanceRating,
+	dynamicColumns,
+	onClose,
 }) => {
 	const [isEditing, setIsEditing] = useState(false);
 	const [formData, setFormData] = useState(selectedRowData || {});
 	const [showModal, setShowModal] = useState(false); // 모달 열기/닫기 상태
 
-	// row가 존재하지 않거나 isExpanded가 false일 경우 null을 반환하여 아무것도 렌더링하지 않음
-	if (!row || !row.isExpanded || !selectedRowData) return null;
+	if (!row.isExpanded || !selectedRowData) return null;
 
 	const handleEditClick = () => {
 		setIsEditing(true);
@@ -95,8 +93,8 @@ const RowDetails = ({
 						<td>{renderCellContent('confidentiality')}</td>
 						<td>{renderCellContent('integrity')}</td>
 						<td>{renderCellContent('availability')}</td>
-						<td>{importanceScore || 'N/A'}</td>
-						<td>{importanceRating || 'N/A'}</td>
+						<td>{renderCellContent('importanceScore')}</td>
+						<td>{renderCellContent('importanceRating')}</td>
 						<td>{renderCellContent('note')}</td>
 					</tr>
 				</tbody>

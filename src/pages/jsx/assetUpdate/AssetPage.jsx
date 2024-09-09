@@ -250,19 +250,130 @@ const AssetPage = () => {
 
 			<Row>
 				<Col>
-					{/* 검색 입력 */}
-					<Form.Group className="mb-3 d-flex align-items-center">
-						<Form.Label htmlFor="search" className="me-2">
-							검색 :
-						</Form.Label>
-						<Form.Control
-							id="search"
-							type="text"
-							placeholder="검색어를 입력하세요..."
-							value={searchTerm}
-							onChange={(event) => setSearchTerm(event.target.value)}
-							style={{ width: '20%' }}
-						/>
+					<div
+						style={{
+							border: '1px solid #000000', // 실선의 색상
+							borderRadius: '8px', // 둥근 모서리
+							backgroundColor: '#f2f7ff', // 옅은 파란색 배경
+							padding: '16px', // 여백 추가
+							marginBottom: '20px', // 아래 여백 추가
+						}}
+					>
+						{/* 자산명, 자산위치, 사용자, 부서명 */}
+						<Form.Group className="mb-3">
+							<Row className="align-items-center">
+								<Col md={3} className="d-flex align-items-center">
+									<Form.Label htmlFor="assetName" className="me-2 mb-0">
+										자산명
+									</Form.Label>
+									<Form.Control
+										id="assetName"
+										type="text"
+										placeholder="자산명을 입력하세요..."
+										value={searchTerm}
+										onChange={(event) => setSearchTerm(event.target.value)}
+										style={{ width: '40%' }}
+									/>
+								</Col>
+
+								<Col md={3} className="d-flex align-items-center">
+									<Form.Label htmlFor="assetLocation" className="me-2 mb-0">
+										자산위치
+									</Form.Label>
+									<Form.Select id="assetLocation" style={{ width: '40%' }}>
+										<option>위치를 선택하세요</option>
+										<option value="location1">위치1</option>
+										<option value="location2">위치2</option>
+									</Form.Select>
+								</Col>
+
+								<Col md={3} className="d-flex align-items-center">
+									<Form.Label htmlFor="userName" className="me-2 mb-0">
+										사용자
+									</Form.Label>
+									<Form.Control
+										id="userName"
+										type="text"
+										placeholder="사용자명을 입력하세요..."
+										style={{ width: '40%' }}
+									/>
+								</Col>
+
+								<Col md={3} className="d-flex align-items-center">
+									<Form.Label htmlFor="departmentName" className="me-2 mb-0">
+										부서명
+									</Form.Label>
+									<Form.Select id="departmentName" style={{ width: '40%' }}>
+										<option>부서를 선택하세요</option>
+										<option value="dept1">부서1</option>
+										<option value="dept2">부서2</option>
+									</Form.Select>
+								</Col>
+							</Row>
+						</Form.Group>
+
+						{/* 취득일자 및 가치 */}
+						<Form.Group className="mb-3">
+							<Row className="align-items-center">
+								<Col md={4} className="d-flex align-items-center">
+									<Form.Label
+										htmlFor="acquisitionStartDate"
+										className="me-2 mb-0"
+										style={{ width: '40%' }}
+									>
+										취득일자
+									</Form.Label>
+									<Form.Control id="acquisitionStartDate" type="date" />
+									~
+									<Form.Control
+										id="acquisitionEndDate"
+										type="date"
+										className="ms-2"
+									/>
+								</Col>
+
+								<Col md={4} className="d-flex align-items-center">
+									<Form.Label htmlFor="assetValue" className="me-2 mb-0">
+										가치
+									</Form.Label>
+									<Form.Select id="assetValue" style={{ width: '40%' }}>
+										<option>가치를 선택하세요</option>
+										<option value="high">높음</option>
+										<option value="medium">보통</option>
+										<option value="low">낮음</option>
+									</Form.Select>
+								</Col>
+
+								<Col md={4} className="d-flex justify-content-end">
+									<Button variant="primary">검색</Button>
+								</Col>
+							</Row>
+						</Form.Group>
+					</div>
+					{/* 버튼 4개 추가 */}
+					<Form.Group className="mb-3">
+						<Row className="d-flex justify-content-end">
+							<Col md={1} className="mb-2 text-end">
+								<Button variant="secondary" style={{ width: '60%' }}>
+									일괄 수정
+								</Button>
+							</Col>
+							<Col md={1} className="mb-2 text-end">
+								<Button variant="danger" style={{ width: '60%' }}>
+									일괄 폐기
+								</Button>
+							</Col>
+							<Col md={1} className="mb-2 text-end">
+								<Button variant="info" style={{ width: '50%' }}>
+									QR
+								</Button>
+							</Col>
+							<Col md={1} className="mb-2 text-end">
+								<Button variant="success" style={{ width: '60%' }}>
+									엑셀 출력
+								</Button>
+							</Col>
+						</Row>
 					</Form.Group>
 
 					{/* 테이블 */}

@@ -6,9 +6,8 @@ const ProductDetailsEcom = lazy(() => import('./ProductDetails'));
 const AssetRegister = lazy(() => import('./assetCheck'));
 const BackupHistory = lazy(() => import('./BackupHistory'));
 const AssetSurveyHistory = lazy(() => import('./AssetSurvey'));
-const Software = lazy(() => import('./assetUpdate'));
-// const Contact = lazy(() => import('./assetUpdate'));
-//const AssetPage = lazy(() => import('./assetUpdate'));
+const Expand = lazy(() => import('./Expand'));
+const AssetPage = lazy(() => import('./assetUpdate'));
 
 export default function jsx() {
 	return (
@@ -20,9 +19,8 @@ export default function jsx() {
 				<Route path="ProductDetailsEcom" element={<ProductDetailsEcom />} />
 				<Route path="BackupHistory" element={<BackupHistory />} />
 				<Route path="AssetSurveyHistory" element={<AssetSurveyHistory />} />
-				<Route path="Software" element={<Software />} />
-				{/* <Route path="Contact" element={<Contact />} /> */}
-				{/* <Route path="AssetPage" element={<AssetPage />} /> */}
+				<Route path="Expand" element={<Expand />} />
+				<Route path="AssetPage" element={<AssetPage />} />
 			</Route>
 		</Routes>
 	);

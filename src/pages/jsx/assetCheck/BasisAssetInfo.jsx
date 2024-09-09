@@ -336,6 +336,7 @@ const BasisAssetInfo = ({ formData, handleChange }) => {
 											<label className="form-label">도입일자</label> <br />
 											<CustomDatePicker
 												type="date"
+												dateFormat="yyyy-MM-dd"
 												name="introducedDate"
 												hideAddon={true}
 												value={formData.introducedDate}

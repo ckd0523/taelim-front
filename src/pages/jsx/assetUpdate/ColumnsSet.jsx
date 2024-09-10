@@ -55,9 +55,8 @@ const columns = [
 		defaultCanSort: true,
 	},
 	{
-		Header: '소유자',
-		accessor: '<i className={`mdi mdi-trash-can-outline`} />',
-		defaultCanSort: true,
+		Header: 'Action', // 이 부분에서 부모로부터 함수를 전달받아 사용
+		accessor: 'action',
 	},
 ];
 

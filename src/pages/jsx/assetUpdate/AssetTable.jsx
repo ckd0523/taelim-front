@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Row, Col, Card, Button, Form } from 'react-bootstrap';
 import { PageBreadcrumb, CustomDatePicker, TextInput, Form as RHForm } from '@/components';
-import { columns } from './ColumnsSet'; // table의 column 설정
+import { columns as baseColumns } from './ColumnsSet'; // table의 column 설정
 import { Table } from './ExpandableTable';
 
 const AssetTable = () => {
@@ -73,6 +73,47 @@ const AssetTable = () => {
 		setUpdateList(filteredData); // 필터링된 데이터를 UpdateList에 저장
 	};
 
+	// 자산 폐기 처리 동작
+	const handleDisposeAsset = async (assetCode) => {
+		try {
+			// API 요청 보내기
+			const response = await fetch(`http://localhost:8080/dispose/${assetCode}`, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+			});
+
+			// 성공 여부 확인
+			if (response.ok) {
+				// 요청이 성공하면 처리할 로직 (예: 테이블에서 해당 행 제거 또는 성공 메시지 출력)
+				console.log('자산이 성공적으로 폐기되었습니다:', assetCode);
+			} else {
+				console.error(`자산 폐기 실패: ${assetCode}`);
+			}
+		} catch (error) {
+			// 오류 처리
+			console.error(`자산 폐기 중 오류 발생: ${assetCode}:`, error);
+		}
+	};
+
+	// 컬럼 설정에 handleDisposeAsset 전달
+	const columns = baseColumns.map((column) => {
+		if (column.Header === 'Action') {
+			return {
+				...column,
+				Cell: ({ row }) => (
+					<button
+						className="btn btn-danger"
+						onClick={() => handleDisposeAsset(row.original.assetCode)}
+					>
+						<i className="mdi mdi-trash-can-outline" style={{ fontSize: '1.2rem' }}></i>
+					</button>
+				),
+			};
+		}
+		return column;
+	});
 	return (
 		<>
 			<PageBreadcrumb title="UpdateHistory" subName="UpdateHistory" />
@@ -238,6 +279,7 @@ const AssetTable = () => {
 									data={UpdateList}
 									pageSize={10}
 									isSortable={true}
+									isSelectable={true}
 									pagination={true}
 									theadClass="table-light"
 									searchBoxClass="mb-2"

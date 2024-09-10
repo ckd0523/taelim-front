@@ -19,7 +19,7 @@ const AssetTable = () => {
 		const fetchData = async () => {
 			try {
 				const response = await axios.get(
-					'http://localhost:8080/assets/approved-not-disposed'
+					'http://133.186.153.78:8080/assets/approved-not-disposed'
 				);
 				setData(response.data);
 				setUpdateList(response.data); // 데이터를 가져온 후 UpdateList를 업데이트

@@ -23,7 +23,7 @@ const RowDetails = ({
 			setIsLoading(true); // 데이터 요청 시작
 			try {
 				console.log(`Fetching data for assetCode: ${AssetCode}`);
-				const response = await axios.get(`http://localhost:8080/asset/${AssetCode}`);
+				const response = await axios.get(`http://133.186.153.78:8080/asset/${AssetCode}`);
 				console.log('Fetched data:', response.data);
 				setFormData(response.data);
 			} catch (error) {

@@ -156,7 +156,7 @@ const ExcelRegister = () => {
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 		try {
-			const excelResponse = await fetch('http://localhost:8080/asset/excelRegister', {
+			const excelResponse = await fetch('http://133.186.153.78:8080/asset/excelRegister', {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',

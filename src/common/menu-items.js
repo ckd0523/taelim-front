@@ -104,16 +104,16 @@ const MENU_ITEMS = [
 			},
 			{
 				key: 'ds-AssetPage',
-				label: '테스트용',
+				label: '자산조회',
 				url: '/jsx/AssetPage',
 				parentKey: 'jsx',
 			},
-			{
-				key: 'ds-Expand',
-				label: '확장',
-				url: '/jsx/Expand',
-				parentKey: 'jsx',
-			},
+			// {
+			// 	key: 'ds-Expand',
+			// 	label: '확장',
+			// 	url: '/jsx/Expand',
+			// 	parentKey: 'jsx',
+			// },
 		],
 	},
 	{

@@ -203,28 +203,28 @@ const Table = (props) => {
 	// 선택된 행 데이터
 
 	// 선택된 행 데이터와 로딩 상태
-	// const [expandedRowData, setExpandedRowData] = useState({});
-	// const [loadingRow, setLoadingRow] = useState(null);
+	const [expandedRowData, setExpandedRowData] = useState({});
+	const [loadingRow, setLoadingRow] = useState(null);
 
-	// const fetchRowData = async (assetCode) => {
-	// 	try {
-	// 		setLoadingRow(assetCode);
-	// 		const response = await axios.get(`http://localhost:8080/asset/${assetCode}`);
-	// 		setExpandedRowData((prev) => ({ ...prev, [assetCode]: response.data }));
-	// 	} catch (error) {
-	// 		console.error('자산 데이터를 가져오는 중 오류 발생:', error);
-	// 	} finally {
-	// 		setLoadingRow(null);
-	// 	}
-	// };
+	const fetchRowData = async (assetCode) => {
+		try {
+			setLoadingRow(assetCode);
+			const response = await axios.get(`http://localhost:8080/asset/${assetCode}`);
+			setExpandedRowData((prev) => ({ ...prev, [assetCode]: response.data }));
+		} catch (error) {
+			console.error('자산 데이터를 가져오는 중 오류 발생:', error);
+		} finally {
+			setLoadingRow(null);
+		}
+	};
 
-	// const importanceScore = calculateImportanceScore(selectedRowData);
-	// const importanceRating = calculateImportanceRating(importanceScore);
-	// const classification = selectedRowData?.assetClassification;
-	// const dynamicColumns = React.useMemo(
-	// 	() => getClassificationColumns(classification),
-	// 	[classification]
-	// );
+	const importanceScore = calculateImportanceScore(selectedRowData);
+	const importanceRating = calculateImportanceRating(importanceScore);
+	const classification = selectedRowData?.assetClassification;
+	const dynamicColumns = React.useMemo(
+		() => getClassificationColumns(classification),
+		[classification]
+	);
 
 	let otherProps = {};
 
@@ -302,12 +302,12 @@ const Table = (props) => {
 								) : (
 									<i
 										className={`ri-arrow-down-s-fill`}
-										// onClick={() => {
-										// 	if (!row.isExpanded) {
-										// 		// 행이 확장되지 않은 경우에만 데이터 요청
-										// 		fetchRowData(row.original.AssetCode);
-										// 	}
-										// }}
+										onClick={() => {
+											if (!row.isExpanded) {
+												// 행이 확장되지 않은 경우에만 데이터 요청
+												fetchRowData(row.original.AssetCode);
+											}
+										}}
 									/>
 								)}
 							</span>
@@ -376,9 +376,9 @@ const Table = (props) => {
 												<div>
 													<RowDetails
 														row={row}
-														//selectedRowData={selectedRowData}
-														// importanceScore={importanceScore}
-														// importanceRating={importanceRating}
+														selectedRowData={selectedRowData}
+														importanceScore={importanceScore}
+														importanceRating={importanceRating}
 														dynamicColumns={getClassificationColumns(
 															row.original.AssetClassification
 														)}

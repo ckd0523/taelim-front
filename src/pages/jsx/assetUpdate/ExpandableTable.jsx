@@ -9,9 +9,7 @@ import {
 	useExpanded,
 } from 'react-table';
 import classNames from 'classnames';
-import axios from 'axios';
 import { Pagination } from '@/components';
-//import Stocks from './Stocks';
 import RowDetails from './RowDetails';
 
 const GlobalFilter = ({ preGlobalFilteredRows, globalFilter, setGlobalFilter, searchBoxClass }) => {
@@ -39,143 +37,6 @@ const GlobalFilter = ({ preGlobalFilteredRows, globalFilter, setGlobalFilter, se
 	);
 };
 
-const getClassificationColumns = (classification) => {
-	switch (classification) {
-		case 'INFORMATION_PROTECTION_SYSTEM':
-			return [{ title: '서비스범위', data: 'serviceScope' }];
-
-		case 'APPLICATION_PROGRAM':
-			return [
-				{ title: '서비스범위', data: 'serviceScope' },
-				{ title: 'OS', data: 'os' },
-				{ title: '관련DB', data: 'relatedDB' },
-				{ title: 'IP', data: 'ip' },
-				{ title: '화면수', data: 'screenNumber' },
-			];
-
-		case 'SOFTWARE':
-			return [
-				{ title: 'IP', data: 'ip' },
-				{ title: 'ID', data: 'serverId' },
-				{ title: 'PW', data: 'serverPassword' },
-				{ title: '담당업체', data: 'companyManager' },
-				{ title: 'OS', data: 'os' },
-			];
-
-		case 'ELECTRONIC_INFORMATION':
-			return [
-				{ title: 'OS', data: 'os' },
-				{ title: '시스템', data: 'system' },
-				{ title: 'DB종류', data: 'dbtype' },
-			];
-
-		case 'DOCUMENT':
-			return [
-				{ title: '문서등급', data: 'documentGrade' },
-				{ title: '문서형태', data: 'documentType' },
-				{ title: '문서링크', data: 'documentLink' },
-			];
-
-		case 'PATENTS_AND_TRADEMARKS':
-			return [
-				{ title: '출원일자', data: 'applicationDate' },
-				{ title: '등록일자', data: 'registrationDate' },
-				{ title: '만료일자', data: 'expirationDate' },
-				{ title: '특허/상표 상태', data: 'patentTrademarkStatus' },
-				{ title: '출원국가', data: 'countryApplication' },
-				{ title: '특허분류', data: 'patentClassification' },
-				{ title: '특허세목', data: 'patentItem' },
-				{ title: '출원번호', data: 'applicationNo' },
-				{ title: '발명자', data: 'inventor' },
-				{ title: '권리권자', data: 'assignee' },
-				{ title: '관련문서', data: 'relatedDocuments' },
-			];
-
-		case 'ITSYSTEM_EQUIPMENT':
-			return [
-				{ title: '장비유형', data: 'equipmentType' },
-				{ title: '랙유닛', data: 'rackUnit' },
-				{ title: '전원공급장치', data: 'powerSupply' },
-				{ title: '쿨링시스템', data: 'coolingSystem' },
-				{ title: '인터페이스 포트', data: 'interfacePorts' },
-				{ title: '폼팩터', data: 'formFactor' },
-				{ title: '확장슬롯수', data: 'expansionSlots' },
-				{ title: '그래픽카드', data: 'graphicsCard' },
-				{ title: '포트 구성', data: 'portConfiguration' },
-				{ title: '모니터 포함여부', data: 'monitorIncluded' },
-			];
-
-		case 'ITNETWORK_EQUIPMENT':
-			return [
-				{ title: '장비유형', data: 'equipmentType' },
-				{ title: '포트수', data: 'numberOfPorts' },
-				{ title: '지원프로토콜', data: 'supportedProtocols' },
-				{ title: '펌웨어 버전', data: 'firmwareVersion' },
-				{ title: '네트워크 속도', data: 'networkSpeed' },
-				{ title: '서비스범위', data: 'serviceScope' },
-			];
-
-		case 'TERMINAL':
-			return [
-				{ title: 'IP', data: 'ip' },
-				{ title: '제품 시리얼 번호', data: 'productSerialNumber' },
-				{ title: 'OS', data: 'os' },
-				{ title: '보안관제', data: 'securityControl' },
-				{ title: '내부정보 유출 방지', data: 'kaitsKeeper' },
-				{ title: '악성코드,랜섬웨어 탐지', data: 'V3OfficeSecurity' },
-				{ title: '안티랜섬웨어', data: 'appCheckPro' },
-				{ title: 'NAC agent', data: 'tgate' },
-			];
-
-		case 'FURNITURE':
-			return [{ title: '크기', data: 'furnitureSize' }];
-
-		case 'DEVICES':
-			return [
-				{ title: '기기유형', data: 'deviceType' },
-				{ title: '모델번호', data: 'modelNumber' },
-				{ title: '연결방식', data: 'connectionType' },
-				{ title: '전원사양', data: 'powerSpecifications' },
-			];
-
-		case 'CAR':
-			return [
-				{ title: '배기량', data: 'displacement' },
-				{ title: '차량의 문 수', data: 'doorsCount' },
-				{ title: '엔진 형식', data: 'engineType' },
-				{ title: '차량 종류', data: 'carType' },
-				{ title: '차량 식별번호', data: 'identificationNo' },
-				{ title: '차량 색상', data: 'carColor' },
-				{ title: '연식', data: 'modelYear' },
-			];
-
-		case 'OTHERASSETS':
-			return [
-				{ title: '기타 세부 설명', data: 'otherDescription' },
-				{ title: '사용 빈도', data: 'usageFrequency' },
-			];
-
-		default:
-			return [];
-	}
-};
-// 중요성 점수를 계산
-const calculateImportanceScore = (selectedRowData) => {
-	if (selectedRowData) {
-		const { confidentiality, integrity, availability } = selectedRowData;
-		return (confidentiality || 0) + (integrity || 0) + (availability || 0);
-	}
-	return 0;
-};
-
-// 중요성 등급을 계산
-const calculateImportanceRating = (score) => {
-	if (score >= 7 && score <= 9) return 'A급';
-	if (score >= 5 && score <= 6) return 'B급';
-	if (score >= 3 && score <= 4) return 'C급';
-	return 'N/A';
-};
-
 const IndeterminateCheckbox = forwardRef(({ indeterminate, ...rest }, ref) => {
 	const defaultRef = useRef();
 	const resolvedRef = ref || defaultRef;
@@ -199,25 +60,6 @@ const Table = (props) => {
 	const isSelectable = props['isSelectable'] || false;
 	const isExpandable = props['isExpandable'] || false;
 	const sizePerPageList = props['sizePerPageList'] || [];
-	const [selectedRowData, setSelectedRowData] = useState(null); // 선택된 행 데이터
-
-	const importanceScore = calculateImportanceScore(selectedRowData);
-	const importanceRating = calculateImportanceRating(importanceScore);
-	const classification = selectedRowData?.assetClassification;
-	const dynamicColumns = React.useMemo(
-		() => getClassificationColumns(classification),
-		[classification]
-	);
-
-	const fetchRowData = async (assetCode) => {
-		try {
-			const response = await axios.get(`http://localhost:8080/asset/${assetCode}`);
-			return response.data;
-		} catch (error) {
-			console.error('자산 데이터를 가져오는 중 오류 발생:', error);
-			return null;
-		}
-	};
 
 	let otherProps = {};
 
@@ -305,20 +147,9 @@ const Table = (props) => {
 
 	const rows = pagination ? dataTable.page : dataTable.rows;
 
-	useEffect(() => {
-		const expandedRows = rows.filter((row) => row.isExpanded);
-		if (expandedRows.length > 0) {
-			const assetCode = expandedRows[0]?.original?.assetCode;
-			if (assetCode) {
-				fetchRowData(assetCode).then((data) => {
-					setSelectedRowData(data); // 선택된 행 데이터 상태 업데이트
-				});
-			}
-		}
-	}, [rows]); // rows 변경시마다 실행됨 (특히 row.isExpanded 변경시 실행)
-
 	return (
 		<>
+			{/* 검색 필터 */}
 			{isSearchable && (
 				<GlobalFilter
 					preGlobalFilteredRows={dataTable.preGlobalFilteredRows}
@@ -328,6 +159,7 @@ const Table = (props) => {
 				/>
 			)}
 
+			{/* 테이블 */}
 			<div className="table-responsive">
 				<table
 					{...dataTable.getTableProps()}
@@ -365,16 +197,13 @@ const Table = (props) => {
 										))}
 									</tr>
 									{/* 확장된 내용 렌더링 */}
-									{row.isExpanded && (
+									{row.isExpanded && isExpandable && (
 										<tr>
 											<td colSpan={dataTable.headerGroups[0].headers.length}>
 												<div>
 													<RowDetails
 														row={row}
-														selectedRowData={selectedRowData}
-														importanceScore={importanceScore}
-														importanceRating={importanceRating}
-														dynamicColumns={dynamicColumns}
+														assetCode={row.original.assetCode}
 													/>
 												</div>
 											</td>

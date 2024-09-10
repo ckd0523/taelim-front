@@ -10,6 +10,7 @@ const InfoModal = ({ show, handleClose, modalData }) => {
 			<Modal.Body>
 				{modalData && (
 					<div>
+						<p>요청구분: {modalData.demandNo}</p>
 						<p>요청구분: {modalData.demandType}</p>
 						<p>요청일자: {modalData.demandDate}</p>
 						<p>요청자: {modalData.demandBy}</p>
@@ -26,7 +27,7 @@ const InfoModal = ({ show, handleClose, modalData }) => {
 	);
 };
 
-const ActionModal = ({ show, handleClose, actionType, handleSubmit }) => {
+const ActionModal = ({ show, handleClose, actionData, actionType, handleSubmit }) => {
 	const [reason, setReason] = useState('');
 
 	const handleReasonChange = (e) => setReason(e.target.value);
@@ -45,6 +46,7 @@ const ActionModal = ({ show, handleClose, actionType, handleSubmit }) => {
 				<Form>
 					<Form.Group>
 						<Form.Label>
+							<p>선택된 데이터: {JSON.stringify(actionData)}</p>
 							{actionType === 'approve'
 								? '승인 사유를 입력하세요'
 								: '거절 사유를 입력하세요'}

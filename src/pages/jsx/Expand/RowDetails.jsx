@@ -102,7 +102,7 @@ const RowDetails = ({
 				</thead>
 				<tbody>
 					<tr>
-						<td>{renderCellContent('AssetCode')}</td>
+						<td>{renderCellContent('assetCode')}</td>
 						<td>{renderCellContent('assetName')}</td>
 						<td>{renderCellContent('assetBasis')}</td>
 						<td>{renderCellContent('manufacturingCompany')}</td>

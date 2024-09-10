@@ -23,12 +23,17 @@ const StatusColumn = ({ row }) => {
 // get all columns
 const columns = (setModalData, setShowModal) => [
 	{
+		Header: '요청번호',
+		accessor: 'demandNo',
+	},
+	{
 		Header: '요청구분',
 		accessor: 'demandType',
 		defaultCanSort: true,
 		Cell: ({ row }) => {
 			const handleRowClick = useCallback(() => {
 				setModalData(row.original);
+				console.log(row.original);
 				setShowModal(true);
 			}, [row.original]);
 

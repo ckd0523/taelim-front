@@ -1,5 +1,6 @@
 import { Row, Col, Card, Button, Modal } from 'react-bootstrap';
-import { Table, PageBreadcrumb, CustomDatePicker, TextInput, Form as RHForm } from '@/components';
+import { PageBreadcrumb, CustomDatePicker, TextInput, Form as RHForm } from '@/components';
+import { Table } from './Table';
 import { columns } from './ColumnsSet';
 import { useState } from 'react';
 import { demands } from './data';
@@ -17,10 +18,12 @@ const DemandHistory = () => {
 	const [showModal, setShowModal] = useState(false);
 	const [modalData, setModalData] = useState(null);
 	const [showActModal, setShowActModal] = useState(false);
-	const [actionType, setActionType] = useState(null); // 'approve' or 'reject'
+	const [actionData, setActionData] = useState(null); // ActionModal로 보낼 데이터
+	const [actionType, setActionType] = useState(null);
 
-	const handleOpenModal = (type) => {
+	const handleOpenModal = (type, rowData) => {
 		setActionType(type);
+		setActionData(rowData); // rowData 또는 선택한 데이터를 설정
 		setShowActModal(true);
 	};
 
@@ -184,6 +187,7 @@ const DemandHistory = () => {
 									isSortable={true}
 									pagination={true}
 									isSelectable={true}
+									initialState={{ hiddenColumns: ['demandNo'] }} // id 열을 숨김
 									theadClass="table-light"
 									searchBoxClass="mb-2"
 								/>
@@ -198,6 +202,7 @@ const DemandHistory = () => {
 								show={showActModal}
 								handleClose={() => setShowActModal(false)}
 								actionType={actionType}
+								actionData={actionData} // ActionModal로 데이터 전달
 								handleSubmit={handleModalSubmit}
 							/>
 						</Card.Body>

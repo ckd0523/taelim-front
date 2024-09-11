@@ -28,7 +28,7 @@ const Stocks = () => {
 	// 데이터 가져오기
 	const fetchData = async (assetCode) => {
 		try {
-			const response = await fetch(`http://localhost:8080/asset/${assetCode}`);
+			const response = await fetch(`http://133.186.153.78:8080/api/asset/${assetCode}`);
 			if (!response.ok) {
 				throw new Error(`HTTP error! Status: ${response.status}`);
 			}

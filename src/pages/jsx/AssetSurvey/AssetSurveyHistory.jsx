@@ -111,7 +111,7 @@ const AssetSurveyHistory = () => {
 
 	const handlePostRequest = () => {
 		axios
-			.post('http://133.186.153.78:8080/register', registerData) // 서버에 보낼 데이터
+			.post('http://133.186.153.78:8080/api/register', registerData) // 서버에 보낼 데이터
 			.then((response) => {
 				setResponse(response.data); // 응답 데이터 상태 업데이트
 			})
@@ -124,7 +124,7 @@ const AssetSurveyHistory = () => {
 	const handleDelete = async () => {
 		console.log(selectedIds); //int 타입
 		try {
-			await axios.post('http://133.186.153.78:8080/deleteAssetSurvey', {
+			await axios.post('http://133.186.153.78:8080/api/deleteAssetSurvey', {
 				assetSurveyNo: selectedIds,
 			});
 

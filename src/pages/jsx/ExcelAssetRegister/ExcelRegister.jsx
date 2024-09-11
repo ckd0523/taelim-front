@@ -156,13 +156,16 @@ const ExcelRegister = () => {
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 		try {
-			const excelResponse = await fetch('http://133.186.153.78:8080/asset/excelRegister', {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify(formData),
-			});
+			const excelResponse = await fetch(
+				'http://133.186.153.78:8080/api/asset/excelRegister',
+				{
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+					},
+					body: JSON.stringify(formData),
+				}
+			);
 
 			if (excelResponse.ok) {
 				alert('엑셀이 정상적으로 등록되었습니다.');

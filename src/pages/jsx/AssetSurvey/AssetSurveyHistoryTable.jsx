@@ -5,62 +5,65 @@ import { Table2 } from '../../../components/table/Table2';
 //import StatusColumn from './TableColumnSet';
 
 const columns = [
-  { Header: '회차', accessor: 'round', defaultCanSort: true, },
-  { Header: '위치', accessor: 'assetSurveyLocation', defaultCanSort: false, },
-  { Header: '자산조사일자', accessor: 'assetSurveyStartDate', defaultCanSort: false, },
-  { Header: '자산조사자', accessor: 'assetSurveyBy', defaultCanSort: false, },
-  {
-    Header: '상태', accessor: 'surveyStatus', defaultCanSort: false,
-    //Cell: StatusColumn,
-    Cell: ({ value }) => (value ? '완료' : '진행 중')
-  },
+	{ Header: '회차', accessor: 'round', defaultCanSort: true },
+	{ Header: '위치', accessor: 'assetSurveyLocation', defaultCanSort: false },
+	{ Header: '자산조사일자', accessor: 'assetSurveyStartDate', defaultCanSort: false },
+	{ Header: '자산조사자', accessor: 'assetSurveyBy', defaultCanSort: false },
+	{
+		Header: '상태',
+		accessor: 'surveyStatus',
+		defaultCanSort: false,
+		//Cell: StatusColumn,
+		Cell: ({ value }) => (value ? '완료' : '진행 중'),
+	},
 ];
 
 const sizePerPageList = [
-  { text: '5', value: 5, },
-  { text: '10', value: 10, },
-  { text: '25', value: 25, },
-  { text: '100', value: 100, },
+	{ text: '5', value: 5 },
+	{ text: '10', value: 10 },
+	{ text: '25', value: 25 },
+	{ text: '100', value: 100 },
 ];
 
 const SurveyTable = () => {
-  const [data, setData] = useState([]);
+	const [data, setData] = useState([]);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get('http://localhost:8080/assetSurveyHistory');
-        setData(response.data); // API로부터 받은 데이터 설정
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    };
+	useEffect(() => {
+		const fetchData = async () => {
+			try {
+				const response = await axios.get(
+					'http://133.186.153.78:8080/api/assetSurveyHistory'
+				);
+				setData(response.data); // API로부터 받은 데이터 설정
+			} catch (error) {
+				console.error('Error fetching data:', error);
+			}
+		};
 
-    fetchData();
-  }, []);
+		fetchData();
+	}, []);
 
-  return (
-    <Row>
-      <Card></Card>
-      <Col>
-        <Card>
-          <Card.Body>
-            {/* 이 Table은 리액트의 테이블이 아니라 Hyper의 테이블임 */}
-            <Table2
-              columns={columns}
-              data={data}
-              pagesize={5}
-              sizePerPageList={sizePerPageList}
-              isSortable={true}
-              pagination={true}
-              isSelectable={true}
-            />
-          </Card.Body>
-        </Card>
-      </Col>
-    </Row>
-  );
-
+	return (
+		<Row>
+			<Card></Card>
+			<Col>
+				<Card>
+					<Card.Body>
+						{/* 이 Table은 리액트의 테이블이 아니라 Hyper의 테이블임 */}
+						<Table2
+							columns={columns}
+							data={data}
+							pagesize={5}
+							sizePerPageList={sizePerPageList}
+							isSortable={true}
+							pagination={true}
+							isSelectable={true}
+						/>
+					</Card.Body>
+				</Card>
+			</Col>
+		</Row>
+	);
 };
 
 export default SurveyTable;

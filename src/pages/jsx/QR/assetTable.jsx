@@ -63,7 +63,7 @@ const AssetTable = () => {
 		const disposeAsset = (assetCode) => {
 			$.ajax({
 				type: 'POST',
-				url: `http://133.186.153.78:8080/api/dispose/${assetCode}`,
+				url: `http://133.186.153.78/api/dispose/${assetCode}`,
 				success: function () {
 					alert(`Asset ${assetCode} has been successfully disposed.`);
 					// Optionally, you can refresh the table data

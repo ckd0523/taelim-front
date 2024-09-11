@@ -31,9 +31,7 @@ const SurveyTable = () => {
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
-				const response = await axios.get(
-					'http://133.186.153.78:8080/api/assetSurveyHistory'
-				);
+				const response = await axios.get('http://133.186.153.78/api/assetSurveyHistory');
 				setData(response.data); // API로부터 받은 데이터 설정
 			} catch (error) {
 				console.error('Error fetching data:', error);

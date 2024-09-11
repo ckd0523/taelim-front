@@ -97,7 +97,7 @@ const AssetRegister = () => {
 	const handleSubmit = async (e) => {
 		e.preventDefault(); // 페이지 새로고침 방지
 		try {
-			const assetResponse = await fetch('http://localhost:8080/asset/register', {
+			const assetResponse = await fetch('http://133.186.153.78/api/asset/register', {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
@@ -123,7 +123,7 @@ const AssetRegister = () => {
 						console.log('fileType:', fileFormData.get('fileType'));
 
 						const fileResponse = await fetch(
-							'http://133.186.153.78:8080/asset/file/upload',
+							'http://133.186.153.78/api/asset/file/upload',
 							{
 								method: 'POST',
 								body: fileFormData,

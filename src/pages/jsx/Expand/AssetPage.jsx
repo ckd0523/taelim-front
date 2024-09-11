@@ -170,7 +170,7 @@ const AssetPage = () => {
 		const fetchData = async () => {
 			try {
 				const response = await axios.get(
-					'http://133.186.153.78:8080/api/assets/approved-not-disposed'
+					'http://133.186.153.78/api/assets/approved-not-disposed'
 				);
 				setData(response.data);
 			} catch (error) {
@@ -182,7 +182,7 @@ const AssetPage = () => {
 
 	const fetchRowData = async (assetCode) => {
 		try {
-			const response = await axios.get(`http://133.186.153.78:8080/api/asset/${assetCode}`);
+			const response = await axios.get(`http://133.186.153.78/api/asset/${assetCode}`);
 			setSelectedRowData(response.data);
 		} catch (error) {
 			console.error('자산 데이터를 가져오는 중 오류 발생:', error);

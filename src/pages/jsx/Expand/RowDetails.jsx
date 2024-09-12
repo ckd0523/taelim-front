@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Table as BootstrapTable, Row, Col, Button, Form, Modal } from 'react-bootstrap';
 import axios from 'axios';
 
+const API_URL = import.meta.env.VITE_BASIC_URL;
+
 const RowDetails = ({
 	row,
 	selectedRowData,
@@ -23,7 +25,7 @@ const RowDetails = ({
 			setIsLoading(true); // 데이터 요청 시작
 			try {
 				console.log(`Fetching data for assetCode: ${AssetCode}`);
-				const response = await axios.get(`http://localhost:8080/asset/${AssetCode}`);
+				const response = await axios.get(`${API_URL}/asset/${AssetCode}`);
 				console.log('Fetched data:', response.data);
 				setFormData(response.data);
 			} catch (error) {
@@ -32,9 +34,28 @@ const RowDetails = ({
 				setIsLoading(false); // 데이터 요청 완료
 			}
 		};
-
 		fetchRowData(); // useEffect에서 fetchRowData 호출
 	}, [AssetCode]); // AssetCode가 변경될 때마다 호출
+
+	// useEffect(() => {
+	// 	const fetchRowData = async () => {
+	// 		if (!AssetCode) return;
+
+	// 		setIsLoading(true); // 데이터 요청 시작
+	// 		try {
+	// 			console.log(`Fetching data for assetCode: ${AssetCode}`);
+	// 			const response = await axios.get(`http://133.186.153.78/api/asset/${AssetCode}`);
+	// 			console.log('Fetched data:', response.data);
+	// 			setFormData(response.data);
+	// 		} catch (error) {
+	// 			console.error('Error fetching asset data:', error);
+	// 		} finally {
+	// 			setIsLoading(false); // 데이터 요청 완료
+	// 		}
+	// 	};
+
+	// 	fetchRowData(); // useEffect에서 fetchRowData 호출
+	// }, [AssetCode]); // AssetCode가 변경될 때마다 호출
 
 	const handleEditClick = () => {
 		setIsEditing(true);

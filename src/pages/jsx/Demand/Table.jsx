@@ -111,7 +111,11 @@ const Table = (props) => {
 						// The cell can use the individual row's getToggleRowSelectedProps method
 						// to the render a checkbox
 						Cell: ({ row }) => (
-							<div>
+							<div
+								style={{
+									paddingLeft: `${row.depth * 2}rem`, // row.depth에 따라 들여쓰기 설정
+								}}
+							>
 								<IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
 							</div>
 						),
@@ -201,16 +205,28 @@ const Table = (props) => {
 						))}
 					</thead>
 					<tbody {...dataTable.getTableBodyProps()}>
-						{(rows || []).map((row, index) => {
-							dataTable.prepareRow(row);
+						{rows.map((row, index) => {
+							dataTable.prepareRow(row); // 각 행에 대해 한 번만 호출
+
+							// 기본 행 스타일링
+							const rowStyle = {
+								backgroundColor: row.isExpanded ? '#f0f8ff' : 'transparent',
+							};
+
 							return (
-								<tr {...row.getRowProps()} key={index}>
-									{row.cells.map((cell) => {
-										return (
+								<React.Fragment key={row.id}>
+									<tr
+										{...row.getRowProps()}
+										style={{
+											backgroundColor:
+												row.depth === 1 ? '#f0f8ff' : 'transparent', // 상위 요소일 때 색상 설정
+										}}
+									>
+										{row.cells.map((cell) => (
 											<td {...cell.getCellProps()}>{cell.render('Cell')}</td>
-										);
-									})}
-								</tr>
+										))}
+									</tr>
+								</React.Fragment>
 							);
 						})}
 					</tbody>

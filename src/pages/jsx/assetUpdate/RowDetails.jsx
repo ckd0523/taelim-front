@@ -192,9 +192,20 @@ const RowDetails = ({ row, assetCode, onClose }) => {
 	// 모달 닫기 처리
 	const handleModalClose = () => setShowModal(false);
 
-	const handleSubmit = () => {
-		// 수정 요청 처리 로직
-		setShowModal(false);
+	// 수정 요청 api 받아서 처리
+	const handleSubmit = async () => {
+		try {
+			// 수정 요청 처리
+			const response = await axios.post(
+				`http://localhost:8080/asset/update/${formData.assetCode}`,
+				formData
+			);
+			alert(response.data); // 성공 메시지
+			setShowModal(false);
+		} catch (error) {
+			console.error('Error updating asset data:', error);
+			setErrorMessage('자산 수정 요청 중 오류가 발생했습니다.');
+		}
 	};
 
 	const renderCellContent = (key) => {
@@ -261,11 +272,11 @@ const RowDetails = ({ row, assetCode, onClose }) => {
 						</thead>
 						<tbody>
 							<tr>
-								<td>{renderCellContent('assetCode')}</td>
-								<td>{renderCellContent('assetName')}</td>
-								<td>{renderCellContent('assetBasis')}</td>
-								<td>{renderCellContent('manufacturingCompany')}</td>
-								<td>{renderCellContent('purpose')}</td>
+								<td>{formData.assetCode || 'N/A'}</td>
+								<td>{formData.assetName || 'N/A'}</td>
+								<td>{formData.assetBasis || 'N/A'}</td>
+								<td>{formData.manufacturingCompany || 'N/A'}</td>
+								<td>{formData.purpose || 'N/A'}</td>
 								<td>{renderCellContent('department')}</td>
 								<td>{renderCellContent('assetLocation')}</td>
 								<td>{renderCellContent('assetUser')}</td>

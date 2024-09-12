@@ -43,7 +43,10 @@ const AssetTable = () => {
 		setSelectedAssetCode(assetCode); // 모달을 열 때 해당 자산 코드를 설정
 		setShowModal(true); // 모달을 열기
 	};
-	const handleClose = () => setShowModal(false);
+	const handleClose = () => {
+		resetForm();
+		setShowModal(false);
+	};
 
 	useEffect(() => {
 		const fetchData = async () => {
@@ -77,8 +80,10 @@ const AssetTable = () => {
 				break;
 			case 'assetLocation':
 				setAssetLocation(value);
+				break;
 			case 'introducedDate':
 				setIntroduceDate(value);
+				break;
 			default:
 				break;
 		}
@@ -93,8 +98,10 @@ const AssetTable = () => {
 				(assetOwner === '' || (item.assetOwner && item.assetOwner.includes(assetOwner))) &&
 				(assetLocation === '' ||
 					(item.assetLocation && item.assetLocation.includes(assetLocation))) &&
-				(selectedStartDate === null || new Date(item.updateDate) >= selectedStartDate) &&
-				(selectedEndDate === null || new Date(item.updateDate) <= selectedEndDate)
+				(selectedStartDate === null ||
+					(item.updateDate && new Date(item.updateDate) >= selectedStartDate)) &&
+				(selectedEndDate === null ||
+					(item.updateDate && new Date(item.updateDate) <= selectedEndDate))
 			);
 		});
 
@@ -111,18 +118,15 @@ const AssetTable = () => {
 		};
 
 		try {
-			const response = await fetch(`http://localhost:8080/disposeAsset/${assetCode}`, {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify(disposeDto),
-			});
+			const response = await axios.post(
+				`http://localhost:8080/disposeAsset/${assetCode}`,
+				disposeDto
+			);
 
-			if (response.ok) {
+			if (response.status === 200) {
 				console.log('자산 폐기 성공:', assetCode);
 				setUpdateList((prevData) =>
-					prevData.filter((UpdateList) => UpdateList.assetCode !== assetCode)
+					prevData.filter((item) => item.assetCode !== assetCode)
 				);
 				resetForm();
 				handleClose();
@@ -130,7 +134,7 @@ const AssetTable = () => {
 				console.error('자산 폐기 실패:', assetCode);
 			}
 		} catch (error) {
-			console.error(`자산 폐기 중 오류 발생: ${assetCode}:`, error);
+			console.error(`자산 폐기 중 오류 발생: ${assetCode}`, error);
 		}
 	};
 
@@ -144,33 +148,35 @@ const AssetTable = () => {
 		};
 
 		try {
-			const response = await fetch(`http://localhost:8080/disposeDemand/${assetCode}`, {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify(disposeDto),
-			});
+			const response = await axios.post(
+				`http://localhost:8080/disposeDemand/${assetCode}`,
+				disposeDto
+			);
 
-			if (response.ok) {
+			if (response.status === 200) {
 				console.log('자산 폐기 요청 성공:', assetCode);
+				// UI를 즉시 업데이트
+				setUpdateList((prevList) =>
+					prevList.map((item) =>
+						item.assetCode === assetCode ? { ...item, isDisposed: true } : item
+					)
+				);
 				resetForm();
 				handleClose();
-				setIsDisposed(true); // 상태 업데이트
 			} else {
 				console.error('자산 폐기 요청 실패:', assetCode);
 			}
 		} catch (error) {
-			console.error(`자산 폐기 요청 중 오류 발생: ${assetCode}:`, error);
+			console.error(`자산 폐기 요청 중 오류 발생: ${assetCode}`, error);
 		}
 	};
 
 	// 폐기 요청 버튼 클릭 핸들러
-	const handleRequest = () => {
+	const handleRequest = async () => {
 		if (isDisposed) {
 			setErrorMessage('폐기 요청이 이미 들어간 자산입니다.');
 		} else {
-			handleDisposeDemand(selectedAssetCode);
+			await handleDisposeDemand(selectedAssetCode); // await을 추가하여 비동기 작업 완료 후 상태 업데이트
 		}
 	};
 
@@ -354,7 +360,7 @@ const AssetTable = () => {
 
 							{/*폐기 모달창 */}
 							<Modal show={showModal} onHide={handleClose}>
-								<Modal.Header>
+								<Modal.Header closeButton>
 									<Modal.Title>
 										폐기 요청 - 자산 코드: {selectedAssetCode}
 									</Modal.Title>

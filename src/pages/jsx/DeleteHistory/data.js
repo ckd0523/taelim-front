@@ -1,3 +1,4 @@
+//안쓰는거
 const assetDeletes = [
 	{
 		DeleteNo: 1,

@@ -52,9 +52,7 @@ const AssetTable = () => {
 					'http://localhost:8080/assets/approved-not-disposed'
 				);
 				setData(response.data);
-				console.log(setData);
 				setUpdateList(response.data); // 데이터를 가져온 후 UpdateList를 업데이트
-				console.log(setUpdateList);
 			} catch (error) {
 				console.error('데이터를 가져오는 중 오류 발생:', error);
 			}
@@ -212,7 +210,7 @@ const AssetTable = () => {
 								}}
 							>
 								<RHForm onChange={handleFormChange}>
-									<Row className="mb-3">
+									<Row className="mb-4">
 										{/* 검색 필터 상단 */}
 										<Col md={3} className="d-flex align-items-center">
 											<div style={{ display: 'flex', alignItems: 'center' }}>
@@ -283,7 +281,7 @@ const AssetTable = () => {
 											</div>
 										</Col>
 									</Row>
-									<Row className="mb-3">
+									<Row className="mb-1">
 										{/* 검색 필터 하단 */}
 										<Col md={4} className="d-flex align-items-center">
 											<Form.Label

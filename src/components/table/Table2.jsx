@@ -10,6 +10,7 @@ import {
 } from 'react-table';
 import classNames from 'classnames';
 import { Pagination } from './Pagination';
+import { useNavigate } from 'react-router-dom';
 
 const GlobalFilter = ({
   preGlobalFilteredRows,
@@ -59,12 +60,9 @@ const IndeterminateCheckbox = forwardRef(
   }
 );
 
-// 행 클릭 이벤트 핸들러
-const handleRowClick = (row) => {
-  //setSelectedRow(row);
-  //setShowModal(true);
-  console.log(row.values.assetSurveyLocation);
-};
+
+
+
 
 const Table2 = (props) => {
   const isSearchable = props['isSearchable'] || false;
@@ -73,6 +71,24 @@ const Table2 = (props) => {
   const isSelectable = props['isSelectable'] || false;
   const isExpandable = props['isExpandable'] || false;
   const sizePerPageList = props['sizePerPageList'] || [];
+
+  const navigate = useNavigate();
+
+  // 행 클릭 이벤트 핸들러
+  const handleRowClick = (row) => {
+    //setSelectedRow(row);
+    //setShowModal(true);
+    console.log(row.values.assetSurveyLocation);
+    const location = row.values.assetSurveyLocation;
+    navigate('/jsx/AssetSurveyDetail', {
+      state: {
+        location: row.values.assetSurveyLocation,
+        surveyStartDate: row.values.assetSurveyStartDate,
+        surveyBy: row.values.assetSurveyBy,
+        assetSurveyNo: row.values.assetSurveyNo,
+      }
+    });  // 클릭된 행의 location으로 페이지 이동
+  };
 
   let otherProps = {};
 

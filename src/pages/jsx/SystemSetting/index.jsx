@@ -1,0 +1,1 @@
+export { SystemSetting as default } from './SystemSetting';

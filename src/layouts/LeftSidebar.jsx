@@ -10,6 +10,7 @@ import logoDark from '@/assets/images/logo-dark.png';
 import logoSm from '@/assets/images/logo-sm.png';
 import logoDarkSm from '@/assets/images/logo-dark-sm.png';
 import { getMenuItems } from './utils/menu';
+import { Button } from 'react-bootstrap';
 
 const UserBox = () => {
 	return (

@@ -1,46 +1,66 @@
 import { Row, Col, Card, Button, Modal } from 'react-bootstrap';
 import { Table, PageBreadcrumb, CustomDatePicker, TextInput, Form as RHForm } from '@/components';
 import { columns } from './ColumnsSet';
-import { useState } from 'react';
-import { assetDeletes } from './data';
+import { useState, useEffect } from 'react';
+//import { assetDeletes } from './data';
 import { InfoModal } from './DeleteHistoryModal';
+import axios from 'axios';
 
 import Select from 'react-select';
 
 const DeleteHistory = () => {
-	const [DeleteList, setDeleteList] = useState(assetDeletes);
-	const [AssetName, setAssetName] = useState('');
-	const [AssetCode, setAssetCode] = useState('');
-	const [DeleteReason, setDeleteReason] = useState('');
-	const [DeleteBy, setDeleteBy] = useState('');
-	const [DeleteMethod, setDeleteMethod] = useState('');
-	const [DeleteLocation, setDeleteLocation] = useState('');
+	// 데이터 저장
+	const [DeleteList, setDeleteList] = useState([]);
+	const [originalData, setOriginalData] = useState([]); // 전체 데이터를 저장할 상태
+	// 검색을 위한 column 들 설정
+	const [assetName, setAssetName] = useState('');
+	const [assetCode, setAssetCode] = useState('');
+	const [deleteReason, setDeleteReason] = useState('');
+	const [deleteBy, setDeleteBy] = useState('');
+	const [deleteMethod, setDeleteMethod] = useState('');
+	const [deleteLocation, setDeleteLocation] = useState('');
+	// 날짜는 아직 못함
 	const [selectedStartDate, setSelectedStartDate] = useState(null);
 	const [selectedEndDate, setSelectedEndDate] = useState(null);
+	// 모달관련
 	const [showModal, setShowModal] = useState(false);
 	const [modalData, setModalData] = useState(null);
+
+	// 백엔드에서 폐기이력 데이터를 불러오는 함수
+	useEffect(() => {
+		const fetchDeleteHistory = async () => {
+			try {
+				const response = await axios.get('http://localhost:8080/deleteHistory'); // API 호출
+				setDeleteList(response.data); // 가져온 데이터를 상태에 저장
+				setOriginalData(response.data); // 검색을 위한 원본 데이터도 저장
+			} catch (error) {
+				console.error('폐기이력 가져오기 실패:', error);
+			}
+		};
+		fetchDeleteHistory();
+	}, []);
 
 	const handleChange = (e) => {
 		const { name, value } = e.target;
 
 		switch (name) {
-			case 'AssetCode':
+			case 'assetCode':
 				setAssetCode(value);
 				console.log(value);
 				break;
-			case 'AssetName':
+			case 'assetName':
 				setAssetName(value);
 				break;
-			case 'DeleteReason':
+			case 'deleteReason':
 				setDeleteReason(value);
 				break;
-			case 'DeleteBy':
+			case 'deleteBy':
 				setDeleteBy(value);
 				break;
-			case 'DeleteMethod':
+			case 'deleteMethod':
 				setDeleteMethod(value);
 				break;
-			case 'DeleteLocation':
+			case 'deleteLocation':
 				setDeleteLocation(value);
 				break;
 			default:
@@ -54,14 +74,14 @@ const DeleteHistory = () => {
 	};
 
 	const handleSearch = () => {
-		const filteredData = assetDeletes.filter((assetDeletes) => {
+		const filteredData = originalData.filter((assetDeletes) => {
 			return (
-				(AssetName === '' || assetDeletes.AssetName.includes(AssetName)) &&
-				(AssetCode === '' || assetDeletes.AssetCode.includes(AssetCode)) &&
-				(DeleteReason === '' || assetDeletes.DeleteReason.includes(DeleteReason)) &&
-				(DeleteBy === '' || assetDeletes.DeleteBy.includes(DeleteBy)) &&
-				(DeleteMethod === '' || assetDeletes.DeleteMethod.includes(DeleteMethod)) &&
-				(DeleteLocation === '' || assetDeletes.DeleteLocation.includes(DeleteLocation)) &&
+				(assetName === '' || assetDeletes.assetName.includes(assetName)) &&
+				(assetCode === '' || assetDeletes.assetCode.includes(assetCode)) &&
+				(deleteReason === '' || assetDeletes.deleteReason.includes(deleteReason)) &&
+				(deleteBy === '' || assetDeletes.deleteBy.includes(deleteBy)) &&
+				(deleteMethod === '' || assetDeletes.deleteMethod.includes(deleteMethod)) &&
+				(deleteLocation === '' || assetDeletes.deleteLocation.includes(deleteLocation)) &&
 				(selectedStartDate === null ||
 					new Date(assetDeletes.DeleteDate) >= selectedStartDate) &&
 				(selectedEndDate === null || new Date(assetDeletes.DeleteDate) <= selectedEndDate)
@@ -85,9 +105,9 @@ const DeleteHistory = () => {
 										<label className="form-label">자산명</label> <br />
 										<TextInput
 											type="text"
-											name="AssetName"
+											name="assetName"
 											containerClass={'mb-3'}
-											value={AssetName}
+											value={assetName}
 											key="text"
 											onChange={handleChange}
 										/>
@@ -96,9 +116,9 @@ const DeleteHistory = () => {
 										<label className="form-label">자산코드</label> <br />
 										<TextInput
 											type="text"
-											name="AssetCode"
+											name="assetCode"
 											containerClass={'mb-3'}
-											value={AssetCode}
+											value={assetCode}
 											key="text"
 											onChange={handleChange}
 										/>
@@ -107,9 +127,9 @@ const DeleteHistory = () => {
 										<label className="form-label">폐기사유</label> <br />
 										<TextInput
 											type="text"
-											name="DeleteReason"
+											name="deleteReason"
 											containerClass={'mb-3'}
-											value={DeleteReason}
+											value={deleteReason}
 											key="text"
 											onChange={handleChange}
 										/>
@@ -118,9 +138,9 @@ const DeleteHistory = () => {
 										<label className="form-label">폐기방법</label> <br />
 										<TextInput
 											type="text"
-											name="DeleteMethod"
+											name="deleteMethod"
 											containerClass={'mb-3'}
-											value={DeleteMethod}
+											value={deleteMethod}
 											key="text"
 											onChange={handleChange}
 										/>
@@ -162,9 +182,9 @@ const DeleteHistory = () => {
 											type="text"
 											name="selectedRequester"
 											containerClass={'mb-3'}
-											value={DeleteLocation}
+											value={deleteLocation}
 											key="text"
-											onChange={DeleteLocation}
+											onChange={handleChange}
 										/>
 									</Col>
 									<Col xl={3}>
@@ -173,7 +193,7 @@ const DeleteHistory = () => {
 											type="text"
 											name="DeleteBy"
 											containerClass={'mb-3'}
-											value={DeleteBy}
+											value={deleteBy}
 											key="text"
 											onChange={handleChange}
 										/>

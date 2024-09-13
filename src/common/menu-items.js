@@ -114,6 +114,12 @@ const MENU_ITEMS = [
 				url: '/jsx/Expand',
 				parentKey: 'jsx',
 			},
+			{
+				key: 'ds-SystemSetting',
+				label: '시스템 설정',
+				url: '/jsx/SystemSetting',
+				parentKey: 'jsx',
+			},
 		],
 	},
 	{

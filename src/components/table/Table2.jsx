@@ -10,6 +10,7 @@ import {
 } from 'react-table';
 import classNames from 'classnames';
 import { Pagination } from './Pagination';
+import { useNavigate } from 'react-router-dom';
 
 const GlobalFilter = ({
   preGlobalFilteredRows,
@@ -59,12 +60,9 @@ const IndeterminateCheckbox = forwardRef(
   }
 );
 
-// 행 클릭 이벤트 핸들러
-const handleRowClick = (row) => {
-  //setSelectedRow(row);
-  //setShowModal(true);
-  console.log(row.values.assetSurveyLocation);
-};
+
+
+
 
 const Table2 = (props) => {
   const isSearchable = props['isSearchable'] || false;
@@ -73,6 +71,31 @@ const Table2 = (props) => {
   const isSelectable = props['isSelectable'] || false;
   const isExpandable = props['isExpandable'] || false;
   const sizePerPageList = props['sizePerPageList'] || [];
+  const isDataExist = props['isDataExist'] || false;
+  //const isLoading = props['loading'] || false;
+
+  const navigate = useNavigate();
+
+  // 행 클릭 이벤트 핸들러
+  const handleRowClick = (row) => {
+    if (row.values.assetSurveyLocation === '') {
+      //console.log('1');
+      return;
+    }
+
+    //setSelectedRow(row);
+    //setShowModal(true);
+    console.log(row.values.assetSurveyLocation);
+    const location = row.values.assetSurveyLocation;
+    navigate('/jsx/AssetSurveyDetail', {
+      state: {
+        location: row.values.assetSurveyLocation,
+        surveyStartDate: row.values.assetSurveyStartDate,
+        surveyBy: row.values.assetSurveyBy,
+        assetSurveyNo: row.values.assetSurveyNo,
+      }
+    });  // 클릭된 행의 location으로 페이지 이동
+  };
 
   let otherProps = {};
 
@@ -203,24 +226,35 @@ const Table2 = (props) => {
             ))}
           </thead>
           <tbody {...dataTable.getTableBodyProps()}>
-            {(rows || []).map((row, index) => {
-              dataTable.prepareRow(row);
-              return (
-                //여기서 행에 onclick handler 달아줌
-                <tr {...row.getRowProps({
-                  onClick: () => handleRowClick(row) // onClick을 함수로 전달
-                })} key={index}>
-                  {row.cells.map((cell) => {
-                    return (
+            {isDataExist ? (
+              // 데이터가 존재하지 않을 때는 오류 메시지 표시
+              <tr>
+                <td colSpan={6} className="text-center text-danger">
+                  데이터를 불러오지 못했습니다.
+                </td>
+              </tr>
+            ) : (
+              // 데이터가 존재할 때는 각 행을 표시
+              (rows || []).map((row, index) => {
+                dataTable.prepareRow(row);
+                return (
+                  <tr
+                    {...row.getRowProps({
+                      onClick: () => handleRowClick(row),
+                    })}
+                    key={index}
+                  >
+                    {row.cells.map((cell) => (
                       <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
-                    );
-                  })}
-                </tr>
-              );
-            })}
+                    ))}
+                  </tr>
+                );
+              })
+            )}
           </tbody>
         </table>
       </div>
+
 
       {pagination && <Pagination tableProps={dataTable} sizePerPageList={sizePerPageList} />}
     </>

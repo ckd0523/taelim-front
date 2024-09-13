@@ -2,11 +2,11 @@ import { useState, useEffect } from "react";
 
 const URL = import.meta.env.VITE_BASIC_URL;
 
-const BackUpTable = () => {
+const DetailTable = (assetSurveyNo) => {
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    fetch(`${URL}/backUpHistory`)
+    fetch(`${URL}/assetSurveyDetail/${assetSurveyNo}`)
       .then((response) => response.json())
       .then((data) => {
         setData(data);
@@ -17,4 +17,4 @@ const BackUpTable = () => {
   return data;
 };
 
-export default BackUpTable;
+export { DetailTable };

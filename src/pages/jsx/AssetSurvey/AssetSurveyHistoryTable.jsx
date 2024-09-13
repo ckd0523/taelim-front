@@ -2,19 +2,36 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Row, Col, Card } from 'react-bootstrap';
 import { Table2 } from '../../../components/table/Table2';
+import assetSurveyLocation from './assetSurveyLocation';
 //import StatusColumn from './TableColumnSet';
+
+const URL = import.meta.env.VITE_BASIC_URL;
 
 const columns = [
   { Header: '회차', accessor: 'round', defaultCanSort: true, },
-  { Header: '위치', accessor: 'assetSurveyLocation', defaultCanSort: false, },
+  {
+    Header: '위치', accessor: 'assetSurveyLocation', defaultCanSort: false,
+    Cell: ({ value }) => {
+      const location = assetSurveyLocation.find(loc => loc.value === value);
+      return location ? location.label : value; // 매칭되는 label을 찾아 표시
+    },
+  },
   { Header: '자산조사일자', accessor: 'assetSurveyStartDate', defaultCanSort: false, },
   { Header: '자산조사자', accessor: 'assetSurveyBy', defaultCanSort: false, },
   {
     Header: '상태', accessor: 'surveyStatus', defaultCanSort: false,
     //Cell: StatusColumn,
-    Cell: ({ value }) => (value ? '완료' : '진행 중')
+    Cell: ({ value }) => (value === '' ? null : value ? '완료' : '진행 중')
   },
 ];
+
+const tableData = [{
+  round: '',
+  assetSurveyLocation: '',
+  assetSurveyStartDate: '',
+  assetSurveyBy: '',
+  surveyStatus: '',
+}];
 
 const sizePerPageList = [
   { text: '5', value: 5, },
@@ -23,21 +40,25 @@ const sizePerPageList = [
   { text: '100', value: 100, },
 ];
 
-const SurveyTable = () => {
+const SurveyTable = ({ tableChange }) => {
   const [data, setData] = useState([]);
+  const [isDataExist, setIsDataExist] = useState(false); //fetch로 데이터를 못불러 왔는지
+  //const [loading, setLoading] = useState(true); // fetch로 데이터 불러오는 중인지
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://localhost:8080/assetSurveyHistory');
+        const response = await axios.get(`${URL}/assetSurveyHistory`);
         setData(response.data); // API로부터 받은 데이터 설정
       } catch (error) {
+        setData(tableData);
+        setIsDataExist(true);
         console.error('Error fetching data:', error);
       }
     };
 
     fetchData();
-  }, []);
+  }, [tableChange]);
 
   return (
     <Row>
@@ -54,6 +75,7 @@ const SurveyTable = () => {
               isSortable={true}
               pagination={true}
               isSelectable={true}
+              isDataExist={isDataExist}
             />
           </Card.Body>
         </Card>

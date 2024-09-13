@@ -99,9 +99,9 @@ const AssetTable = () => {
 				(assetLocation === '' ||
 					(item.assetLocation && item.assetLocation.includes(assetLocation))) &&
 				(selectedStartDate === null ||
-					(item.updateDate && new Date(item.updateDate) >= selectedStartDate)) &&
+					(item.introducedDate && new Date(item.introducedDate) >= selectedStartDate)) &&
 				(selectedEndDate === null ||
-					(item.updateDate && new Date(item.updateDate) <= selectedEndDate))
+					(item.introducedDate && new Date(item.introducedDate) < selectedEndDate))
 			);
 		});
 

@@ -185,14 +185,17 @@ const RowDetails = ({ row, assetCode, onClose }) => {
 	};
 
 	// formData를 변경하는 함수
-	const handleInputChange = (e, key) => {
-		setFormData({ ...formData, [key]: e.target.value });
+	const handleInputChange = (event, key) => {
+		const { value } = event.target; // 이벤트 객체에서 value 추출
+		setFormData((prevData) => ({
+			...prevData,
+			[key]: value, // 해당 키의 값을 업데이트
+		}));
 	};
-
 	// 모달 닫기 처리
 	const handleModalClose = () => setShowModal(false);
 
-	// 수정 요청 api 받아서 처리
+	// 수정  api 받아서 처리
 	const handleSubmit = async () => {
 		try {
 			// 수정 요청 처리
@@ -204,12 +207,119 @@ const RowDetails = ({ row, assetCode, onClose }) => {
 			setShowModal(false);
 		} catch (error) {
 			console.error('Error updating asset data:', error);
+			setErrorMessage('자산 수정  중 오류가 발생했습니다.');
+		}
+	};
+
+	// 수정 요청 api 받아서 처리
+	const handleSubmit1 = async () => {
+		try {
+			// 수정 요청 처리
+			const response = await axios.post(
+				`http://localhost:8080/asset/updateDemand/${formData.assetCode}`,
+				formData
+			);
+			alert(response.data); // 성공 메시지
+			setShowModal(false);
+		} catch (error) {
+			console.error('Error updating asset data:', error);
 			setErrorMessage('자산 수정 요청 중 오류가 발생했습니다.');
 		}
 	};
 
 	const renderCellContent = (key) => {
+		// 수정모드 설정
 		if (isEditing) {
+			// department select 설정
+			if (key === 'department') {
+				return (
+					<Form.Select
+						value={formData[key] || ''}
+						onChange={(e) => handleInputChange(e, key)}
+					>
+						<option value="IT_DEPARTMENT">IT부</option>
+						<option value="ADMINISTRATIVE_DEPARTMENT">관리부</option>
+						<option value="SALES_DEPARTMENT">영업부</option>
+						<option value="MARKETING_DEPARTMENT">마케팅부</option>
+						<option value="PRODUCTION_DEPARTMENT">생산부</option>
+						<option value="OPERATIONS_DEPARTMENT">운영부</option>
+						<option value="HUMAN_RESOURCES_DEPARTMENT">인사부</option>
+					</Form.Select>
+				);
+			}
+			// assetLocation select 설정
+			if (key === 'assetLocation') {
+				return (
+					<Form.Select
+						value={formData[key] || ''}
+						onChange={(e) => handleInputChange(e, key)}
+					>
+						<option value="MAIN_B1_DOCUMENT_STORAGE">본관 지하 문서고</option>
+						<option value="MAIN_1F">본관 1층</option>
+						<option value="MAIN_1F_RECEPTION_ROOM">본관 1층 접견실</option>
+						<option value="MAIN_2F">본관 2층</option>
+						<option value="MAIN_2F_PRESIDENT_OFFICE">본관 2층 사장실</option>
+						<option value="MAIN_2F_RESEARCH_OFFICE">본관 2층 기술 연구소 사무실</option>
+						<option value="MAIN_2F_CONFERENCE_ROOM">본관 2층 대회의실</option>
+						<option value="MAIN_2F_CEO_OFFICE">본관 2층 대표 이사실</option>
+						<option value="MAIN_3F_STORAGE">본관 3층 창고</option>
+						<option value="MDCG">MDCG</option>
+						<option value="FACTORY_BUILDING">공장동</option>
+					</Form.Select>
+				);
+			}
+			// owenership select 설정
+			if (key === 'ownership') {
+				return (
+					<Form.Select
+						value={formData[key] || ''}
+						onChange={(e) => handleInputChange(e, key)}
+					>
+						<option value="OWNED">소유</option>
+						<option value="LEASED">임대</option>
+					</Form.Select>
+				);
+			}
+			// useState select 설정
+			if (key === 'useState') {
+				return (
+					<Form.Select
+						value={formData[key] || ''}
+						onChange={(e) => handleInputChange(e, key)}
+					>
+						<option value="NEW">신규</option>
+						<option value="IN_USE">사용중</option>
+						<option value="UNDER_MAINTENANCE">유지관리 중</option>
+						<option value="RESERVED">예비</option>
+						<option value="RETIRED_DISCARDED">퇴직/폐기</option>
+					</Form.Select>
+				);
+			}
+			// operationStatus select 설정
+			if (key === 'operationStatus') {
+				return (
+					<Form.Select
+						value={formData[key] || ''}
+						onChange={(e) => handleInputChange(e, key)}
+					>
+						<option value="OPERATING">가동중</option>
+						<option value="NOT_OPERATING">미가동</option>
+						<option value="MALFUNCTION">고장</option>
+					</Form.Select>
+				);
+			}
+			// introduceDate 날짜로 설정
+			if (key === 'introducedDate') {
+				return (
+					<Form.Control
+						type="date" // 날짜 입력을 위한 date 타입 사용
+						value={formData[key] || ''}
+						onChange={(e) => handleInputChange(e, key)} // onChange 핸들러로 날짜 값 처리
+					/>
+				);
+			}
+
+			// select 외는 text input 설정
 			return (
 				<Form.Control
 					type="text"
@@ -218,6 +328,7 @@ const RowDetails = ({ row, assetCode, onClose }) => {
 				/>
 			);
 		}
+		// 수정 모드가 아닐 때 일반 텍스트 렌더링
 		return formData[key] || 'N/A';
 	};
 
@@ -423,7 +534,7 @@ const RowDetails = ({ row, assetCode, onClose }) => {
 									<Button variant="secondary" onClick={handleModalClose}>
 										취소
 									</Button>
-									<Button variant="primary" onClick={handleSubmit}>
+									<Button variant="primary" onClick={handleSubmit1}>
 										수정 요청
 									</Button>
 									<Button variant="primary" onClick={handleSubmit}>

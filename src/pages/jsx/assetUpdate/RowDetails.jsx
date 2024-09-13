@@ -5,10 +5,10 @@ import axios from 'axios';
 // 자산 분류에 따른 동적 열 정의 함수
 const getClassificationColumns = (classification) => {
 	switch (classification) {
-		case 'INFORMATION_PROTECTION_SYSTEM':
+		case '정보보호시스템':
 			return [{ title: '서비스범위', data: 'serviceScope' }];
 
-		case 'APPLICATION_PROGRAM':
+		case '응용프로그램':
 			return [
 				{ title: '서비스범위', data: 'serviceScope' },
 				{ title: 'OS', data: 'os' },
@@ -17,7 +17,7 @@ const getClassificationColumns = (classification) => {
 				{ title: '화면수', data: 'screenNumber' },
 			];
 
-		case 'SOFTWARE':
+		case '소프트웨어':
 			return [
 				{ title: 'IP', data: 'ip' },
 				{ title: 'ID', data: 'serverId' },
@@ -26,21 +26,21 @@ const getClassificationColumns = (classification) => {
 				{ title: 'OS', data: 'os' },
 			];
 
-		case 'ELECTRONIC_INFORMATION':
+		case '전자정보':
 			return [
 				{ title: 'OS', data: 'os' },
 				{ title: '시스템', data: 'system' },
 				{ title: 'DB종류', data: 'dbtype' },
 			];
 
-		case 'DOCUMENT':
+		case '문서':
 			return [
 				{ title: '문서등급', data: 'documentGrade' },
 				{ title: '문서형태', data: 'documentType' },
 				{ title: '문서링크', data: 'documentLink' },
 			];
 
-		case 'PATENTS_AND_TRADEMARKS':
+		case '특허 및 상표':
 			return [
 				{ title: '출원일자', data: 'applicationDate' },
 				{ title: '등록일자', data: 'registrationDate' },
@@ -55,7 +55,7 @@ const getClassificationColumns = (classification) => {
 				{ title: '관련문서', data: 'relatedDocuments' },
 			];
 
-		case 'ITSYSTEM_EQUIPMENT':
+		case 'IT 장비 - 시스템':
 			return [
 				{ title: '장비유형', data: 'equipmentType' },
 				{ title: '랙유닛', data: 'rackUnit' },
@@ -69,7 +69,7 @@ const getClassificationColumns = (classification) => {
 				{ title: '모니터 포함여부', data: 'monitorIncluded' },
 			];
 
-		case 'ITNETWORK_EQUIPMENT':
+		case 'IT 장비 – 네트워크':
 			return [
 				{ title: '장비유형', data: 'equipmentType' },
 				{ title: '포트수', data: 'numberOfPorts' },
@@ -79,7 +79,7 @@ const getClassificationColumns = (classification) => {
 				{ title: '서비스범위', data: 'serviceScope' },
 			];
 
-		case 'TERMINAL':
+		case '단말기':
 			return [
 				{ title: 'IP', data: 'ip' },
 				{ title: '제품 시리얼 번호', data: 'productSerialNumber' },
@@ -91,10 +91,10 @@ const getClassificationColumns = (classification) => {
 				{ title: 'NAC agent', data: 'tgate' },
 			];
 
-		case 'FURNITURE':
+		case '가구':
 			return [{ title: '크기', data: 'furnitureSize' }];
 
-		case 'DEVICES':
+		case '기기':
 			return [
 				{ title: '기기유형', data: 'deviceType' },
 				{ title: '모델번호', data: 'modelNumber' },
@@ -102,7 +102,7 @@ const getClassificationColumns = (classification) => {
 				{ title: '전원사양', data: 'powerSpecifications' },
 			];
 
-		case 'CAR':
+		case '차량':
 			return [
 				{ title: '배기량', data: 'displacement' },
 				{ title: '차량의 문 수', data: 'doorsCount' },
@@ -113,7 +113,7 @@ const getClassificationColumns = (classification) => {
 				{ title: '연식', data: 'modelYear' },
 			];
 
-		case 'OTHERASSETS':
+		case '기타':
 			return [
 				{ title: '기타 세부 설명', data: 'otherDescription' },
 				{ title: '사용 빈도', data: 'usageFrequency' },
@@ -237,13 +237,13 @@ const RowDetails = ({ row, assetCode, onClose }) => {
 						value={formData[key] || ''}
 						onChange={(e) => handleInputChange(e, key)}
 					>
-						<option value="IT_DEPARTMENT">IT부</option>
-						<option value="ADMINISTRATIVE_DEPARTMENT">관리부</option>
-						<option value="SALES_DEPARTMENT">영업부</option>
-						<option value="MARKETING_DEPARTMENT">마케팅부</option>
-						<option value="PRODUCTION_DEPARTMENT">생산부</option>
-						<option value="OPERATIONS_DEPARTMENT">운영부</option>
-						<option value="HUMAN_RESOURCES_DEPARTMENT">인사부</option>
+						<option value="IT부">IT부</option>
+						<option value="관리부">관리부</option>
+						<option value="영업부">영업부</option>
+						<option value="마케팅부">마케팅부</option>
+						<option value="생산부">생산부</option>
+						<option value="운영부">운영부</option>
+						<option value="인사부">인사부</option>
 					</Form.Select>
 				);
 			}
@@ -254,17 +254,19 @@ const RowDetails = ({ row, assetCode, onClose }) => {
 						value={formData[key] || ''}
 						onChange={(e) => handleInputChange(e, key)}
 					>
-						<option value="MAIN_B1_DOCUMENT_STORAGE">본관 지하 문서고</option>
-						<option value="MAIN_1F">본관 1층</option>
-						<option value="MAIN_1F_RECEPTION_ROOM">본관 1층 접견실</option>
-						<option value="MAIN_2F">본관 2층</option>
-						<option value="MAIN_2F_PRESIDENT_OFFICE">본관 2층 사장실</option>
-						<option value="MAIN_2F_RESEARCH_OFFICE">본관 2층 기술 연구소 사무실</option>
-						<option value="MAIN_2F_CONFERENCE_ROOM">본관 2층 대회의실</option>
-						<option value="MAIN_2F_CEO_OFFICE">본관 2층 대표 이사실</option>
-						<option value="MAIN_3F_STORAGE">본관 3층 창고</option>
-						<option value="MDCG">MDCG</option>
-						<option value="FACTORY_BUILDING">공장동</option>
+						<option value="본관 지하 문서고">본관 지하 문서고</option>
+						<option value="본관 1층">본관 1층</option>
+						<option value="본관 1층 접견실">본관 1층 접견실</option>
+						<option value="본관 2층">본관 2층</option>
+						<option value="본관 2층 사장실">본관 2층 사장실</option>
+						<option value="본관 2층 기술연구소 사무실">
+							본관 2층 기술 연구소 사무실
+						</option>
+						<option value="본관 2층 대회의실">본관 2층 대회의실</option>
+						<option value="본관 2층 대표이사실">본관 2층 대표 이사실</option>
+						<option value="본관 3층 창고">본관 3층 창고</option>
+						<option value="MDCG 천장">MDCG</option>
+						<option value="공장동">공장동</option>
 					</Form.Select>
 				);
 			}
@@ -275,8 +277,8 @@ const RowDetails = ({ row, assetCode, onClose }) => {
 						value={formData[key] || ''}
 						onChange={(e) => handleInputChange(e, key)}
 					>
-						<option value="OWNED">소유</option>
-						<option value="LEASED">임대</option>
+						<option value="소유">소유</option>
+						<option value="임대">임대</option>
 					</Form.Select>
 				);
 			}
@@ -287,11 +289,11 @@ const RowDetails = ({ row, assetCode, onClose }) => {
 						value={formData[key] || ''}
 						onChange={(e) => handleInputChange(e, key)}
 					>
-						<option value="NEW">신규</option>
-						<option value="IN_USE">사용중</option>
-						<option value="UNDER_MAINTENANCE">유지관리 중</option>
-						<option value="RESERVED">예비</option>
-						<option value="RETIRED_DISCARDED">퇴직/폐기</option>
+						<option value="신규">신규</option>
+						<option value="사용중">사용중</option>
+						<option value="유지 관리 중 or 보수 작업 중">유지관리 중</option>
+						<option value="예비">예비</option>
+						<option value="퇴직/폐기">퇴직/폐기</option>
 					</Form.Select>
 				);
 			}
@@ -302,9 +304,9 @@ const RowDetails = ({ row, assetCode, onClose }) => {
 						value={formData[key] || ''}
 						onChange={(e) => handleInputChange(e, key)}
 					>
-						<option value="OPERATING">가동중</option>
-						<option value="NOT_OPERATING">미가동</option>
-						<option value="MALFUNCTION">고장</option>
+						<option value="가동중">가동중</option>
+						<option value="미가동">미가동</option>
+						<option value="고장">고장</option>
 					</Form.Select>
 				);
 			}

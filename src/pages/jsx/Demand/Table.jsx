@@ -87,8 +87,9 @@ const Table = (props) => {
 				pageSize: props['pageSize'] || 10,
 				hiddenColumns: hiddenColumns, // 숨길 열 설정
 			},
+			//selectedFlatRows,
+			//selectedRowIds,
 		},
-
 		otherProps.hasOwnProperty('useGlobalFilter') && otherProps['useGlobalFilter'],
 		otherProps.hasOwnProperty('useSortBy') && otherProps['useSortBy'],
 		otherProps.hasOwnProperty('useExpanded') && otherProps['useExpanded'],
@@ -113,7 +114,7 @@ const Table = (props) => {
 						Cell: ({ row }) => (
 							<div
 								style={{
-									paddingLeft: `${row.depth * 2}rem`, // row.depth에 따라 들여쓰기 설정
+									paddingLeft: `${row.depth * 2}rem`,
 								}}
 							>
 								<IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
@@ -165,6 +166,20 @@ const Table = (props) => {
 		}
 	);
 
+	const {
+		selectedFlatRows,
+		state: { selectedRowIds },
+		// ...other destructured values
+	} = dataTable;
+
+	useEffect(() => {
+		console.log('Selected row IDs:', selectedRowIds);
+		console.log(
+			'selectedFlatRows[].original',
+			selectedFlatRows.map((d) => d.original)
+		);
+	}, [selectedRowIds]);
+
 	const rows = pagination ? dataTable.page : dataTable.rows;
 
 	return (
@@ -207,12 +222,6 @@ const Table = (props) => {
 					<tbody {...dataTable.getTableBodyProps()}>
 						{rows.map((row, index) => {
 							dataTable.prepareRow(row); // 각 행에 대해 한 번만 호출
-
-							// 기본 행 스타일링
-							const rowStyle = {
-								backgroundColor: row.isExpanded ? '#f0f8ff' : 'transparent',
-							};
-
 							return (
 								<React.Fragment key={row.id}>
 									<tr

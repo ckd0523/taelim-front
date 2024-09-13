@@ -188,7 +188,7 @@ const DemandHistory = () => {
 									pagination={true}
 									isSelectable={true}
 									initialState={{ hiddenColumns: ['demandNo'] }} // id 열을 숨김
-									theadClass="table-info"
+									theadClass="table-light"
 									tableClass="border-black"
 									searchBoxClass="mb-2"
 								/>

@@ -59,6 +59,7 @@ const RegisterButton = ({ onClickRegister }) => {
   const handleRegistRequest = async () => {
     setIsSubmitting(true); // 요청 시작 시 확인 버튼 비활성화
 
+
     try {
       // 보낼 데이터를 객체로 구성
       const requestData = {
@@ -66,6 +67,8 @@ const RegisterButton = ({ onClickRegister }) => {
         location: selectedLocation,
         email: surveyBy, // 현재 하드코딩된 이메일
       };
+
+      console.log(requestData.location);
 
       const response = await fetch(`${URL}/register`, {
         method: 'POST',

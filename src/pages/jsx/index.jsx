@@ -5,6 +5,8 @@ import JSX from '../jsx';
 const ProductDetailsEcom = lazy(() => import('./ProductDetails'));
 const AssetRegister = lazy(() => import('./assetCheck'));
 const ExcelRegister = lazy(() => import('./ExcelAssetRegister'));
+const MaintainRegister = lazy(() => import('./Maintain'));
+const MaintainHist = lazy(() => import('./MaintainHistory'));
 const BackupHistory = lazy(() => import('./BackupHistory'));
 const AssetSurveyHistory = lazy(() => import('./AssetSurvey'));
 const DemandHistory = lazy(() => import('./Demand'));
@@ -23,6 +25,8 @@ export default function jsx() {
 				{/* 자산등록 */}
 				<Route path="AssetRegister" element={<AssetRegister />} />
 				<Route path="ExcelRegister" element={<ExcelRegister />} />
+				<Route path="MaintainRegister" element={<MaintainRegister />} />
+				<Route path="MaintainHist" element={<MaintainHist />} />
 				<Route path="ProductDetailsEcom" element={<ProductDetailsEcom />} />
 				<Route path="BackupHistory" element={<BackupHistory />} />
 				<Route path="AssetSurveyHistory" element={<AssetSurveyHistory />} />

@@ -47,11 +47,11 @@ const assetClassification = [
 	{ value: 'OTHERASSETS', label: '기타' },
 ];
 const assetBasis = [
-	{ value: 'COMMON', label: '일반' },
+	{ value: '일반', label: '일반' },
 	{ value: 'TISAX', label: 'TISAX' },
 ];
 const department = [
-	{ value: 'IT_DEPARTMENT', label: 'IT부' },
+	{ value: 'IT부', label: 'IT부' },
 	{
 		value: 'ADMINISTRATIVE_DEPARTMENT',
 		label: '관리부',
@@ -67,18 +67,18 @@ const department = [
 ];
 const assetLocation = [
 	{
-		value: 'MAIN_B1_DOCUMENT_STORAGE',
+		value: '본관 지하 문서고',
 		label: '본관 지하 문서고',
 	},
-	{ value: 'MAIN_1F', label: '본관 1층' },
+	{ value: '본관 1층', label: '본관 1층' },
 	{
-		value: 'MAIN_1F_RECEPTION_ROOM',
+		value: '본관 1층 접견실',
 		label: '본관 1층 접견실',
 	},
-	{ value: 'MAIN_2F', label: '본관 2층' },
+	{ value: '본관 2층', label: '본관 2층' },
 	{
-		value: 'MAIN_2F_PRESIDENT_OFFICE',
-		label: ' 본관 2층 사장실',
+		value: '본관 2층 사장실',
+		label: '본관 2층 사장실',
 	},
 	{
 		value: 'MAIN_2F_RESEARCH_OFFICE',
@@ -117,9 +117,9 @@ const useState = [
 	{ value: 'RETIRED_DISCARDED', label: '퇴직/폐기' },
 ];
 const operationStatus = [
-	{ value: 'OPERATING', label: '가동중' },
-	{ value: 'NOT_OPERATING', label: '미가동' },
-	{ value: 'MALFUNCTION', label: '고장' },
+	{ value: '가동중', label: '가동중' },
+	{ value: '미가동', label: '미가동' },
+	{ value: '고장', label: '고장' },
 ];
 //기본 자산 정보 및 관리 정보 컬럼
 const BasisAssetInfo = ({ formData, handleChange }) => {

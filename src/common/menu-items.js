@@ -73,6 +73,18 @@ const MENU_ITEMS = [
 				parentKey: 'jsx',
 			},
 			{
+				key: 'ds-MaintainRegister',
+				label: '유지보수등록',
+				url: '/jsx/MaintainRegister',
+				parentKey: 'jsx',
+			},
+			{
+				key: 'ds-MaintainHist',
+				label: '유지보수이력',
+				url: '/jsx/MaintainHist',
+				parentKey: 'jsx,',
+			},
+			{
 				key: 'ds-BackUpHistory',
 				label: '백업이력',
 				url: '/jsx/BackUpHistory',
@@ -108,6 +120,7 @@ const MENU_ITEMS = [
 				url: '/jsx/AssetPage',
 				parentKey: 'jsx',
 			},
+			{},
 			// {
 			// 	key: 'ds-Expand',
 			// 	label: '확장',

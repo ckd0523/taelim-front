@@ -3,6 +3,7 @@ import * as XLSX from 'xlsx';
 import { Button, Table } from 'react-bootstrap';
 import Select from 'react-select';
 
+const urlConfig = import.meta.env.VITE_BASIC_URL;
 const ExcelRegister = () => {
 	const [data, setData] = useState({});
 	const [selectValue, setSelectValue] = useState([]);
@@ -103,7 +104,7 @@ const ExcelRegister = () => {
 										case '서비스 범위':
 											updatedFormData['serviceScope'] = excelRow[index];
 											break;
-										case '가동 여부':
+										case '가동여부':
 											updatedFormData['operationStatus'] = excelRow[index];
 											break;
 										case '도입일자':
@@ -156,7 +157,7 @@ const ExcelRegister = () => {
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 		try {
-			const excelResponse = await fetch('http://localhost:8080/asset/excelRegister', {
+			const excelResponse = await fetch(`${urlConfig}/asset/excelRegister`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',

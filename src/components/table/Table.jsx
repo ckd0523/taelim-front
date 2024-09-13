@@ -52,7 +52,7 @@ const IndeterminateCheckbox = forwardRef(({ indeterminate, ...rest }, ref) => {
 	);
 });
 
-const Table = (props) => {
+const Table = ({ onRowClick, ...props }) => {
 	const isSearchable = props['isSearchable'] || false;
 	const isSortable = props['isSortable'] || false;
 	const pagination = props['pagination'] || false;
@@ -200,7 +200,12 @@ const Table = (props) => {
 						{(rows || []).map((row, index) => {
 							dataTable.prepareRow(row);
 							return (
-								<tr {...row.getRowProps()} key={index}>
+								<tr
+									{...row.getRowProps()}
+									onClick={() => onRowClick(row.original)}
+									style={{ cursor: 'pointer' }}
+									key={index}
+								>
 									{row.cells.map((cell) => {
 										return (
 											<td {...cell.getCellProps()}>{cell.render('Cell')}</td>

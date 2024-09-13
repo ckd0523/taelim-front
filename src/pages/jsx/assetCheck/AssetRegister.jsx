@@ -4,13 +4,14 @@ import { useState } from 'react';
 import FileUpload from './FileUpload';
 import { Button } from 'react-bootstrap';
 
+const urlConfig = import.meta.env.VITE_BASIC_URL;
 //자산등록
 const AssetRegister = () => {
 	const [files, setFiles] = useState([]);
 	const [formData, setFormData] = useState({
 		assetClassification: 'INFORMATION_PROTECTION_SYSTEM',
 		assetName: '',
-		assetBasis: 'COMMON',
+		assetBasis: '',
 		manufacturingCompany: '',
 		purpose: '',
 		department: 'IT_DEPARTMENT',
@@ -97,7 +98,7 @@ const AssetRegister = () => {
 	const handleSubmit = async (e) => {
 		e.preventDefault(); // 페이지 새로고침 방지
 		try {
-			const assetResponse = await fetch('http://localhost:8080/asset/register', {
+			const assetResponse = await fetch(`${urlConfig}/asset/register`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',

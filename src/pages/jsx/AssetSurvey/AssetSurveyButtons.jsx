@@ -11,8 +11,8 @@ const Buttons = ({ onClickRegister }) => {
         <Button className='btn btn-danger'>자산 조사 삭제</Button>
       </Col>
       <Col>
+        {/* 자산 조사 등록 버튼 */}
         <RegisterButton onClickRegister={onClickRegister} />
-        {/* <Button>자산 조사 등록</Button> */}
       </Col>
     </Row>
   );

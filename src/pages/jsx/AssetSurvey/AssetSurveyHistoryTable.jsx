@@ -21,9 +21,17 @@ const columns = [
   {
     Header: '상태', accessor: 'surveyStatus', defaultCanSort: false,
     //Cell: StatusColumn,
-    Cell: ({ value }) => (value ? '완료' : '진행 중')
+    Cell: ({ value }) => (value === '' ? null : value ? '완료' : '진행 중')
   },
 ];
+
+const tableData = [{
+  round: '',
+  assetSurveyLocation: '',
+  assetSurveyStartDate: '',
+  assetSurveyBy: '',
+  surveyStatus: '',
+}];
 
 const sizePerPageList = [
   { text: '5', value: 5, },
@@ -34,6 +42,8 @@ const sizePerPageList = [
 
 const SurveyTable = ({ tableChange }) => {
   const [data, setData] = useState([]);
+  const [isDataExist, setIsDataExist] = useState(false); //fetch로 데이터를 못불러 왔는지
+  //const [loading, setLoading] = useState(true); // fetch로 데이터 불러오는 중인지
 
   useEffect(() => {
     const fetchData = async () => {
@@ -41,6 +51,8 @@ const SurveyTable = ({ tableChange }) => {
         const response = await axios.get(`${URL}/assetSurveyHistory`);
         setData(response.data); // API로부터 받은 데이터 설정
       } catch (error) {
+        setData(tableData);
+        setIsDataExist(true);
         console.error('Error fetching data:', error);
       }
     };
@@ -63,6 +75,7 @@ const SurveyTable = ({ tableChange }) => {
               isSortable={true}
               pagination={true}
               isSelectable={true}
+              isDataExist={isDataExist}
             />
           </Card.Body>
         </Card>

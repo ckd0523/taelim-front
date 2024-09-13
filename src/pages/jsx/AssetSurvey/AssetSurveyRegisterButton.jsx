@@ -16,6 +16,8 @@ const RegisterButton = ({ onClickRegister }) => {
 
   const [surveyBy, setSurveyBy] = useState('user10@example.com'); // 하드코딩된 사용자 이메일
 
+  const [isSubmitting, setIsSubmitting] = useState(false); // 버튼 비활성화 상태 추가
+
   //useEffect는 컴포넌트 최상위에 선언을 해야한다.
   //useEffect은 async로 선언 불가, useEffect 안에 async 함수를 따로 만들어야함
   useEffect(() => {
@@ -55,6 +57,8 @@ const RegisterButton = ({ onClickRegister }) => {
 
   // 자산 조사 등록 요청 보내는 함수
   const handleRegistRequest = async () => {
+    setIsSubmitting(true); // 요청 시작 시 확인 버튼 비활성화
+
     try {
       // 보낼 데이터를 객체로 구성
       const requestData = {
@@ -63,7 +67,7 @@ const RegisterButton = ({ onClickRegister }) => {
         email: surveyBy, // 현재 하드코딩된 이메일
       };
 
-      const response = await fetch('http://localhost:8080/register', {
+      const response = await fetch(`${URL}/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -72,17 +76,20 @@ const RegisterButton = ({ onClickRegister }) => {
       });
 
       if (!response.ok) {
+        setIsSubmitting(false); // 요청 완료 후 확인 버튼 활성화
         throw new Error('자산 조사 등록에 실패했습니다.');
       }
 
       alert('자산 조사 등록이 완료되었습니다.');
       setLocation('');
       toggleSignUp(); // 모달 닫기
+      setIsSubmitting(false); // 요청 완료 후 확인 버튼 활성화
       //등록 성공 후 테이블 리렌더링
       onClickRegister();
     } catch (error) {
       console.error('자산 조사 등록 중 오류:', error);
       alert('오류가 발생했습니다. 다시 시도해주세요.');
+      setIsSubmitting(false); // 요청 완료 후 확인 버튼 활성화
     }
   };
 
@@ -149,8 +156,8 @@ const RegisterButton = ({ onClickRegister }) => {
         </Modal.Body>
 
         <Modal.Footer>
-          <Button onClick={handleRegistRequest}>
-            확인
+          <Button onClick={handleRegistRequest} disabled={isSubmitting}>
+            {isSubmitting ? '처리 중...' : '확인'}
           </Button>
           <Button className='bnt btn-danger' onClick={toggleSignUp}>
             취소

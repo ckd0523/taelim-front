@@ -87,8 +87,9 @@ const Table = (props) => {
 				pageSize: props['pageSize'] || 10,
 				hiddenColumns: hiddenColumns, // 숨길 열 설정
 			},
+			//selectedFlatRows,
+			//selectedRowIds,
 		},
-
 		otherProps.hasOwnProperty('useGlobalFilter') && otherProps['useGlobalFilter'],
 		otherProps.hasOwnProperty('useSortBy') && otherProps['useSortBy'],
 		otherProps.hasOwnProperty('useExpanded') && otherProps['useExpanded'],
@@ -111,7 +112,11 @@ const Table = (props) => {
 						// The cell can use the individual row's getToggleRowSelectedProps method
 						// to the render a checkbox
 						Cell: ({ row }) => (
-							<div>
+							<div
+								style={{
+									paddingLeft: `${row.depth * 2}rem`,
+								}}
+							>
 								<IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
 							</div>
 						),
@@ -161,6 +166,20 @@ const Table = (props) => {
 		}
 	);
 
+	const {
+		selectedFlatRows,
+		state: { selectedRowIds },
+		// ...other destructured values
+	} = dataTable;
+
+	useEffect(() => {
+		console.log('Selected row IDs:', selectedRowIds);
+		console.log(
+			'selectedFlatRows[].original',
+			selectedFlatRows.map((d) => d.original)
+		);
+	}, [selectedRowIds]);
+
 	const rows = pagination ? dataTable.page : dataTable.rows;
 
 	return (
@@ -201,16 +220,22 @@ const Table = (props) => {
 						))}
 					</thead>
 					<tbody {...dataTable.getTableBodyProps()}>
-						{(rows || []).map((row, index) => {
-							dataTable.prepareRow(row);
+						{rows.map((row, index) => {
+							dataTable.prepareRow(row); // 각 행에 대해 한 번만 호출
 							return (
-								<tr {...row.getRowProps()} key={index}>
-									{row.cells.map((cell) => {
-										return (
+								<React.Fragment key={row.id}>
+									<tr
+										{...row.getRowProps()}
+										style={{
+											backgroundColor:
+												row.depth === 1 ? '#f0f8ff' : 'transparent', // 상위 요소일 때 색상 설정
+										}}
+									>
+										{row.cells.map((cell) => (
 											<td {...cell.getCellProps()}>{cell.render('Cell')}</td>
-										);
-									})}
-								</tr>
+										))}
+									</tr>
+								</React.Fragment>
 							);
 						})}
 					</tbody>

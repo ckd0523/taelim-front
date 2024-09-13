@@ -59,6 +59,7 @@ const Table = (props) => {
 	const isSelectable = props['isSelectable'] || false;
 	const isExpandable = props['isExpandable'] || false;
 	const sizePerPageList = props['sizePerPageList'] || [];
+	const hiddenColumns = props.initialState?.hiddenColumns || [];
 
 	let otherProps = {};
 
@@ -83,6 +84,7 @@ const Table = (props) => {
 			columns: props.columns,
 			data: props['data'],
 			initialState: { pageSize: props['pageSize'] || 10 },
+			hiddenColumns: hiddenColumns, // 숨길 열 설정
 		},
 
 		otherProps.hasOwnProperty('useGlobalFilter') && otherProps['useGlobalFilter'],

@@ -48,3 +48,11 @@
 	font-size: 1.5rem; /* 제목 크기 조정 */
 	display: inline-block; /* 제목을 인라인 블록으로 변경하여 여백 조정 */
 }
+.info-section {
+	border: 2px solid #000; /* 실선 처리, 두께 2px, 색상 검정 */
+	padding: 15px; /* 내부 여백 추가 */
+	margin-top: 20px; /* 위쪽에 여백 추가 */
+	border-radius: 5px; /* 모서리를 살짝 둥글게 */
+	max-height: 500px; /* div의 최대 높이 지정 */
+	overflow-y: auto; /* 세로 스크롤 추가 */
+}

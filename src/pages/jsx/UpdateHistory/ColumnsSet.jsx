@@ -10,40 +10,41 @@ const columns = (setModalData, setShowModal) => [
 		defaultCanSort: true,
 		Cell: ({ row }) => {
 			const handleRowClick = useCallback(() => {
+				console.log('클릭된 행 : ', row.original);
 				setModalData(row.original);
 				setShowModal(true);
 			}, [row.original]);
 
 			return (
 				<span onClick={handleRowClick} style={{ cursor: 'pointer', color: 'blue' }}>
-					{row.original.UpdateNo}
+					{row.index + 1}
 				</span>
 			);
 		},
 	},
 	{
 		Header: '자산코드',
-		accessor: 'AssetCode',
+		accessor: 'assetCode',
 		defaultCanSort: false,
 	},
 	{
 		Header: '자산명',
-		accessor: 'AssetName',
+		accessor: 'assetName',
 		defaultCanSort: false,
 	},
 	{
 		Header: '수정일자',
-		accessor: 'UpdateDate',
+		accessor: 'updateDate',
 		defaultCanSort: true,
 	},
 	{
 		Header: '수정요청자',
-		accessor: 'UpdateBy',
+		accessor: 'updateBy',
 		defaultCanSort: true,
 	},
 	{
 		Header: '수정사유',
-		accessor: 'UpdateReason',
+		accessor: 'updateReason',
 		defaultCanSort: false,
 	},
 ];

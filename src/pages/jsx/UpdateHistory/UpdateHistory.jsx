@@ -4,34 +4,56 @@ import { columns } from './ColumnsSet';
 import { useState } from 'react';
 import { assetUpdates } from './data';
 import { InfoModal } from './UpdateHistoryModal';
+import axios from 'axios';
 
 import Select from 'react-select';
+import { useEffect } from 'react';
 
 const UpdateHistory = () => {
-	const [UpdateList, setUpdateList] = useState(assetUpdates);
-	const [AssetCode, setAssetCode] = useState('');
-	const [UpdateReason, setUpdateReason] = useState('');
-	const [AssetName, setAssetName] = useState('');
-	const [UpdateBy, setUpdateBy] = useState('');
+	// 데이터 저장
+	const [UpdateList, setUpdateList] = useState([]);
+	const [originalData, setOriginalData] = useState([]); // 데이터 저장할 위치
+
+	// 검색을 위한 column 들 재설정
+	const [assetName, setAssetName] = useState('');
+	const [assetCode, setAssetCode] = useState('');
+	const [updateReason, setUpdateReason] = useState('');
+	const [updateBy, setUpdateBy] = useState('');
+	// 날짜 아직 미정
 	const [selectedStartDate, setSelectedStartDate] = useState(null);
 	const [selectedEndDate, setSelectedEndDate] = useState(null);
+	// 모달 관련
 	const [showModal, setShowModal] = useState(false);
 	const [modalData, setModalData] = useState(null);
+
+	// 백엔드에서 수정 이력 데이터를 불러오는 함수
+	useEffect(() => {
+		const fetchUpdateHistory = async () => {
+			try {
+				const response = await axios.get('http://localhost:8080/updateHistory'); // API 호출
+				setUpdateList(response.data); // 가져온 데이터를 저장
+				setOriginalData(response.data); // 검색을 위하 원본 데이터도 저장
+			} catch (error) {
+				console.log('수정 이력 가져오기 실패 : ', error);
+			}
+		};
+		fetchUpdateHistory();
+	}, []);
 
 	const handleFormChange = (e) => {
 		const { name, value } = e.target;
 
 		switch (name) {
-			case 'AssetCode':
+			case 'assetCode':
 				setAssetCode(value);
 				break;
-			case 'AssetName':
+			case 'assetName':
 				setAssetName(value);
 				break;
-			case 'UpdateReason':
+			case 'updateReason':
 				setUpdateReason(value);
 				break;
-			case 'UpdateBy':
+			case 'updateBy':
 				setUpdateBy(value);
 				break;
 			default:
@@ -45,12 +67,12 @@ const UpdateHistory = () => {
 	};
 
 	const handleSearch = () => {
-		const filteredData = assetUpdates.filter((assetUpdates) => {
+		const filteredData = originalData.filter((assetUpdates) => {
 			return (
-				(AssetCode === '' || assetUpdates.AssetCode.includes(AssetCode)) &&
-				(AssetName === '' || assetUpdates.AssetName.includes(AssetName)) &&
-				(UpdateBy === '' || assetUpdates.UpdateBy.includes(UpdateBy)) &&
-				(UpdateReason === '' || assetUpdates.UpdateReason.includes(UpdateReason)) &&
+				(assetCode === '' || assetUpdates.assetCode.includes(assetCode)) &&
+				(assetName === '' || assetUpdates.assetName.includes(assetName)) &&
+				(updateBy === '' || assetUpdates.updateBy.includes(updateBy)) &&
+				(updateReason === '' || assetUpdates.updateReason.includes(updateReason)) &&
 				(selectedStartDate === null ||
 					new Date(assetUpdates.UpdateDate) >= selectedStartDate) &&
 				(selectedEndDate === null || new Date(assetUpdates.UpdateDate) <= selectedEndDate)
@@ -74,9 +96,9 @@ const UpdateHistory = () => {
 										<label className="form-label">자산코드</label> <br />
 										<TextInput
 											type="text"
-											name="AssetCode"
+											name="assetCode"
 											containerClass={'mb-3'}
-											value={AssetCode}
+											value={assetCode}
 											key="text"
 											onChange={handleFormChange}
 										/>
@@ -85,9 +107,9 @@ const UpdateHistory = () => {
 										<label className="form-label">자산명</label> <br />
 										<TextInput
 											type="text"
-											name="AssetName"
+											name="assetName"
 											containerClass={'mb-3'}
-											value={AssetName}
+											value={assetName}
 											key="text"
 											onChange={handleFormChange}
 										/>
@@ -96,9 +118,9 @@ const UpdateHistory = () => {
 										<label className="form-label">수정사유</label> <br />
 										<TextInput
 											type="text"
-											name="UpdateReason"
+											name="updateReason"
 											containerClass={'mb-3'}
-											value={UpdateReason}
+											value={updateReason}
 											key="text"
 											onChange={handleFormChange}
 										/>
@@ -107,9 +129,9 @@ const UpdateHistory = () => {
 										<label className="form-label">수정요청자</label> <br />
 										<TextInput
 											type="text"
-											name="UpdateBy"
+											name="updateBy"
 											containerClass={'mb-3'}
-											value={UpdateBy}
+											value={updateBy}
 											key="text"
 											onChange={handleFormChange}
 										/>
@@ -172,6 +194,7 @@ const UpdateHistory = () => {
 									//isSelectable={true}
 									theadClass="table-light"
 									searchBoxClass="mb-2"
+									onRowClick={() => {}} // onRowClick 이벤트를 빈 함수로 설정하여 무시
 								/>
 							</Row>
 							{/* Modal */}

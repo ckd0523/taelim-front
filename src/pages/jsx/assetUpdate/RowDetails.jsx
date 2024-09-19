@@ -205,6 +205,7 @@ const RowDetails = ({ row, assetCode, onClose }) => {
 			);
 			alert(response.data); // 성공 메시지
 			setShowModal(false);
+			console.log(formData);
 		} catch (error) {
 			console.error('Error updating asset data:', error);
 			setErrorMessage('자산 수정  중 오류가 발생했습니다.');
@@ -520,15 +521,27 @@ const RowDetails = ({ row, assetCode, onClose }) => {
 										</Form.Group>
 										<Form.Group className="mb-3">
 											<Form.Label>수정사유</Form.Label>
-											<Form.Select>
-												<option>사유 1</option>
-												<option>사유 2</option>
-												<option>사유 3</option>
+											<Form.Select
+												value={formData.updateReason}
+												onChange={(e) =>
+													handleInputChange(e, 'updateReason')
+												}
+											>
+												<option value="사유 1">사유 1</option>
+												<option value="사유 2">사유 2</option>
+												<option value="사유 3">사유 3</option>
 											</Form.Select>
 										</Form.Group>
 										<Form.Group className="mb-3">
 											<Form.Label>수정내용</Form.Label>
-											<Form.Control as="textarea" rows={3} />
+											<Form.Control
+												as="textarea"
+												rows={3}
+												value={formData.updateDetail}
+												onChange={(e) =>
+													handleInputChange(e, 'updateDetail')
+												}
+											/>
 										</Form.Group>
 									</Form>
 								</Modal.Body>

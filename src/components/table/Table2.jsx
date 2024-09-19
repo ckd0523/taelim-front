@@ -87,7 +87,7 @@ const Table2 = (props) => {
     //setShowModal(true);
     console.log(row.values.assetSurveyLocation);
     const location = row.values.assetSurveyLocation;
-    navigate('/jsx/AssetSurveyDetail', {
+    navigate('/jsx/AssetSurveyDetail/', {
       state: {
         location: row.values.assetSurveyLocation,
         surveyStartDate: row.values.assetSurveyStartDate,
@@ -119,7 +119,8 @@ const Table2 = (props) => {
     {
       columns: props.columns,
       data: props['data'],
-      initialState: { pageSize: props['pageSize'] || 10 },
+      //안보이게 할 컬럼을 여기 init에 적어주면 됨.
+      initialState: { pageSize: props['pageSize'] || 10, hiddenColumns: ['assetSurveyNo'] },
     },
 
     otherProps.hasOwnProperty('useGlobalFilter') && otherProps['useGlobalFilter'],

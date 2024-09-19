@@ -3,17 +3,52 @@ import { useLocation } from 'react-router-dom';
 import assetSurveyLocation from './assetSurveyLocation';
 import { useState } from 'react';
 import { Table } from '@/components';
-import { DetailTable } from './data';
+import { getDetailTable } from './data';
+import { DetailTable } from './AssetSurveyHistoryTable';
 
 const columns = [
-  { Header: '자산 코드', accessor: 'round', defaultCanSort: true, },
-  { Header: '자산명', accessor: 'assetSurveyLocation', defaultCanSort: false, },
-  { Header: '자산 소유자', accessor: 'assetSurveyStartDate', defaultCanSort: false, },
-  { Header: '자산 담당자', accessor: 'assetSurveyBy', defaultCanSort: false, },
-  { Header: '정위치 유무', accessor: 'surveyStatus', defaultCanSort: false, },
-  { Header: '상태', accessor: 'surveyStatus', defaultCanSort: false, },
-  { Header: '내용', accessor: 'surveyStatus', defaultCanSort: false, },
+  { Header: '자산 코드', accessor: 'assetCode', defaultCanSort: true, },
+  { Header: '자산명', accessor: 'assetName', defaultCanSort: false, },
+  { Header: '자산 소유자', accessor: 'assetOwner', defaultCanSort: false, },
+  { Header: '자산 담당자', accessor: 'assetSecurityManager', defaultCanSort: false, },
+  {
+    Header: '정위치 유무', accessor: 'exactLocation',
+    Cell: ({ row }) => (
+      <input
+        type='checkbox'
+        checked={row.original.exactLocation}
+        onChange={(e) => handleCheckboxChange(e, row)}
+      />
+    )
+  },
+  {
+    Header: '상태', accessor: 'assetStatus',
+    Cell: ({ row }) => (
+      <input
+        type='checkbox'
+        checked={row.original.assetStatus}
+        onChange={(e) => handleCheckboxChange(e, row)}
+      />
+    )
+  },
+  {
+    Header: '내용', accessor: 'assetSurveyContent',
+    Cell: ({ }) => (
+      <input
+        type='text'
+      />
+    )
+  },
 ];
+
+const handleCheckboxChange = (e, row) => {
+  const updatedRow = {
+    ...row.original,
+    [e.target.name]: e.target.checked,
+  };
+  console.log('Updated Row:', updatedRow);
+  // 상태를 업데이트하는 로직 추가
+};
 
 const AssetSurveyDetail = () => {
   const locationParam = useLocation();
@@ -32,7 +67,9 @@ const AssetSurveyDetail = () => {
     setIsChecked(!isChecked);
   };
 
-  const data = DetailTable(assetSurveyNo);
+  console.log('선택한 레코드 자산 번호 : ' + assetSurveyNo);
+  const data = getDetailTable(assetSurveyNo);
+  //console.log('얘가 null이라고? : ' + data);
 
   return (
     <div>
@@ -104,17 +141,15 @@ const AssetSurveyDetail = () => {
 
       <Card>
         <Card.Body>
-          <p>테이블 들어갈 자리</p> {/*
-          <Table>
-            columns={columns}
-            data={data}
-            pagesize={5}
-            sizePerPageList={20}
-            isSortable={true}
-            pagination={true}
-            isSelectable={true}
-          </Table>
-          */}
+
+          {/* */}
+          <p>테이블 들어갈 자리</p>
+          {data && data.length > 0 ? (
+            <DetailTable detailColumn={columns} detailData={data} />
+          ) : (
+            <p>Loading...</p>  // 데이터가 없을 때 보여줄 내용
+          )}
+
         </Card.Body>
       </Card>
 

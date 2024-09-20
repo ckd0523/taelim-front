@@ -7,9 +7,9 @@ export default function Footer() {
 		<footer className="footer">
 			<div className="container-fluid">
 				<Row>
-					<Col md={6}>{currentYear} © Hyper - Coderthemes.com</Col>
+					<Col md={6}>{currentYear} © Taelim</Col>
 					<Col md={6}>
-						<div className="text-md-end footer-links d-none d-md-block">
+						{/* <div className="text-md-end footer-links d-none d-md-block">
 							<Link to="https://coderthemes.com" target="_blank">
 								About
 							</Link>
@@ -21,7 +21,7 @@ export default function Footer() {
 							<Link to="https://coderthemes.com" target="_blank">
 								Contact Us
 							</Link>
-						</div>
+						</div> */}
 					</Col>
 				</Row>
 			</div>

@@ -9,29 +9,30 @@ import logo from '@/assets/images/logo.png';
 import logoDark from '@/assets/images/logo-dark.png';
 import logoSm from '@/assets/images/logo-sm.png';
 import logoDarkSm from '@/assets/images/logo-dark-sm.png';
+import taelimlogo from '@/assets/images/Taelimlogo.png';
 import { getMenuItems } from './utils/menu';
 import { Button } from 'react-bootstrap';
 
-const UserBox = () => {
-	return (
-		<div className="leftbar-user">
-			<Link to="/pages/profile">
-				<img
-					src={profileImg}
-					alt="user-image"
-					height="42"
-					className="rounded-circle shadow-sm"
-				/>
-				<span className="leftbar-user-name mt-2">Dominic Keller</span>
-			</Link>
-		</div>
-	);
-};
+// const UserBox = () => {
+// 	return (
+// 		<div className="leftbar-user">
+// 			<Link to="/pages/profile">
+// 				<img
+// 					src={profileImg}
+// 					alt="user-image"
+// 					height="42"
+// 					className="rounded-circle shadow-sm"
+// 				/>
+// 				<span className="leftbar-user-name mt-2">Dominic Keller</span>
+// 			</Link>
+// 		</div>
+// 	);
+// };
 
 const SideBarContent = () => {
 	return (
 		<>
-			<UserBox />
+			{/* <UserBox /> */}
 			<AppMenu menuItems={getMenuItems()} />
 			<div className="clearfix" />
 		</>
@@ -45,8 +46,7 @@ const LeftSidebar = ({ isCondensed, leftbarDark }) => {
 	 * Handle the click anywhere in doc
 	 */
 	const handleOtherClick = (e) => {
-		if (menuNodeRef && menuNodeRef.current && menuNodeRef.current.contains(e.target))
-			return;
+		if (menuNodeRef && menuNodeRef.current && menuNodeRef.current.contains(e.target)) return;
 		// else hide the menubar
 		if (document.body) {
 			document.body.classList.remove('sidebar-enable');
@@ -63,12 +63,16 @@ const LeftSidebar = ({ isCondensed, leftbarDark }) => {
 
 	return (
 		<div className="leftside-menu" ref={menuNodeRef}>
-			<Link to="/" className={`logo ${leftbarDark ? 'logo-light' : 'logo-dark'}`}>
+			<Link
+				to="/"
+				className={`logo ${leftbarDark ? 'logo-light' : 'logo-dark'}`}
+				style={{ backgroundColor: 'logo-light' }}
+			>
 				<span className="logo-lg">
-					<img src={leftbarDark ? logo : logoDark} alt="logo" height="16" />
+					<img src={taelimlogo} alt="logo" height="30" />
 				</span>
 				<span className="logo-sm">
-					<img src={leftbarDark ? logoSm : logoDarkSm} alt="logo" height="16" />
+					<img src={taelimlogo} alt="logo" height="30" />
 				</span>
 			</Link>
 

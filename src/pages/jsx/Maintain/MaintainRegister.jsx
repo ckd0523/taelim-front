@@ -8,6 +8,8 @@ const MaintainRegister = () => {
 	const [show, setShow] = useState(false);
 
 	const [imgFile, setImgFile] = useState();
+
+	const [file, files] = useState([]);
 	const [afterImg, setAfterImg] = useState();
 	const [imgPath, setImgPath] = useState();
 	const [AfterPath, setAfterPath] = useState();
@@ -42,6 +44,56 @@ const MaintainRegister = () => {
 		reader.onloadend = () => {
 			setAfterPath(reader.result);
 		};
+	};
+
+	const handleSubmit = async (e) => {
+		e.preventDefault();
+		try {
+			const maintainResponse = await fetch(`${urlConfig}/maintain/register`, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify(formData),
+			});
+
+			if (maintainResponse.ok) {
+				const assetNo = await maintainResponse.text();
+				alert('유지보수가 성공적으로 등록');
+
+				if (files.length > 0) {
+					for (let { file, fileType } of files) {
+						const fileFormData = new FormData();
+						fileFormData.append('assetNo', assetNo);
+						fileFormData.append('file', file[0]);
+						fileFormData.append('fileType', fileType);
+						// console.log(fileFormData.assetNo);
+						console.log('fileFormData:', fileFormData.get('file'));
+						console.log('assetNo:', fileFormData.get('assetNo'));
+						console.log('fileType:', fileFormData.get('fileType'));
+
+						const fileResponse = await fetch(
+							'http://localhost:8080/asset/file/upload',
+							{
+								method: 'POST',
+								body: fileFormData,
+							}
+						);
+
+						if (fileResponse.ok) {
+							alert('파일이 성공적으로 업로드됨');
+						} else {
+							alert('파일 업로드 실패');
+						}
+					}
+				}
+			} else {
+				alert('자산 등록 실패');
+			}
+		} catch (error) {
+			console.error('에러발생 : ', error);
+			alert('자산 등록 중 에러가 발생');
+		}
 	};
 	return (
 		<div>
@@ -108,7 +160,7 @@ const MaintainRegister = () => {
 					</Form>
 				</Modal.Body>
 				<Modal.Footer>
-					<Button variant="secondary" onClick={handleClose}>
+					<Button variant="secondary" onClick={handleSubmit}>
 						등록
 					</Button>
 					<Button variant="primary" onClick={handleClose}>

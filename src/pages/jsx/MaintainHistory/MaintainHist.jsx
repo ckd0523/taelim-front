@@ -1,8 +1,10 @@
-import { Row, Col, Card, Form, FormGroup, Button } from 'react-bootstrap';
+import { Row, Col, Card, Form, Button } from 'react-bootstrap';
 import { CustomDatePicker, Table } from '@/components';
 import { records as data } from '@/pages/jsx/MaintainHistory/data';
 import { MaintainDetail } from '@/pages/jsx/MaintainHistory/MaintainDetail';
 import { useState } from 'react';
+
+import './Media.css';
 const columns = [
 	{
 		Header: '번호',
@@ -58,18 +60,27 @@ const MaintainHist = () => {
 	const handleClose = () => setShow(false);
 	return (
 		<>
-			<Row>
-				<Col style={{ paddingTop: 100, paddingLeft: 100, paddingRight: 100 }}>
-					<Card>
-						<Card.Body>
-							<Form>
-								<Row className="g-0">
-									<Col sm={2}>
-										<Form.Group as={Row}>
-											<Form.Label htmlFor="assetName" column sm={2}>
+			<Row className="px-3 pt-5 justify-content-center d-flex align-items-center">
+				<Col className=" d-flex justify-content-center align-items-center">
+					<Card className="card ">
+						<Card.Body className="card-body ">
+							<Form className="col-md-12 justify-content-center d-flex align-items-center">
+								<Row className="justify-content-center col-md-12 d-flex align-items-center">
+									<Col xs={12} md={4} lg={2}>
+										<Form.Group
+											as={Row}
+											className="d-flex justify-content-center align-items-center "
+										>
+											<Form.Label
+												htmlFor="assetName"
+												column
+												xs={12}
+												md={12}
+												lg={3}
+											>
 												자산명
 											</Form.Label>
-											<Col sm={5}>
+											<Col xs={12} md={12} lg={5}>
 												<Form.Control
 													type="text"
 													name="자산명"
@@ -79,12 +90,21 @@ const MaintainHist = () => {
 										</Form.Group>
 									</Col>
 
-									<Col sm={3}>
-										<Form.Group as={Row}>
-											<Form.Label htmlFor="assetCode" column sm={2}>
+									<Col xs={12} md={6} lg={3}>
+										<Form.Group
+											as={Row}
+											className="d-flex justify-content-center align-items-center"
+										>
+											<Form.Label
+												htmlFor="assetCode"
+												column
+												xs={12}
+												md={12}
+												lg={2}
+											>
 												자산코드
 											</Form.Label>
-											<Col sm={5}>
+											<Col xs={12} md={12} lg={5}>
 												<Form.Control
 													type="text"
 													name="자산코드"
@@ -94,12 +114,21 @@ const MaintainHist = () => {
 										</Form.Group>
 									</Col>
 
-									<Col sm={3}>
-										<Form.Group as={Row}>
-											<Form.Label htmlFor="maintainBy" column sm={2}>
+									<Col xs={12} md={6} lg={3}>
+										<Form.Group
+											as={Row}
+											className="d-flex justify-content-center align-items-center"
+										>
+											<Form.Label
+												htmlFor="maintainBy"
+												column
+												xs={12}
+												md={7}
+												lg={3}
+											>
 												유지보수자
 											</Form.Label>
-											<Col sm={5}>
+											<Col xs={12} md={7} lg={5}>
 												<Form.Control
 													type="text"
 													name="유지보수자"
@@ -109,17 +138,21 @@ const MaintainHist = () => {
 										</Form.Group>
 									</Col>
 
-									<Col sm={3}>
-										<Form.Group as={Row} className="align-items-center">
-											<Form.Label column sm={3}>
+									<Col
+										column
+										xs={12}
+										md={6}
+										lg={3}
+										className="d-flex justify-content-center align-items-center"
+									>
+										<Form.Group
+											as={Row}
+											className="d-flex justify-content-center  align-items-center"
+										>
+											<Form.Label column xs={12} md={11} lg={3}>
 												유지보수 일자
 											</Form.Label>
-											<Col sm={4}>
-												{/* <Form.Control
-													type="date"
-													name="유지보수일자"
-													id="startDate"
-												/> */}
+											<Col xs={5} md={5} lg={4}>
 												<CustomDatePicker
 													type="date"
 													dateFormat="yyyy-MM-dd"
@@ -127,15 +160,10 @@ const MaintainHist = () => {
 													hideAddon={true}
 												/>
 											</Col>
-											<Col sm={1} className="text-center">
+											<Col xs={1} md={1} lg={1} className="text-center">
 												~
 											</Col>
-											<Col sm={4}>
-												{/* <Form.Control
-													type="date"
-													name="유지보수일자"
-													id="endDate"
-												/> */}
+											<Col xs={5} md={5} lg={4}>
 												<CustomDatePicker
 													type="date"
 													dateFormat="yyyy-MM-dd"
@@ -145,7 +173,7 @@ const MaintainHist = () => {
 											</Col>
 										</Form.Group>
 									</Col>
-									<Col style={{ paddingLeft: 20 }}>
+									<Col className="px-2 d-flex justify-content-center ">
 										<Button>검색</Button>
 									</Col>
 								</Row>
@@ -155,14 +183,13 @@ const MaintainHist = () => {
 				</Col>
 			</Row>
 
-			<Row>
-				<Col style={{ padding: 100 }}>
-					<h4 className="header-title text-center">유지보수 이력</h4>
+			<Row className="justify-content-center align-items-center">
+				{/* <h4 className="header-title text-center">유지보수 이력</h4> */}
+				<Col className="pt-5 d-flex justify-content-center align-items-center">
 					<Card>
 						<Card.Body>
 							<Table
 								theadClass="table-light"
-								className="table-centered mb-0"
 								sizePerPageList={sizePerPageList}
 								columns={columns}
 								data={data}

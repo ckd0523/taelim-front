@@ -1,0 +1,50 @@
+@media (max-width: 768px) {
+	.responsive-padding {
+		padding-top: 20px; /* 테블릿 크기 */
+	}
+	.card {
+		display: flex;
+		flex-direction: column; /* 카드 내용을 수직으로 정렬 */
+		width: 30rem;
+	}
+	.card-body {
+		flex-grow: 1; /* 카드 내용이 균등하게 채워지도록 설정 */
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between; /* 상하 여백 균등 배분 */
+	}
+}
+
+@media (min-width: 769px) and (max-width: 1280px) {
+	.responsive-padding {
+		padding: 20px;
+	}
+	.card {
+		display: flex;
+		flex-direction: column;
+		width: 42rem;
+	}
+	.card-body {
+		flex-grow: 1;
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+	}
+}
+
+@media (min-width: 1281px) {
+	.responsive-padding {
+		padding: 50px;
+	}
+	.card {
+		display: flex;
+		flex-direction: column;
+		width: 100rem;
+	}
+	.card-body {
+		flex-grow: 1;
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+	}
+}

@@ -1,9 +1,9 @@
-import axios from 'axios';
 import BasisAssetInfo from './BasisAssetInfo';
 import { useState } from 'react';
 import FileUpload from './FileUpload';
-import { Button } from 'react-bootstrap';
+import { Button, Row, Col, Container } from 'react-bootstrap';
 
+import './Media.css';
 const urlConfig = import.meta.env.VITE_BASIC_URL;
 //자산등록
 const AssetRegister = () => {
@@ -158,26 +158,28 @@ const AssetRegister = () => {
 	};
 
 	return (
-		<div>
-			<div className="d-flex justify-content-center" style={{ padding: 50 }}>
-				<BasisAssetInfo formData={formData} handleChange={handleChange} />
-			</div>
-			<div className="d-flex justify-content-center" style={{ padding: 50 }}>
-				<FileUpload files={files} setFiles={setFiles} />
-			</div>
-			<div
-				className="d-flex justify-content-center"
-				style={{ padding: '0px 50px 50px 50px' }}
-			>
-				<Button size="lg" variant="primary" type="submit" onClick={handleSubmit}>
-					저장
-				</Button>
-				<p style={{ padding: 5 }}></p>
-				<Button size="lg" variant="secondary" type="button">
-					취소
-				</Button>
-			</div>
-		</div>
+		<Container fluid>
+			<Row className="d-flex justify-content-center col-md-8 responsive-padding">
+				<Col xs={12} md={8} lg={6}>
+					<BasisAssetInfo formData={formData} handleChange={handleChange} />
+				</Col>
+			</Row>
+			<Row className="d-flex justify-content-center col-md-8 responsive-padding">
+				<Col xs={12} md={8} lg={6}>
+					<FileUpload files={files} setFiles={setFiles} />
+				</Col>
+			</Row>
+			<Row className="d-flex justify-content-center responsive-padding">
+				<Col xs={12} md={8} lg={6} className="text-center">
+					<Button size="lg" variant="primary" type="submit" onClick={handleSubmit}>
+						저장
+					</Button>
+					<Button size="lg" variant="secondary" type="button">
+						취소
+					</Button>
+				</Col>
+			</Row>
+		</Container>
 	);
 };
 

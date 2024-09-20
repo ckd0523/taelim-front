@@ -4,25 +4,35 @@ import { useAccordionButton } from 'react-bootstrap';
 
 import PurchasingInfo from './PurchasingInfo';
 import './ButtonStyle.css';
+import './Media.css';
 import { Row, Col, Card, Accordion } from 'react-bootstrap';
+import { BsCaretUpFill } from 'react-icons/bs';
+import { BsCaretDownFill } from 'react-icons/bs';
 
 import { TextInput, TextAreaInput } from '@/components/Form';
 import { useForm, FormProvider } from 'react-hook-form';
 import { CustomDatePicker } from '@/components/Form';
-
+import { useState } from 'react';
 import Select from 'react-select';
 // import { Typehead } from "react-bootstrap-typeahead";
 // import { values } from "regenerator-runtime";
 
 function CustomToggle({ children, eventKey }) {
-	const decoratedOnClick = useAccordionButton(eventKey, () => console.log('totally custom'));
+	const [isOpen, setIsOpen] = useState(false);
+	const decoratedOnClick = useAccordionButton(eventKey, () => setIsOpen((prevOpen) => !prevOpen));
+
 	return (
 		<button
-			className="custom-button"
+			className="custom-button px-3 pt-2"
 			type="button"
-			style={{ backgroundColor: 'white' }}
+			style={{ backgroundColor: 'white', textAlign: 'left' }}
 			onClick={decoratedOnClick}
 		>
+			{isOpen ? (
+				<BsCaretUpFill style={{ paddingRight: '10' }} size="30" color="#2222226b" />
+			) : (
+				<BsCaretDownFill style={{ paddingRight: '10' }} size="30" color="#2222226b" />
+			)}
 			{children}
 		</button>
 	);
@@ -47,11 +57,11 @@ const assetClassification = [
 	{ value: 'OTHERASSETS', label: '기타' },
 ];
 const assetBasis = [
-	{ value: '일반', label: '일반' },
+	{ value: 'COMMON', label: '일반' },
 	{ value: 'TISAX', label: 'TISAX' },
 ];
 const department = [
-	{ value: 'IT부', label: 'IT부' },
+	{ value: 'IT_DEPARTMENT', label: 'IT부' },
 	{
 		value: 'ADMINISTRATIVE_DEPARTMENT',
 		label: '관리부',
@@ -67,17 +77,17 @@ const department = [
 ];
 const assetLocation = [
 	{
-		value: '본관 지하 문서고',
+		value: 'MAIN_B1_DOCUMENT_STORAGE',
 		label: '본관 지하 문서고',
 	},
-	{ value: '본관 1층', label: '본관 1층' },
+	{ value: 'MAIN_1F', label: '본관 1층' },
 	{
-		value: '본관 1층 접견실',
+		value: 'MAIN_1F_RECEPTION_ROOM',
 		label: '본관 1층 접견실',
 	},
-	{ value: '본관 2층', label: '본관 2층' },
+	{ value: 'MAIN_2F', label: '본관 2층' },
 	{
-		value: '본관 2층 사장실',
+		value: 'MAIN_2F_PRESIDENT_OFFICE',
 		label: '본관 2층 사장실',
 	},
 	{
@@ -109,7 +119,7 @@ const ownership = [
 	{ value: 'OWNED', label: '소유' },
 	{ value: 'LEASED', label: '임대' },
 ];
-const useState = [
+const useSta = [
 	{ value: 'NEW', label: '신규' },
 	{ value: 'IN_USE', label: '사용중' },
 	{ value: 'UNDER_MAINTENANCE', label: '유지관리 중' },
@@ -117,9 +127,9 @@ const useState = [
 	{ value: 'RETIRED_DISCARDED', label: '퇴직/폐기' },
 ];
 const operationStatus = [
-	{ value: '가동중', label: '가동중' },
-	{ value: '미가동', label: '미가동' },
-	{ value: '고장', label: '고장' },
+	{ value: 'OPERATING', label: '가동중' },
+	{ value: 'NOT_OPERATING', label: '미가동' },
+	{ value: 'MALFUNCTION', label: '고장' },
 ];
 //기본 자산 정보 및 관리 정보 컬럼
 const BasisAssetInfo = ({ formData, handleChange }) => {
@@ -127,15 +137,13 @@ const BasisAssetInfo = ({ formData, handleChange }) => {
 	return (
 		<div>
 			<Accordion defaultActiveKey="0">
-				<Card style={{ width: '120rem' }}>
-					<CustomToggle eventKey="0">
-						<Card.Header>기본 자산 정보 및 관리 정보</Card.Header>
-					</CustomToggle>
+				<Card>
+					<CustomToggle eventKey="0">기본 자산 정보 및 관리 정보</CustomToggle>
 					<Accordion.Collapse eventKey="0">
 						<FormProvider {...methods}>
 							<Card.Body>
 								<Row>
-									<Col lg={5} style={{ paddingLeft: 80 }}>
+									<Col lg={5}>
 										<p className="mb-2 c fw-bold">자산분류</p>
 										<Select
 											className="mb-3"
@@ -299,19 +307,19 @@ const BasisAssetInfo = ({ formData, handleChange }) => {
 										<Select
 											className="mb-3"
 											placeholder="사용상태를 선택해주세요"
-											name="useState"
-											value={useState.find(
+											name="useSta"
+											value={useSta.find(
 												(option) => option.value === formData.useState
 											)}
 											onChange={(selectedOption) =>
 												handleChange({
 													target: {
-														name: 'useState',
+														name: 'useSta',
 														value: selectedOption.value,
 													},
 												})
 											}
-											options={useState}
+											options={useSta}
 										></Select>
 										<p className="mb-2 c fw-bold">가동여부</p>
 										<Select
@@ -394,7 +402,7 @@ const BasisAssetInfo = ({ formData, handleChange }) => {
 				</Card>
 			</Accordion>
 
-			<div className="d-flex justify-content-center">
+			{/* <div className="d-flex justify-content-center">
 				<PurchasingInfo formData={formData} handleChange={handleChange} />
 			</div>
 			<div className="d-flex justify-content-center">
@@ -403,7 +411,21 @@ const BasisAssetInfo = ({ formData, handleChange }) => {
 					assetClassification={formData.assetClassification}
 					handleChange={handleChange}
 				/>
-			</div>
+			</div> */}
+			{/* <Row className="d-flex responsive-padding"> */}
+			<Col xs={12} md={8} lg={6}>
+				<PurchasingInfo formData={formData} handleChange={handleChange} />
+			</Col>
+			{/* </Row> */}
+			{/* <Row className="d-flex responsive-padding"> */}
+			<Col xs={12} md={8} lg={6}>
+				<AssetCategories
+					formData={formData}
+					assetClassification={formData.assetClassification}
+					handleChange={handleChange}
+				/>
+			</Col>
+			{/* </Row> */}
 		</div>
 	);
 };

@@ -57,7 +57,13 @@ const RegisterButton = ({ onClickRegister }) => {
 
   // 자산 조사 등록 요청 보내는 함수
   const handleRegistRequest = async () => {
+    if (selectedLocation == '') {
+      alert('위치를 다시 선택하세요.');
+      return; // 선택된 위치가 없으면 실행하지 않음
+    }
+
     setIsSubmitting(true); // 요청 시작 시 확인 버튼 비활성화
+
 
     try {
       // 보낼 데이터를 객체로 구성
@@ -66,6 +72,8 @@ const RegisterButton = ({ onClickRegister }) => {
         location: selectedLocation,
         email: surveyBy, // 현재 하드코딩된 이메일
       };
+
+      console.log(requestData.location);
 
       const response = await fetch(`${URL}/register`, {
         method: 'POST',

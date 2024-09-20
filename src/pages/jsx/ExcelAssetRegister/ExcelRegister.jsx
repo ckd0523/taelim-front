@@ -1,14 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import * as XLSX from 'xlsx';
-import { Button, Table } from 'react-bootstrap';
+import { Button, Table, Row, Col, Form } from 'react-bootstrap';
 import Select from 'react-select';
 
 const urlConfig = import.meta.env.VITE_BASIC_URL;
 const ExcelRegister = () => {
 	const [data, setData] = useState({});
-	const [selectValue, setSelectValue] = useState([]);
+	const [selectValue, setSelectValue] = useState(null);
+	const [uploadFile, setUploadFile] = useState(null);
 	const [headers, setHeaders] = useState([]);
 	const [formData, setFormData] = useState([]); // 여러 행을 처리하기 위해 배열로 변경
+
+	const fileInputRef = useRef(null);
 
 	const classification = [
 		{ value: '2.1 서버(시스템)', label: 'IT장비-시스템' },
@@ -25,6 +28,10 @@ const ExcelRegister = () => {
 	const handleSelectValue = (selectOption) => {
 		setSelectValue(selectOption);
 		console.log(selectOption);
+
+		if (fileInputRef.current) {
+			fileInputRef.current.value = '';
+		}
 	};
 
 	const sheetNames = [
@@ -43,6 +50,7 @@ const ExcelRegister = () => {
 
 	const handleFileUpload = (e) => {
 		const file = e.target.files[0];
+		setUploadFile(file);
 		const reader = new FileReader();
 
 		reader.onload = (event) => {
@@ -65,8 +73,12 @@ const ExcelRegister = () => {
 								const updatedFormData = {};
 
 								headers.forEach((header, index) => {
+									const cleanedHeader = header
+										.trim('')
+										.replace(/[^가-힣a-zA-Z0-9]/g, '');
+
 									// 엑셀 헤더에 따라 formData에 맞게 값을 설정
-									switch (header) {
+									switch (cleanedHeader) {
 										case '자산기준':
 											updatedFormData['assetBasis'] = excelRow[index];
 											break;
@@ -101,29 +113,31 @@ const ExcelRegister = () => {
 											updatedFormData['assetSecurityManager'] =
 												excelRow[index];
 											break;
-										case '서비스 범위':
-											updatedFormData['serviceScope'] = excelRow[index];
-											break;
 										case '가동여부':
 											updatedFormData['operationStatus'] = excelRow[index];
 											break;
 										case '도입일자':
 											updatedFormData['introducedDate'] = excelRow[index];
 											break;
-										case '기밀성':
+										case '기밀성 (C)':
 											updatedFormData['confidentiality'] = excelRow[index];
+											console.log(updatedFormData['confidentiality']);
 											break;
-										case '무결성':
+										case '무결성 (l)':
 											updatedFormData['integrity'] = excelRow[index];
 											break;
-										case '가용성':
+										case '가용성 (A)':
 											updatedFormData['availability'] = excelRow[index];
 											break;
+										case '서비스 범위':
+											updatedFormData['serviceScope'] = excelRow[index];
+											break;
+
 										default:
 											break;
 									}
 								});
-
+								console.log(updatedFormData);
 								return updatedFormData;
 							});
 
@@ -167,6 +181,17 @@ const ExcelRegister = () => {
 
 			if (excelResponse.ok) {
 				alert('엑셀이 정상적으로 등록되었습니다.');
+				// window.location.reload();
+				setSelectValue(null); // 선택한 셀렉트 값 초기화
+				setFormData([]); // 폼 데이터 초기화
+				setData({}); // 엑셀 데이터 초기화
+				setHeaders([]); // 헤더 초기화
+				setUploadFile(null); // 업로드된 파일 상태 초기화
+
+				// 파일 입력 필드 초기화
+				if (fileInputRef.current) {
+					fileInputRef.current.value = ''; // 파일 입력 필드 초기화
+				}
 			} else {
 				alert('엑셀 등록 중 에러가 발생했습니다.');
 			}
@@ -178,39 +203,58 @@ const ExcelRegister = () => {
 
 	return (
 		<div>
+			<Row className="g-2">
+				<Col sm={6}>
+					<Form.Group style={{ padding: 50 }}>
+						<div>
+							<Select
+								placeholder="자산분류를 선택해주세요"
+								onChange={handleSelectValue}
+								options={classification}
+								value={selectValue}
+							></Select>
+							{selectValue ? selectValue.label : null}
+						</div>
+					</Form.Group>
+				</Col>
+				<Col sm={6}>
+					<Form.Group style={{ padding: 50 }}>
+						<Form.Control type="file" onChange={handleFileUpload} ref={fileInputRef} />
+					</Form.Group>
+				</Col>
+			</Row>
 			<div style={{ padding: 50 }}>
-				<Select onChange={handleSelectValue} options={classification}></Select>
-				{selectValue ? selectValue.label : null}
-			</div>
-			<div style={{ padding: 50 }}>
-				<input type="file" onChange={handleFileUpload} />
-				{Object.keys(data).length > 0 && (
-					<div>
-						{Object.keys(data).map((sheetName) => (
-							<div key={sheetName}>
-								<h3>Sheet: {sheetName}</h3>
-								<Table bordered>
-									<thead>
-										<tr>
-											{headers.map((header, index) => (
-												<th key={index}>{header}</th>
-											))}
-										</tr>
-									</thead>
-									<tbody>
-										{data[sheetName].map((row, rowIndex) => (
-											<tr key={rowIndex}>
-												{headers.map((header, colIndex) => (
-													<td key={colIndex}>{row[header]}</td>
+				<Row>
+					<Col>
+						{Object.keys(data).length > 0 && (
+							<div>
+								{Object.keys(data).map((sheetName) => (
+									<div key={sheetName}>
+										<h3>Sheet: {sheetName.substring(4, 12)}</h3>
+										<Table bordered>
+											<thead>
+												<tr>
+													{headers.map((header, index) => (
+														<th key={index}>{header}</th>
+													))}
+												</tr>
+											</thead>
+											<tbody>
+												{data[sheetName].map((row, rowIndex) => (
+													<tr key={rowIndex}>
+														{headers.map((header, colIndex) => (
+															<td key={colIndex}>{row[header]}</td>
+														))}
+													</tr>
 												))}
-											</tr>
-										))}
-									</tbody>
-								</Table>
+											</tbody>
+										</Table>
+									</div>
+								))}
 							</div>
-						))}
-					</div>
-				)}
+						)}
+					</Col>
+				</Row>
 			</div>
 			<div className="d-flex justify-content-center">
 				<Button type="submit" onClick={handleSubmit}>

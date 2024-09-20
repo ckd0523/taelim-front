@@ -1,22 +1,21 @@
 import { Row, Col, Card, Table as BootstrapTable, Button, Modal, Form } from 'react-bootstrap';
 import { useState, useEffect } from 'react';
-import RowDetails from '../assetUpdate/RowDetails';
 import axios from 'axios';
 import './Style.css'; // 같은 폴더에서 CSS 파일 import
 
-const InfoModal = ({ show, handleClose, modalData, assetCode }) => {
+const InfoModal = ({ show, handleClose, modalData, assetNo }) => {
 	const [assetInfo, setAssetInfo] = useState(null);
 	const [isLoading, setIsLoading] = useState(true);
 
 	useEffect(() => {
-		if (assetCode) {
-			// assetCode가 유효할 때만 fetchRowData 호출
+		if (assetNo) {
+			// assetNo  유효할 때만 fetchRowData 호출
 			const fetchRowData = async () => {
-				console.log('정상적인 assetCode: ', assetCode);
+				console.log('정상적인 assetNo : ', assetNo);
 				setIsLoading(true); // 데이터 요청 시작부분
 
 				try {
-					const response = await axios.get(`http://localhost:8080/list/${assetCode}`);
+					const response = await axios.get(`http://localhost:8080/list/${assetNo}`);
 					console.log(`불러온 데이터 : `, response.data);
 
 					const lowestAsset = response.data.reduce((prev, current) => {
@@ -31,9 +30,9 @@ const InfoModal = ({ show, handleClose, modalData, assetCode }) => {
 				}
 			};
 
-			fetchRowData(); // assetCode가 유효할 때만 fetchRowData 호출
+			fetchRowData(); // assetNo  유효할 때만 fetchRowData 호출
 		}
-	}, [assetCode]); // assetCode가 변경될 때만 호출
+	}, [assetNo]); // assetNo  변경될 때만 호출
 
 	return (
 		<Modal

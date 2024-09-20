@@ -26,7 +26,7 @@ const UpdateHistory = () => {
 	const [showModal, setShowModal] = useState(false);
 	const [modalData, setModalData] = useState(null);
 
-	const [selectedAssetCode, setSelectedAssetCode] = useState(null); // 선택된 assetCode
+	const [selectedAssetNo, setSelectedAssetNo] = useState(null); // 선택된 assetNo
 
 	// 백엔드에서 수정 이력 데이터를 불러오는 함수
 	useEffect(() => {
@@ -64,14 +64,14 @@ const UpdateHistory = () => {
 	};
 
 	const handleRowClick = (rowData) => {
-		setSelectedAssetCode(rowData.assetCode);
+		setSelectedAssetNo(rowData.assetNo); // assetNo 설정
 		setShowModal(true);
 	};
-	// UpdateHistory.jsx
+
 	useEffect(() => {
-		if (selectedAssetCode) {
+		if (selectedAssetNo) {
 		}
-	}, [selectedAssetCode]);
+	}, [selectedAssetNo]);
 
 	const handleSearch = () => {
 		const filteredData = originalData.filter((assetUpdates) => {
@@ -208,7 +208,7 @@ const UpdateHistory = () => {
 							<InfoModal
 								show={showModal}
 								handleClose={() => setShowModal(false)}
-								assetCode={selectedAssetCode}
+								assetNo={selectedAssetNo}
 							/>
 						</Card.Body>
 					</Card>

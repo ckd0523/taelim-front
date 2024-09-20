@@ -5,10 +5,10 @@ import axios from 'axios';
 // 자산 분류에 따른 동적 열 정의 함수
 const getClassificationColumns = (classification) => {
 	switch (classification) {
-		case 'INFORMATION_PROTECTION_SYSTEM':
+		case '정보보호시스템':
 			return [{ title: '서비스범위', data: 'serviceScope' }];
 
-		case 'APPLICATION_PROGRAM':
+		case '응용프로그램':
 			return [
 				{ title: '서비스범위', data: 'serviceScope' },
 				{ title: 'OS', data: 'os' },
@@ -17,7 +17,7 @@ const getClassificationColumns = (classification) => {
 				{ title: '화면수', data: 'screenNumber' },
 			];
 
-		case 'SOFTWARE':
+		case '소프트웨어':
 			return [
 				{ title: 'IP', data: 'ip' },
 				{ title: 'ID', data: 'serverId' },
@@ -26,21 +26,21 @@ const getClassificationColumns = (classification) => {
 				{ title: 'OS', data: 'os' },
 			];
 
-		case 'ELECTRONIC_INFORMATION':
+		case '전자정보':
 			return [
 				{ title: 'OS', data: 'os' },
 				{ title: '시스템', data: 'system' },
 				{ title: 'DB종류', data: 'dbtype' },
 			];
 
-		case 'DOCUMENT':
+		case '문서':
 			return [
 				{ title: '문서등급', data: 'documentGrade' },
 				{ title: '문서형태', data: 'documentType' },
 				{ title: '문서링크', data: 'documentLink' },
 			];
 
-		case 'PATENTS_AND_TRADEMARKS':
+		case '특허 및 상표':
 			return [
 				{ title: '출원일자', data: 'applicationDate' },
 				{ title: '등록일자', data: 'registrationDate' },
@@ -55,7 +55,7 @@ const getClassificationColumns = (classification) => {
 				{ title: '관련문서', data: 'relatedDocuments' },
 			];
 
-		case 'ITSYSTEM_EQUIPMENT':
+		case 'IT 장비 - 시스템':
 			return [
 				{ title: '장비유형', data: 'equipmentType' },
 				{ title: '랙유닛', data: 'rackUnit' },
@@ -69,7 +69,7 @@ const getClassificationColumns = (classification) => {
 				{ title: '모니터 포함여부', data: 'monitorIncluded' },
 			];
 
-		case 'ITNETWORK_EQUIPMENT':
+		case 'IT 장비 – 네트워크':
 			return [
 				{ title: '장비유형', data: 'equipmentType' },
 				{ title: '포트수', data: 'numberOfPorts' },
@@ -79,7 +79,7 @@ const getClassificationColumns = (classification) => {
 				{ title: '서비스범위', data: 'serviceScope' },
 			];
 
-		case 'TERMINAL':
+		case '단말기':
 			return [
 				{ title: 'IP', data: 'ip' },
 				{ title: '제품 시리얼 번호', data: 'productSerialNumber' },
@@ -91,10 +91,10 @@ const getClassificationColumns = (classification) => {
 				{ title: 'NAC agent', data: 'tgate' },
 			];
 
-		case 'FURNITURE':
+		case '가구':
 			return [{ title: '크기', data: 'furnitureSize' }];
 
-		case 'DEVICES':
+		case '기기':
 			return [
 				{ title: '기기유형', data: 'deviceType' },
 				{ title: '모델번호', data: 'modelNumber' },
@@ -102,7 +102,7 @@ const getClassificationColumns = (classification) => {
 				{ title: '전원사양', data: 'powerSpecifications' },
 			];
 
-		case 'CAR':
+		case '차량':
 			return [
 				{ title: '배기량', data: 'displacement' },
 				{ title: '차량의 문 수', data: 'doorsCount' },
@@ -113,7 +113,7 @@ const getClassificationColumns = (classification) => {
 				{ title: '연식', data: 'modelYear' },
 			];
 
-		case 'OTHERASSETS':
+		case '기타':
 			return [
 				{ title: '기타 세부 설명', data: 'otherDescription' },
 				{ title: '사용 빈도', data: 'usageFrequency' },

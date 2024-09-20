@@ -3,8 +3,21 @@ import { CustomDatePicker, Table } from '@/components';
 import { records as data } from '@/pages/jsx/MaintainHistory/data';
 import { MaintainDetail } from '@/pages/jsx/MaintainHistory/MaintainDetail';
 import { useState } from 'react';
+import styled from 'styled-components';
 
-import './Media.css';
+const StyledCard = styled.div`
+	display: flex;
+	flex-direction: column;
+
+	@media (min-width: 1281px) {
+		width: 130rem;
+	}
+`;
+const StyledCardBody = styled.div`
+	flex-grow: 1;
+	flex-direction: column;
+	justify-content: space-between;
+`;
 const columns = [
 	{
 		Header: '번호',
@@ -62,8 +75,8 @@ const MaintainHist = () => {
 		<>
 			<Row className="px-3 pt-5 justify-content-center d-flex align-items-center">
 				<Col className=" d-flex justify-content-center align-items-center">
-					<Card className="card ">
-						<Card.Body className="card-body ">
+					<StyledCard className="card ">
+						<StyledCardBody className="card-body ">
 							<Form className="col-md-12 justify-content-center d-flex align-items-center">
 								<Row className="justify-content-center col-md-12 d-flex align-items-center">
 									<Col xs={12} md={4} lg={2}>
@@ -178,16 +191,16 @@ const MaintainHist = () => {
 									</Col>
 								</Row>
 							</Form>
-						</Card.Body>
-					</Card>
+						</StyledCardBody>
+					</StyledCard>
 				</Col>
 			</Row>
 
 			<Row className="justify-content-center align-items-center">
 				{/* <h4 className="header-title text-center">유지보수 이력</h4> */}
 				<Col className="pt-5 d-flex justify-content-center align-items-center">
-					<Card>
-						<Card.Body>
+					<StyledCard className="card">
+						<StyledCardBody className="card-body">
 							<Table
 								theadClass="table-light"
 								sizePerPageList={sizePerPageList}
@@ -198,8 +211,8 @@ const MaintainHist = () => {
 								pageSize={5}
 								onRowClick={handleClick}
 							/>
-						</Card.Body>
-					</Card>
+						</StyledCardBody>
+					</StyledCard>
 				</Col>
 			</Row>
 

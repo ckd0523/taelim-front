@@ -9,8 +9,31 @@ import { BsCaretUpFill } from 'react-icons/bs';
 import { BsCaretDownFill } from 'react-icons/bs';
 
 import Select from 'react-select';
-import './Media.css';
 import { useState } from 'react';
+import styled from 'styled-components';
+const StyledCard = styled.div`
+	display: flex;
+	flex-direction: column;
+
+	@media (max-width: 768px) {
+		width: 30rem;
+	}
+
+	@media (min-width: 769px) and (max-width: 1280px) {
+		width: 42rem;
+	}
+
+	@media (min-width: 1281px) {
+		width: 100rem;
+	}
+`;
+
+const StyledCardBody = styled.div`
+	flex-grow: 1;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+`;
 function CustomToggle({ children, eventKey }) {
 	const [isOpen, setIsOpen] = useState(false);
 	const decoratedOnClick = useAccordionButton(eventKey, () => setIsOpen((prevOpen) => !prevOpen));
@@ -129,11 +152,11 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
 				return (
 					<div>
 						<Accordion defaultActiveKey="0" flush>
-							<Card className="card">
+							<StyledCard className="card">
 								<CustomToggle eventKey="0">자산별 컬럼</CustomToggle>
 								<Accordion.Collapse eventKey="0">
 									<FormProvider {...methods}>
-										<Card.Body className="card-body">
+										<StyledCardBody className="card-body">
 											<Row>
 												<Col lg={5}>
 													<TextInput
@@ -147,10 +170,10 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
 													/>
 												</Col>
 											</Row>
-										</Card.Body>
+										</StyledCardBody>
 									</FormProvider>
 								</Accordion.Collapse>
-							</Card>
+							</StyledCard>
 						</Accordion>
 					</div>
 				);
@@ -159,11 +182,11 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
 				return (
 					<div>
 						<Accordion defaultActiveKey="0">
-							<Card>
+							<StyledCard className="card">
 								<CustomToggle eventKey="0">자산별 컬럼</CustomToggle>
 								<Accordion.Collapse eventKey="0">
 									<FormProvider {...methods}>
-										<Card.Body>
+										<StyledCardBody className="card-body">
 											<Row>
 												<Col lg={5}>
 													<TextInput
@@ -213,10 +236,10 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
 													/>
 												</Col>
 											</Row>
-										</Card.Body>
+										</StyledCardBody>
 									</FormProvider>
 								</Accordion.Collapse>
-							</Card>
+							</StyledCard>
 						</Accordion>
 					</div>
 				);
@@ -224,11 +247,11 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
 				return (
 					<div>
 						<Accordion defaultActiveKey="0">
-							<Card>
+							<StyledCard className="card">
 								<CustomToggle eventKey="0">자산별 컬럼</CustomToggle>
 								<Accordion.Collapse eventKey="0">
 									<FormProvider {...methods}>
-										<Card.Body>
+										<StyledCardBody className="card-body">
 											<Row>
 												<Col lg={5}>
 													<TextInput
@@ -278,10 +301,10 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
 													/>
 												</Col>
 											</Row>
-										</Card.Body>
+										</StyledCardBody>
 									</FormProvider>
 								</Accordion.Collapse>
-							</Card>
+							</StyledCard>
 						</Accordion>
 					</div>
 				);
@@ -289,11 +312,11 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
 				return (
 					<div>
 						<Accordion defaultActiveKey="0">
-							<Card>
+							<StyledCard className="card">
 								<CustomToggle eventKey="0">자산별 컬럼</CustomToggle>
 								<Accordion.Collapse eventKey="0">
 									<FormProvider {...methods}>
-										<Card.Body>
+										<StyledCardBody className="card-body">
 											<Row>
 												<Col lg={5}>
 													<TextInput
@@ -325,10 +348,10 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
 													/>
 												</Col>
 											</Row>
-										</Card.Body>
+										</StyledCardBody>
 									</FormProvider>
 								</Accordion.Collapse>
-							</Card>
+							</StyledCard>
 						</Accordion>
 					</div>
 				);
@@ -336,11 +359,11 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
 				return (
 					<div>
 						<Accordion defaultActiveKey="0">
-							<Card>
+							<StyledCard className="card">
 								<CustomToggle eventKey="0">자산별 컬럼</CustomToggle>
 								<Accordion.Collapse eventKey="0">
 									<FormProvider {...methods}>
-										<Card.Body>
+										<StyledCardBody className="card-body">
 											<Row>
 												<Col lg={5}>
 													<p className="mb-2 c fw-bold">문서등급</p>
@@ -394,10 +417,10 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
 													/>
 												</Col>
 											</Row>
-										</Card.Body>
+										</StyledCardBody>
 									</FormProvider>
 								</Accordion.Collapse>
-							</Card>
+							</StyledCard>
 						</Accordion>
 					</div>
 				);
@@ -405,11 +428,11 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
 				return (
 					<div>
 						<Accordion defaultActiveKey="0">
-							<Card>
+							<StyledCard className="card">
 								<CustomToggle eventKey="0">자산별 컬럼</CustomToggle>
 								<Accordion.Collapse eventKey="0">
 									<FormProvider {...methods}>
-										<Card.Body>
+										<StyledCardBody className="card-body">
 											<Row>
 												<Col lg={5}>
 													<div className="form-group mb-3">
@@ -592,10 +615,10 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
 													/>
 												</Col>
 											</Row>
-										</Card.Body>
+										</StyledCardBody>
 									</FormProvider>
 								</Accordion.Collapse>
-							</Card>
+							</StyledCard>
 						</Accordion>
 					</div>
 				);
@@ -603,11 +626,11 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
 				return (
 					<div>
 						<Accordion defaultActiveKey="0">
-							<Card>
+							<StyledCard className="card">
 								<CustomToggle eventKey="0">자산별 컬럼</CustomToggle>
 								<Accordion.Collapse eventKey="0">
 									<FormProvider {...methods}>
-										<Card.Body>
+										<StyledCardBody className="card-body">
 											<Row>
 												<Col lg={5}>
 													<TextInput
@@ -742,10 +765,10 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
 													</Form.Group>
 												</Col>
 											</Row>
-										</Card.Body>
+										</StyledCardBody>
 									</FormProvider>
 								</Accordion.Collapse>
-							</Card>
+							</StyledCard>
 						</Accordion>
 					</div>
 				);
@@ -753,11 +776,11 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
 				return (
 					<div>
 						<Accordion defaultActiveKey="0">
-							<Card>
+							<StyledCard className="card">
 								<CustomToggle eventKey="0">자산별 컬럼</CustomToggle>
 								<Accordion.Collapse eventKey="0">
 									<FormProvider {...methods}>
-										<Card.Body>
+										<StyledCardBody className="card-body">
 											<Row>
 												<Col lg={5}>
 													<TextInput
@@ -816,10 +839,10 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
 													/>
 												</Col>
 											</Row>
-										</Card.Body>
+										</StyledCardBody>
 									</FormProvider>
 								</Accordion.Collapse>
-							</Card>
+							</StyledCard>
 						</Accordion>
 					</div>
 				);
@@ -827,11 +850,11 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
 				return (
 					<div>
 						<Accordion defaultActiveKey="0">
-							<Card>
+							<StyledCard className="card">
 								<CustomToggle eventKey="0">자산별 컬럼</CustomToggle>
 								<Accordion.Collapse eventKey="0">
 									<FormProvider {...methods}>
-										<Card.Body>
+										<StyledCardBody className="card-body">
 											<Row>
 												<Col lg={5}>
 													<TextInput
@@ -955,10 +978,10 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
 													</div>
 												</Col>
 											</Row>
-										</Card.Body>
+										</StyledCardBody>
 									</FormProvider>
 								</Accordion.Collapse>
-							</Card>
+							</StyledCard>
 						</Accordion>
 					</div>
 				);
@@ -966,11 +989,11 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
 				return (
 					<div>
 						<Accordion defaultActiveKey="0">
-							<Card>
+							<StyledCard className="card">
 								<CustomToggle eventKey="0">자산별 컬럼</CustomToggle>
 								<Accordion.Collapse eventKey="0">
 									<FormProvider {...methods}>
-										<Card.Body>
+										<StyledCardBody className="card-body">
 											<Row>
 												<Col lg={5}>
 													<TextInput
@@ -984,10 +1007,10 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
 													/>
 												</Col>
 											</Row>
-										</Card.Body>
+										</StyledCardBody>
 									</FormProvider>
 								</Accordion.Collapse>
-							</Card>
+							</StyledCard>
 						</Accordion>
 					</div>
 				);
@@ -995,11 +1018,11 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
 				return (
 					<div>
 						<Accordion defaultActiveKey="0">
-							<Card>
+							<StyledCard className="card">
 								<CustomToggle eventKey="0">자산별 컬럼</CustomToggle>
 								<Accordion.Collapse eventKey="0">
 									<FormProvider {...methods}>
-										<Card.Body>
+										<StyledCardBody className="card-body">
 											<Row>
 												<Col lg={5}>
 													<TextInput
@@ -1040,10 +1063,10 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
 													/>
 												</Col>
 											</Row>
-										</Card.Body>
+										</StyledCardBody>
 									</FormProvider>
 								</Accordion.Collapse>
-							</Card>
+							</StyledCard>
 						</Accordion>
 					</div>
 				);
@@ -1051,11 +1074,11 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
 				return (
 					<div>
 						<Accordion defaultActiveKey="0">
-							<Card>
+							<StyledCard className="card">
 								<CustomToggle eventKey="0">자산별 컬럼</CustomToggle>
 								<Accordion.Collapse eventKey="0">
 									<FormProvider {...methods}>
-										<Card.Body>
+										<StyledCardBody className="card-body">
 											<Row>
 												<Col lg={5}>
 													<TextInput
@@ -1143,10 +1166,10 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
 													/>
 												</Col>
 											</Row>
-										</Card.Body>
+										</StyledCardBody>
 									</FormProvider>
 								</Accordion.Collapse>
-							</Card>
+							</StyledCard>
 						</Accordion>
 					</div>
 				);
@@ -1154,11 +1177,11 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
 				return (
 					<div>
 						<Accordion defaultActiveKey="0">
-							<Card>
+							<StyledCard className="card">
 								<CustomToggle eventKey="0">자산별 컬럼</CustomToggle>
 								<Accordion.Collapse eventKey="0">
 									<FormProvider {...methods}>
-										<Card.Body>
+										<StyledCardBody className="card-body">
 											<Row>
 												<Col lg={5}>
 													<TextInput
@@ -1181,10 +1204,10 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
 													/>
 												</Col>
 											</Row>
-										</Card.Body>
+										</StyledCardBody>
 									</FormProvider>
 								</Accordion.Collapse>
-							</Card>
+							</StyledCard>
 						</Accordion>
 					</div>
 				);

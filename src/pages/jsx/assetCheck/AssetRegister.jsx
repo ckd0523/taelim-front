@@ -2,9 +2,8 @@ import BasisAssetInfo from './BasisAssetInfo';
 import { useState } from 'react';
 import FileUpload from './FileUpload';
 import { Button, Row, Col, Container } from 'react-bootstrap';
-
-import './Media.css';
 const urlConfig = import.meta.env.VITE_BASIC_URL;
+
 //자산등록
 const AssetRegister = () => {
 	const [files, setFiles] = useState([]);
@@ -159,17 +158,17 @@ const AssetRegister = () => {
 
 	return (
 		<Container fluid>
-			<Row className="d-flex justify-content-center col-md-8 responsive-padding">
+			<Row className="d-flex justify-content-center col-md-8">
 				<Col xs={12} md={8} lg={6}>
 					<BasisAssetInfo formData={formData} handleChange={handleChange} />
 				</Col>
 			</Row>
-			<Row className="d-flex justify-content-center col-md-8 responsive-padding">
+			<Row className="d-flex justify-content-center col-md-8">
 				<Col xs={12} md={8} lg={6}>
 					<FileUpload files={files} setFiles={setFiles} />
 				</Col>
 			</Row>
-			<Row className="d-flex justify-content-center responsive-padding">
+			<Row className="d-flex justify-content-center">
 				<Col xs={12} md={8} lg={6} className="text-center">
 					<Button size="lg" variant="primary" type="submit" onClick={handleSubmit}>
 						저장

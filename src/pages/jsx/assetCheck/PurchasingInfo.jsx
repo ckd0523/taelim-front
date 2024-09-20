@@ -10,7 +10,31 @@ import { BsCaretDownFill } from 'react-icons/bs';
 import Select from 'react-select';
 import { useState } from 'react';
 import './ButtonStyle.css';
-import './Media.css';
+import styled from 'styled-components';
+const StyledCard = styled.div`
+	display: flex;
+	flex-direction: column;
+
+	@media (max-width: 768px) {
+		width: 30rem;
+	}
+
+	@media (min-width: 769px) and (max-width: 1280px) {
+		width: 42rem;
+	}
+
+	@media (min-width: 1281px) {
+		width: 100rem;
+	}
+`;
+
+const StyledCardBody = styled.div`
+	flex-grow: 1;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+`;
+
 const depreciationMethod = [
 	{ value: 'FIXED_AMOUNT', label: '정액법' },
 	{ value: 'FIXED_RATE', label: '정률법' },
@@ -39,11 +63,11 @@ const PurchasingInfo = ({ formData, handleChange }) => {
 	return (
 		<div>
 			<Accordion defaultActiveKey="1">
-				<Card className="card">
+				<StyledCard className="card">
 					<CustomToggle eventKey="1">재무 및 구매정보</CustomToggle>
 					<Accordion.Collapse eventKey="1">
 						<FormProvider {...methods}>
-							<Card.Body>
+							<StyledCardBody className="card-body">
 								<Row>
 									<Col lg={5}>
 										<TextInput
@@ -147,10 +171,10 @@ const PurchasingInfo = ({ formData, handleChange }) => {
 										</div>
 									</Col>
 								</Row>
-							</Card.Body>
+							</StyledCardBody>
 						</FormProvider>
 					</Accordion.Collapse>
-				</Card>
+				</StyledCard>
 			</Accordion>
 		</div>
 	);

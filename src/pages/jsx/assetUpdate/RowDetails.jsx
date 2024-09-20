@@ -5,10 +5,10 @@ import axios from 'axios';
 // 자산 분류에 따른 동적 열 정의 함수
 const getClassificationColumns = (classification) => {
 	switch (classification) {
-		case '정보보호시스템':
+		case 'INFORMATION_PROTECTION_SYSTEM':
 			return [{ title: '서비스범위', data: 'serviceScope' }];
 
-		case '응용프로그램':
+		case 'APPLICATION_PROGRAM':
 			return [
 				{ title: '서비스범위', data: 'serviceScope' },
 				{ title: 'OS', data: 'os' },
@@ -17,7 +17,7 @@ const getClassificationColumns = (classification) => {
 				{ title: '화면수', data: 'screenNumber' },
 			];
 
-		case '소프트웨어':
+		case 'SOFTWARE':
 			return [
 				{ title: 'IP', data: 'ip' },
 				{ title: 'ID', data: 'serverId' },
@@ -26,21 +26,21 @@ const getClassificationColumns = (classification) => {
 				{ title: 'OS', data: 'os' },
 			];
 
-		case '전자정보':
+		case 'ELECTRONIC_INFORMATION':
 			return [
 				{ title: 'OS', data: 'os' },
 				{ title: '시스템', data: 'system' },
 				{ title: 'DB종류', data: 'dbtype' },
 			];
 
-		case '문서':
+		case 'DOCUMENT':
 			return [
 				{ title: '문서등급', data: 'documentGrade' },
 				{ title: '문서형태', data: 'documentType' },
 				{ title: '문서링크', data: 'documentLink' },
 			];
 
-		case '특허 및 상표':
+		case 'PATENTS_AND_TRADEMARKS':
 			return [
 				{ title: '출원일자', data: 'applicationDate' },
 				{ title: '등록일자', data: 'registrationDate' },
@@ -55,7 +55,7 @@ const getClassificationColumns = (classification) => {
 				{ title: '관련문서', data: 'relatedDocuments' },
 			];
 
-		case 'IT 장비 - 시스템':
+		case 'ITSYSTEM_EQUIPMENT':
 			return [
 				{ title: '장비유형', data: 'equipmentType' },
 				{ title: '랙유닛', data: 'rackUnit' },
@@ -69,7 +69,7 @@ const getClassificationColumns = (classification) => {
 				{ title: '모니터 포함여부', data: 'monitorIncluded' },
 			];
 
-		case 'IT 장비 – 네트워크':
+		case 'ITNETWORK_EQUIPMENT':
 			return [
 				{ title: '장비유형', data: 'equipmentType' },
 				{ title: '포트수', data: 'numberOfPorts' },
@@ -79,7 +79,7 @@ const getClassificationColumns = (classification) => {
 				{ title: '서비스범위', data: 'serviceScope' },
 			];
 
-		case '단말기':
+		case 'TERMINAL':
 			return [
 				{ title: 'IP', data: 'ip' },
 				{ title: '제품 시리얼 번호', data: 'productSerialNumber' },
@@ -91,10 +91,10 @@ const getClassificationColumns = (classification) => {
 				{ title: 'NAC agent', data: 'tgate' },
 			];
 
-		case '가구':
+		case 'FURNITURE':
 			return [{ title: '크기', data: 'furnitureSize' }];
 
-		case '기기':
+		case 'DEVICES':
 			return [
 				{ title: '기기유형', data: 'deviceType' },
 				{ title: '모델번호', data: 'modelNumber' },
@@ -102,7 +102,7 @@ const getClassificationColumns = (classification) => {
 				{ title: '전원사양', data: 'powerSpecifications' },
 			];
 
-		case '차량':
+		case 'CAR':
 			return [
 				{ title: '배기량', data: 'displacement' },
 				{ title: '차량의 문 수', data: 'doorsCount' },
@@ -113,7 +113,7 @@ const getClassificationColumns = (classification) => {
 				{ title: '연식', data: 'modelYear' },
 			];
 
-		case '기타':
+		case 'OTHERASSETS':
 			return [
 				{ title: '기타 세부 설명', data: 'otherDescription' },
 				{ title: '사용 빈도', data: 'usageFrequency' },
@@ -205,6 +205,7 @@ const RowDetails = ({ row, assetCode, onClose }) => {
 			);
 			alert(response.data); // 성공 메시지
 			setShowModal(false);
+			console.log(formData);
 		} catch (error) {
 			console.error('Error updating asset data:', error);
 			setErrorMessage('자산 수정  중 오류가 발생했습니다.');
@@ -520,15 +521,27 @@ const RowDetails = ({ row, assetCode, onClose }) => {
 										</Form.Group>
 										<Form.Group className="mb-3">
 											<Form.Label>수정사유</Form.Label>
-											<Form.Select>
-												<option>사유 1</option>
-												<option>사유 2</option>
-												<option>사유 3</option>
+											<Form.Select
+												value={formData.updateReason}
+												onChange={(e) =>
+													handleInputChange(e, 'updateReason')
+												}
+											>
+												<option value="사유 1">사유 1</option>
+												<option value="사유 2">사유 2</option>
+												<option value="사유 3">사유 3</option>
 											</Form.Select>
 										</Form.Group>
 										<Form.Group className="mb-3">
 											<Form.Label>수정내용</Form.Label>
-											<Form.Control as="textarea" rows={3} />
+											<Form.Control
+												as="textarea"
+												rows={3}
+												value={formData.updateDetail}
+												onChange={(e) =>
+													handleInputChange(e, 'updateDetail')
+												}
+											/>
 										</Form.Group>
 									</Form>
 								</Modal.Body>

@@ -29,29 +29,6 @@ pipeline {
             }
         }
 
-        stage('Build') {  
-            steps {
-                dir('.') {
-                    sh """
-                    yarn install
-                    """
-                }
-
-                dir('.') {
-                    sh """
-                    CI=false yarn build
-                    """
-                }
-            }
-            post {
-                success {
-                    sh 'echo "Successfully Build Test"'
-                }
-                 failure {
-                    sh 'echo "Fail Build Test"'
-                }
-            }
-        }  
         stage('Docker Build') {  
             steps {  
                 sh 'docker build -t fe_taelim:${timestamp} .'

@@ -56,7 +56,7 @@ const MENU_ITEMS = [
 		children: [
 			{
 				key: 'ds-ProductDetailsEcom',
-				label: 'QR조회',
+				label: 'QR조회1',
 				url: '/jsx/ProductDetailsEcom',
 				parentKey: 'jsx',
 			},

@@ -16,8 +16,8 @@ const columns = [
     Cell: ({ row }) => (
       <input
         type='checkbox'
-        checked={row.original.exactLocation}
-        onChange={(e) => handleCheckboxChange(e, row)}
+        //checked={row.original.exactLocation}
+        onChange={(e) => handleCheckboxChange(e, row, 'exactLocation')}
       />
     )
   },
@@ -26,8 +26,8 @@ const columns = [
     Cell: ({ row }) => (
       <input
         type='checkbox'
-        checked={row.original.assetStatus}
-        onChange={(e) => handleCheckboxChange(e, row)}
+        //checked={row.original.assetStatus}
+        onChange={(e) => handleCheckboxChange(e, row, 'assetStatus')}
       />
     )
   },
@@ -41,10 +41,10 @@ const columns = [
   },
 ];
 
-const handleCheckboxChange = (e, row) => {
+const handleCheckboxChange = (e, row, fieldName) => {
   const updatedRow = {
     ...row.original,
-    [e.target.name]: e.target.checked,
+    [fieldName]: e.target.checked,
   };
   console.log('Updated Row:', updatedRow);
   // 상태를 업데이트하는 로직 추가
@@ -52,6 +52,7 @@ const handleCheckboxChange = (e, row) => {
 
 const AssetSurveyDetail = () => {
   const locationParam = useLocation();
+  /*
   //console.log(locationParam);
   const locationValue = locationParam.state.location;
 
@@ -60,6 +61,22 @@ const AssetSurveyDetail = () => {
   const surveyStartDate = locationParam.state.surveyStartDate;
   const surveyBy = locationParam.state.surveyBy;
   const assetSurveyNo = locationParam.state.assetSurveyNo;
+  */
+
+  //테이블의 페이지가 넘어갈 때 계속 locationValue를 세팅하는 코드가 작동하는데
+  //그 데이터가 자산 조사 이력에서 넘어오지 않아 null이 되어 useState로 값을 유지해야함
+  // useState로 locationParam의 값을 저장
+  const [locationState, setLocationState] = useState({
+    location: locationParam.state?.location || '', // 초기값이 없을 경우 ''로 설정
+    surveyStartDate: locationParam.state?.surveyStartDate || '',
+    surveyBy: locationParam.state?.surveyBy || '',
+    assetSurveyNo: locationParam.state?.assetSurveyNo || ''
+  });
+
+  // locationState.location을 기반으로 매칭되는 label을 찾음
+  const matchedLocation = assetSurveyLocation.find(
+    loc => loc.value === locationState.location
+  );
 
   const [isChecked, setIsChecked] = useState(false);
 
@@ -67,8 +84,8 @@ const AssetSurveyDetail = () => {
     setIsChecked(!isChecked);
   };
 
-  console.log('선택한 레코드 자산 번호 : ' + assetSurveyNo);
-  const data = getDetailTable(assetSurveyNo);
+  //console.log('선택한 레코드 자산 번호 : ' + locationState.assetSurveyNo);
+  const data = getDetailTable(locationState.assetSurveyNo);
   //console.log('얘가 null이라고? : ' + data);
 
   return (
@@ -81,17 +98,17 @@ const AssetSurveyDetail = () => {
             <Col>
               <strong>위치 : </strong>
               <span>{/* 매칭되는 location이 있으면 label을 표시, 없으면 locationValue 그대로 표시 */}
-                {matchedLocation ? matchedLocation.label : locationValue}</span>
+                {matchedLocation ? matchedLocation.label : locationState.location}</span>
             </Col>
 
             <Col>
               <strong>자산 조사일 : </strong>
-              <span>{surveyStartDate}</span>
+              <span>{locationState.surveyStartDate}</span>
             </Col>
 
             <Col>
               <strong>자산 조사자 : </strong>
-              <span>{surveyBy}</span>
+              <span>{locationState.surveyBy}</span>
             </Col>
           </Row>
         </Card.Body>
@@ -142,12 +159,12 @@ const AssetSurveyDetail = () => {
       <Card>
         <Card.Body>
 
-          {/* */}
-          <p>테이블 들어갈 자리</p>
+          {/* 
+          <p>테이블 들어갈 자리</p>  */}
           {data && data.length > 0 ? (
             <DetailTable detailColumn={columns} detailData={data} />
           ) : (
-            <p>Loading...</p>  // 데이터가 없을 때 보여줄 내용
+            <p>데이터가 없습니다.</p>  // 데이터가 없을 때 보여줄 내용
           )}
 
         </Card.Body>

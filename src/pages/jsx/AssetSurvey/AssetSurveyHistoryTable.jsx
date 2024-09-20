@@ -96,7 +96,7 @@ const DetailTable = ({ detailColumn, detailData }) => {
       sizePerPageList={20}
       isSortable={true}
       pagination={true}
-      isSelectable={true}
+      isSelectable={false}
     />
   );
 };

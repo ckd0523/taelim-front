@@ -5,18 +5,27 @@ import './ButtonStyle.css';
 import { TextInput, TextAreaInput } from '@/components/Form';
 import { useForm, FormProvider } from 'react-hook-form';
 import { CustomDatePicker } from '@/components/Form';
+import { BsCaretUpFill } from 'react-icons/bs';
+import { BsCaretDownFill } from 'react-icons/bs';
 
 import Select from 'react-select';
-
+import './Media.css';
+import { useState } from 'react';
 function CustomToggle({ children, eventKey }) {
-	const decoratedOnClick = useAccordionButton(eventKey, () => console.log('totally custom'));
+	const [isOpen, setIsOpen] = useState(false);
+	const decoratedOnClick = useAccordionButton(eventKey, () => setIsOpen((prevOpen) => !prevOpen));
 	return (
 		<button
-			className="custom-button"
+			className="custom-button px-3 pt-2"
 			type="button"
-			style={{ backgroundColor: 'white' }}
+			style={{ backgroundColor: 'white', textAlign: 'left' }}
 			onClick={decoratedOnClick}
 		>
+			{isOpen ? (
+				<BsCaretUpFill style={{ paddingRight: '10' }} size="30" color="#2222226b" />
+			) : (
+				<BsCaretDownFill style={{ paddingRight: '10' }} size="30" color="#2222226b" />
+			)}
 			{children}
 		</button>
 	);
@@ -120,15 +129,13 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
 				return (
 					<div>
 						<Accordion defaultActiveKey="0" flush>
-							<Card style={{ width: '120rem' }}>
-								<CustomToggle eventKey="0">
-									<Card.Header>자산별 컬럼</Card.Header>
-								</CustomToggle>
+							<Card className="card">
+								<CustomToggle eventKey="0">자산별 컬럼</CustomToggle>
 								<Accordion.Collapse eventKey="0">
 									<FormProvider {...methods}>
-										<Card.Body>
+										<Card.Body className="card-body">
 											<Row>
-												<Col lg={5} style={{ paddingLeft: 80 }}>
+												<Col lg={5}>
 													<TextInput
 														label="서비스범위"
 														type="text"
@@ -152,15 +159,13 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
 				return (
 					<div>
 						<Accordion defaultActiveKey="0">
-							<Card style={{ width: '120rem' }}>
-								<CustomToggle eventKey="0">
-									<Card.Header>자산별 컬럼</Card.Header>
-								</CustomToggle>
+							<Card>
+								<CustomToggle eventKey="0">자산별 컬럼</CustomToggle>
 								<Accordion.Collapse eventKey="0">
 									<FormProvider {...methods}>
 										<Card.Body>
 											<Row>
-												<Col lg={5} style={{ paddingLeft: 80 }}>
+												<Col lg={5}>
 													<TextInput
 														label="서비스범위"
 														type="text"
@@ -219,15 +224,13 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
 				return (
 					<div>
 						<Accordion defaultActiveKey="0">
-							<Card style={{ width: '120rem' }}>
-								<CustomToggle eventKey="0">
-									<Card.Header>자산별 컬럼</Card.Header>
-								</CustomToggle>
+							<Card>
+								<CustomToggle eventKey="0">자산별 컬럼</CustomToggle>
 								<Accordion.Collapse eventKey="0">
 									<FormProvider {...methods}>
 										<Card.Body>
 											<Row>
-												<Col lg={5} style={{ paddingLeft: 80 }}>
+												<Col lg={5}>
 													<TextInput
 														label="IP"
 														type="text"
@@ -286,15 +289,13 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
 				return (
 					<div>
 						<Accordion defaultActiveKey="0">
-							<Card style={{ width: '120rem' }}>
-								<CustomToggle eventKey="0">
-									<Card.Header>자산별 컬럼</Card.Header>
-								</CustomToggle>
+							<Card>
+								<CustomToggle eventKey="0">자산별 컬럼</CustomToggle>
 								<Accordion.Collapse eventKey="0">
 									<FormProvider {...methods}>
 										<Card.Body>
 											<Row>
-												<Col lg={5} style={{ paddingLeft: 80 }}>
+												<Col lg={5}>
 													<TextInput
 														label="OS"
 														type="text"
@@ -335,15 +336,13 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
 				return (
 					<div>
 						<Accordion defaultActiveKey="0">
-							<Card style={{ width: '120rem' }}>
-								<CustomToggle eventKey="0">
-									<Card.Header>자산별 컬럼</Card.Header>
-								</CustomToggle>
+							<Card>
+								<CustomToggle eventKey="0">자산별 컬럼</CustomToggle>
 								<Accordion.Collapse eventKey="0">
 									<FormProvider {...methods}>
 										<Card.Body>
 											<Row>
-												<Col lg={5} style={{ paddingLeft: 80 }}>
+												<Col lg={5}>
 													<p className="mb-2 c fw-bold">문서등급</p>
 													<Select
 														className="mb-3"
@@ -406,15 +405,13 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
 				return (
 					<div>
 						<Accordion defaultActiveKey="0">
-							<Card style={{ width: '120rem' }}>
-								<CustomToggle eventKey="0">
-									<Card.Header>자산별 컬럼</Card.Header>
-								</CustomToggle>
+							<Card>
+								<CustomToggle eventKey="0">자산별 컬럼</CustomToggle>
 								<Accordion.Collapse eventKey="0">
 									<FormProvider {...methods}>
 										<Card.Body>
 											<Row>
-												<Col lg={5} style={{ paddingLeft: 80 }}>
+												<Col lg={5}>
 													<div className="form-group mb-3">
 														<label className="form-label">
 															출원일자
@@ -606,15 +603,13 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
 				return (
 					<div>
 						<Accordion defaultActiveKey="0">
-							<Card style={{ width: '120rem' }}>
-								<CustomToggle eventKey="0">
-									<Card.Header>자산별 컬럼</Card.Header>
-								</CustomToggle>
+							<Card>
+								<CustomToggle eventKey="0">자산별 컬럼</CustomToggle>
 								<Accordion.Collapse eventKey="0">
 									<FormProvider {...methods}>
 										<Card.Body>
 											<Row>
-												<Col lg={5} style={{ paddingLeft: 80 }}>
+												<Col lg={5}>
 													<TextInput
 														label="장비유형"
 														type="text"
@@ -758,15 +753,13 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
 				return (
 					<div>
 						<Accordion defaultActiveKey="0">
-							<Card style={{ width: '120rem' }}>
-								<CustomToggle eventKey="0">
-									<Card.Header>자산별 컬럼</Card.Header>
-								</CustomToggle>
+							<Card>
+								<CustomToggle eventKey="0">자산별 컬럼</CustomToggle>
 								<Accordion.Collapse eventKey="0">
 									<FormProvider {...methods}>
 										<Card.Body>
 											<Row>
-												<Col lg={5} style={{ paddingLeft: 80 }}>
+												<Col lg={5}>
 													<TextInput
 														label="장비유형"
 														type="text"
@@ -834,15 +827,13 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
 				return (
 					<div>
 						<Accordion defaultActiveKey="0">
-							<Card style={{ width: '120rem' }}>
-								<CustomToggle eventKey="0">
-									<Card.Header>자산별 컬럼</Card.Header>
-								</CustomToggle>
+							<Card>
+								<CustomToggle eventKey="0">자산별 컬럼</CustomToggle>
 								<Accordion.Collapse eventKey="0">
 									<FormProvider {...methods}>
 										<Card.Body>
 											<Row>
-												<Col lg={5} style={{ paddingLeft: 80 }}>
+												<Col lg={5}>
 													<TextInput
 														label="IP"
 														type="text"
@@ -975,15 +966,13 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
 				return (
 					<div>
 						<Accordion defaultActiveKey="0">
-							<Card style={{ width: '120rem' }}>
-								<CustomToggle eventKey="0">
-									<Card.Header>자산별 컬럼</Card.Header>
-								</CustomToggle>
+							<Card>
+								<CustomToggle eventKey="0">자산별 컬럼</CustomToggle>
 								<Accordion.Collapse eventKey="0">
 									<FormProvider {...methods}>
 										<Card.Body>
 											<Row>
-												<Col lg={5} style={{ paddingLeft: 80 }}>
+												<Col lg={5}>
 													<TextInput
 														label="크기"
 														type="text"
@@ -1006,15 +995,13 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
 				return (
 					<div>
 						<Accordion defaultActiveKey="0">
-							<Card style={{ width: '120rem' }}>
-								<CustomToggle eventKey="0">
-									<Card.Header>자산별 컬럼</Card.Header>
-								</CustomToggle>
+							<Card>
+								<CustomToggle eventKey="0">자산별 컬럼</CustomToggle>
 								<Accordion.Collapse eventKey="0">
 									<FormProvider {...methods}>
 										<Card.Body>
 											<Row>
-												<Col lg={5} style={{ paddingLeft: 80 }}>
+												<Col lg={5}>
 													<TextInput
 														label="기기유형"
 														type="text"
@@ -1064,15 +1051,13 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
 				return (
 					<div>
 						<Accordion defaultActiveKey="0">
-							<Card style={{ width: '120rem' }}>
-								<CustomToggle eventKey="0">
-									<Card.Header>자산별 컬럼</Card.Header>
-								</CustomToggle>
+							<Card>
+								<CustomToggle eventKey="0">자산별 컬럼</CustomToggle>
 								<Accordion.Collapse eventKey="0">
 									<FormProvider {...methods}>
 										<Card.Body>
 											<Row>
-												<Col lg={5} style={{ paddingLeft: 80 }}>
+												<Col lg={5}>
 													<TextInput
 														label="배기량"
 														type="number"
@@ -1169,15 +1154,13 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
 				return (
 					<div>
 						<Accordion defaultActiveKey="0">
-							<Card style={{ width: '120rem' }}>
-								<CustomToggle eventKey="0">
-									<Card.Header>자산별 컬럼</Card.Header>
-								</CustomToggle>
+							<Card>
+								<CustomToggle eventKey="0">자산별 컬럼</CustomToggle>
 								<Accordion.Collapse eventKey="0">
 									<FormProvider {...methods}>
 										<Card.Body>
 											<Row>
-												<Col lg={5} style={{ paddingLeft: 80 }}>
+												<Col lg={5}>
 													<TextInput
 														label="기타 세부 설명"
 														type="text"

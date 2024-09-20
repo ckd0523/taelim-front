@@ -10,6 +10,7 @@ import logoDark from '@/assets/images/logo-dark.png';
 import logoSm from '@/assets/images/logo-sm.png';
 import logoDarkSm from '@/assets/images/logo-dark-sm.png';
 import taelimlogo from '@/assets/images/Taelimlogo.png';
+import taelimlogo_sm from '@/assets/images/Taelimlogo-sm.png';
 import { getMenuItems } from './utils/menu';
 import { Button } from 'react-bootstrap';
 
@@ -63,16 +64,12 @@ const LeftSidebar = ({ isCondensed, leftbarDark }) => {
 
 	return (
 		<div className="leftside-menu" ref={menuNodeRef}>
-			<Link
-				to="/"
-				className={`logo ${leftbarDark ? 'logo-light' : 'logo-dark'}`}
-				style={{ backgroundColor: 'logo-light' }}
-			>
+			<Link to="/" className={`logo ${leftbarDark ? 'logo-light' : 'logo-dark'}`}>
 				<span className="logo-lg">
 					<img src={taelimlogo} alt="logo" height="30" />
 				</span>
 				<span className="logo-sm">
-					<img src={taelimlogo} alt="logo" height="30" />
+					<img src={taelimlogo_sm} alt="logo" height="30" />
 				</span>
 			</Link>
 

@@ -8,81 +8,87 @@ import assetSurveyLocation from './assetSurveyLocation';
 const URL = import.meta.env.VITE_BASIC_URL;
 
 const columns = [
-  { Header: '회차', accessor: 'round', defaultCanSort: true, },
-  {
-    Header: '위치', accessor: 'assetSurveyLocation', defaultCanSort: false,
-    Cell: ({ value }) => {
-      const location = assetSurveyLocation.find(loc => loc.value === value);
-      return location ? location.label : value; // 매칭되는 label을 찾아 표시
-    },
-  },
-  { Header: '자산조사일자', accessor: 'assetSurveyStartDate', defaultCanSort: false, },
-  { Header: '자산조사자', accessor: 'assetSurveyBy', defaultCanSort: false, },
-  {
-    Header: '상태', accessor: 'surveyStatus', defaultCanSort: false,
-    //Cell: StatusColumn,
-    Cell: ({ value }) => (value === '' ? null : value ? '완료' : '진행 중')
-  },
+	{ Header: '회차', accessor: 'round', defaultCanSort: true },
+	{
+		Header: '위치',
+		accessor: 'assetSurveyLocation',
+		defaultCanSort: false,
+		Cell: ({ value }) => {
+			const location = assetSurveyLocation.find((loc) => loc.value === value);
+			return location ? location.label : value; // 매칭되는 label을 찾아 표시
+		},
+	},
+	{ Header: '자산조사일자', accessor: 'assetSurveyStartDate', defaultCanSort: false },
+	{ Header: '자산조사자', accessor: 'assetSurveyBy', defaultCanSort: false },
+	{
+		Header: '상태',
+		accessor: 'surveyStatus',
+		defaultCanSort: false,
+		//Cell: StatusColumn,
+		Cell: ({ value }) => (value === '' ? null : value ? '완료' : '진행 중'),
+	},
 ];
 
-const tableData = [{
-  round: '',
-  assetSurveyLocation: '',
-  assetSurveyStartDate: '',
-  assetSurveyBy: '',
-  surveyStatus: '',
-}];
+const tableData = [
+	{
+		round: '',
+		assetSurveyLocation: '',
+		assetSurveyStartDate: '',
+		assetSurveyBy: '',
+		surveyStatus: '',
+	},
+];
 
 const sizePerPageList = [
-  { text: '5', value: 5, },
-  { text: '10', value: 10, },
-  { text: '25', value: 25, },
-  { text: '100', value: 100, },
+	{ text: '5', value: 5 },
+	{ text: '10', value: 10 },
+	{ text: '25', value: 25 },
+	{ text: '100', value: 100 },
 ];
 
 const SurveyTable = ({ tableChange }) => {
-  const [data, setData] = useState([]);
-  const [isDataExist, setIsDataExist] = useState(false); //fetch로 데이터를 못불러 왔는지
-  //const [loading, setLoading] = useState(true); // fetch로 데이터 불러오는 중인지
+	const [data, setData] = useState([]);
+	const [isDataExist, setIsDataExist] = useState(false); //fetch로 데이터를 못불러 왔는지
+	//const [loading, setLoading] = useState(true); // fetch로 데이터 불러오는 중인지
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(`${URL}/assetSurveyHistory`);
-        setData(response.data); // API로부터 받은 데이터 설정
-      } catch (error) {
-        setData(tableData);
-        setIsDataExist(true);
-        console.error('Error fetching data:', error);
-      }
-    };
+	useEffect(() => {
+		const fetchData = async () => {
+			try {
+				const response = await axios.get(`${URL}/assetSurveyHistory`);
+				setData(response.data); // API로부터 받은 데이터 설정
+			} catch (error) {
+				setData(tableData);
+				setIsDataExist(true);
+				console.error('Error fetching data:', error);
+			}
+		};
 
-    fetchData();
-  }, [tableChange]);
+		fetchData();
+	}, [tableChange]);
 
-  return (
-    <Row>
-      <Card></Card>
-      <Col>
-        <Card>
-          <Card.Body>
-            {/* 이 Table은 리액트의 테이블이 아니라 Hyper의 테이블임 */}
-            <Table2
-              columns={columns}
-              data={data}
-              pagesize={5}
-              sizePerPageList={sizePerPageList}
-              isSortable={true}
-              pagination={true}
-              isSelectable={true}
-              isDataExist={isDataExist}
-            />
-          </Card.Body>
-        </Card>
-      </Col>
-    </Row>
-  );
-
+	return (
+		<Row>
+			<Card></Card>
+			<Col>
+				<Card>
+					<Card.Body>
+						{/* 이 Table은 리액트의 테이블이 아니라 Hyper의 테이블임 */}
+						<Table2
+							columns={columns}
+							data={data}
+							pagesize={5}
+							sizePerPageList={sizePerPageList}
+							theadClass="table-light"
+							isSortable={true}
+							pagination={true}
+							isSelectable={true}
+							isDataExist={isDataExist}
+						/>
+					</Card.Body>
+				</Card>
+			</Col>
+		</Row>
+	);
 };
 
 export default SurveyTable;

@@ -1,25 +1,25 @@
 import { Row, Col, Card, Button } from 'react-bootstrap';
 import { Table } from '@/components';
-import BackUpTable from './data';  // useBackUpHistory로 변경
+import BackUpTable from './data'; // useBackUpHistory로 변경
 import { useState } from 'react';
 import { CustomDatePicker } from '@/components';
 import Select from 'react-select';
 
 const columns = [
-	{ Header: '번호', accessor: 'backUpNo', defaultCanSort: true, },
-	{ Header: '백업 날짜', accessor: 'backUpDate', defaultCanSort: true, },
-	{ Header: '백업 범위', accessor: 'backUpScope', defaultCanSort: false, },
+	{ Header: '번호', accessor: 'backUpNo', defaultCanSort: true },
+	{ Header: '백업 날짜', accessor: 'backUpDate', defaultCanSort: true },
+	{ Header: '백업 범위', accessor: 'backUpScope', defaultCanSort: false },
 ];
 
 const sizePerPageList = [
-	{ text: '5', value: 5, },
-	{ text: '10', value: 10, },
-	{ text: '25', value: 25, },
-	{ text: '100', value: 100, },
+	{ text: '5', value: 5 },
+	{ text: '10', value: 10 },
+	{ text: '25', value: 25 },
+	{ text: '100', value: 100 },
 ];
 
 const BackUpHistory = () => {
-	const [selectedDate, setSelectedDate] = useState(new Date())
+	const [selectedDate, setSelectedDate] = useState(new Date());
 
 	const data = BackUpTable();
 
@@ -66,7 +66,6 @@ const BackUpHistory = () => {
 										/>
 									</div>
 								</Col>
-
 								<Col lg={2}>
 									<Button>검색</Button>
 								</Col>
@@ -85,6 +84,7 @@ const BackUpHistory = () => {
 								columns={columns}
 								data={data}
 								pageSize={5}
+								theadClass="table-light"
 								sizePerPageList={sizePerPageList}
 								isSortable={true}
 								pagination={true}

@@ -1,5 +1,5 @@
 import SearchBar from "./AssetSurveyHistorySearchBar";
-import SurveyTable from "./AssetSurveyHistoryTable";
+import { SurveyTable } from "./AssetSurveyHistoryTable";
 import Buttons from "./AssetSurveyButtons";
 import { useState } from "react";
 

@@ -3,11 +3,13 @@ import axios from 'axios';
 import { Row, Col, Card } from 'react-bootstrap';
 import { Table2 } from '../../../components/table/Table2';
 import assetSurveyLocation from './assetSurveyLocation';
+import { Table } from '@/components';
 //import StatusColumn from './TableColumnSet';
 
 const URL = import.meta.env.VITE_BASIC_URL;
 
 const columns = [
+  { Header: '자산 조사 번호', accessor: 'assetSurveyNo', show: false, },
   { Header: '회차', accessor: 'round', defaultCanSort: true, },
   {
     Header: '위치', accessor: 'assetSurveyLocation', defaultCanSort: false,
@@ -85,6 +87,20 @@ const SurveyTable = ({ tableChange }) => {
 
 };
 
-export default SurveyTable;
+const DetailTable = ({ detailColumn, detailData }) => {
+  return (
+    <Table
+      columns={detailColumn}
+      data={detailData}
+      pagesize={5}
+      sizePerPageList={20}
+      isSortable={true}
+      pagination={true}
+      isSelectable={false}
+    />
+  );
+};
+
+export { SurveyTable, DetailTable };
 //default하면 하나만 내보내는데 가져올 때 명시적으로 안 가져와도 됨.
 //default 빼고 { }는 여러 개의 컴포넌트를 내보낼 때 사용하지만 명시적으로 가져와야 함.

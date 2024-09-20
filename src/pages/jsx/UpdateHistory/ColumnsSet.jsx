@@ -3,15 +3,18 @@ import classNames from 'classnames';
 import { useCallback } from 'react';
 
 // get all columns
-const columns = (setModalData, setShowModal) => [
+const columns = (setModalData, setShowModal, setAssetCode) => [
 	{
 		Header: '번호',
 		accessor: 'UpdateNo',
 		defaultCanSort: true,
 		Cell: ({ row }) => {
 			const handleRowClick = useCallback(() => {
-				console.log('클릭된 행 : ', row.original);
+				console.log('클릭된 행 : ', row.original); // row.original의 구조 확인
+				console.log('assetCode: ', row.original.assetCode); // assetCode 값이 존재하는지 확인
+
 				setModalData(row.original);
+				setAssetCode(row.original.assetCode); // assetCode 설정
 				setShowModal(true);
 			}, [row.original]);
 

@@ -26,6 +26,8 @@ const UpdateHistory = () => {
 	const [showModal, setShowModal] = useState(false);
 	const [modalData, setModalData] = useState(null);
 
+	const [selectedAssetCode, setSelectedAssetCode] = useState(null); // 선택된 assetCode
+
 	// 백엔드에서 수정 이력 데이터를 불러오는 함수
 	useEffect(() => {
 		const fetchUpdateHistory = async () => {
@@ -62,9 +64,14 @@ const UpdateHistory = () => {
 	};
 
 	const handleRowClick = (rowData) => {
-		setModalData(rowData);
+		setSelectedAssetCode(rowData.assetCode);
 		setShowModal(true);
 	};
+	// UpdateHistory.jsx
+	useEffect(() => {
+		if (selectedAssetCode) {
+		}
+	}, [selectedAssetCode]);
 
 	const handleSearch = () => {
 		const filteredData = originalData.filter((assetUpdates) => {
@@ -185,7 +192,7 @@ const UpdateHistory = () => {
 
 							<Row>
 								<Table
-									columns={columns(setModalData, setShowModal)}
+									columns={columns(setModalData, setShowModal, setAssetCode)}
 									data={UpdateList}
 									pageSize={10}
 									//isExpandable={true}
@@ -194,14 +201,14 @@ const UpdateHistory = () => {
 									//isSelectable={true}
 									theadClass="table-light"
 									searchBoxClass="mb-2"
-									onRowClick={() => {}} // onRowClick 이벤트를 빈 함수로 설정하여 무시
+									onRowClick={handleRowClick} // onRowClick 이벤트를 빈 함수로 설정하여 무시
 								/>
 							</Row>
 							{/* Modal */}
 							<InfoModal
 								show={showModal}
 								handleClose={() => setShowModal(false)}
-								modalData={modalData}
+								assetCode={selectedAssetCode}
 							/>
 						</Card.Body>
 					</Card>

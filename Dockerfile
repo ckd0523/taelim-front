@@ -1,7 +1,7 @@
 FROM node:lts-alpine as build  
 WORKDIR /app
-COPY package.json package-lock.json ./
-RUN yarn ci
+COPY package.json ./
+RUN yarn install
 COPY . .  
 ENV NODE_OPTIONS="--max-old-space-size=8192"
 RUN yarn build

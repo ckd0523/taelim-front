@@ -209,6 +209,7 @@ const UpdateHistory = () => {
 								show={showModal}
 								handleClose={() => setShowModal(false)}
 								assetNo={selectedAssetNo}
+								modalData={modalData} // modalData를 InfoModal로 전달
 							/>
 						</Card.Body>
 					</Card>

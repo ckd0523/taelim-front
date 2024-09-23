@@ -34,6 +34,7 @@ const MaintainRegister = ({ assetCode, assetNo }) => {
 			if (maintainResponse.ok) {
 				const assetNo = await maintainResponse.text();
 				alert('유지보수가 성공적으로 등록');
+				window.location.reload();
 			} else {
 				alert('유지보수 등록 실패');
 			}

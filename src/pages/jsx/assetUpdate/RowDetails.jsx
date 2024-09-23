@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Table as BootstrapTable, Row, Col, Button, Form, Modal } from 'react-bootstrap';
 import axios from 'axios';
 import MaintainRegister from '@/pages/jsx/Maintain';
+const urlConfig = import.meta.env.VITE_BASIC_URL;
 // 자산 분류에 따른 동적 열 정의 함수
 const getClassificationColumns = (classification) => {
 	switch (classification) {

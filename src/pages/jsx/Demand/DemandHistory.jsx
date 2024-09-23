@@ -2,9 +2,12 @@ import { Row, Col, Card, Button, Modal } from 'react-bootstrap';
 import { PageBreadcrumb, CustomDatePicker, TextInput, Form as RHForm } from '@/components';
 import { Table } from './Table';
 import { columns } from './ColumnsSet';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { demands } from './data';
 import { InfoModal, ActionModal } from './DemandModal';
+import axios from 'axios';
+
+const urlConfig = import.meta.env.VITE_BASIC_URL;
 
 import Select from 'react-select';
 
@@ -20,6 +23,18 @@ const DemandHistory = () => {
 	const [showActModal, setShowActModal] = useState(false);
 	const [actionData, setActionData] = useState(null); // ActionModal로 보낼 데이터
 	const [actionType, setActionType] = useState(null);
+
+	useEffect(() => {
+		const fetchData = async () => {
+			try {
+				const response = await axios.get(`${urlConfig}/DemandHistory`);
+				setDemandsList(response.data);
+			} catch (error) {
+				console.error('데이터를 가져오는 중 오류 발생:', error);
+			}
+		};
+		fetchData();
+	}, []);
 
 	const handleOpenModal = (type, rowData) => {
 		setActionType(type);
@@ -187,7 +202,7 @@ const DemandHistory = () => {
 									isSortable={true}
 									pagination={true}
 									isSelectable={true}
-									initialState={{ hiddenColumns: ['demandNo'] }} // id 열을 숨김
+									initialState={{ hiddenColumns: ['demandNo', 'assetNo'] }} // id 열을 숨김
 									theadClass="table-light"
 									tableClass="border-black"
 									searchBoxClass="mb-2"

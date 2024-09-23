@@ -226,6 +226,8 @@ const RowDetails = ({ row, assetCode, onClose }) => {
 		} catch (error) {
 			console.error('Error updating asset data:', error);
 			setErrorMessage('자산 수정 요청 중 오류가 발생했습니다.');
+		} finally {
+			window.location.reload();
 		}
 	};
 

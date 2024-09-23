@@ -1,22 +1,17 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
 import { Row, Col, Card, Button, Form, Modal } from 'react-bootstrap';
 import { PageBreadcrumb, CustomDatePicker, TextInput, Form as RHForm } from '@/components';
+
 import { columns as baseColumns } from './ColumnsSet'; // table의 column 설정
 import { Table } from './ExpandableTable';
+import { SearchForm } from './AssetSearchBar';
+
+import axios from 'axios';
 const urlConfig = import.meta.env.VITE_BASIC_URL;
 
 const AssetTable = () => {
 	const [data, setData] = useState([]);
 	const [UpdateList, setUpdateList] = useState([]);
-	const [assetCode, setAssetCode] = useState('');
-	const [assetName, setAssetName] = useState('');
-	const [department, setDepartment] = useState('');
-	const [assetOwner, setAssetOwner] = useState('');
-	const [assetLocation, setAssetLocation] = useState('');
-	const [introducedDate, setIntroduceDate] = useState('');
-	const [selectedStartDate, setSelectedStartDate] = useState(null); // 이건 아직 안됨
-	const [selectedEndDate, setSelectedEndDate] = useState(null); //  이건 아직 안됨
 
 	// 폐기 모달창 부분
 	const [showModal, setShowModal] = useState(false); // 모달창 열기/닫기 상태
@@ -62,33 +57,15 @@ const AssetTable = () => {
 		fetchData();
 	}, []);
 
-	const handleFormChange = (e) => {
-		const { name, value } = e.target;
-		switch (name) {
-			case 'assetCode':
-				setAssetCode(value);
-				break;
-			case 'assetName':
-				setAssetName(value);
-				break;
-			case 'department':
-				setDepartment(value);
-				break;
-			case 'assetOwner':
-				setAssetOwner(value);
-				break;
-			case 'assetLocation':
-				setAssetLocation(value);
-				break;
-			case 'introducedDate':
-				setIntroduceDate(value);
-				break;
-			default:
-				break;
-		}
-	};
-
-	const handleSearch = () => {
+	const handleSearch = ({
+		assetCode,
+		assetName,
+		department,
+		assetOwner,
+		assetLocation,
+		selectedStartDate,
+		selectedEndDate,
+	}) => {
 		const filteredData = data.filter((item) => {
 			return (
 				(assetCode === '' || (item.assetCode && item.assetCode.includes(assetCode))) &&
@@ -98,9 +75,8 @@ const AssetTable = () => {
 				(assetLocation === '' ||
 					(item.assetLocation && item.assetLocation.includes(assetLocation))) &&
 				(selectedStartDate === null ||
-					(item.introducedDate && new Date(item.introducedDate) >= selectedStartDate)) &&
-				(selectedEndDate === null ||
-					(item.introducedDate && new Date(item.introducedDate) < selectedEndDate))
+					new Date(item.introducedDate) >= selectedStartDate) &&
+				(selectedEndDate === null || new Date(item.introducedDate) <= selectedEndDate)
 			);
 		});
 
@@ -196,248 +172,140 @@ const AssetTable = () => {
 
 	return (
 		<>
-			<PageBreadcrumb title="UpdateHistory" subName="UpdateHistory" />
+			<PageBreadcrumb title="자산조회부분" subName="UpdateHistory" />
 
-			<Row>
-				<Col xs={12}>
-					<Card>
-						<Card.Body>
-							<div
-								style={{
-									border: '1px solid #000000', // 실선의 색상
-									borderRadius: '8px', // 둥근 모서리
-									backgroundColor: '#f2f7ff', // 옅은 파란색 배경
-									padding: '16px', // 여백 추가
-									marginBottom: '20px', // 아래 여백 추가
-								}}
-							>
-								<RHForm onChange={handleFormChange}>
-									<Row className="mb-4">
-										{/* 검색 필터 상단 */}
-										<Col md={3} className="d-flex align-items-center">
-											<div style={{ display: 'flex', alignItems: 'center' }}>
-												<Form.Label
-													className="me-2 mb-0"
-													style={{ width: '40%' }}
-												>
-													자산명
-												</Form.Label>
-												<Form.Control
-													name="assetName"
-													type="text"
-													placeholder="자산명을 입력하세요..."
-													value={assetName}
-													onChange={handleFormChange}
-												/>
-											</div>
+			<div>
+				<Card></Card>
+				{/* 검색 폼 하위 컴포넌트 */}
+				<SearchForm onSearch={handleSearch} />
+
+				<Row>
+					<Col xs={12}>
+						<Card>
+							<Card.Body>
+								{/* 버튼 4개 추가 */}
+								<Form.Group className="mb-3">
+									<Row className="d-flex justify-content-end">
+										<Col md={1} className="mb-2 text-end">
+											<Button variant="secondary" style={{ width: '60%' }}>
+												일괄 수정
+											</Button>
 										</Col>
-										<Col md={3} className="d-flex align-items-center">
-											<div style={{ display: 'flex', alignItems: 'center' }}>
-												<Form.Label
-													className="me-2 mb-0"
-													style={{ width: '40%' }}
-												>
-													자산위치
-												</Form.Label>
-												<Form.Control
-													name="assetLocation"
-													type="text"
-													placeholder="자산위치를 입력하세요..."
-													value={assetLocation}
-													onChange={handleFormChange}
-												/>
-											</div>
+										<Col md={1} className="mb-2 text-end">
+											<Button variant="danger" style={{ width: '60%' }}>
+												일괄 폐기
+											</Button>
 										</Col>
-										<Col md={3} className="d-flex align-items-center">
-											<div style={{ display: 'flex', alignItems: 'center' }}>
-												<Form.Label
-													className="me-2 mb-0"
-													style={{ width: '40%' }}
-												>
-													사용자
-												</Form.Label>
-												<Form.Control
-													name="assetOwner"
-													type="text"
-													placeholder="사용자를 입력하세요..."
-													value={assetOwner}
-													onChange={handleFormChange}
-												/>
-											</div>
+										<Col md={1} className="mb-2 text-end">
+											<Button variant="info" style={{ width: '50%' }}>
+												QR
+											</Button>
 										</Col>
-										<Col md={3} className="d-flex align-items-center">
-											<div style={{ display: 'flex', alignItems: 'center' }}>
-												<Form.Label
-													className="me-2 mb-0"
-													style={{ width: '40%' }}
-												>
-													부서
-												</Form.Label>
-												<Form.Control
-													name="department"
-													type="text"
-													placeholder="부서를 입력하세요..."
-													value={department}
-													onChange={handleFormChange}
-												/>
-											</div>
-										</Col>
-									</Row>
-									<Row className="mb-1">
-										{/* 검색 필터 하단 */}
-										<Col md={4} className="d-flex align-items-center">
-											<Form.Label
-												htmlFor="acquisitionStartDate"
-												className="me-2 mb-0"
-												style={{ width: '40%' }}
-											>
-												취득일자
-											</Form.Label>
-											<Row>
-												<Col>
-													<CustomDatePicker
-														hideAddon={true}
-														dateFormat="yyyy-MM-dd"
-														value={selectedStartDate}
-														onChange={(date) =>
-															setSelectedStartDate(date)
-														}
-													/>
-												</Col>
-												<Col>
-													<CustomDatePicker
-														hideAddon={true}
-														dateFormat="yyyy-MM-dd"
-														value={selectedEndDate}
-														onChange={(date) =>
-															setSelectedEndDate(date)
-														}
-													/>
-												</Col>
-											</Row>
-										</Col>
-										<Col md={8} className="d-flex justify-content-end">
-											<Button
-												variant="primary"
-												type="button"
-												onClick={handleSearch}
-											>
-												검색
+										<Col md={1} className="mb-2 text-end">
+											<Button variant="success" style={{ width: '60%' }}>
+												엑셀 출력
 											</Button>
 										</Col>
 									</Row>
-								</RHForm>
-							</div>
-							{/* 버튼 4개 추가 */}
-							<Form.Group className="mb-3">
-								<Row className="d-flex justify-content-end">
-									<Col md={1} className="mb-2 text-end">
-										<Button variant="secondary" style={{ width: '60%' }}>
-											일괄 수정
-										</Button>
-									</Col>
-									<Col md={1} className="mb-2 text-end">
-										<Button variant="danger" style={{ width: '60%' }}>
-											일괄 폐기
-										</Button>
-									</Col>
-									<Col md={1} className="mb-2 text-end">
-										<Button variant="info" style={{ width: '50%' }}>
-											QR
-										</Button>
-									</Col>
-									<Col md={1} className="mb-2 text-end">
-										<Button variant="success" style={{ width: '60%' }}>
-											엑셀 출력
-										</Button>
-									</Col>
-								</Row>
-							</Form.Group>
+								</Form.Group>
 
-							{/*폐기 모달창 */}
-							<Modal show={showModal} onHide={handleClose}>
-								<Modal.Header closeButton>
-									<Modal.Title>
-										폐기 요청 - 자산 코드: {selectedAssetCode}
-									</Modal.Title>
-								</Modal.Header>
-								<Modal.Body>
-									<Form>
-										<Form.Group className="mb-3">
-											<Form.Label>구분</Form.Label>
-											<Form.Control type="text" value="폐기" readOnly />
-										</Form.Group>
-										<Form.Group className="mb-3">
-											<Form.Label>폐기 사유</Form.Label>
-											<Form.Select
-												value={disposeReason}
-												onChange={(e) => setDisposeReason(e.target.value)}
-											>
-												<option value="">사유를 선택하세요</option>
-												<option value="노후화">노후화</option>
-												<option value="고장">고장</option>
-												<option value="성능저하">성능저하</option>
-											</Form.Select>
-										</Form.Group>
-										<Form.Group className="mb-3">
-											<Form.Label>폐기 내용</Form.Label>
-											<Form.Control
-												as="textarea"
-												rows={3}
-												value={disposeDetail}
-												onChange={(e) => setDisposeDetail(e.target.value)}
+								{/*폐기 모달창 */}
+								<Modal show={showModal} onHide={handleClose}>
+									<Modal.Header closeButton>
+										<Modal.Title>
+											폐기 요청 - 자산 코드: {selectedAssetCode}
+										</Modal.Title>
+									</Modal.Header>
+									<Modal.Body>
+										<Form>
+											<Form.Group className="mb-3">
+												<Form.Label>구분</Form.Label>
+												<Form.Control type="text" value="폐기" readOnly />
+											</Form.Group>
+											<Form.Group className="mb-3">
+												<Form.Label>폐기 사유</Form.Label>
+												<Form.Select
+													value={disposeReason}
+													onChange={(e) =>
+														setDisposeReason(e.target.value)
+													}
+												>
+													<option value="">사유를 선택하세요</option>
+													<option value="노후화">노후화</option>
+													<option value="고장">고장</option>
+													<option value="성능저하">성능저하</option>
+												</Form.Select>
+											</Form.Group>
+											<Form.Group className="mb-3">
+												<Form.Label>폐기 내용</Form.Label>
+												<Form.Control
+													as="textarea"
+													rows={3}
+													value={disposeDetail}
+													onChange={(e) =>
+														setDisposeDetail(e.target.value)
+													}
+												/>
+											</Form.Group>
+											<Form.Group className="mb-3">
+												<Form.Label>폐기 위치</Form.Label>
+												<Form.Control
+													type="text"
+													value={disposeLocation}
+													onChange={(e) =>
+														setDisposeLocation(e.target.value)
+													}
+												/>
+											</Form.Group>
+											<Form.Group>
+												<Form.Label>폐기 방법</Form.Label>
+												<Form.Control
+													type="text"
+													value={disposeMethod}
+													onChange={(e) =>
+														setDisposeMethod(e.target.value)
+													}
+												/>
+											</Form.Group>
+										</Form>
+									</Modal.Body>
+									<Modal.Footer>
+										<Button variant="danger" onClick={handleRequest}>
+											폐기요청
+										</Button>
+										<Button
+											variant="danger"
+											onClick={() => handleDisposeAsset(selectedAssetCode)}
+										>
+											폐기
+										</Button>
+										<Button variant="secondary" onClick={() => handleClose()}>
+											취소
+										</Button>
+									</Modal.Footer>
+								</Modal>
+								<RHForm>
+									<Card>
+										<Card.Body>
+											<Table
+												columns={columns}
+												data={UpdateList}
+												pageSize={10}
+												isSortable={true}
+												isSelectable={true}
+												pagination={true}
+												theadClass="table-light"
+												searchBoxClass="mb-2"
+												isExpandable={true} // 확장 가능
 											/>
-										</Form.Group>
-										<Form.Group className="mb-3">
-											<Form.Label>폐기 위치</Form.Label>
-											<Form.Control
-												type="text"
-												value={disposeLocation}
-												onChange={(e) => setDisposeLocation(e.target.value)}
-											/>
-										</Form.Group>
-										<Form.Group>
-											<Form.Label>폐기 방법</Form.Label>
-											<Form.Control
-												type="text"
-												value={disposeMethod}
-												onChange={(e) => setDisposeMethod(e.target.value)}
-											/>
-										</Form.Group>
-									</Form>
-								</Modal.Body>
-								<Modal.Footer>
-									<Button variant="danger" onClick={handleRequest}>
-										폐기요청
-									</Button>
-									<Button
-										variant="danger"
-										onClick={() => handleDisposeAsset(selectedAssetCode)}
-									>
-										폐기
-									</Button>
-									<Button variant="secondary" onClick={() => handleClose()}>
-										취소
-									</Button>
-								</Modal.Footer>
-							</Modal>
-							<Row>
-								<Table
-									columns={columns}
-									data={UpdateList}
-									pageSize={10}
-									isSortable={true}
-									isSelectable={true}
-									pagination={true}
-									theadClass="table-light"
-									searchBoxClass="mb-2"
-									isExpandable={true} // 확장 가능
-								/>
-							</Row>
-						</Card.Body>
-					</Card>
-				</Col>
-			</Row>
+										</Card.Body>
+									</Card>
+								</RHForm>
+							</Card.Body>
+						</Card>
+					</Col>
+				</Row>
+			</div>
 		</>
 	);
 };

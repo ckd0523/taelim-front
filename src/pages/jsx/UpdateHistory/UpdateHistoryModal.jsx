@@ -173,7 +173,7 @@ const InfoModal = ({ show, handleClose, modalData, assetNo }) => {
 				setIsLoading(true); // 데이터 요청 시작부분
 
 				try {
-					const response = await axios.get(`${urlConfig}/list/${assetCode}`);
+					const response = await axios.get(`${urlConfig}/list/${assetNo}`);
 					console.log(`불러온 데이터 : `, response.data);
 
 					const [lowestAsset, modifiedAsset] = response.data;

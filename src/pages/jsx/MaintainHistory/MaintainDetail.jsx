@@ -1,7 +1,20 @@
+import { useRef } from 'react';
+import { useState } from 'react';
 import { Form, Modal } from 'react-bootstrap';
 import { Input } from 'react-bootstrap-typeahead';
 import { BsImage } from 'react-icons/bs';
 const MaintainDetail = ({ show, selectData, handleClose }) => {
+	const [formData, setFormData] = useState();
+	const handleChange = (e) => {
+		const { name, value } = e.target;
+		setFormData((prevState) => ({
+			...prevState,
+			[name]: value,
+		}));
+		console.log('name: ', name);
+		console.log('value: ', value);
+	};
+
 	return (
 		<>
 			<Modal show={show} onHide={handleClose}>
@@ -16,55 +29,31 @@ const MaintainDetail = ({ show, selectData, handleClose }) => {
 							<Form.Label>유지보수 담당자</Form.Label>
 							<Form.Control type="text" value={selectData.maintainBy} readOnly />
 							<Form.Label>시작일</Form.Label>
-							<Form.Control type="text" value={selectData.startDay} readOnly />
+							<Form.Control type="text" value={selectData.repairStartDate} readOnly />
 							<Form.Label>완료일</Form.Label>
-							<Form.Control type="date" value={selectData.endDay} />
+							{selectData.repairEndDate === null ? (
+								<Form.Control
+									type="date"
+									name="repairEndDate"
+									value={selectData.repairEndDate}
+									onChange={handleChange}
+								/>
+							) : (
+								<Form.Control
+									type="text"
+									value={selectData.repairEndDate}
+									readOnly
+								/>
+							)}
 						</Form.Group>
 						<Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
 							<Form.Label>유지보수 내용</Form.Label>
 							<Form.Control
 								as="textarea"
-								value={selectData.maintainContent}
+								value={selectData.repairResult}
 								rows={3}
+								readOnly
 							/>
-						</Form.Group>
-						<Form.Group>
-							<p>유지보수 전 사진</p>
-							<Form.Label htmlFor="maintainBefore">
-								{/* {imgPath ? (
-                                    <img width="200" src={imgPath} />
-                                ) : (
-                                    <BsImage size={120} />
-                                )} */}
-								<BsImage size={120} />
-							</Form.Label>
-							<Input
-								hidden
-								// ref={imgRef}
-								type="file"
-								id="maintainBefore"
-								accept="image/*"
-								// onChange={previewImage}
-							></Input>
-						</Form.Group>
-						<Form.Group>
-							<p>유지보수 후 사진</p>
-							<Form.Label htmlFor="maintainAfter">
-								{/* {AfterPath ? (
-                                    <img width="200" src={AfterPath} />
-                                ) : (
-                                    <BsImage size={120} />
-                                )} */}
-								<BsImage size={120} />
-							</Form.Label>
-							<Input
-								hidden
-								// ref={imgRef}
-								type="file"
-								id="maintainAfter"
-								accept="image/*"
-								// onChange={AfterImage}
-							></Input>
 						</Form.Group>
 					</Form>
 				</Modal.Body>

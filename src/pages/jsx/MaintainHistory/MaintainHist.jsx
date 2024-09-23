@@ -1,9 +1,9 @@
-import { Row, Col, Card, Form, Button } from 'react-bootstrap';
+import { Row, Col, Form, Button } from 'react-bootstrap';
 import { CustomDatePicker, Table } from '@/components';
-import { records as data } from '@/pages/jsx/MaintainHistory/data';
 import { MaintainDetail } from '@/pages/jsx/MaintainHistory/MaintainDetail';
 import { useState } from 'react';
 import styled from 'styled-components';
+import { useEffect } from 'react';
 
 const StyledCard = styled.div`
 	display: flex;
@@ -21,7 +21,7 @@ const StyledCardBody = styled.div`
 const columns = [
 	{
 		Header: '번호',
-		accessor: 'id',
+		accessor: 'repairNo',
 		defaultCanSort: true,
 	},
 	{
@@ -36,12 +36,12 @@ const columns = [
 	},
 	{
 		Header: '유지보수일자',
-		accessor: 'maintainDate',
+		accessor: 'repairStartDate',
 		defaultCanSort: true,
 	},
 	{
 		Header: '유지보수자',
-		accessor: 'maintainBy',
+		accessor: 'repairBy',
 		defaultCanSort: true,
 	},
 	{
@@ -61,39 +61,68 @@ const sizePerPageList = [
 		value: 10,
 	},
 ];
-
+const urlConfig = import.meta.env.VITE_BASIC_URL;
 const MaintainHist = () => {
 	const [show, setShow] = useState(false);
 	const [selectData, setSelectData] = useState();
+	const [data, setData] = useState([]);
 
 	const handleClick = (rowdata) => {
 		setSelectData(rowdata);
 		setShow(true);
 	};
 	const handleClose = () => setShow(false);
+
+	// useEffect(async (e) => {
+	// 	e.preventDefault();
+	// 	try {
+	// 		const response = await fetch(`${urlConfig}/maintain/get`, {
+	// 			method: 'GET',
+	// 			headers: {
+	// 				'Content-Type': 'application/json',
+	// 			},
+	// 			body: setData(response.data),
+	// 		});
+	// 		if (response.ok) {
+	// 			console.log('리스트출력');
+	// 		}
+	// 	} catch (error) {
+	// 		console.log('에러발생 : ', error);
+	// 		alert('리스트 출력 중 에러 발생');
+	// 	}
+	// });
+	useEffect(() => {
+		const requestOptions = {
+			method: 'GET',
+			redirect: 'follow',
+		};
+		fetch(`${urlConfig}/maintain/get`, requestOptions)
+			.then((response) => response.json())
+			.then((result) => {
+				if (Array.isArray(result)) {
+					console.log(result);
+					setData(result);
+				} else {
+					console.error('error');
+					setData([]);
+				}
+			})
+			.catch((error) => console.log('error', error));
+	}, []);
 	return (
 		<>
-			<Row className="px-3 pt-5 justify-content-center d-flex align-items-center">
-				<Col className=" d-flex justify-content-center align-items-center">
-					<StyledCard className="card ">
+			<Row className="px-3 pt-5">
+				<Col className="d-flex justify-content-center">
+					<StyledCard className="px-3 card">
 						<StyledCardBody className="card-body ">
-							<Form className="col-md-12 justify-content-center d-flex align-items-center">
-								<Row className="justify-content-center col-md-12 d-flex align-items-center">
+							<Form>
+								<Row className="align-items-center">
 									<Col xs={12} md={4} lg={2}>
-										<Form.Group
-											as={Row}
-											className="d-flex justify-content-center align-items-center "
-										>
-											<Form.Label
-												htmlFor="assetName"
-												column
-												xs={12}
-												md={12}
-												lg={3}
-											>
+										<Form.Group as={Row}>
+											<Form.Label htmlFor="assetName" xs={12} md={12} lg={10}>
 												자산명
 											</Form.Label>
-											<Col xs={12} md={12} lg={5}>
+											<Col xs={12} md={12} lg={10}>
 												<Form.Control
 													type="text"
 													name="자산명"
@@ -104,20 +133,11 @@ const MaintainHist = () => {
 									</Col>
 
 									<Col xs={12} md={6} lg={3}>
-										<Form.Group
-											as={Row}
-											className="d-flex justify-content-center align-items-center"
-										>
-											<Form.Label
-												htmlFor="assetCode"
-												column
-												xs={12}
-												md={12}
-												lg={2}
-											>
+										<Form.Group as={Row}>
+											<Form.Label htmlFor="assetCode" xs={12} md={12} lg={2}>
 												자산코드
 											</Form.Label>
-											<Col xs={12} md={12} lg={5}>
+											<Col xs={12} md={12} lg={8}>
 												<Form.Control
 													type="text"
 													name="자산코드"
@@ -128,20 +148,11 @@ const MaintainHist = () => {
 									</Col>
 
 									<Col xs={12} md={6} lg={3}>
-										<Form.Group
-											as={Row}
-											className="d-flex justify-content-center align-items-center"
-										>
-											<Form.Label
-												htmlFor="maintainBy"
-												column
-												xs={12}
-												md={7}
-												lg={3}
-											>
+										<Form.Group as={Row}>
+											<Form.Label htmlFor="maintainBy" xs={12} md={7} lg={3}>
 												유지보수자
 											</Form.Label>
-											<Col xs={12} md={7} lg={5}>
+											<Col xs={12} md={7} lg={6}>
 												<Form.Control
 													type="text"
 													name="유지보수자"
@@ -151,32 +162,23 @@ const MaintainHist = () => {
 										</Form.Group>
 									</Col>
 
-									<Col
-										column
-										xs={12}
-										md={6}
-										lg={3}
-										className="d-flex justify-content-center align-items-center"
-									>
-										<Form.Group
-											as={Row}
-											className="d-flex justify-content-center  align-items-center"
-										>
-											<Form.Label column xs={12} md={11} lg={3}>
+									<Col xs={12} md={6} lg={3}>
+										<Form.Group as={Row}>
+											<Form.Label xs={12} md={11} lg={5}>
 												유지보수 일자
 											</Form.Label>
-											<Col xs={5} md={5} lg={4}>
+											<Col xs={5} md={5} lg={5.5}>
 												<CustomDatePicker
 													type="date"
 													dateFormat="yyyy-MM-dd"
-													name="endDate"
+													name="startDate"
 													hideAddon={true}
 												/>
 											</Col>
 											<Col xs={1} md={1} lg={1} className="text-center">
 												~
 											</Col>
-											<Col xs={5} md={5} lg={4}>
+											<Col xs={5} md={5} lg={5.5}>
 												<CustomDatePicker
 													type="date"
 													dateFormat="yyyy-MM-dd"
@@ -186,7 +188,7 @@ const MaintainHist = () => {
 											</Col>
 										</Form.Group>
 									</Col>
-									<Col className="px-2 d-flex justify-content-center ">
+									<Col className="px-2 pt-3">
 										<Button>검색</Button>
 									</Col>
 								</Row>
@@ -196,7 +198,7 @@ const MaintainHist = () => {
 				</Col>
 			</Row>
 
-			<Row className="justify-content-center align-items-center">
+			<Row className="align-items-center">
 				{/* <h4 className="header-title text-center">유지보수 이력</h4> */}
 				<Col className="pt-5 d-flex justify-content-center align-items-center">
 					<StyledCard className="card">

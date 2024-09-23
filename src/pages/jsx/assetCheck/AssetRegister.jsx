@@ -123,7 +123,7 @@ const AssetRegister = () => {
 						console.log('fileType:', fileFormData.get('fileType'));
 
 						const fileResponse = await fetch(
-							'http://localhost:8080/asset/file/upload',
+							'http://localhost:8080/maintain/file/upload',
 							{
 								method: 'POST',
 								body: fileFormData,

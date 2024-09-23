@@ -1,50 +1,22 @@
 import { Button, Form, Modal } from 'react-bootstrap';
-import { useState, useRef } from 'react';
-import { BsImage } from 'react-icons/bs';
-import { Input } from 'react-bootstrap-typeahead';
+import { useState } from 'react';
+import RepairFileUpload from '@/pages/jsx/Maintain/RepairFileUpload';
+import Files from '@/pages/apps/projects/Details/Files';
 
 const urlConfig = import.meta.env.VITE_BASIC_URL;
-const MaintainRegister = () => {
+const MaintainRegister = ({ assetCode, assetNo }) => {
 	const [show, setShow] = useState(false);
-
-	const [imgFile, setImgFile] = useState();
-
-	const [file, files] = useState([]);
-	const [afterImg, setAfterImg] = useState();
-	const [imgPath, setImgPath] = useState();
-	const [AfterPath, setAfterPath] = useState();
-	const imgRef = useRef();
-	const MAX_IMAGE_SIZE_BYTES = 1024 * 1024 * 2;
+	const [formData, setFormData] = useState({
+		assetNo: assetNo,
+		assetCode: assetCode,
+		repairStartDate: new Date().toISOString().slice(0, 10),
+		repairEndDate: '',
+		repairBy: '',
+		repairResult: '',
+	});
 
 	const handleClose = () => setShow(false);
 	const handleShow = () => setShow(true);
-
-	const previewImage = (e) => {
-		e.preventDefault();
-		let reader = new FileReader();
-		if (e.target.files) {
-			reader.readAsDataURL(e.target.files[0]);
-			setImgFile(e.target.files[0]);
-		}
-
-		reader.onloadend = () => {
-			setImgPath(reader.result);
-		};
-
-		console.log(reader);
-	};
-	const AfterImage = (e) => {
-		e.preventDefault();
-		let reader = new FileReader();
-		if (e.target.files) {
-			reader.readAsDataURL(e.target.files[0]);
-			setAfterImg(e.target.files[0]);
-		}
-
-		reader.onloadend = () => {
-			setAfterPath(reader.result);
-		};
-	};
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
@@ -57,47 +29,37 @@ const MaintainRegister = () => {
 				body: JSON.stringify(formData),
 			});
 
+			console.log(assetNo);
+			console.log(assetCode);
 			if (maintainResponse.ok) {
 				const assetNo = await maintainResponse.text();
 				alert('유지보수가 성공적으로 등록');
-
-				if (files.length > 0) {
-					for (let { file, fileType } of files) {
-						const fileFormData = new FormData();
-						fileFormData.append('assetNo', assetNo);
-						fileFormData.append('file', file[0]);
-						fileFormData.append('fileType', fileType);
-						// console.log(fileFormData.assetNo);
-						console.log('fileFormData:', fileFormData.get('file'));
-						console.log('assetNo:', fileFormData.get('assetNo'));
-						console.log('fileType:', fileFormData.get('fileType'));
-
-						const fileResponse = await fetch(
-							'http://localhost:8080/asset/file/upload',
-							{
-								method: 'POST',
-								body: fileFormData,
-							}
-						);
-
-						if (fileResponse.ok) {
-							alert('파일이 성공적으로 업로드됨');
-						} else {
-							alert('파일 업로드 실패');
-						}
-					}
-				}
 			} else {
-				alert('자산 등록 실패');
+				alert('유지보수 등록 실패');
 			}
 		} catch (error) {
 			console.error('에러발생 : ', error);
-			alert('자산 등록 중 에러가 발생');
+			alert('유지보수 등록 중 에러가 발생');
 		}
 	};
+	// const today = new Date();
+	// const todayMonth =
+	// 	today.getMonth() + 1 > 9 ? today.getMonth() + 1 : '0' + (today.getMonth() + 1);
+	// const todayDate = today.getDate() > 9 ? today.getDate() : '0' + today.getDate();
+
+	// repairStartDate = `${today.getFullYear()}-` + todayMonth + '-' + todayDate;
+	const handleChange = (e) => {
+		const { name, value } = e.target;
+		setFormData((prevState) => ({
+			...prevState,
+			[name]: value,
+		}));
+		console.log('name: ', name);
+		console.log('value: ', value);
+	};
 	return (
-		<div>
-			<Button variant="primary" onClick={handleShow}>
+		<>
+			<Button variant="secondary" onClick={handleShow} className="me-2">
 				유지보수등록
 			</Button>
 
@@ -109,54 +71,35 @@ const MaintainRegister = () => {
 					<Form>
 						<Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
 							<Form.Label>자산코드</Form.Label>
-							<Form.Control type="text" readOnly />
+							<Form.Control value={formData.assetCode} type="text" readOnly />
 							<Form.Label>유지보수 담당자</Form.Label>
-							<Form.Control type="text" readOnly />
+							<Form.Control value={formData.repairBy} type="text" readOnly />
 							<Form.Label>시작일</Form.Label>
-							<Form.Control type="text" readOnly />
+							<Form.Control
+								name="repairStartDate"
+								value={formData.repairStartDate}
+								type="text"
+								readOnly
+							/>
 							<Form.Label>완료일</Form.Label>
-							<Form.Control type="date" />
+							<Form.Control
+								name="repairEndDate"
+								value={formData.repairEndDate}
+								onChange={handleChange}
+								type="date"
+							/>
 						</Form.Group>
 						<Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
 							<Form.Label>유지보수 내용</Form.Label>
-							<Form.Control as="textarea" rows={3} />
+							<Form.Control
+								name="repairResult"
+								value={formData.repairResult}
+								as="textarea"
+								rows={3}
+								onChange={handleChange}
+							/>
 						</Form.Group>
-						<Form.Group>
-							<p>유지보수 전 사진</p>
-							<Form.Label htmlFor="maintainBefore">
-								{imgPath ? (
-									<img width="200" src={imgPath} />
-								) : (
-									<BsImage size={120} />
-								)}
-							</Form.Label>
-							<Input
-								hidden
-								ref={imgRef}
-								type="file"
-								id="maintainBefore"
-								accept="image/*"
-								onChange={previewImage}
-							></Input>
-						</Form.Group>
-						<Form.Group>
-							<p>유지보수 후 사진</p>
-							<Form.Label htmlFor="maintainAfter">
-								{AfterPath ? (
-									<img width="200" src={AfterPath} />
-								) : (
-									<BsImage size={120} />
-								)}
-							</Form.Label>
-							<Input
-								hidden
-								ref={imgRef}
-								type="file"
-								id="maintainAfter"
-								accept="image/*"
-								onChange={AfterImage}
-							></Input>
-						</Form.Group>
+						<RepairFileUpload />
 					</Form>
 				</Modal.Body>
 				<Modal.Footer>
@@ -168,7 +111,7 @@ const MaintainRegister = () => {
 					</Button>
 				</Modal.Footer>
 			</Modal>
-		</div>
+		</>
 	);
 };
 

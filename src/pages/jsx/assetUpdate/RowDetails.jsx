@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Table as BootstrapTable, Row, Col, Button, Form, Modal } from 'react-bootstrap';
 import axios from 'axios';
-
+import MaintainRegister from '@/pages/jsx/Maintain';
 // 자산 분류에 따른 동적 열 정의 함수
 const getClassificationColumns = (classification) => {
 	switch (classification) {
@@ -497,9 +497,13 @@ const RowDetails = ({ row, assetCode, onClose }) => {
 											>
 												수정
 											</Button>
-											<Button variant="secondary" className="me-2">
-												유지보수등록
-											</Button>
+
+											{/* 유지보수 */}
+											<MaintainRegister
+												assetCode={formData.assetCode}
+												assetName={formData.assetName}
+												assetNo={formData.assetNo}
+											/>
 										</>
 									)}
 									<Button variant="danger" onClick={onClose}>

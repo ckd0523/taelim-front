@@ -9,6 +9,8 @@ import axios from 'axios';
 import Select from 'react-select';
 import { useEffect } from 'react';
 
+const urlConfig = import.meta.env.VITE_BASIC_URL;
+
 const UpdateHistory = () => {
 	// 데이터 저장
 	const [UpdateList, setUpdateList] = useState([]);
@@ -32,7 +34,7 @@ const UpdateHistory = () => {
 	useEffect(() => {
 		const fetchUpdateHistory = async () => {
 			try {
-				const response = await axios.get('http://localhost:8080/updateHistory'); // API 호출
+				const response = await axios.get(`${urlConfig}/updateHistory`); // API 호출
 				setUpdateList(response.data); // 가져온 데이터를 저장
 				setOriginalData(response.data); // 검색을 위하 원본 데이터도 저장
 			} catch (error) {

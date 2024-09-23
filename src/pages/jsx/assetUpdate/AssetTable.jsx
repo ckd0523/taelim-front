@@ -4,6 +4,7 @@ import { Row, Col, Card, Button, Form, Modal } from 'react-bootstrap';
 import { PageBreadcrumb, CustomDatePicker, TextInput, Form as RHForm } from '@/components';
 import { columns as baseColumns } from './ColumnsSet'; // table의 column 설정
 import { Table } from './ExpandableTable';
+const urlConfig = import.meta.env.VITE_BASIC_URL;
 
 const AssetTable = () => {
 	const [data, setData] = useState([]);
@@ -51,9 +52,7 @@ const AssetTable = () => {
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
-				const response = await axios.get(
-					'http://localhost:8080/assets/approved-not-disposed'
-				);
+				const response = await axios.get(`${urlConfig}/assets/approved-not-disposed`);
 				setData(response.data);
 				setUpdateList(response.data); // 데이터를 가져온 후 UpdateList를 업데이트
 			} catch (error) {
@@ -118,10 +117,7 @@ const AssetTable = () => {
 		};
 
 		try {
-			const response = await axios.post(
-				`http://localhost:8080/disposeAsset/${assetCode}`,
-				disposeDto
-			);
+			const response = await axios.post(`${urlConfig}/disposeAsset/${assetCode}`, disposeDto);
 
 			if (response.status === 200) {
 				console.log('자산 폐기 성공:', assetCode);
@@ -149,7 +145,7 @@ const AssetTable = () => {
 
 		try {
 			const response = await axios.post(
-				`http://localhost:8080/disposeDemand/${assetCode}`,
+				`${urlConfig}/disposeDemand/${assetCode}`,
 				disposeDto
 			);
 

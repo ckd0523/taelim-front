@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import RowDetails from '../assetUpdate/RowDetails';
 import axios from 'axios';
 import './Style.css'; // 같은 폴더에서 CSS 파일 import
+const urlConfig = import.meta.env.VITE_BASIC_URL;
 
 const InfoModal = ({ show, handleClose, modalData, assetCode }) => {
 	const [assetInfo, setAssetInfo] = useState(null);
@@ -16,7 +17,7 @@ const InfoModal = ({ show, handleClose, modalData, assetCode }) => {
 				setIsLoading(true); // 데이터 요청 시작부분
 
 				try {
-					const response = await axios.get(`http://localhost:8080/list/${assetCode}`);
+					const response = await axios.get(`${urlConfig}/list/${assetCode}`);
 					console.log(`불러온 데이터 : `, response.data);
 
 					const lowestAsset = response.data.reduce((prev, current) => {

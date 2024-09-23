@@ -4,6 +4,7 @@ import Tabs from './Tab';
 import QuickAccess from '@/pages/apps/FileManager/QuickAccess';
 import { quickAccessFiles } from './data';
 import { Row, Col, Card } from 'react-bootstrap';
+const urlConfig = import.meta.env.VITE_BASIC_URL;
 
 const Stocks = () => {
 	const [commonData, setCommonData] = useState({});
@@ -28,7 +29,7 @@ const Stocks = () => {
 	// 데이터 가져오기
 	const fetchData = async (assetCode) => {
 		try {
-			const response = await fetch(`http://localhost:8080/asset1/${assetCode}`);
+			const response = await fetch(`${urlConfig}/asset1/${assetCode}`);
 			if (!response.ok) {
 				throw new Error(`HTTP error! Status: ${response.status}`);
 			}

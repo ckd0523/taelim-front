@@ -92,7 +92,7 @@ const getClassificationColumns = (classification) => {
 				{ title: 'NAC agent', data: 'tgate' },
 			];
 
-		case 'FURNITURE':
+		case '가구':
 			return [{ title: '크기', data: 'furnitureSize' }];
 
 		case 'DEVICES':
@@ -146,6 +146,11 @@ const InfoModal = ({ show, handleClose, modalData, assetNo }) => {
 	const [assetInfo, setAssetInfo] = useState(null); // 변경 전 정보
 	const [modifiedAssetInfo, setModifiedAssetInfo] = useState(null); // 변경 후 정보
 
+	// 변경 전 , 변경 후 테이블 색깔 비교
+	const getCellClassName = (originalValue, newValue) => {
+		return originalValue !== newValue ? 'text-danger' : '';
+	};
+
 	const [isLoading, setIsLoading] = useState(true);
 
 	const importanceScore = calculateImportanceScore(assetInfo);
@@ -189,6 +194,11 @@ const InfoModal = ({ show, handleClose, modalData, assetNo }) => {
 		}
 	}, [assetNo]); // assetNo  변경될 때만 호출
 
+	// // 셀 색상을 결정하는 함수
+	// const getCellClassName = (originalValue, newValue) => {
+	// 	return originalValue !== newValue ? 'text-danger' : '';
+	// };
+
 	return (
 		<Modal
 			show={show}
@@ -219,7 +229,7 @@ const InfoModal = ({ show, handleClose, modalData, assetNo }) => {
 
 							{/* assetInfo 관련 정보 */}
 							<div className="info-section">
-								<h2>변경 전 : {modalData.assetNo}</h2>
+								<h2>변경 전 : {assetInfo.assetNo}</h2>
 								<h4>기본 자산 정보 및 관리 정보</h4>
 								<BootstrapTable striped bordered hover className="table-detail">
 									<thead>
@@ -383,8 +393,8 @@ const InfoModal = ({ show, handleClose, modalData, assetNo }) => {
 											<td>{modifiedAssetInfo.confidentiality || 'N/A'}</td>
 											<td>{modifiedAssetInfo.integrity || 'N/A'}</td>
 											<td>{modifiedAssetInfo.availability || 'N/A'}</td>
-											<td>{importanceScore}</td>
-											<td>{importanceRating}</td>
+											<td>{modifiedImportanceScore}</td>
+											<td>{modifiedImportanceRating}</td>
 											<td>{modifiedAssetInfo.note || 'N/A'}</td>
 										</tr>
 									</tbody>
@@ -467,51 +477,4 @@ const InfoModal = ({ show, handleClose, modalData, assetNo }) => {
 	);
 };
 
-const ActionModal = ({ show, handleClose, actionType, handleSubmit }) => {
-	const [reason, setReason] = useState('');
-
-	const handleReasonChange = (e) => setReason(e.target.value);
-
-	const handleFormSubmit = () => {
-		handleSubmit(reason); // 사유를 넘겨주면서 처리
-		handleClose(); // 모달 닫기
-	};
-
-	return (
-		<Modal show={show} onHide={handleClose}>
-			<Modal.Header closeButton>
-				<Modal.Title>{actionType === 'approve' ? '승인 사유' : '거절 사유'}</Modal.Title>
-			</Modal.Header>
-			<Modal.Body>
-				<Form>
-					<Form.Group>
-						<Form.Label>
-							{actionType === 'approve'
-								? '승인 사유를 입력하세요'
-								: '거절 사유를 입력하세요'}
-						</Form.Label>
-						<Form.Control
-							type="text"
-							value={reason}
-							onChange={handleReasonChange}
-							placeholder={actionType === 'approve' ? '승인 사유' : '거절 사유'}
-						/>
-					</Form.Group>
-				</Form>
-			</Modal.Body>
-			<Modal.Footer>
-				<Button variant="secondary" onClick={handleClose}>
-					닫기
-				</Button>
-				<Button
-					variant={actionType === 'approve' ? 'primary' : 'danger'}
-					onClick={handleFormSubmit}
-				>
-					처리
-				</Button>
-			</Modal.Footer>
-		</Modal>
-	);
-};
-
-export { InfoModal, ActionModal };
+export { InfoModal };

@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import { useCallback } from 'react';
 
 // get all columns
-const columns = (setModalData, setShowModal, setAssetNo) => [
+const columns = (setModalData, setAssetNo) => [
 	{
 		Header: '번호',
 		accessor: 'UpdateNo',
@@ -15,8 +15,8 @@ const columns = (setModalData, setShowModal, setAssetNo) => [
 
 				setModalData(row.original);
 				setAssetNo(row.original.assetNo); // assetNo 설정
-				setShowModal(true);
-			}, [row.original]);
+				//setShowModal(true);
+			}, [row.original, setModalData, setAssetNo]);
 
 			return (
 				<span onClick={handleRowClick} style={{ cursor: 'pointer', color: 'blue' }}>

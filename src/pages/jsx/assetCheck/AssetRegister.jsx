@@ -1,8 +1,8 @@
-import axios from 'axios';
 import BasisAssetInfo from './BasisAssetInfo';
 import { useState } from 'react';
 import FileUpload from './FileUpload';
-import { Button } from 'react-bootstrap';
+import { Button, Row, Col, Container } from 'react-bootstrap';
+const urlConfig = import.meta.env.VITE_BASIC_URL;
 
 //자산등록
 const AssetRegister = () => {
@@ -10,7 +10,7 @@ const AssetRegister = () => {
 	const [formData, setFormData] = useState({
 		assetClassification: 'INFORMATION_PROTECTION_SYSTEM',
 		assetName: '',
-		assetBasis: 'COMMON',
+		assetBasis: '',
 		manufacturingCompany: '',
 		purpose: '',
 		department: 'IT_DEPARTMENT',
@@ -97,7 +97,7 @@ const AssetRegister = () => {
 	const handleSubmit = async (e) => {
 		e.preventDefault(); // 페이지 새로고침 방지
 		try {
-			const assetResponse = await fetch('http://133.186.153.78/api/asset/register', {
+			const assetResponse = await fetch(`${urlConfig}/asset/register`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
@@ -157,26 +157,28 @@ const AssetRegister = () => {
 	};
 
 	return (
-		<div>
-			<div className="d-flex justify-content-center" style={{ padding: 50 }}>
-				<BasisAssetInfo formData={formData} handleChange={handleChange} />
-			</div>
-			<div className="d-flex justify-content-center" style={{ padding: 50 }}>
-				<FileUpload files={files} setFiles={setFiles} />
-			</div>
-			<div
-				className="d-flex justify-content-center"
-				style={{ padding: '0px 50px 50px 50px' }}
-			>
-				<Button size="lg" variant="primary" type="submit" onClick={handleSubmit}>
-					저장
-				</Button>
-				<p style={{ padding: 5 }}></p>
-				<Button size="lg" variant="secondary" type="button">
-					취소
-				</Button>
-			</div>
-		</div>
+		<Container fluid>
+			<Row className="d-flex justify-content-center col-md-8">
+				<Col xs={12} md={8} lg={6}>
+					<BasisAssetInfo formData={formData} handleChange={handleChange} />
+				</Col>
+			</Row>
+			<Row className="d-flex justify-content-center col-md-8">
+				<Col xs={12} md={8} lg={6}>
+					<FileUpload files={files} setFiles={setFiles} />
+				</Col>
+			</Row>
+			<Row className="d-flex justify-content-center">
+				<Col xs={12} md={8} lg={6} className="text-center">
+					<Button size="lg" variant="primary" type="submit" onClick={handleSubmit}>
+						저장
+					</Button>
+					<Button size="lg" variant="secondary" type="button">
+						취소
+					</Button>
+				</Col>
+			</Row>
+		</Container>
 	);
 };
 

@@ -2,11 +2,26 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Row, Col, Card } from 'react-bootstrap';
 import { Table2 } from '../../../components/table/Table2';
+import assetSurveyLocation from './assetSurveyLocation';
+import { Table } from '@/components';
 //import StatusColumn from './TableColumnSet';
+
+const URL = import.meta.env.VITE_BASIC_URL;
 
 const columns = [
 	{ Header: '회차', accessor: 'round', defaultCanSort: true },
 	{ Header: '위치', accessor: 'assetSurveyLocation', defaultCanSort: false },
+	{ Header: '자산 조사 번호', accessor: 'assetSurveyNo', show: false },
+	{ Header: '회차', accessor: 'round', defaultCanSort: true },
+	{
+		Header: '위치',
+		accessor: 'assetSurveyLocation',
+		defaultCanSort: false,
+		Cell: ({ value }) => {
+			const location = assetSurveyLocation.find((loc) => loc.value === value);
+			return location ? location.label : value; // 매칭되는 label을 찾아 표시
+		},
+	},
 	{ Header: '자산조사일자', accessor: 'assetSurveyStartDate', defaultCanSort: false },
 	{ Header: '자산조사자', accessor: 'assetSurveyBy', defaultCanSort: false },
 	{
@@ -14,7 +29,17 @@ const columns = [
 		accessor: 'surveyStatus',
 		defaultCanSort: false,
 		//Cell: StatusColumn,
-		Cell: ({ value }) => (value ? '완료' : '진행 중'),
+		Cell: ({ value }) => (value === '' ? null : value ? '완료' : '진행 중'),
+	},
+];
+
+const tableData = [
+	{
+		round: '',
+		assetSurveyLocation: '',
+		assetSurveyStartDate: '',
+		assetSurveyBy: '',
+		surveyStatus: '',
 	},
 ];
 
@@ -25,21 +50,25 @@ const sizePerPageList = [
 	{ text: '100', value: 100 },
 ];
 
-const SurveyTable = () => {
+const SurveyTable = ({ tableChange }) => {
 	const [data, setData] = useState([]);
+	const [isDataExist, setIsDataExist] = useState(false); //fetch로 데이터를 못불러 왔는지
+	//const [loading, setLoading] = useState(true); // fetch로 데이터 불러오는 중인지
 
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
-				const response = await axios.get('http://133.186.153.78/api/assetSurveyHistory');
+				const response = await axios.get(`${URL}/assetSurveyHistory`);
 				setData(response.data); // API로부터 받은 데이터 설정
 			} catch (error) {
+				setData(tableData);
+				setIsDataExist(true);
 				console.error('Error fetching data:', error);
 			}
 		};
 
 		fetchData();
-	}, []);
+	}, [tableChange]);
 
 	return (
 		<Row>
@@ -53,9 +82,11 @@ const SurveyTable = () => {
 							data={data}
 							pagesize={5}
 							sizePerPageList={sizePerPageList}
+							theadClass="table-light"
 							isSortable={true}
 							pagination={true}
 							isSelectable={true}
+							isDataExist={isDataExist}
 						/>
 					</Card.Body>
 				</Card>
@@ -64,6 +95,20 @@ const SurveyTable = () => {
 	);
 };
 
-export default SurveyTable;
+const DetailTable = ({ detailColumn, detailData }) => {
+	return (
+		<Table
+			columns={detailColumn}
+			data={detailData}
+			pagesize={5}
+			sizePerPageList={20}
+			isSortable={true}
+			pagination={true}
+			isSelectable={false}
+		/>
+	);
+};
+
+export { SurveyTable, DetailTable };
 //default하면 하나만 내보내는데 가져올 때 명시적으로 안 가져와도 됨.
 //default 빼고 { }는 여러 개의 컴포넌트를 내보낼 때 사용하지만 명시적으로 가져와야 함.

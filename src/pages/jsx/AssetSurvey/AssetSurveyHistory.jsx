@@ -10,6 +10,7 @@ import { bottom } from '@popperjs/core';
 import { Button, Form, Modal } from 'react-bootstrap';
 import Select from 'react-select';
 import { formatDate } from '@fullcalendar/core';
+const urlConfig = import.meta.env.VITE_BASIC_URL;
 
 const AssetSurveyHistory = () => {
 	const tableRef = useRef(null);
@@ -20,7 +21,7 @@ const AssetSurveyHistory = () => {
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
-				const response = await axios.get('http://133.186.153.78/assetSurveyHistory');
+				const response = await axios.get(`${urlConfig}/assetSurveyHistory`);
 				setData(response.data); // API로부터 받은 데이터 설정
 			} catch (error) {
 				console.error('Error fetching data:', error);
@@ -111,7 +112,7 @@ const AssetSurveyHistory = () => {
 
 	const handlePostRequest = () => {
 		axios
-			.post('http://133.186.153.78/api/register', registerData) // 서버에 보낼 데이터
+			.post(`${urlConfig}/register`, registerData) // 서버에 보낼 데이터
 			.then((response) => {
 				setResponse(response.data); // 응답 데이터 상태 업데이트
 			})
@@ -124,7 +125,7 @@ const AssetSurveyHistory = () => {
 	const handleDelete = async () => {
 		console.log(selectedIds); //int 타입
 		try {
-			await axios.post('http://133.186.153.78/api/deleteAssetSurvey', {
+			await axios.post(`${urlConfig}/deleteAssetSurvey`, {
 				assetSurveyNo: selectedIds,
 			});
 

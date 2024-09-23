@@ -7,6 +7,7 @@ import classNames from 'classnames';
 import PaginationControls from './PaginationControls'; // 새로운 컴포넌트 임포트
 import RowDetails from './RowDetails'; // 새로 추가된 컴포넌트 임포트
 import './style.css';
+const urlConfig = import.meta.env.VITE_BASIC_URL;
 
 const columns = [
 	{ Header: '번호', accessor: 'assetNo' },
@@ -169,9 +170,7 @@ const AssetPage = () => {
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
-				const response = await axios.get(
-					'http://133.186.153.78/api/assets/approved-not-disposed'
-				);
+				const response = await axios.get(`${urlConfig}/assets/approved-not-disposed`);
 				setData(response.data);
 			} catch (error) {
 				console.error('데이터를 가져오는 중 오류 발생:', error);
@@ -182,7 +181,7 @@ const AssetPage = () => {
 
 	const fetchRowData = async (assetCode) => {
 		try {
-			const response = await axios.get(`http://133.186.153.78/api/asset/${assetCode}`);
+			const response = await axios.get(`${urlConfig}/asset/${assetCode}`);
 			setSelectedRowData(response.data);
 		} catch (error) {
 			console.error('자산 데이터를 가져오는 중 오류 발생:', error);

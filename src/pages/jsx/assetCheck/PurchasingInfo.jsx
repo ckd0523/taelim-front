@@ -5,24 +5,55 @@ import { useAccordionButton } from 'react-bootstrap';
 import { TextInput, TextAreaInput } from '@/components/Form';
 import { useForm, FormProvider } from 'react-hook-form';
 import { CustomDatePicker } from '@/components/Form';
-
+import { BsCaretUpFill } from 'react-icons/bs';
+import { BsCaretDownFill } from 'react-icons/bs';
 import Select from 'react-select';
-
+import { useState } from 'react';
 import './ButtonStyle.css';
+import styled from 'styled-components';
+const StyledCard = styled.div`
+	display: flex;
+	flex-direction: column;
+
+	@media (max-width: 768px) {
+		width: 30rem;
+	}
+
+	@media (min-width: 769px) and (max-width: 1280px) {
+		width: 42rem;
+	}
+
+	@media (min-width: 1281px) {
+		width: 100rem;
+	}
+`;
+
+const StyledCardBody = styled.div`
+	flex-grow: 1;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+`;
 
 const depreciationMethod = [
 	{ value: 'FIXED_AMOUNT', label: '정액법' },
 	{ value: 'FIXED_RATE', label: '정률법' },
 ];
 function CustomToggle({ children, eventKey }) {
-	const decoratedOnClick = useAccordionButton(eventKey, () => console.log('totally custom'));
+	const [isOpen, setIsOpen] = useState(false);
+	const decoratedOnClick = useAccordionButton(eventKey, () => setIsOpen((prevOpen) => !prevOpen));
 	return (
 		<button
-			className="custom-button"
+			className="custom-button px-3 pt-2"
 			type="button"
-			style={{ backgroundColor: 'white' }}
+			style={{ backgroundColor: 'white', textAlign: 'left' }}
 			onClick={decoratedOnClick}
 		>
+			{isOpen ? (
+				<BsCaretUpFill style={{ paddingRight: '10' }} size="30" color="#2222226b" />
+			) : (
+				<BsCaretDownFill style={{ paddingRight: '10' }} size="30" color="#2222226b" />
+			)}
 			{children}
 		</button>
 	);
@@ -32,15 +63,13 @@ const PurchasingInfo = ({ formData, handleChange }) => {
 	return (
 		<div>
 			<Accordion defaultActiveKey="1">
-				<Card style={{ width: '120rem' }}>
-					<CustomToggle eventKey="1">
-						<Card.Header>재무 및 구매정보</Card.Header>
-					</CustomToggle>
+				<StyledCard className="card">
+					<CustomToggle eventKey="1">재무 및 구매정보</CustomToggle>
 					<Accordion.Collapse eventKey="1">
 						<FormProvider {...methods}>
-							<Card.Body>
+							<StyledCardBody className="card-body">
 								<Row>
-									<Col lg={5} style={{ paddingLeft: 80 }}>
+									<Col lg={5}>
 										<TextInput
 											containerClass={'mb-3'}
 											name="purchaseCost"
@@ -142,10 +171,10 @@ const PurchasingInfo = ({ formData, handleChange }) => {
 										</div>
 									</Col>
 								</Row>
-							</Card.Body>
+							</StyledCardBody>
 						</FormProvider>
 					</Accordion.Collapse>
-				</Card>
+				</StyledCard>
 			</Accordion>
 		</div>
 	);

@@ -120,11 +120,11 @@ const Topbar = ({ topbarDark, toggleMenu, navOpen }) => {
 						</div>
 					</button>
 
-					<TopbarSearch options={searchOptions} />
+					{/* <TopbarSearch options={searchOptions} /> */}
 				</div>
 
 				<ul className="topbar-menu d-flex align-items-center gap-3">
-					<li className="dropdown d-lg-none">
+					{/* <li className="dropdown d-lg-none">
 						<SearchDropdown />
 					</li>
 					<li className="dropdown">
@@ -135,7 +135,7 @@ const Topbar = ({ topbarDark, toggleMenu, navOpen }) => {
 					</li>
 					<li className="dropdown d-none d-sm-inline-block">
 						<AppsDropdown />
-					</li>
+					</li> */}
 					<li className="d-none d-sm-inline-block">
 						<button
 							className="nav-link dropdown-toggle end-bar-toggle arrow-none btn btn-link shadow-none"
@@ -145,7 +145,7 @@ const Topbar = ({ topbarDark, toggleMenu, navOpen }) => {
 						</button>
 					</li>
 
-					<li className="d-none d-sm-inline-block">
+					{/* <li className="d-none d-sm-inline-block">
 						<OverlayTrigger
 							placement="left"
 							overlay={<Tooltip id="dark-mode-toggler">Theme Mode</Tooltip>}
@@ -167,7 +167,7 @@ const Topbar = ({ topbarDark, toggleMenu, navOpen }) => {
 							username={'Dominic Keller'}
 							userTitle={'Founder'}
 						/>
-					</li>
+					</li> */}
 				</ul>
 			</div>
 		</div>

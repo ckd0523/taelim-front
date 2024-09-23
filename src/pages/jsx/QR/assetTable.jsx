@@ -5,6 +5,8 @@ import 'datatables.net-dt/css/dataTables.dataTables.min.css';
 import QRCodeDisplay from './QRCodeDisplay';
 import ReactDOM from 'react-dom';
 
+const urlConfig = import.meta.env.VITE_BASIC_URL;
+
 const AssetTable = () => {
 	// useRef 훅을 사용하여 테이블 요소를 참조
 	const tableRef = useRef();
@@ -14,7 +16,7 @@ const AssetTable = () => {
 		const table = $(tableRef.current).DataTable({
 			ajax: {
 				type: 'GET',
-				url: 'http://133.186.153.78:8080/assets/approved-not-disposed', // Ensure the URL is correct
+				url: `${urlConfig}/assets/approved-not-disposed`, // Ensure the URL is correct
 				dataSrc: '', // Assuming the data is an array at the root of the response
 			},
 			columns: [
@@ -63,7 +65,7 @@ const AssetTable = () => {
 		const disposeAsset = (assetCode) => {
 			$.ajax({
 				type: 'POST',
-				url: `http://133.186.153.78/api/dispose/${assetCode}`,
+				url: `${urlConfig}/dispose/${assetCode}`,
 				success: function () {
 					alert(`Asset ${assetCode} has been successfully disposed.`);
 					// Optionally, you can refresh the table data

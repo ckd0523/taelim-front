@@ -16,44 +16,44 @@ const columns = (setModalData, setShowModal) => [
 
 			return (
 				<span onClick={handleRowClick} style={{ cursor: 'pointer', color: 'blue' }}>
-					{row.original.DeleteNo}
+					{row.index + 1}
 				</span>
 			);
 		},
 	},
 	{
 		Header: '자산코드',
-		accessor: 'AssetCode',
+		accessor: 'assetCode',
 		defaultCanSort: true,
 	},
 	{
 		Header: '자산명',
-		accessor: 'AssetName',
+		accessor: 'assetName',
 		defaultCanSort: false,
 	},
 	{
 		Header: '폐기일자',
-		accessor: 'DeleteDate',
+		accessor: 'deleteDate',
 		defaultCanSort: false,
 	},
 	{
 		Header: '폐기자',
-		accessor: 'DeleteBy',
+		accessor: 'deleteBy',
 		defaultCanSort: false,
 	},
 	{
 		Header: '폐기사유',
-		accessor: 'DeleteReason',
+		accessor: 'deleteReason',
 		defaultCanSort: false,
 	},
 	{
 		Header: '폐기방법',
-		accessor: 'DeleteMethod',
+		accessor: 'deleteMethod',
 		defaultCanSort: false,
 	},
 	{
 		Header: '폐기위치',
-		accessor: 'DeleteLocation',
+		accessor: 'deleteLocation',
 		defaultCanSort: false,
 	},
 ];

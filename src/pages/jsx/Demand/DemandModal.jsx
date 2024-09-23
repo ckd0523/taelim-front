@@ -61,14 +61,14 @@ const ActionModal = ({ show, handleClose, actionData, actionType, handleSubmit }
 				</Form>
 			</Modal.Body>
 			<Modal.Footer>
-				<Button variant="secondary" onClick={handleClose}>
-					닫기
-				</Button>
 				<Button
 					variant={actionType === 'approve' ? 'primary' : 'danger'}
 					onClick={handleFormSubmit}
 				>
 					처리
+				</Button>
+				<Button variant="secondary" onClick={handleClose}>
+					닫기
 				</Button>
 			</Modal.Footer>
 		</Modal>

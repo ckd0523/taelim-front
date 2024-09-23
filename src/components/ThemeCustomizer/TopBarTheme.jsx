@@ -1,11 +1,7 @@
 import { ThemeSettings } from '@/common';
 import { Row, Form } from 'react-bootstrap';
 
-const TopBarTheme = ({
-	handleChangeTopBarTheme,
-	topBarTheme,
-	layoutConstants,
-}) => {
+const TopBarTheme = ({ handleChangeTopBarTheme, topBarTheme, layoutConstants }) => {
 	return (
 		<>
 			<h5 className="my-3 font-16 fw-bold">Topbar Color</h5>

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 // import Modal from "react-modal";
+const urlConfig = import.meta.env.VITE_BASIC_URL;
 
 // QRCodeDisplay 컴포넌트 정의
 const QRCodeDisplay = ({ assetCode, assetName }) => {
@@ -14,7 +15,7 @@ const QRCodeDisplay = ({ assetCode, assetName }) => {
 	const fetchQrCode = async () => {
 		try {
 			// 서버에 QR 코드 요청
-			const response = await axios.get('http://133.186.153.78/api/generateQRCode', {
+			const response = await axios.get(`${urlConfig}/generateQRCode`, {
 				params: { assetCode, assetName }, // 요청 파라미터로 자산 코드와 자산 이름 전송
 				responseType: 'blob', // 응답 유형을 blob으로 설정
 			});

@@ -2,9 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Table as BootstrapTable, Row, Col, Button, Form, Modal } from 'react-bootstrap';
 import axios from 'axios';
 
-const firebaseConfig = {
-	API_URL: import.meta.env.VITE_BASIC_URL,
-};
+const API_URL = import.meta.env.VITE_BASIC_URL;
 
 const RowDetails = ({
 	row,
@@ -27,7 +25,7 @@ const RowDetails = ({
 			setIsLoading(true); // 데이터 요청 시작
 			try {
 				console.log(`Fetching data for assetCode: ${AssetCode}`);
-				const response = await axios.get(`${firebaseConfig.API_URL}/asset/${AssetCode}`);
+				const response = await axios.get(`${API_URL}/asset/${AssetCode}`);
 				console.log('Fetched data:', response.data);
 				setFormData(response.data);
 			} catch (error) {

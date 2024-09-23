@@ -189,6 +189,7 @@ const DemandHistory = () => {
 									isSelectable={true}
 									initialState={{ hiddenColumns: ['demandNo'] }} // id 열을 숨김
 									theadClass="table-light"
+									tableClass="border-black"
 									searchBoxClass="mb-2"
 								/>
 							</Row>

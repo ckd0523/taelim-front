@@ -52,13 +52,14 @@ const IndeterminateCheckbox = forwardRef(({ indeterminate, ...rest }, ref) => {
 	);
 });
 
-const Table = (props) => {
+const Table = ({ onRowClick, ...props }) => {
 	const isSearchable = props['isSearchable'] || false;
 	const isSortable = props['isSortable'] || false;
 	const pagination = props['pagination'] || false;
 	const isSelectable = props['isSelectable'] || false;
 	const isExpandable = props['isExpandable'] || false;
 	const sizePerPageList = props['sizePerPageList'] || [];
+	const hiddenColumns = props.initialState?.hiddenColumns || [];
 
 	let otherProps = {};
 
@@ -83,6 +84,7 @@ const Table = (props) => {
 			columns: props.columns,
 			data: props['data'],
 			initialState: { pageSize: props['pageSize'] || 10 },
+			hiddenColumns: hiddenColumns, // 숨길 열 설정
 		},
 
 		otherProps.hasOwnProperty('useGlobalFilter') && otherProps['useGlobalFilter'],
@@ -200,7 +202,12 @@ const Table = (props) => {
 						{(rows || []).map((row, index) => {
 							dataTable.prepareRow(row);
 							return (
-								<tr {...row.getRowProps()} key={index}>
+								<tr
+									{...row.getRowProps()}
+									onClick={() => onRowClick(row.original)}
+									style={{ cursor: 'pointer' }}
+									key={index}
+								>
 									{row.cells.map((cell) => {
 										return (
 											<td {...cell.getCellProps()}>{cell.render('Cell')}</td>

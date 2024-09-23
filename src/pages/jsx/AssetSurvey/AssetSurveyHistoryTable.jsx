@@ -31,6 +31,27 @@ const columns = [
 		//Cell: StatusColumn,
 		Cell: ({ value }) => (value === '' ? null : value ? '완료' : '진행 중'),
 	},
+
+	// { Header: '자산 조사 번호', accessor: 'assetSurveyNo', show: false },
+	// { Header: '회차', accessor: 'round', defaultCanSort: true },
+	// {
+	//   Header: '위치',
+	//   accessor: 'assetSurveyLocation',
+	//   defaultCanSort: false,
+	//   Cell: ({ value }) => {
+	//     const location = assetSurveyLocation.find((loc) => loc.value === value);
+	//     return location ? location.label : value; // 매칭되는 label을 찾아 표시
+	//   },
+	// },
+	// { Header: '자산조사일자', accessor: 'assetSurveyStartDate', defaultCanSort: false },
+	// { Header: '자산조사자', accessor: 'assetSurveyBy', defaultCanSort: false },
+	// {
+	//   Header: '상태',
+	//   accessor: 'surveyStatus',
+	//   defaultCanSort: false,
+	//   //Cell: StatusColumn,
+	//   Cell: ({ value }) => (value === '' ? null : value ? '완료' : '진행 중'),
+	// },
 ];
 
 const tableData = [
@@ -50,7 +71,7 @@ const sizePerPageList = [
 	{ text: '100', value: 100 },
 ];
 
-const SurveyTable = ({ tableChange }) => {
+const SurveyTable = ({ tableChange, setSelectedRows }) => {
 	const [data, setData] = useState([]);
 	const [isDataExist, setIsDataExist] = useState(false); //fetch로 데이터를 못불러 왔는지
 	//const [loading, setLoading] = useState(true); // fetch로 데이터 불러오는 중인지
@@ -87,6 +108,7 @@ const SurveyTable = ({ tableChange }) => {
 							pagination={true}
 							isSelectable={true}
 							isDataExist={isDataExist}
+							setSelectedRows={setSelectedRows}
 						/>
 					</Card.Body>
 				</Card>

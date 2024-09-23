@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Table as BootstrapTable, Row, Col, Button, Form, Modal } from 'react-bootstrap';
 import axios from 'axios';
+import MaintainRegister from '@/pages/jsx/Maintain';
 const urlConfig = import.meta.env.VITE_BASIC_URL;
-
 // 자산 분류에 따른 동적 열 정의 함수
 const getClassificationColumns = (classification) => {
 	switch (classification) {
@@ -210,6 +210,8 @@ const RowDetails = ({ row, assetCode, onClose }) => {
 		} catch (error) {
 			console.error('Error updating asset data:', error);
 			setErrorMessage('자산 수정  중 오류가 발생했습니다.');
+		} finally {
+			window.location.reload();
 		}
 	};
 
@@ -226,6 +228,8 @@ const RowDetails = ({ row, assetCode, onClose }) => {
 		} catch (error) {
 			console.error('Error updating asset data:', error);
 			setErrorMessage('자산 수정 요청 중 오류가 발생했습니다.');
+		} finally {
+			window.location.reload();
 		}
 	};
 
@@ -498,9 +502,13 @@ const RowDetails = ({ row, assetCode, onClose }) => {
 											>
 												수정
 											</Button>
-											<Button variant="secondary" className="me-2">
-												유지보수등록
-											</Button>
+
+											{/* 유지보수 */}
+											<MaintainRegister
+												assetCode={formData.assetCode}
+												assetName={formData.assetName}
+												assetNo={formData.assetNo}
+											/>
 										</>
 									)}
 									<Button variant="danger" onClick={onClose}>

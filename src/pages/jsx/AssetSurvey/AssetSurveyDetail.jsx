@@ -2,7 +2,7 @@ import { Row, Col, Card, Button, Form } from 'react-bootstrap';
 import { useLocation } from 'react-router-dom';
 import assetSurveyLocation from './assetSurveyLocation';
 import { useState } from 'react';
-import { Table } from '@/components';
+//import { Table } from '@/components';
 import { getDetailTable } from './data';
 import { DetailTable } from './AssetSurveyHistoryTable';
 
@@ -169,6 +169,15 @@ const AssetSurveyDetail = () => {
 
         </Card.Body>
       </Card>
+
+      <Row className='row-cols-auto justify-content-end'>
+        <Col>
+          <Button className='btn btn-success'>완료</Button>
+        </Col>
+        <Col>
+          <Button className='btn btn-danger'>취소</Button>
+        </Col>
+      </Row>
 
     </div >
   );

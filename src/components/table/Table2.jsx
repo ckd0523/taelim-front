@@ -72,6 +72,7 @@ const Table2 = (props) => {
   const isExpandable = props['isExpandable'] || false;
   const sizePerPageList = props['sizePerPageList'] || [];
   const isDataExist = props['isDataExist'] || false;
+  const setSelectedRows = props['setSelectedRows'] || false;
   //const isLoading = props['loading'] || false;
 
   const navigate = useNavigate();
@@ -86,7 +87,7 @@ const Table2 = (props) => {
     //setSelectedRow(row);
     //setShowModal(true);
     console.log(row.values.assetSurveyLocation);
-    const location = row.values.assetSurveyLocation;
+    //const location = row.values.assetSurveyLocation;
     navigate('/jsx/AssetSurveyDetail/', {
       state: {
         location: row.values.assetSurveyLocation,
@@ -95,6 +96,19 @@ const Table2 = (props) => {
         assetSurveyNo: row.values.assetSurveyNo,
       }
     });  // 클릭된 행의 location으로 페이지 이동
+  };
+
+  //onClick을 row 전체에 걸어버리면 checkbox를 선택했을 때 row를 선택한 것으로 인식해서 문제가 생김
+  const handleCellClick = (event, row) => {
+    // 첫 번째 컬럼이 클릭되었는지 확인
+    const clickedCell = event.target.closest('td');
+    const cells = Array.from(clickedCell.parentNode.children);
+    const cellIndex = cells.indexOf(clickedCell);
+
+    // 첫 번째 컬럼(0번 index)이 아닌 경우에만 handleRowClick 호출
+    if (cellIndex !== 0) {
+      handleRowClick(row);
+    }
   };
 
   let otherProps = {};
@@ -139,14 +153,18 @@ const Table2 = (props) => {
             // to render a checkbox
             Header: ({ getToggleAllPageRowsSelectedProps }) => (
               <div>
-                <IndeterminateCheckbox {...getToggleAllPageRowsSelectedProps()} />
+                <IndeterminateCheckbox {...getToggleAllPageRowsSelectedProps()}
+                  /* disabled={dataTable.rows.some(row => row.original.surveyStatus === true)} */ />
+
               </div>
             ),
             // The cell can use the individual row's getToggleRowSelectedProps method
             // to the render a checkbox
             Cell: ({ row }) => (
               <div>
-                <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
+                {row.original.surveyStatus !== true ? (
+                  <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
+                ) : null}
               </div>
             ),
           },
@@ -186,6 +204,28 @@ const Table2 = (props) => {
         ]);
     }
   );
+
+  //자산 조사 이력에서 자산 조사 삭제할 때 체크 박스 동작
+  const {
+    selectedFlatRows,
+    state: { selectedRowIds },
+    // ...other destructured values
+  } = dataTable;
+
+  useEffect(() => {
+
+    //전체 선택 시 완료된 자산 조사도 select가 됨
+    const selectedRowsData = selectedFlatRows.map((row) => row.original);
+    //그래서 surveyStatus가 false인 행들만 필터링
+    const validSelectedRows = selectedRowsData.filter(row => row.surveyStatus === false);
+
+    //console.log("선택된 행:", JSON.stringify(validSelectedRows, null, 2));
+
+    // assetSurveyNo만 출력
+    const assetSurveyNos = validSelectedRows.map(row => row.assetSurveyNo);
+    //console.log("선택된 행에서 자산 조사 번호:", assetSurveyNos.join(', '));
+    setSelectedRows(assetSurveyNos);
+  }, [selectedRowIds]);
 
   const rows = pagination ? dataTable.page : dataTable.rows;
 
@@ -241,7 +281,7 @@ const Table2 = (props) => {
                 return (
                   <tr
                     {...row.getRowProps({
-                      onClick: () => handleRowClick(row),
+                      onClick: (e) => handleCellClick(e, row),
                     })}
                     key={index}
                   >

@@ -11,7 +11,6 @@ import {
 import classNames from 'classnames';
 import { Pagination } from '@/components';
 import RowDetails from './RowDetails';
-const urlConfig = import.meta.env.VITE_BASIC_URL;
 
 const GlobalFilter = ({ preGlobalFilteredRows, globalFilter, setGlobalFilter, searchBoxClass }) => {
 	const count = preGlobalFilteredRows.length;
@@ -61,24 +60,6 @@ const Table = (props) => {
 	const isSelectable = props['isSelectable'] || false;
 	const isExpandable = props['isExpandable'] || false;
 	const sizePerPageList = props['sizePerPageList'] || [];
-	const [selectedRowData, setSelectedRowData] = useState(null); // 선택된 행 데이터
-
-	const importanceScore = calculateImportanceScore(selectedRowData);
-	const importanceRating = calculateImportanceRating(importanceScore);
-	const classification = selectedRowData?.assetClassification;
-	const dynamicColumns = React.useMemo(
-		() => getClassificationColumns(classification),
-		[classification]
-	);
-
-	const fetchRowData = async (assetCode) => {
-		try {
-			const response = await axios.get(`${urlConfig}/api/asset/${assetCode}`);
-			setSelectedRowData(response.data);
-		} catch (error) {
-			console.error('자산 데이터를 가져오는 중 오류 발생:', error);
-		}
-	};
 
 	let otherProps = {};
 

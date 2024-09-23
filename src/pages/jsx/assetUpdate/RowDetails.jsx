@@ -162,7 +162,7 @@ const RowDetails = ({ row, assetCode, onClose }) => {
 			setIsLoading(true); // 데이터 요청 시작
 			try {
 				console.log(`Fetching data for assetCode: ${assetCode}`);
-				const response = await axios.get(`http://localhost:8080/asset/${assetCode}`);
+				const response = await axios.get(`${urlConfig}/asset/${assetCode}`);
 				console.log('Fetched data:', response.data);
 				setFormData(response.data);
 			} catch (error) {
@@ -200,7 +200,7 @@ const RowDetails = ({ row, assetCode, onClose }) => {
 		try {
 			// 수정 요청 처리
 			const response = await axios.post(
-				`http://localhost:8080/asset/update/${formData.assetCode}`,
+				`${urlConfig}/asset/update/${formData.assetCode}`,
 				formData
 			);
 			alert(response.data); // 성공 메시지
@@ -209,6 +209,8 @@ const RowDetails = ({ row, assetCode, onClose }) => {
 		} catch (error) {
 			console.error('Error updating asset data:', error);
 			setErrorMessage('자산 수정  중 오류가 발생했습니다.');
+		} finally {
+			window.location.reload();
 		}
 	};
 
@@ -217,7 +219,7 @@ const RowDetails = ({ row, assetCode, onClose }) => {
 		try {
 			// 수정 요청 처리
 			const response = await axios.post(
-				`http://localhost:8080/asset/updateDemand/${formData.assetCode}`,
+				`${urlConfig}/asset/updateDemand/${formData.assetCode}`,
 				formData
 			);
 			alert(response.data); // 성공 메시지
@@ -225,6 +227,8 @@ const RowDetails = ({ row, assetCode, onClose }) => {
 		} catch (error) {
 			console.error('Error updating asset data:', error);
 			setErrorMessage('자산 수정 요청 중 오류가 발생했습니다.');
+		} finally {
+			window.location.reload();
 		}
 	};
 

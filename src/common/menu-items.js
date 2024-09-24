@@ -54,7 +54,7 @@ const MENU_ITEMS = [
 		key: 'regist',
 		label: '자산등록',
 		isTitle: false,
-		icon: 'uil-home-alt',
+		icon: 'uil-file-plus',
 		children: [
 			{
 				key: 'ds-AssetRegister',
@@ -74,7 +74,7 @@ const MENU_ITEMS = [
 		key: 'check',
 		label: '자산조회',
 		isTitle: false,
-		icon: 'uil-home-alt',
+		icon: ' uil-list-ul',
 		children: [
 			{
 				key: 'ds-AssetPage',
@@ -94,13 +94,13 @@ const MENU_ITEMS = [
 		key: 'ds-AssetSurveyHistory',
 		label: '자산조사',
 		url: '/jsx/AssetSurveyHistory',
-		icon: 'uil-calender',
+		icon: 'uil-file-edit-alt',
 	},
 	{
 		key: 'history',
 		label: '자산 이력',
 		isTitle: false,
-		icon: 'uil-home-alt',
+		icon: 'uil-invoice',
 		children: [
 			{
 				key: 'ds-UpdateHistory',
@@ -124,7 +124,7 @@ const MENU_ITEMS = [
 				key: 'ds-MaintainHist',
 				label: '유지보수이력',
 				url: '/jsx/MaintainHist',
-				parentKey: 'history,',
+				parentKey: 'history',
 			},
 		],
 	},
@@ -132,18 +132,19 @@ const MENU_ITEMS = [
 		key: 'ds-DemandHistory',
 		label: '요청내역',
 		url: '/jsx/DemandHistory',
-		icon: 'uil-home-alt',
+		icon: 'uil-bell',
 	},
 	{
 		key: 'ds-MaintainRegister',
 		label: '유지보수등록',
 		url: '/jsx/MaintainRegister',
-		icon: 'uil-home-alt',
+		icon: 'uil-traffic-barrier',
 	},
 	{
 		key: 'ds-SystemSetting',
 		label: '시스템 설정',
 		url: '/jsx/SystemSetting',
+		icon: ' ri-settings-3-line',
 	},
 	// 여기까지
 

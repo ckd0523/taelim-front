@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import { useCallback } from 'react';
 
 // get all columns
-const columns = (setModalData, setShowModal, setAssetCode) => [
+const columns = (setModalData, setAssetNo) => [
 	{
 		Header: '번호',
 		accessor: 'UpdateNo',
@@ -11,12 +11,12 @@ const columns = (setModalData, setShowModal, setAssetCode) => [
 		Cell: ({ row }) => {
 			const handleRowClick = useCallback(() => {
 				console.log('클릭된 행 : ', row.original); // row.original의 구조 확인
-				console.log('assetCode: ', row.original.assetCode); // assetCode 값이 존재하는지 확인
+				console.log('assetNo: ', row.original.assetNo); // assetNo 값이 존재하는지 확인
 
 				setModalData(row.original);
-				setAssetCode(row.original.assetCode); // assetCode 설정
-				setShowModal(true);
-			}, [row.original]);
+				setAssetNo(row.original.assetNo); // assetNo 설정
+				//setShowModal(true);
+			}, [row.original, setModalData, setAssetNo]);
 
 			return (
 				<span onClick={handleRowClick} style={{ cursor: 'pointer', color: 'blue' }}>

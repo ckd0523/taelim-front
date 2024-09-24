@@ -122,13 +122,10 @@ const AssetRegister = () => {
 						console.log('assetNo:', fileFormData.get('assetNo'));
 						console.log('fileType:', fileFormData.get('fileType'));
 
-						const fileResponse = await fetch(
-							'http://localhost:8080/asset/file/upload',
-							{
-								method: 'POST',
-								body: fileFormData,
-							}
-						);
+						const fileResponse = await fetch(`${urlConfig}/asset/file/upload`, {
+							method: 'POST',
+							body: fileFormData,
+						});
 
 						if (fileResponse.ok) {
 							alert('파일이 성공적으로 업로드됨');

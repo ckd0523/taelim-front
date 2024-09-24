@@ -46,11 +46,7 @@ const ActionModal = ({ show, handleClose, actionData, actionType, handleSubmit }
 			switch (item.demandType) {
 				case 'update':
 					axios
-						.post(`${API_URL}/updateAction`, dataToSend, {
-							headers: {
-								'Content-Type': 'application/json', // JSON 형식으로 설정
-							},
-						})
+						.post(`${API_URL}/updateAction`, dataToSend)
 						.then((response) => {
 							console.log('Update successful:', response.data);
 						})

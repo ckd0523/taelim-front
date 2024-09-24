@@ -178,6 +178,7 @@ const AssetSurveyDetail = () => {
           <Button className='btn btn-danger'>취소</Button>
         </Col>
       </Row>
+      <Card></Card>
 
     </div >
   );

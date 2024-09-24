@@ -41,6 +41,8 @@ const AssetSurveyHistory2 = () => {
       }
 
       alert('자산 조사 삭제가 완료되었습니다.');
+      //삭제 성공 후 선택된 행 초기화
+      setSelectedRows([]);
       //삭제 성공 후 테이블 리렌더링
       onClickRegister();
     } catch (error) {

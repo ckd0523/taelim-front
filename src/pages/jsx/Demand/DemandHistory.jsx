@@ -21,8 +21,9 @@ const DemandHistory = () => {
 	const [showModal, setShowModal] = useState(false);
 	const [modalData, setModalData] = useState(null);
 	const [showActModal, setShowActModal] = useState(false);
-	const [actionData, setActionData] = useState(null); // ActionModal로 보낼 데이터
+	const [actionData, setActionData] = useState([]); // ActionModal로 보낼 데이터
 	const [actionType, setActionType] = useState(null);
+	const [rowSelect, setRowSelect] = useState([]);
 
 	useEffect(() => {
 		const fetchData = async () => {
@@ -36,9 +37,10 @@ const DemandHistory = () => {
 		fetchData();
 	}, []);
 
-	const handleOpenModal = (type, rowData) => {
+	const handleOpenModal = (type, rowSelect) => {
+		console.log(rowSelect);
 		setActionType(type);
-		setActionData(rowData); // rowData 또는 선택한 데이터를 설정
+		setActionData(rowSelect); // rowData 또는 선택한 데이터를 설정
 		setShowActModal(true);
 	};
 
@@ -57,8 +59,8 @@ const DemandHistory = () => {
 		setSelectedRequester(e.target.value);
 	};
 
-	const handleRowClick = (rowData) => {
-		setModalData(rowData);
+	const handleRowClick = (rowSelect) => {
+		setModalData(rowSelect);
 		setShowModal(true);
 	};
 
@@ -180,14 +182,14 @@ const DemandHistory = () => {
 								<Col className="d-flex align-items-center justify-content-end mb-2">
 									<Button
 										variant="secondary"
-										onClick={() => handleOpenModal('approve')}
+										onClick={() => handleOpenModal('approve', rowSelect)}
 										className="me-2"
 									>
 										승인
 									</Button>
 									<Button
 										variant="danger"
-										onClick={() => handleOpenModal('reject')}
+										onClick={() => handleOpenModal('reject', rowSelect)}
 									>
 										거절
 									</Button>
@@ -206,6 +208,7 @@ const DemandHistory = () => {
 									theadClass="table-light"
 									tableClass="border-black"
 									searchBoxClass="mb-2"
+									setRowSelect={setRowSelect}
 								/>
 							</Row>
 							{/* Modal */}

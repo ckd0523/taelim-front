@@ -1,5 +1,8 @@
 import { Row, Col, Card, Button, Modal, Form } from 'react-bootstrap';
 import { useState } from 'react';
+import axios from 'axios';
+
+const API_URL = import.meta.env.VITE_BASIC_URL;
 
 const InfoModal = ({ show, handleClose, modalData }) => {
 	return (
@@ -33,6 +36,40 @@ const ActionModal = ({ show, handleClose, actionData, actionType, handleSubmit }
 	const handleReasonChange = (e) => setReason(e.target.value);
 
 	const handleFormSubmit = () => {
+		for (const item of actionData) {
+			console.log('여깁니다' + JSON.stringify(item)); // 각 항목의 assetNo에 접근
+			const dataToSend = {
+				DemandAction: item, // 각 항목의 데이터
+				reason,
+				actionType,
+			};
+			switch (item.demandType) {
+				case 'update':
+					axios
+						.post(`${API_URL}/updateAction`, dataToSend, {
+							headers: {
+								'Content-Type': 'application/json', // JSON 형식으로 설정
+							},
+						})
+						.then((response) => {
+							console.log('Update successful:', response.data);
+						})
+						.catch((error) => {
+							console.error('Update error:', error);
+						});
+					break;
+				case 'delete':
+					axios
+						.post(`${API_URL}/deleteAction`, dataToSend)
+						.then((response) => {
+							console.log('Delete successful:', response.data);
+						})
+						.catch((error) => {
+							console.error('Delete error:', error);
+						});
+					break;
+			}
+		}
 		handleSubmit(reason); // 사유를 넘겨주면서 처리
 		handleClose(); // 모달 닫기
 	};
@@ -46,7 +83,9 @@ const ActionModal = ({ show, handleClose, actionData, actionType, handleSubmit }
 				<Form>
 					<Form.Group>
 						<Form.Label>
-							<p>선택된 데이터: {JSON.stringify(actionData)}</p>
+							<p>
+								선택된 데이터: {actionData.map((item) => item.assetNo).join(', ')}
+							</p>
 							{actionType === 'approve'
 								? '승인 사유를 입력하세요'
 								: '거절 사유를 입력하세요'}

@@ -1,11 +1,16 @@
 import SearchBar from "./AssetSurveyHistorySearchBar";
 import { SurveyTable } from "./AssetSurveyHistoryTable";
-import Buttons from "./AssetSurveyButtons";
-import { useState } from "react";
+import { Buttons } from "./AssetSurveyButtons";
+import { useState, useEffect } from "react";
 
 const URL = import.meta.env.VITE_BASIC_URL;
 
 const AssetSurveyHistory2 = () => {
+
+  //다른 페이지에서 이 페이지로 넘어올 때 스크롤을 최상단으로
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   //자산 조사 삭제를 위해 어떤 행이 선택되었는지
   const [selectedRows, setSelectedRows] = useState([]);

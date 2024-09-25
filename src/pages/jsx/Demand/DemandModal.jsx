@@ -37,12 +37,12 @@ const ActionModal = ({ show, handleClose, actionData, actionType, handleSubmit }
 
 	const handleFormSubmit = () => {
 		for (const item of actionData) {
-			console.log('여깁니다' + JSON.stringify(item)); // 각 항목의 assetNo에 접근
 			const dataToSend = {
-				DemandAction: item, // 각 항목의 데이터
+				demandAction: item, // 각 항목의 데이터
 				reason,
 				actionType,
 			};
+			console.log('여깁니다' + JSON.stringify(dataToSend));
 			switch (item.demandType) {
 				case 'update':
 					axios
@@ -68,6 +68,7 @@ const ActionModal = ({ show, handleClose, actionData, actionType, handleSubmit }
 		}
 		handleSubmit(reason); // 사유를 넘겨주면서 처리
 		handleClose(); // 모달 닫기
+		window.location.reload();
 	};
 
 	return (

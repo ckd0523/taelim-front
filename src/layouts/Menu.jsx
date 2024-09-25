@@ -89,21 +89,23 @@ const MenuItemWithChildren = ({
 	);
 };
 
-const MenuItem = ({ item, className, linkClassName }) => {
+//onClick 추가
+const MenuItem = ({ item, className, linkClassName, onClick }) => {
 	return (
 		<li className={className}>
-			<MenuItemLink item={item} className={linkClassName} />
+			<MenuItemLink item={item} className={linkClassName} onClick={onClick} />
 		</li>
 	);
 };
 
-const MenuItemLink = ({ item, className }) => {
+const MenuItemLink = ({ item, className, onClick }) => {
 	return (
 		<Link
-			to={item.url}
+			to={item.url || '#'}
 			target={item.target}
 			className={`side-nav-link-ref ${className}`}
 			data-menu-key={item.key}
+			onClick={onClick}// onClick 추가
 		>
 			{item.icon ? (
 				<>
@@ -135,7 +137,7 @@ const MenuItemLink = ({ item, className }) => {
 	);
 };
 
-const AppMenu = ({ menuItems }) => {
+const AppMenu = ({ menuItems, onSystemSettingClick }) => {
 	const location = useLocation();
 
 	const menuRef = useRef(null);
@@ -200,11 +202,15 @@ const AppMenu = ({ menuItems }) => {
 									<MenuItem
 										item={item}
 										linkClassName="side-nav-link"
-										className={`side-nav-item ${
-											activeMenuItems.includes(item.key)
-												? 'menuitem-active'
-												: ''
-										}`}
+										className={`side-nav-item ${activeMenuItems.includes(item.key)
+											? 'menuitem-active'
+											: ''
+											}`}
+										// "시스템 설정" 클릭 시 모달 열기
+										onClick={item.key === 'ds-SystemSetting' ? (e) => {
+											e.preventDefault(); // 기본 동작(Link로 페이지 이동) 방지
+											onSystemSettingClick(); // 모달 열기 함수 호출
+										} : undefined}
 									/>
 								)}
 							</React.Fragment>

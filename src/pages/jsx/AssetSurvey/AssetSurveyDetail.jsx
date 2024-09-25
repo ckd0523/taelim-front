@@ -5,7 +5,9 @@ import { useState, useEffect } from 'react';
 //import { Table } from '@/components';
 import { getDetailTable } from './data';
 import { DetailTable } from './AssetSurveyHistoryTable';
-import { SurveyCompleteButton } from './AssetSurveyButtons';
+import { SurveyCompleteButton, SruveyCancelButton } from './AssetSurveyButtons';
+
+const URL = import.meta.env.VITE_BASIC_URL;
 
 const columns = [
   { Header: '자산 코드', accessor: 'assetCode', defaultCanSort: true, },
@@ -41,21 +43,6 @@ const columns = [
     )
   },
 ];
-
-const onClickCompleteSurvey = async () => {
-
-
-  //assetSurveyNo를 fetch 요청 보냄
-
-
-  //ok return이면 {위치}에 대한 자산 조사가 완료되었습니다. or 자산 조사 완료
-
-  //자산 조사 이력 페이지로 이동
-  //console.log("fffffff");
-  alert("자산 조사 완료");
-  window.location.href = '/jsx/AssetSurveyHistory';
-
-};
 
 //정위치 유무, 상태 체크박스 선택 시 동작
 const handleCheckboxChange = (e, row, fieldName) => {
@@ -104,6 +91,24 @@ const AssetSurveyDetail = () => {
 
   const handleToggle = () => {
     setIsChecked(!isChecked);
+  };
+
+  const onClickCompleteSurvey = async () => {
+    try {
+      const response = await fetch(`${URL}/completeSurvey/${locationState.assetSurveyNo}`, { method: 'PUT' });
+
+      if (!response.ok) {
+        alert('자산 조사 완료에 실패했습니다.');
+        return;
+      }
+
+      alert("자산 조사 완료");
+      window.location.href = '/jsx/AssetSurveyHistory';
+
+    } catch (error) {
+      console.error('자산 조사 완료 중 오류:', error);
+      alert('오류가 발생했습니다. 다시 시도해주세요.');
+    }
   };
 
   //console.log('선택한 레코드 자산 번호 : ' + locationState.assetSurveyNo);
@@ -198,9 +203,8 @@ const AssetSurveyDetail = () => {
           <SurveyCompleteButton onClickCompleteSurvey={onClickCompleteSurvey} />
         </Col>
         <Col>
-          <Link to={"/jsx/AssetSurveyHistory"}>
-            <Button className='btn btn-danger'>취소</Button>
-          </Link>
+          {/* 자산 조사 뒤로가기 버튼 */}
+          <SruveyCancelButton />
         </Col>
       </Row>
       <Card></Card>

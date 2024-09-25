@@ -79,7 +79,8 @@ const Table2 = (props) => {
 
   // 행 클릭 이벤트 핸들러
   const handleRowClick = (row) => {
-    if (row.values.assetSurveyLocation === '') {
+    //자산 조사의 위치가 없거나 자산 조사가 완료된 자산 조사는 클릭 안됨
+    if (row.values.assetSurveyLocation === '' || row.values.surveyStatus === true) {
       //console.log('1');
       return;
     }

@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import SimpleBar from 'simplebar-react';
 import AppMenu from './Menu';
@@ -12,7 +12,8 @@ import logoDarkSm from '@/assets/images/logo-dark-sm.png';
 import taelimlogo from '@/assets/images/Taelimlogo.png';
 import taelimlogo_sm from '@/assets/images/Taelimlogo-sm.png';
 import { getMenuItems } from './utils/menu';
-import { Button } from 'react-bootstrap';
+import { Button, Modal, Col, Nav, Tab, Row } from 'react-bootstrap';
+import { useToggle } from '@/hooks';
 
 // const UserBox = () => {
 // 	return (
@@ -30,11 +31,101 @@ import { Button } from 'react-bootstrap';
 // 	);
 // };
 
+const URL = import.meta.env.VITE_BASIC_URL;
+
+//시스템 설정 모달이 뜰 때 자산 기준 금액 정보를 가져옴
+const getAmountSet = async () => {
+	try {
+		const response = await fetch(`${URL}/getAmountSet`);
+		const data = await response.json();
+		//console.log('받은 데이터 : ' + JSON.stringify(data));
+		//console.log("고가치 기준 금액 : " + data.high_value_standard);
+		return data;
+	} catch (error) {
+		console.error('error : ', error);
+		return null; // 에러가 발생하면 null을 반환합니다.
+	}
+};
+
+
 const SideBarContent = () => {
+	const [signUpModal, toggleSignUp] = useToggle(false);
+	const [amountSetData, setAmountSetData] = useState(null);
+	const [modify, setModify] = useState(false);
+	//console.log("얘 뭔데" + signUpModal);
+
+	// signUpModal이 true일 때만 실행되도록 설정
+	useEffect(() => {
+		if (signUpModal) {  // signUpModal이 true일 때만 실행
+			const fetchData = async () => {
+				const data = await getAmountSet();  // 데이터를 fetch
+				setAmountSetData(data);  // 데이터를 상태에 저장
+			};
+			fetchData();
+		}
+	}, [signUpModal]);  // 의존성 배열에 signUpModal을 추가
+
+	const ChangeModify = () => {
+		if (modify) {
+			setModify(false);
+		} else {
+			setModify(true);
+		}
+
+	};
+
 	return (
 		<>
-			{/* <UserBox /> */}
-			<AppMenu menuItems={getMenuItems()} />
+			{/* 모달 컴포넌트 */}
+			<Modal show={signUpModal} onHide={toggleSignUp} size='lg'>
+				<Modal.Header closeButton>
+					<Modal.Title>시스템 설정</Modal.Title>
+				</Modal.Header>
+				<Modal.Body>
+					<Tab.Container id="left-tabs-example" defaultActiveKey="first">
+						<Row>
+							<Col sm={3}>
+								<Nav variant="pills" className="flex-column">
+									<Nav.Item>
+										<Nav.Link eventKey="first">자산 기준 금액 설정</Nav.Link>
+									</Nav.Item>
+									<Nav.Item>
+										<Nav.Link eventKey="second">설정 2</Nav.Link>
+									</Nav.Item>
+								</Nav>
+							</Col>
+
+							<Col sm={9}>
+								<Tab.Content>
+									<Tab.Pane eventKey="first"><label>고가치 기준 금액</label>
+										<input type='number' value={amountSetData ? amountSetData.high_value_standard : -1} readOnly={modify} />
+										<br></br>
+										<label>저가치 기준 금액</label>
+										<input type='number' value={amountSetData ? amountSetData.low_value_standard : -1} readOnly={modify} /></Tab.Pane>
+									<Button onClick={ChangeModify}>{modify ? ('저장') : ('수정')}</Button>
+									<Tab.Pane eventKey="second">설정2에 필요한 것이 있으면 말씀해주세요</Tab.Pane>
+								</Tab.Content>
+							</Col>
+						</Row>
+					</Tab.Container>
+					{/* 
+					<h3>자산 기준 금액 설정</h3>
+					<label>고가치 기준 금액</label>
+					<input type='number' value={amountSetData ? amountSetData.high_value_standard : -1} readOnly={true} />
+					<br></br>
+					<label>저가치 기준 금액</label>
+					<input type='number' value={amountSetData ? amountSetData.low_value_standard : -1} readOnly={true} />
+					*/}
+				</Modal.Body>
+				<Modal.Footer>
+					<Button variant="secondary" onClick={toggleSignUp}>
+						닫기
+					</Button>
+				</Modal.Footer>
+			</Modal>
+
+			{/* 메뉴 */}
+			<AppMenu menuItems={getMenuItems()} onSystemSettingClick={toggleSignUp} />
 			<div className="clearfix" />
 		</>
 	);

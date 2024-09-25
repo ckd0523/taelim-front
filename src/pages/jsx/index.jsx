@@ -36,7 +36,7 @@ export default function jsx() {
 				<Route path="Expand" element={<Expand />} />
 				<Route path="AssetPage" element={<AssetPage />} />
 				<Route path="AssetSurveyDetail" element={<AssetSurveyDetail />} />
-				<Route path="SystemSetting" element={<SystemSetting />} />
+				{/* <Route path="SystemSetting" element={<SystemSetting />} /> */}
 			</Route>
 		</Routes>
 	);

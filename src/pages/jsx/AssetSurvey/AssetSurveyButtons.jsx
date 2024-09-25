@@ -2,6 +2,7 @@ import { Row, Col, Button, Modal, Card } from 'react-bootstrap';
 import RegisterButton from './AssetSurveyRegisterButton';
 import { useState } from 'react';
 import { useToggle } from '@/hooks';
+import { Link } from 'react-router-dom';
 
 const Buttons = ({ onClickRegister, onDelete }) => {
   return (
@@ -45,4 +46,26 @@ const SurveyCompleteButton = ({ onClickCompleteSurvey }) => {
   );
 };
 
-export { Buttons, SurveyCompleteButton };
+const SruveyCancelButton = () => {
+  const [signUpModal, toggleSignUp] = useToggle();
+  return (
+    <>
+      <Button className='btn btn-danger' onClick={toggleSignUp} >취소</Button>
+
+      {/* Modal */}
+      <Modal show={signUpModal} onHide={toggleSignUp} backdrop="static" size="sm" centered>
+        <Modal.Body className='text-center'>
+          <p>정말 나가시겠습니까?</p> 진행 상황은 저장됩니다.
+        </Modal.Body>
+        <Modal.Footer className='justify-content-center'>
+          <Link to={"/jsx/AssetSurveyHistory"}>
+            <Button variant="primary">예</Button>
+          </Link>
+          <Button variant="danger" onClick={toggleSignUp}>아니오</Button>
+        </Modal.Footer>
+      </Modal>
+    </>
+  );
+}
+
+export { Buttons, SurveyCompleteButton, SruveyCancelButton };

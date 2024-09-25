@@ -1,2 +1,1 @@
-export * from './Table';
-export * from './Pagination';
+export { DemandHistory as default } from './DemandHistory';

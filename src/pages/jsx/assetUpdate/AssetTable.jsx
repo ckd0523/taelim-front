@@ -4,6 +4,7 @@ import { Row, Col, Card, Button, Form, Modal } from 'react-bootstrap';
 import { PageBreadcrumb, CustomDatePicker, TextInput, Form as RHForm } from '@/components';
 import { columns as baseColumns } from './ColumnsSet'; // table의 column 설정
 import { Table } from './ExpandableTable';
+import { ActionModal } from './AllChangeModal';
 const urlConfig = import.meta.env.VITE_BASIC_URL;
 
 const AssetTable = () => {
@@ -17,6 +18,16 @@ const AssetTable = () => {
 	const [introducedDate, setIntroduceDate] = useState('');
 	const [selectedStartDate, setSelectedStartDate] = useState(null); // 이건 아직 안됨
 	const [selectedEndDate, setSelectedEndDate] = useState(null); //  이건 아직 안됨
+
+	// 선택된 Row 배열,
+	const [rowSelect, setRowSelect] = useState([]);
+	const [actionType, setActionType] = useState(null);
+	const [showActModal, setShowActModal] = useState(false);
+
+	const handleOpenModal = (type) => {
+		setActionType(type);
+		setShowActModal(true);
+	};
 
 	// 폐기 모달창 부분
 	const [showModal, setShowModal] = useState(false); // 모달창 열기/닫기 상태
@@ -332,12 +343,20 @@ const AssetTable = () => {
 							<Form.Group className="mb-3">
 								<Row className="d-flex justify-content-end">
 									<Col md={1} className="mb-2 text-end">
-										<Button variant="secondary" style={{ width: '60%' }}>
+										<Button
+											variant="secondary"
+											onClick={() => handleOpenModal('AllUpdate', rowSelect)}
+											style={{ width: '60%' }}
+										>
 											일괄 수정
 										</Button>
 									</Col>
 									<Col md={1} className="mb-2 text-end">
-										<Button variant="danger" style={{ width: '60%' }}>
+										<Button
+											variant="danger"
+											onClick={() => handleOpenModal('AllDispose', rowSelect)}
+											style={{ width: '60%' }}
+										>
 											일괄 폐기
 										</Button>
 									</Col>
@@ -432,12 +451,19 @@ const AssetTable = () => {
 									theadClass="table-light"
 									searchBoxClass="mb-2"
 									isExpandable={true} // 확장 가능
+									setRowSelect={setRowSelect}
 								/>
 							</Row>
 						</Card.Body>
 					</Card>
 				</Col>
 			</Row>
+			<ActionModal
+				show={showActModal}
+				handleClose={() => setShowActModal(false)}
+				actionType={actionType}
+				actionData={rowSelect}
+			/>
 		</>
 	);
 };

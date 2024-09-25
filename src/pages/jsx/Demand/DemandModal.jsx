@@ -4,32 +4,6 @@ import axios from 'axios';
 
 const API_URL = import.meta.env.VITE_BASIC_URL;
 
-const InfoModal = ({ show, handleClose, modalData }) => {
-	return (
-		<Modal show={show} onHide={handleClose} backdrop="static" keyboard={false}>
-			<Modal.Header closeButton>
-				<Modal.Title>요청 상세 정보</Modal.Title>
-			</Modal.Header>
-			<Modal.Body>
-				{modalData && (
-					<div>
-						<p>요청구분: {modalData.demandNo}</p>
-						<p>요청구분: {modalData.demandType}</p>
-						<p>요청일자: {modalData.demandDate}</p>
-						<p>요청자: {modalData.demandBy}</p>
-						<p>상태: {modalData.demandStatus}</p>
-					</div>
-				)}
-			</Modal.Body>
-			<Modal.Footer>
-				<Button variant="secondary" onClick={handleClose}>
-					닫기
-				</Button>
-			</Modal.Footer>
-		</Modal>
-	);
-};
-
 const ActionModal = ({ show, handleClose, actionData, actionType, handleSubmit }) => {
 	const [reason, setReason] = useState('');
 
@@ -42,7 +16,7 @@ const ActionModal = ({ show, handleClose, actionData, actionType, handleSubmit }
 				reason,
 				actionType,
 			};
-			console.log('여깁니다' + JSON.stringify(dataToSend));
+
 			switch (item.demandType) {
 				case 'update':
 					axios
@@ -111,4 +85,4 @@ const ActionModal = ({ show, handleClose, actionData, actionType, handleSubmit }
 	);
 };
 
-export { InfoModal, ActionModal };
+export { ActionModal };

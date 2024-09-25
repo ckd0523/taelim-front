@@ -1,7 +1,6 @@
 import { Button, Form, Modal } from 'react-bootstrap';
 import { useState } from 'react';
 import RepairFileUpload from '@/pages/jsx/Maintain/RepairFileUpload';
-import Files from '@/pages/apps/projects/Details/Files';
 
 const urlConfig = import.meta.env.VITE_BASIC_URL;
 const MaintainRegister = ({ assetCode, assetNo }) => {

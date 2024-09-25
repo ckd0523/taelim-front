@@ -23,14 +23,14 @@ const MaintainDetail = ({ show, selectData, handleClose }) => {
 				</Modal.Header>
 				<Modal.Body>
 					<Form>
-						<Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+						<Form.Group className="mb-3 pt-2" controlId="exampleForm.ControlInput1">
 							<Form.Label>자산코드</Form.Label>
 							<Form.Control type="text" value={selectData.assetCode} readOnly />
-							<Form.Label>유지보수 담당자</Form.Label>
+							<Form.Label className="pt-2">유지보수 담당자</Form.Label>
 							<Form.Control type="text" value={selectData.maintainBy} readOnly />
-							<Form.Label>시작일</Form.Label>
+							<Form.Label className="pt-2">시작일</Form.Label>
 							<Form.Control type="text" value={selectData.repairStartDate} readOnly />
-							<Form.Label>완료일</Form.Label>
+							<Form.Label className="pt-2">완료일</Form.Label>
 							{selectData.repairEndDate === null ? (
 								<Form.Control
 									type="date"

@@ -15,16 +15,22 @@ const StyledCard = styled.div`
 	display: flex;
 	flex-direction: column;
 
-	@media (max-width: 768px) {
-		width: 30rem;
+	@media (max-width: 767px) {
+		width: 100%;
+		margin: 0 auto;
+		display: flex;
 	}
 
-	@media (min-width: 769px) and (max-width: 1280px) {
-		width: 42rem;
+	@media (min-width: 768px) and (max-width: 1023px) {
+		width: 100%;
+		margin: 0 auto;
+		display: flex;
 	}
 
-	@media (min-width: 1281px) {
-		width: 100rem;
+	@media (min-width: 1024px) {
+		width: 100%;
+		margin: 0 auto;
+		display: flex;
 	}
 `;
 
@@ -39,9 +45,9 @@ function CustomToggle({ children, eventKey }) {
 	const decoratedOnClick = useAccordionButton(eventKey, () => setIsOpen((prevOpen) => !prevOpen));
 	return (
 		<button
-			className="custom-button px-3 pt-2"
+			className="custom-button px-3 pt-2 fw-bold"
 			type="button"
-			style={{ backgroundColor: 'white', textAlign: 'left' }}
+			style={{ backgroundColor: '#dcefdc', textAlign: 'left' }}
 			onClick={decoratedOnClick}
 		>
 			{isOpen ? (
@@ -151,7 +157,7 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
 			case 'INFORMATION_PROTECTION_SYSTEM':
 				return (
 					<div>
-						<Accordion defaultActiveKey="0" flush>
+						<Accordion defaultActiveKey="0">
 							<StyledCard className="card">
 								<CustomToggle eventKey="0">자산별 컬럼</CustomToggle>
 								<Accordion.Collapse eventKey="0">
@@ -1217,10 +1223,6 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
 		}
 	};
 
-	return (
-		<>
-			<div>{renderAdditionalFields()}</div>
-		</>
-	);
+	return <>{renderAdditionalFields()}</>;
 };
 export default AssetCategories;

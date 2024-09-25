@@ -60,6 +60,7 @@ const Table = (props) => {
 	const isExpandable = props['isExpandable'] || false;
 	const sizePerPageList = props['sizePerPageList'] || [];
 	const hiddenColumns = props.initialState?.hiddenColumns || [];
+	const setRowSelect = props['setRowSelect'] || [];
 
 	let otherProps = {};
 
@@ -178,6 +179,8 @@ const Table = (props) => {
 			'selectedFlatRows[].original',
 			selectedFlatRows.map((d) => d.original)
 		);
+		const Rows = selectedFlatRows.map((d) => d.original);
+		setRowSelect(Rows);
 	}, [selectedRowIds]);
 
 	const rows = pagination ? dataTable.page : dataTable.rows;

@@ -232,19 +232,37 @@ const ExcelRegister = () => {
 									<div key={sheetName}>
 										<h3>Sheet: {sheetName.substring(4, 12)}</h3>
 										<Table bordered>
-											<thead>
+											<thead className="table-light">
 												<tr>
-													{headers.map((header, index) => (
+													{/* {headers.map((header, index) => (
 														<th key={index}>{header}</th>
-													))}
+													))} */}
+													<th>자산기준</th>
+													<th>자산코드</th>
+													<th>자산명</th>
+													<th>자산분류</th>
+													<th>목적/기능</th>
+													<th>자산위치</th>
+													<th>부서</th>
+													<th>사용자</th>
+													<th>소유자</th>
 												</tr>
 											</thead>
 											<tbody>
 												{data[sheetName].map((row, rowIndex) => (
 													<tr key={rowIndex}>
-														{headers.map((header, colIndex) => (
+														{/* {headers.map((header, colIndex) => (
 															<td key={colIndex}>{row[header]}</td>
-														))}
+														))} */}
+														<td>{row['자산기준']}</td>
+														<td>{row['자산코드']}</td>
+														<td>{row['자산명']}</td>
+														<td>{sheetName.substring(4, 12)}</td>
+														<td>{row['목적/기능']}</td>
+														<td>{row['자산위치']}</td>
+														<td>{row['부서']}</td>
+														<td>{row['사용자']}</td>
+														<td>{row['소유자']}</td>
 													</tr>
 												))}
 											</tbody>

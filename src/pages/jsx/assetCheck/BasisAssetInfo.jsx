@@ -15,22 +15,23 @@ import { CustomDatePicker } from '@/components/Form';
 import { useState } from 'react';
 import Select from 'react-select';
 import styled from 'styled-components';
-// import { Typehead } from "react-bootstrap-typeahead";
-// import { values } from "regenerator-runtime";
 const StyledCard = styled.div`
 	display: flex;
 	flex-direction: column;
 
-	@media (max-width: 768px) {
-		width: 30rem;
+	@media (max-width: 767px) {
+		width: 100%;
+		display: block;
 	}
 
-	@media (min-width: 769px) and (max-width: 1280px) {
-		width: 42rem;
+	@media (min-width: 768px) and (max-width: 1023px) {
+		width: 100%;
+		display: block;
 	}
 
-	@media (min-width: 1281px) {
-		width: 100rem;
+	@media (min-width: 1024px) {
+		width: 100%;
+		display: block;
 	}
 `;
 
@@ -41,28 +42,14 @@ const StyledCardBody = styled.div`
 	justify-content: space-between;
 `;
 
-const ResponsivePadding = styled.div`
-	@media (max-width: 768px) {
-		padding-top: 20px;
-	}
-
-	@media (min-width: 769px) and (max-width: 1280px) {
-		padding: 20px;
-	}
-
-	@media (min-width: 1281px) {
-		padding: 50px;
-	}
-`;
 function CustomToggle({ children, eventKey }) {
 	const [isOpen, setIsOpen] = useState(false);
 	const decoratedOnClick = useAccordionButton(eventKey, () => setIsOpen((prevOpen) => !prevOpen));
-
 	return (
 		<button
-			className="custom-button px-3 pt-2"
+			className="custom-button px-3 pt-2 fw-bold"
 			type="button"
-			style={{ backgroundColor: 'white', textAlign: 'left' }}
+			style={{ width: '100%', backgroundColor: '#dcefdc', textAlign: 'left' }}
 			onClick={decoratedOnClick}
 		>
 			{isOpen ? (
@@ -173,300 +160,280 @@ const BasisAssetInfo = ({ formData, handleChange }) => {
 	const methods = useForm();
 	return (
 		<div>
-			<ResponsivePadding>
-				<Accordion defaultActiveKey="0">
-					<StyledCard className="card">
-						<CustomToggle eventKey="0">기본 자산 정보 및 관리 정보</CustomToggle>
-						<Accordion.Collapse eventKey="0">
-							<FormProvider {...methods}>
-								<StyledCardBody className="card-body">
-									<Row>
-										<Col lg={5}>
-											<p className="mb-2 c fw-bold">자산분류</p>
-											<Select
-												className="mb-3"
-												placeholder="자산분류를 선택해주세요"
-												name="assetClassification"
-												value={assetClassification.find(
-													(option) =>
-														option.value ===
-														formData.assetClassification
-												)}
-												onChange={(selectedOption) =>
+			<Accordion defaultActiveKey="0">
+				<StyledCard className="card">
+					<CustomToggle eventKey="0">기본 자산 정보 및 관리 정보</CustomToggle>
+					<Accordion.Collapse eventKey="0">
+						<FormProvider {...methods}>
+							<StyledCardBody className="card-body">
+								<Row>
+									<Col lg={5}>
+										<p className="mb-2 c fw-bold">자산분류</p>
+										<Select
+											className="mb-3"
+											placeholder="자산분류를 선택해주세요"
+											name="assetClassification"
+											value={assetClassification.find(
+												(option) =>
+													option.value === formData.assetClassification
+											)}
+											onChange={(selectedOption) =>
+												handleChange({
+													target: {
+														name: 'assetClassification',
+														value: selectedOption.value,
+													},
+												})
+											}
+											options={assetClassification}
+										></Select>
+										<TextInput
+											label="자산명"
+											type="text"
+											placeholder="자산명을 입력해주세요"
+											name="assetName"
+											containerClass={'mb-3'}
+											value={formData.assetName}
+											onChange={handleChange}
+										/>
+										<p className="mb-2 c fw-bold">자산기준</p>
+										<Select
+											className="mb-3"
+											placeholder="자산기준을 선택해주세요"
+											name="assetBasis"
+											value={assetBasis.find(
+												(option) => option.value === formData.assetBasis
+											)}
+											onChange={(selectedOption) =>
+												handleChange({
+													target: {
+														name: 'assetBasis',
+														value: selectedOption.value,
+													},
+												})
+											}
+											options={assetBasis}
+										></Select>
+										<TextInput
+											label="제조사"
+											type="text"
+											placeholder="제조사를 입력해주세요"
+											name="manufacturingCompany"
+											containerClass={'mb-3'}
+											value={formData.manufacturingCompany}
+											onChange={handleChange}
+										/>
+										<TextInput
+											label="목적"
+											type="text"
+											placeholder="목적을 입력해주세요"
+											name="purpose"
+											containerClass={'mb-3'}
+											value={formData.purpose}
+											onChange={handleChange}
+										/>
+										<p className="mb-2 c fw-bold">부서</p>
+										<Select
+											className="mb-3"
+											placeholder="부서를 선택해주세요"
+											name="department"
+											value={department.find(
+												(option) => option.value === formData.department
+											)}
+											onChange={(selectedOption) =>
+												handleChange({
+													target: {
+														name: 'department',
+														value: selectedOption.value,
+													},
+												})
+											}
+											options={department}
+										></Select>
+										<p className="mb-2 c fw-bold">위치</p>
+										<Select
+											className="mb-3"
+											placeholder="위치를 선택해주세요"
+											name="assetLocation"
+											value={assetLocation.find(
+												(option) => option.value === formData.assetLocation
+											)}
+											onChange={(selectedOption) =>
+												handleChange({
+													target: {
+														name: 'assetLocation',
+														value: selectedOption.value,
+													},
+												})
+											}
+											options={assetLocation}
+										></Select>
+										<TextInput
+											label="사용자"
+											type="text"
+											placeholder="사용자을 입력해주세요"
+											name="assetUser"
+											containerClass={'mb-3'}
+											value={formData.assetUser}
+											onChange={handleChange}
+										/>
+										<TextInput
+											label="소유자"
+											type="text"
+											placeholder="소유자를 입력해주세요"
+											name="assetOwner"
+											containerClass={'mb-3'}
+											value={formData.assetOwner}
+											onChange={handleChange}
+										/>
+										<TextInput
+											label="보안담당자"
+											type="text"
+											placeholder="보안담당자를 입력해주세요"
+											name="assetSecurityManager"
+											containerClass={'mb-3'}
+											value={formData.assetSecurityManager}
+											onChange={handleChange}
+										/>
+									</Col>
+									<Col lg={1} className="d-flex align-items-stretch">
+										<div className="vertical-divider"></div>
+									</Col>
+									<Col lg={5}>
+										<TextInput
+											label="수량"
+											type="number"
+											placeholder="수량을 입력해주세요"
+											name="quantity"
+											containerClass={'mb-3'}
+											value={formData.quantity}
+											onChange={handleChange}
+										/>
+										<p className="mb-2 c fw-bold">소유권</p>
+										<Select
+											className="mb-3"
+											placeholder="소유권을 선택해주세요"
+											name="ownership"
+											value={ownership.find(
+												(option) => option.value === formData.ownership
+											)}
+											onChange={(selectedOption) =>
+												handleChange({
+													target: {
+														name: 'ownership',
+														value: selectedOption.value,
+													},
+												})
+											}
+											options={ownership}
+										></Select>
+										<p className="mb-2 c fw-bold">사용상태</p>
+										<Select
+											className="mb-3"
+											placeholder="사용상태를 선택해주세요"
+											name="useSta"
+											value={useSta.find(
+												(option) => option.value === formData.useState
+											)}
+											onChange={(selectedOption) =>
+												handleChange({
+													target: {
+														name: 'useSta',
+														value: selectedOption.value,
+													},
+												})
+											}
+											options={useSta}
+										></Select>
+										<p className="mb-2 c fw-bold">가동여부</p>
+										<Select
+											className="mb-3"
+											placeholder="가동여부를 선택해주세요"
+											name="operationStatus"
+											value={operationStatus.find(
+												(option) =>
+													option.value === formData.operationStatus
+											)}
+											onChange={(selectedOption) =>
+												handleChange({
+													target: {
+														name: 'operationStatus',
+														value: selectedOption.value,
+													},
+												})
+											}
+											options={operationStatus}
+										></Select>
+										<div className="form-group mb-3">
+											<label className="form-label">도입일자</label> <br />
+											<CustomDatePicker
+												type="date"
+												dateFormat="yyyy-MM-dd"
+												name="introducedDate"
+												hideAddon={true}
+												value={formData.introducedDate}
+												onChange={(date) =>
 													handleChange({
 														target: {
-															name: 'assetClassification',
-															value: selectedOption.value,
+															name: 'introducedDate',
+															value: date ? date : null,
 														},
 													})
 												}
-												options={assetClassification}
-											></Select>
-											<TextInput
-												label="자산명"
-												type="text"
-												placeholder="자산명을 입력해주세요"
-												name="assetName"
-												containerClass={'mb-3'}
-												value={formData.assetName}
-												onChange={handleChange}
 											/>
-											<p className="mb-2 c fw-bold">자산기준</p>
-											<Select
-												className="mb-3"
-												placeholder="자산기준을 선택해주세요"
-												name="assetBasis"
-												value={assetBasis.find(
-													(option) => option.value === formData.assetBasis
-												)}
-												onChange={(selectedOption) =>
-													handleChange({
-														target: {
-															name: 'assetBasis',
-															value: selectedOption.value,
-														},
-													})
-												}
-												options={assetBasis}
-											></Select>
-											<TextInput
-												label="제조사"
-												type="text"
-												placeholder="제조사를 입력해주세요"
-												name="manufacturingCompany"
-												containerClass={'mb-3'}
-												value={formData.manufacturingCompany}
-												onChange={handleChange}
-											/>
-											<TextInput
-												label="목적"
-												type="text"
-												placeholder="목적을 입력해주세요"
-												name="purpose"
-												containerClass={'mb-3'}
-												value={formData.purpose}
-												onChange={handleChange}
-											/>
-											<p className="mb-2 c fw-bold">부서</p>
-											<Select
-												className="mb-3"
-												placeholder="부서를 선택해주세요"
-												name="department"
-												value={department.find(
-													(option) => option.value === formData.department
-												)}
-												onChange={(selectedOption) =>
-													handleChange({
-														target: {
-															name: 'department',
-															value: selectedOption.value,
-														},
-													})
-												}
-												options={department}
-											></Select>
-											<p className="mb-2 c fw-bold">위치</p>
-											<Select
-												className="mb-3"
-												placeholder="위치를 선택해주세요"
-												name="assetLocation"
-												value={assetLocation.find(
-													(option) =>
-														option.value === formData.assetLocation
-												)}
-												onChange={(selectedOption) =>
-													handleChange({
-														target: {
-															name: 'assetLocation',
-															value: selectedOption.value,
-														},
-													})
-												}
-												options={assetLocation}
-											></Select>
-											<TextInput
-												label="사용자"
-												type="text"
-												placeholder="사용자을 입력해주세요"
-												name="assetUser"
-												containerClass={'mb-3'}
-												value={formData.assetUser}
-												onChange={handleChange}
-											/>
-											<TextInput
-												label="소유자"
-												type="text"
-												placeholder="소유자를 입력해주세요"
-												name="assetOwner"
-												containerClass={'mb-3'}
-												value={formData.assetOwner}
-												onChange={handleChange}
-											/>
-											<TextInput
-												label="보안담당자"
-												type="text"
-												placeholder="보안담당자를 입력해주세요"
-												name="assetSecurityManager"
-												containerClass={'mb-3'}
-												value={formData.assetSecurityManager}
-												onChange={handleChange}
-											/>
-										</Col>
-										<Col lg={1} className="d-flex align-items-stretch">
-											<div className="vertical-divider"></div>
-										</Col>
-										<Col lg={5}>
-											<TextInput
-												label="수량"
-												type="number"
-												placeholder="수량을 입력해주세요"
-												name="quantity"
-												containerClass={'mb-3'}
-												value={formData.quantity}
-												onChange={handleChange}
-											/>
-											<p className="mb-2 c fw-bold">소유권</p>
-											<Select
-												className="mb-3"
-												placeholder="소유권을 선택해주세요"
-												name="ownership"
-												value={ownership.find(
-													(option) => option.value === formData.ownership
-												)}
-												onChange={(selectedOption) =>
-													handleChange({
-														target: {
-															name: 'ownership',
-															value: selectedOption.value,
-														},
-													})
-												}
-												options={ownership}
-											></Select>
-											<p className="mb-2 c fw-bold">사용상태</p>
-											<Select
-												className="mb-3"
-												placeholder="사용상태를 선택해주세요"
-												name="useSta"
-												value={useSta.find(
-													(option) => option.value === formData.useState
-												)}
-												onChange={(selectedOption) =>
-													handleChange({
-														target: {
-															name: 'useSta',
-															value: selectedOption.value,
-														},
-													})
-												}
-												options={useSta}
-											></Select>
-											<p className="mb-2 c fw-bold">가동여부</p>
-											<Select
-												className="mb-3"
-												placeholder="가동여부를 선택해주세요"
-												name="operationStatus"
-												value={operationStatus.find(
-													(option) =>
-														option.value === formData.operationStatus
-												)}
-												onChange={(selectedOption) =>
-													handleChange({
-														target: {
-															name: 'operationStatus',
-															value: selectedOption.value,
-														},
-													})
-												}
-												options={operationStatus}
-											></Select>
-											<div className="form-group mb-3">
-												<label className="form-label">도입일자</label>{' '}
-												<br />
-												<CustomDatePicker
-													type="date"
-													dateFormat="yyyy-MM-dd"
-													name="introducedDate"
-													hideAddon={true}
-													value={formData.introducedDate}
-													onChange={(date) =>
-														handleChange({
-															target: {
-																name: 'introducedDate',
-																value: date ? date : null,
-															},
-														})
-													}
-												/>
-											</div>
-											<TextInput
-												label="기밀성"
-												type="number"
-												placeholder="기밀성 입력해주세요"
-												name="confidentiality"
-												containerClass={'mb-3'}
-												value={formData.confidentiality}
-												onChange={handleChange}
-											/>
-											<TextInput
-												label="무결성"
-												type="number"
-												placeholder="무결성을 입력해주세요"
-												name="integrity"
-												containerClass={'mb-3'}
-												value={formData.integrity}
-												onChange={handleChange}
-											/>
-											<TextInput
-												label="가용성"
-												type="number"
-												placeholder="가용성을 입력해주세요"
-												name="availability"
-												containerClass={'mb-3'}
-												value={formData.availability}
-												onChange={handleChange}
-											/>
-											<TextAreaInput
-												label="비고"
-												name="note"
-												rows={4}
-												containerClass={'mb-3'}
-												key="textarea"
-												value={formData.note}
-												onChange={handleChange}
-											/>
-										</Col>
-									</Row>
-								</StyledCardBody>
-							</FormProvider>
-						</Accordion.Collapse>
-					</StyledCard>
-				</Accordion>
-				{/* <div className="d-flex justify-content-center">
+										</div>
+										<TextInput
+											label="기밀성"
+											type="number"
+											placeholder="기밀성 입력해주세요"
+											name="confidentiality"
+											containerClass={'mb-3'}
+											value={formData.confidentiality}
+											onChange={handleChange}
+										/>
+										<TextInput
+											label="무결성"
+											type="number"
+											placeholder="무결성을 입력해주세요"
+											name="integrity"
+											containerClass={'mb-3'}
+											value={formData.integrity}
+											onChange={handleChange}
+										/>
+										<TextInput
+											label="가용성"
+											type="number"
+											placeholder="가용성을 입력해주세요"
+											name="availability"
+											containerClass={'mb-3'}
+											value={formData.availability}
+											onChange={handleChange}
+										/>
+										<TextAreaInput
+											label="비고"
+											name="note"
+											rows={4}
+											containerClass={'mb-3'}
+											key="textarea"
+											value={formData.note}
+											onChange={handleChange}
+										/>
+									</Col>
+								</Row>
+							</StyledCardBody>
+						</FormProvider>
+					</Accordion.Collapse>
+				</StyledCard>
+			</Accordion>
+			<Col xs={12} md={8} lg={12}>
 				<PurchasingInfo formData={formData} handleChange={handleChange} />
-			</div>
-			<div className="d-flex justify-content-center">
+
 				<AssetCategories
 					formData={formData}
 					assetClassification={formData.assetClassification}
 					handleChange={handleChange}
 				/>
-			</div> */}
-				{/* <Row className="d-flex responsive-padding"> */}
-				<Col xs={12} md={8} lg={6}>
-					<PurchasingInfo formData={formData} handleChange={handleChange} />
-				</Col>
-				{/* </Row> */}
-				{/* <Row className="d-flex responsive-padding"> */}
-				<Col xs={12} md={8} lg={6}>
-					<AssetCategories
-						formData={formData}
-						assetClassification={formData.assetClassification}
-						handleChange={handleChange}
-					/>
-				</Col>
-				{/* </Row> */}
-			</ResponsivePadding>
+			</Col>
 		</div>
 	);
 };

@@ -1,5 +1,6 @@
 import { Row, Col, Form, Button } from 'react-bootstrap';
-import { CustomDatePicker, Table } from '@/components';
+import { CustomDatePicker } from '@/components';
+import { Table3 } from '@/components/table/Table3';
 import { MaintainDetail } from '@/pages/jsx/MaintainHistory/MaintainDetail';
 import { useState } from 'react';
 import styled from 'styled-components';
@@ -9,8 +10,23 @@ const StyledCard = styled.div`
 	display: flex;
 	flex-direction: column;
 
-	@media (min-width: 1281px) {
-		width: 130rem;
+	@media (max-width: 767px) {
+		width: 100%;
+		margin: 0 auto;
+		display: flex;
+		font-size: 80%;
+	}
+
+	@media (min-width: 768px) and (max-width: 1023px) {
+		width: 100%;
+		margin: 0 auto;
+		display: flex;
+	}
+
+	@media (min-width: 1024px) {
+		width: 100%;
+		margin: 0 auto;
+		display: flex;
 	}
 `;
 const StyledCardBody = styled.div`
@@ -72,25 +88,6 @@ const MaintainHist = () => {
 		setShow(true);
 	};
 	const handleClose = () => setShow(false);
-
-	// useEffect(async (e) => {
-	// 	e.preventDefault();
-	// 	try {
-	// 		const response = await fetch(`${urlConfig}/maintain/get`, {
-	// 			method: 'GET',
-	// 			headers: {
-	// 				'Content-Type': 'application/json',
-	// 			},
-	// 			body: setData(response.data),
-	// 		});
-	// 		if (response.ok) {
-	// 			console.log('리스트출력');
-	// 		}
-	// 	} catch (error) {
-	// 		console.log('에러발생 : ', error);
-	// 		alert('리스트 출력 중 에러 발생');
-	// 	}
-	// });
 	useEffect(() => {
 		const requestOptions = {
 			method: 'GET',
@@ -175,7 +172,12 @@ const MaintainHist = () => {
 													hideAddon={true}
 												/>
 											</Col>
-											<Col xs={1} md={1} lg={1} className="text-center">
+											<Col
+												xs={1}
+												md={1}
+												lg={1}
+												className="d-flex justify-content-center pt-1 text-center fw-bold"
+											>
 												~
 											</Col>
 											<Col xs={5} md={5} lg={5.5}>
@@ -203,7 +205,7 @@ const MaintainHist = () => {
 				<Col className="pt-5 d-flex justify-content-center align-items-center">
 					<StyledCard className="card">
 						<StyledCardBody className="card-body">
-							<Table
+							<Table3
 								theadClass="table-light"
 								sizePerPageList={sizePerPageList}
 								columns={columns}

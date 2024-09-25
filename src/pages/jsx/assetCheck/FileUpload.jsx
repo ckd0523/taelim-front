@@ -9,16 +9,22 @@ const StyledCard = styled.div`
 	display: flex;
 	flex-direction: column;
 
-	@media (max-width: 768px) {
-		width: 30rem;
+	@media (max-width: 767px) {
+		width: 100%;
+		margin: 0 auto;
+		display: block;
 	}
 
-	@media (min-width: 769px) and (max-width: 1280px) {
-		width: 42rem;
+	@media (min-width: 768px) and (max-width: 1023px) {
+		width: 100%;
+		margin: 0 auto;
+		display: block;
 	}
 
-	@media (min-width: 1281px) {
-		width: 100rem;
+	@media (min-width: 1024px) {
+		width: 100%;
+		margin: 0 auto;
+		display: block;
 	}
 `;
 
@@ -28,27 +34,15 @@ const StyledCardBody = styled.div`
 	flex-direction: column;
 	justify-content: space-between;
 `;
-const ResponsivePadding = styled.div`
-	@media (max-width: 768px) {
-		padding-top: 20px;
-	}
 
-	@media (min-width: 769px) and (max-width: 1280px) {
-		padding: 20px;
-	}
-
-	@media (min-width: 1281px) {
-		padding: 50px;
-	}
-`;
 function CustomToggle({ children, eventKey }) {
 	const [isOpen, setIsOpen] = useState(false);
 	const decoratedOnClick = useAccordionButton(eventKey, () => setIsOpen((prevOpen) => !prevOpen));
 	return (
 		<button
-			className="custom-button px-3 pt-2"
+			className="custom-button px-3 pt-2 fw-bold"
 			type="button"
-			style={{ backgroundColor: 'white', textAlign: 'left' }}
+			style={{ width: '100%', backgroundColor: '#dcefdc', textAlign: 'left' }}
 			onClick={decoratedOnClick}
 		>
 			{isOpen ? (
@@ -87,33 +81,31 @@ const FileUpload = ({ files = [], setFiles }) => {
 	);
 
 	return (
-		<ResponsivePadding>
-			<Accordion defaultActiveKey="0">
-				<StyledCard className="card">
-					<CustomToggle eventKey="0">첨부파일 등록</CustomToggle>
-					<Accordion.Collapse eventKey="0">
-						<StyledCardBody className="card-body">
-							<p className="pt-2 mb-2 c fw-bold">이미지 등록</p>
-							<FileUploader
-								showPreview={true}
-								onFileUpload={(file) => handleFileUpload(file, 'PHOTO')}
-							/>
+		<Accordion defaultActiveKey="3">
+			<StyledCard className="card">
+				<CustomToggle eventKey="3">첨부파일 등록</CustomToggle>
+				<Accordion.Collapse eventKey="3">
+					<StyledCardBody className="card-body">
+						<p className="pt-2 mb-2 c fw-bold">이미지 등록</p>
+						<FileUploader
+							showPreview={true}
+							onFileUpload={(file) => handleFileUpload(file, 'PHOTO')}
+						/>
 
-							<p className="pt-2 mb-2 c fw-bold">보증 세부사항</p>
-							<FileUploader
-								showPreview={true}
-								onFileUpload={(file) => handleFileUpload(file, 'WARRANTY_DETAILS')}
-							/>
-							<p className="pt-2 mb-2 c fw-bold">사용자 메뉴얼 및 기술문서</p>
-							<FileUploader
-								showPreview={true}
-								onFileUpload={(file) => handleFileUpload(file, 'USER_MANUAL')}
-							/>
-						</StyledCardBody>
-					</Accordion.Collapse>
-				</StyledCard>
-			</Accordion>
-		</ResponsivePadding>
+						<p className="pt-2 mb-2 c fw-bold">보증 세부사항</p>
+						<FileUploader
+							showPreview={true}
+							onFileUpload={(file) => handleFileUpload(file, 'WARRANTY_DETAILS')}
+						/>
+						<p className="pt-2 mb-2 c fw-bold">사용자 메뉴얼 및 기술문서</p>
+						<FileUploader
+							showPreview={true}
+							onFileUpload={(file) => handleFileUpload(file, 'USER_MANUAL')}
+						/>
+					</StyledCardBody>
+				</Accordion.Collapse>
+			</StyledCard>
+		</Accordion>
 	);
 };
 

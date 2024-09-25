@@ -124,7 +124,7 @@ const MENU_ITEMS = [
 				key: 'ds-MaintainHist',
 				label: '유지보수이력',
 				url: '/jsx/MaintainHist',
-				parentKey: 'history,',
+				parentKey: 'history',
 			},
 		],
 	},
@@ -132,12 +132,6 @@ const MENU_ITEMS = [
 		key: 'ds-DemandHistory',
 		label: '요청내역',
 		url: '/jsx/DemandHistory',
-		icon: 'uil-home-alt',
-	},
-	{
-		key: 'ds-MaintainRegister',
-		label: '유지보수등록',
-		url: '/jsx/MaintainRegister',
 		icon: 'uil-home-alt',
 	},
 	{

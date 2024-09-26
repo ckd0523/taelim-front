@@ -23,6 +23,7 @@ const ActionModal = ({ show, handleClose, actionData, actionType }) => {
 		for (const item of actionData) {
 			const assetNo = item.assetNo;
 			const updateToSend = {
+				assetDto: item,
 				assetNo,
 				department,
 				assetLocation,

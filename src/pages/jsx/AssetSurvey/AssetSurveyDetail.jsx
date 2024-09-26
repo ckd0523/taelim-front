@@ -1,5 +1,5 @@
 import { Row, Col, Card, Button, Form } from 'react-bootstrap';
-import { Link, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import assetSurveyLocation from './assetSurveyLocation';
 import { useState, useEffect } from 'react';
 //import { Table } from '@/components';

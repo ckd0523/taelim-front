@@ -202,8 +202,10 @@ const Table = (props) => {
 											<td colSpan={dataTable.headerGroups[0].headers.length}>
 												<div>
 													<RowDetails
-														row={row}
-														assetCode={row.original.assetCode}
+														// row={row}
+														// assetCode={row.original.assetCode}
+														assetCode={row.original.assetCode} // assetCode 전달
+														formData={row.original} // 전체 데이터를 formData로 전달
 													/>
 												</div>
 											</td>

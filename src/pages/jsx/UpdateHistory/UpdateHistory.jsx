@@ -28,6 +28,7 @@ const UpdateHistory = () => {
 		const fetchUpdateHistory = async () => {
 			try {
 				const response = await axios.get(`${urlConfig}/updateHistory`); // API 호출
+				console.log('가져온 데이터:', response.data); // 가져온 데이터 구조 확인
 				setUpdateList(response.data); // 가져온 데이터를 저장
 				setOriginalData(response.data); // 검색을 위하 원본 데이터도 저장
 			} catch (error) {
@@ -37,19 +38,20 @@ const UpdateHistory = () => {
 		fetchUpdateHistory();
 	}, []);
 
-	// Table 에서 해당 번호 눌렀을때, 관련 자산번호 modal창 띄우게 하는 버튼 동작
-	const handleRowClick = (rowData) => {
-		// 상태 업데이트
-		setModalData(rowData);
-		setSelectedAssetNo(rowData.assetNo);
-	};
+	// // // Table 에서 해당 번호 눌렀을때, 관련 자산번호 modal창 띄우게 하는 버튼 동작
+	// const handleRowClick = (rowData) => {
+	// 	console.log('클릭된 행 데이터:', rowData); // 클릭된 행의 데이터
+	// 	// 상태 업데이트
+	// 	setModalData(rowData);
+	// 	setSelectedAssetNo(rowData.assetNo);
+	// };
+
 	// 모달 닫기 핸들러에서 상태 초기화
 	const handleCloseModal = () => {
 		setShowModal(false);
 		setModalData(null);
 		setSelectedAssetNo(null);
 	};
-
 	// 상태가 완전히 업데이트된 후 모달을 열기 위한 useEffect
 	useEffect(() => {
 		// modalData와 selectedAssetNo가 유효한 상태에서만 모달을 열도록 설정
@@ -88,16 +90,14 @@ const UpdateHistory = () => {
 				<Card></Card>
 				{/* 검색 폼 하위 컴포넌트 */}
 				<SearchForm onSearch={handleSearch} />
-
 				{/* 엑셀 출력 버튼 */}
 				<UpdateButton />
-
 				<Card></Card>
 				<RHForm>
 					<Card>
 						<Card.Body>
 							<Table
-								columns={columns(setModalData, setShowModal, setSelectedAssetNo)}
+								columns={columns(setModalData, setSelectedAssetNo)}
 								data={UpdateList}
 								pageSize={10}
 								//isExpandable={true}
@@ -106,7 +106,7 @@ const UpdateHistory = () => {
 								//isSelectable={true}
 								theadClass="table-light"
 								searchBoxClass="mb-2"
-								onRowClick={handleRowClick} // onRowClick 이벤트를 빈 함수로 설정하여 무시
+								//onRowClick={handleRowClick} // onRowClick 이벤트를 빈 함수로 설정하여 무시
 							/>
 						</Card.Body>
 					</Card>

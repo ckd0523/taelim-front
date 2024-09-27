@@ -169,7 +169,6 @@ const InfoModal = ({ show, handleClose, modalData, assetNo }) => {
 		if (assetNo) {
 			// assetNo  유효할 때만 fetchRowData 호출
 			const fetchRowData = async () => {
-				console.log('정상적인 assetNo : ', assetNo);
 				setIsLoading(true); // 데이터 요청 시작부분
 
 				try {

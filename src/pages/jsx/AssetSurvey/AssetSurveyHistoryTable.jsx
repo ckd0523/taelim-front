@@ -25,7 +25,7 @@ const columns = [
   {
     Header: '상태',
     accessor: 'surveyStatus',
-    defaultCanSort: false,
+    defaultCanSort: true,
     //Cell: StatusColumn,
     Cell: ({ value }) => (value === '' ? null : value ? '완료' : '진행 중'),
   },
@@ -41,12 +41,14 @@ const tableData = [
   },
 ];
 
+/*
 const sizePerPageList = [
   { text: '5', value: 5 },
   { text: '10', value: 10 },
   { text: '25', value: 25 },
   { text: '100', value: 100 },
 ];
+*/
 
 const SurveyTable = ({ tableChange, setSelectedRows }) => {
   const [data, setData] = useState([]);
@@ -79,7 +81,7 @@ const SurveyTable = ({ tableChange, setSelectedRows }) => {
               columns={columns}
               data={data}
               pagesize={5}
-              sizePerPageList={sizePerPageList}
+              //sizePerPageList={sizePerPageList}
               theadClass="table-light"
               isSortable={true}
               pagination={true}
@@ -96,7 +98,7 @@ const SurveyTable = ({ tableChange, setSelectedRows }) => {
 
 const DetailTable = ({ detailColumn, detailData }) => {
   return (
-    <Table
+    <Table2
       columns={detailColumn}
       data={detailData}
       pagesize={5}

@@ -79,7 +79,8 @@ const Table2 = (props) => {
 
   // 행 클릭 이벤트 핸들러
   const handleRowClick = (row) => {
-    if (row.values.assetSurveyLocation === '') {
+    //자산 조사의 위치가 없거나 자산 조사가 완료된 자산 조사는 클릭 안됨
+    if (row.values.assetSurveyLocation === '' || row.values.surveyStatus === true) {
       //console.log('1');
       return;
     }
@@ -213,6 +214,12 @@ const Table2 = (props) => {
   } = dataTable;
 
   useEffect(() => {
+    //console.log("이거 뭔데 : " + selectedRowIds);
+    //밑에 map을 했을 때 undifined 값이 들어가서 오류가 발생
+    //selectedRowIds가 undifined 이거나 null이면 그냥 return 하도록 함
+    if (!selectedRowIds) {
+      return;
+    }
 
     //전체 선택 시 완료된 자산 조사도 select가 됨
     const selectedRowsData = selectedFlatRows.map((row) => row.original);
@@ -267,32 +274,41 @@ const Table2 = (props) => {
             ))}
           </thead>
           <tbody {...dataTable.getTableBodyProps()}>
+            {/* 데이터를 불러오지 못했을 때 */}
             {isDataExist ? (
-              // 데이터가 존재하지 않을 때는 오류 메시지 표시
               <tr>
                 <td colSpan={6} className="text-center text-danger">
                   데이터를 불러오지 못했습니다.
                 </td>
               </tr>
-            ) : (
-              // 데이터가 존재할 때는 각 행을 표시
-              (rows || []).map((row, index) => {
-                dataTable.prepareRow(row);
-                return (
-                  <tr
-                    {...row.getRowProps({
-                      onClick: (e) => handleCellClick(e, row),
-                    })}
-                    key={index}
-                  >
-                    {row.cells.map((cell) => (
-                      <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
-                    ))}
-                  </tr>
-                );
-              })
-            )}
+            ) :
+              /* 데이터를 불러왔지만 빈 배열일 때 */
+              (props.data && props.data.length === 0) ? (
+                <tr>
+                  <td colSpan={6} className="text-center">
+                    불러올 자산 조사가 없습니다. 자산 조사를 등록하세요.
+                  </td>
+                </tr>
+              ) : (
+                // 데이터가 존재할 때는 각 행을 표시
+                rows.map((row, index) => {
+                  dataTable.prepareRow(row);
+                  return (
+                    <tr
+                      {...row.getRowProps({
+                        onClick: (e) => handleCellClick(e, row),
+                      })}
+                      key={index}
+                    >
+                      {row.cells.map((cell) => (
+                        <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                      ))}
+                    </tr>
+                  );
+                })
+              )}
           </tbody>
+
         </table>
       </div>
 

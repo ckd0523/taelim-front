@@ -1,10 +1,13 @@
 import { Row, Col, Card, Button, Form } from 'react-bootstrap';
 import { useLocation } from 'react-router-dom';
 import assetSurveyLocation from './assetSurveyLocation';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 //import { Table } from '@/components';
 import { getDetailTable } from './data';
 import { DetailTable } from './AssetSurveyHistoryTable';
+import { SurveyCompleteButton, SruveyCancelButton } from './AssetSurveyButtons';
+
+const URL = import.meta.env.VITE_BASIC_URL;
 
 const columns = [
   { Header: '자산 코드', accessor: 'assetCode', defaultCanSort: true, },
@@ -41,6 +44,7 @@ const columns = [
   },
 ];
 
+//정위치 유무, 상태 체크박스 선택 시 동작
 const handleCheckboxChange = (e, row, fieldName) => {
   const updatedRow = {
     ...row.original,
@@ -51,6 +55,11 @@ const handleCheckboxChange = (e, row, fieldName) => {
 };
 
 const AssetSurveyDetail = () => {
+  //다른 페이지에서 이 페이지로 넘어올 때 스크롤을 최상단으로
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   const locationParam = useLocation();
   /*
   //console.log(locationParam);
@@ -82,6 +91,24 @@ const AssetSurveyDetail = () => {
 
   const handleToggle = () => {
     setIsChecked(!isChecked);
+  };
+
+  const onClickCompleteSurvey = async () => {
+    try {
+      const response = await fetch(`${URL}/completeSurvey/${locationState.assetSurveyNo}`, { method: 'PUT' });
+
+      if (!response.ok) {
+        alert('자산 조사 완료에 실패했습니다.');
+        return;
+      }
+
+      alert("자산 조사 완료");
+      window.location.href = '/jsx/AssetSurveyHistory';
+
+    } catch (error) {
+      console.error('자산 조사 완료 중 오류:', error);
+      alert('오류가 발생했습니다. 다시 시도해주세요.');
+    }
   };
 
   //console.log('선택한 레코드 자산 번호 : ' + locationState.assetSurveyNo);
@@ -137,15 +164,6 @@ const AssetSurveyDetail = () => {
                 <strong>미확인 자산 보기</strong>
               </Button>
             </Col>
-
-            <Col>
-              <Form>
-                <Form.Switch
-                  id="custom-switch"
-                >
-                </Form.Switch>
-              </Form>
-            </Col>
           </Row>
         </Col>
 
@@ -172,12 +190,15 @@ const AssetSurveyDetail = () => {
 
       <Row className='row-cols-auto justify-content-end'>
         <Col>
-          <Button className='btn btn-success'>완료</Button>
+          {/* 자산 조사 완료 버튼 */}
+          <SurveyCompleteButton onClickCompleteSurvey={onClickCompleteSurvey} />
         </Col>
         <Col>
-          <Button className='btn btn-danger'>취소</Button>
+          {/* 자산 조사 뒤로가기 버튼 */}
+          <SruveyCancelButton />
         </Col>
       </Row>
+      <Card></Card>
 
     </div >
   );

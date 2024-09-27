@@ -361,6 +361,28 @@ const AssetTable = () => {
 										</Button>
 									</Col>
 									<Col md={1} className="mb-2 text-end">
+										<Button
+											variant="secondary"
+											onClick={() =>
+												handleOpenModal('AllUpdateDemand', rowSelect)
+											}
+											style={{ width: '60%' }}
+										>
+											일괄 수정 요청
+										</Button>
+									</Col>
+									<Col md={1} className="mb-2 text-end">
+										<Button
+											variant="danger"
+											onClick={() =>
+												handleOpenModal('AllDisposeDemand', rowSelect)
+											}
+											style={{ width: '60%' }}
+										>
+											일괄 폐기 요청
+										</Button>
+									</Col>
+									<Col md={1} className="mb-2 text-end">
 										<Button variant="info" style={{ width: '50%' }}>
 											QR
 										</Button>

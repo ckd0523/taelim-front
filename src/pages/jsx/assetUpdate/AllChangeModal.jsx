@@ -9,6 +9,8 @@ const ActionModal = ({ show, handleClose, actionData, actionType }) => {
 	const [assetLocation, setAssetLocation] = useState('');
 	const [assetSecurityManager, setAssetSecurityManager] = useState('');
 	const [assetOwner, setAssetOwner] = useState('');
+	const [disposeMethod, setDisposeMethod] = useState('');
+	const [disposeLocation, setDisposeLocation] = useState('');
 	const [reason, setReason] = useState('');
 	const [detail, setDetail] = useState('');
 
@@ -16,52 +18,73 @@ const ActionModal = ({ show, handleClose, actionData, actionType }) => {
 	const assetLocationChange = (e) => setAssetLocation(e.target.value);
 	const assetSecurityManagerChange = (e) => setAssetSecurityManager(e.target.value);
 	const assetOwnerChange = (e) => setAssetOwner(e.target.value);
+	const disposeMethodChange = (e) => setDisposeMethod(e.target.value);
+	const disposeLocationChange = (e) => setDisposeLocation(e.target.value);
 	const reasonChange = (e) => setReason(e.target.value);
 	const detailChange = (e) => setDetail(e.target.value);
 
 	const handleFormSubmit = () => {
-		for (const item of actionData) {
-			const assetNo = item.assetNo;
-			const updateToSend = {
-				assetDto: item,
-				assetNo,
-				department,
-				assetLocation,
-				assetSecurityManager,
-				assetOwner,
-				reason,
-				detail,
-			};
+		const updateToSend = {
+			assetDtos: actionData,
+			department,
+			assetLocation,
+			assetSecurityManager,
+			assetOwner,
+			reason,
+			detail,
+		};
 
-			const disposeToSend = {
-				assetNo: item.assetNo,
-				reason,
-				detail,
-			};
+		const disposeToSend = {
+			assetDtos: actionData,
+			disposeMethod,
+			disposeLocation,
+			reason,
+			detail,
+		};
 
-			switch (actionType) {
-				case 'AllUpdate':
-					axios
-						.post(`${API_URL}/allUpdate`, updateToSend)
-						.then((response) => {
-							console.log('Update successful:', response.data);
-						})
-						.catch((error) => {
-							console.error('Update error:', error);
-						});
-					break;
-				case 'AllDispose':
-					axios
-						.post(`${API_URL}/AlldeleteAction`, disposeToSend)
-						.then((response) => {
-							console.log('Delete successful:', response.data);
-						})
-						.catch((error) => {
-							console.error('Delete error:', error);
-						});
-					break;
-			}
+		switch (actionType) {
+			case 'AllUpdate':
+				axios
+					.post(`${API_URL}/allUpdate`, updateToSend)
+					.then((response) => {
+						console.log('Update successful:', response.data);
+					})
+					.catch((error) => {
+						console.error('Update error:', error);
+					});
+				break;
+			case 'AllDispose':
+				axios
+					.post(`${API_URL}/allDelete`, disposeToSend)
+					.then((response) => {
+						console.log('Delete successful:', response.data);
+					})
+					.catch((error) => {
+						console.error('Delete error:', error);
+					});
+				break;
+			case 'AllUpdateDemand':
+				axios
+					.post(`${API_URL}/allUpdateDemand`, updateToSend)
+					.then((response) => {
+						console.log('Delete successful:', response.data);
+					})
+					.catch((error) => {
+						console.error('Delete error:', error);
+					});
+				break;
+			case 'AllDisposeDemand':
+				axios
+					.post(`${API_URL}/allDeleteDemand`, disposeToSend)
+					.then((response) => {
+						console.log('Delete successful:', response.data);
+					})
+					.catch((error) => {
+						console.error('Delete error:', error);
+					});
+				break;
 		}
+
 		handleClose(); // 모달 닫기
 		window.location.reload();
 	};
@@ -69,7 +92,12 @@ const ActionModal = ({ show, handleClose, actionData, actionType }) => {
 	return (
 		<Modal show={show} onHide={handleClose}>
 			<Modal.Header closeButton>
-				<Modal.Title>{actionType === 'AllUpdate' ? '일괄 수정' : '일괄 폐기'}</Modal.Title>
+				<Modal.Title>
+					{actionType === 'AllUpdate' && '일괄 수정'}
+					{actionType === 'AllUpdateDemand' && '일괄 수정 요청'}
+					{actionType === 'AllDispose' && '일괄 폐기'}
+					{actionType === 'AllDisposeDemand' && '일괄 폐기 요청'}
+				</Modal.Title>
 			</Modal.Header>
 			<Modal.Body>
 				<Form>
@@ -78,11 +106,11 @@ const ActionModal = ({ show, handleClose, actionData, actionType }) => {
 							<p>
 								선택된 데이터: {actionData.map((item) => item.assetCode).join(', ')}
 							</p>
-							{actionType === 'AllUpdate'
+							{actionType === 'AllUpdate' || actionType === 'AllUpdateDemand'
 								? '수정 내용을 입력하세요'
 								: '폐기 내용을 입력하세요'}
 						</Form.Label>
-						{actionType === 'AllUpdate' && (
+						{(actionType === 'AllUpdate' || actionType === 'AllUpdateDemand') && (
 							<>
 								<Form.Control
 									type="text"
@@ -110,24 +138,52 @@ const ActionModal = ({ show, handleClose, actionData, actionType }) => {
 								/>
 							</>
 						)}
+						{(actionType === 'AllDispose' || actionType === 'AllDisposeDemand') && (
+							<>
+								<Form.Control
+									type="text"
+									value={department}
+									onChange={disposeLocationChange}
+									placeholder={'폐기위치'}
+								/>
+								<Form.Control
+									type="text"
+									value={assetLocation}
+									onChange={disposeMethodChange}
+									placeholder={'폐기방법'}
+								/>
+							</>
+						)}
 						<Form.Control
 							type="text"
 							value={reason}
 							onChange={reasonChange}
-							placeholder={actionType === 'AllUpdate' ? '수정 사유' : '폐기 사유'}
+							placeholder={
+								actionType === 'AllUpdate' || actionType === 'AllUpdateDemand'
+									? '수정 사유'
+									: '폐기 사유'
+							}
 						/>
 						<Form.Control
 							type="text"
 							value={detail}
 							onChange={detailChange}
-							placeholder={actionType === 'AllUpdate' ? '수정 내용' : '폐기 내용'}
+							placeholder={
+								actionType === 'AllUpdate' || actionType === 'AllUpdateDemand'
+									? '수정 내용'
+									: '폐기 내용'
+							}
 						/>
 					</Form.Group>
 				</Form>
 			</Modal.Body>
 			<Modal.Footer>
 				<Button
-					variant={actionType === 'AllUpdate' ? 'primary' : 'danger'}
+					variant={
+						actionType === 'AllUpdate' || actionType === 'AllUpdateDemand'
+							? 'primary'
+							: 'danger'
+					}
 					onClick={handleFormSubmit}
 				>
 					처리

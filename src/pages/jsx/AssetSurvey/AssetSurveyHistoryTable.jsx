@@ -50,8 +50,8 @@ const sizePerPageList = [
 ];
 */
 
-const SurveyTable = ({ tableChange, setSelectedRows }) => {
-  const [data, setData] = useState([]);
+const SurveyTable = ({ tableChange, setSelectedRows, data, setData, setOriginalData }) => {
+
   const [isDataExist, setIsDataExist] = useState(false); //fetch로 데이터를 못불러 왔는지
   //const [loading, setLoading] = useState(true); // fetch로 데이터 불러오는 중인지
 
@@ -59,9 +59,12 @@ const SurveyTable = ({ tableChange, setSelectedRows }) => {
     const fetchData = async () => {
       try {
         const response = await axios.get(`${URL}/assetSurveyHistory`);
+        //검색을 위해서 불변 데이터를 하나 더 만들어줌
         setData(response.data); // API로부터 받은 데이터 설정
+        setOriginalData(response.data);
       } catch (error) {
         setData(tableData);
+
         setIsDataExist(true);
         console.error('Error fetching data:', error);
       }

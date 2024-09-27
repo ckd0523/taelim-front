@@ -1,21 +1,23 @@
 import { useState, useEffect } from 'react';
+import axios from 'axios';
 import { Row, Col, Card, Button, Form, Modal } from 'react-bootstrap';
-import { PageBreadcrumb, Form as RHForm } from '@/components';
-
+import { PageBreadcrumb, CustomDatePicker, TextInput, Form as RHForm } from '@/components';
 import { columns as baseColumns } from './ColumnsSet'; // table의 column 설정
 import { Table } from './ExpandableTable';
 import { ActionModal } from './AllChangeModal';
-import { SearchForm } from './AssetSearchBar';
-import { AssetButtons } from './AssetButton';
-import { DisposeModal } from './DisposeModal';
-
-import axios from 'axios';
-
 const urlConfig = import.meta.env.VITE_BASIC_URL;
 
 const AssetTable = () => {
 	const [data, setData] = useState([]);
 	const [UpdateList, setUpdateList] = useState([]);
+	const [assetCode, setAssetCode] = useState('');
+	const [assetName, setAssetName] = useState('');
+	const [department, setDepartment] = useState('');
+	const [assetOwner, setAssetOwner] = useState('');
+	const [assetLocation, setAssetLocation] = useState('');
+	const [introducedDate, setIntroduceDate] = useState('');
+	const [selectedStartDate, setSelectedStartDate] = useState(null); // 이건 아직 안됨
+	const [selectedEndDate, setSelectedEndDate] = useState(null); //  이건 아직 안됨
 
 	// 선택된 Row 배열,
 	const [rowSelect, setRowSelect] = useState([]);
@@ -31,23 +33,33 @@ const AssetTable = () => {
 	const [showModal, setShowModal] = useState(false); // 모달창 열기/닫기 상태
 	// 모달에서 자산 폐기 요청을 처리할 때 assetCode를 전달하기 위한 상태 추가
 	const [selectedAssetCode, setSelectedAssetCode] = useState('');
+	// handleShow 수정하여 모달을 열 때 자산 코드를 설정
 
-	// 폐기 관련
+	// 폐기 관련 state
+	const [disposeReason, setDisposeReason] = useState('');
+	const [disposeDetail, setDisposeDetail] = useState('');
+	const [disposeLocation, setDisposeLocation] = useState('');
+	const [disposeMethod, setDisposeMethod] = useState('');
 	const [isDisposed, setIsDisposed] = useState(false); // 상태 관리 추가
 	const [errorMessage, setErrorMessage] = useState(''); // 오류 메시지 상태
 
-	// 폐기 모달창 열기 위한 동작 - assetCode 로 보냄 - 휴지통 클릭 동작
+	// 상태 초기화 함수
+	const resetForm = () => {
+		setDisposeReason('');
+		setDisposeDetail('');
+		setDisposeLocation('');
+		setDisposeMethod('');
+	};
+
 	const handleShow = (assetCode) => {
 		setSelectedAssetCode(assetCode); // 모달을 열 때 해당 자산 코드를 설정
 		setShowModal(true); // 모달을 열기
 	};
-
-	// 폐기 모달창 닫기 위한 동작 - DisposeModal.jsx에서 처리
 	const handleClose = () => {
+		resetForm();
 		setShowModal(false);
 	};
 
-	// 자산 테이블 List 불러옴
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
@@ -61,16 +73,33 @@ const AssetTable = () => {
 		fetchData();
 	}, []);
 
-	// 검색필터 조건
-	const handleSearch = ({
-		assetCode,
-		assetName,
-		department,
-		assetOwner,
-		assetLocation,
-		selectedStartDate,
-		selectedEndDate,
-	}) => {
+	const handleFormChange = (e) => {
+		const { name, value } = e.target;
+		switch (name) {
+			case 'assetCode':
+				setAssetCode(value);
+				break;
+			case 'assetName':
+				setAssetName(value);
+				break;
+			case 'department':
+				setDepartment(value);
+				break;
+			case 'assetOwner':
+				setAssetOwner(value);
+				break;
+			case 'assetLocation':
+				setAssetLocation(value);
+				break;
+			case 'introducedDate':
+				setIntroduceDate(value);
+				break;
+			default:
+				break;
+		}
+	};
+
+	const handleSearch = () => {
 		const filteredData = data.filter((item) => {
 			return (
 				(assetCode === '' || (item.assetCode && item.assetCode.includes(assetCode))) &&
@@ -80,8 +109,9 @@ const AssetTable = () => {
 				(assetLocation === '' ||
 					(item.assetLocation && item.assetLocation.includes(assetLocation))) &&
 				(selectedStartDate === null ||
-					new Date(item.introducedDate) >= selectedStartDate) &&
-				(selectedEndDate === null || new Date(item.introducedDate) <= selectedEndDate)
+					(item.introducedDate && new Date(item.introducedDate) >= selectedStartDate)) &&
+				(selectedEndDate === null ||
+					(item.introducedDate && new Date(item.introducedDate) < selectedEndDate))
 			);
 		});
 
@@ -89,7 +119,14 @@ const AssetTable = () => {
 	};
 
 	// 자산 폐기 처리 동작
-	const handleDisposeAsset = async (assetCode, disposeDto) => {
+	const handleDisposeAsset = async (assetCode) => {
+		const disposeDto = {
+			disposeReason,
+			disposeDetail,
+			disposeLocation,
+			disposeMethod,
+		};
+
 		try {
 			const response = await axios.post(`${urlConfig}/disposeAsset/${assetCode}`, disposeDto);
 
@@ -98,6 +135,8 @@ const AssetTable = () => {
 				setUpdateList((prevData) =>
 					prevData.filter((item) => item.assetCode !== assetCode)
 				);
+				resetForm();
+				handleClose();
 			} else {
 				console.error('자산 폐기 실패:', assetCode);
 			}
@@ -107,7 +146,14 @@ const AssetTable = () => {
 	};
 
 	// 자산 폐기 요청 동작
-	const handleDisposeDemand = async (assetCode, disposeDto) => {
+	const handleDisposeDemand = async (assetCode) => {
+		const disposeDto = {
+			disposeReason,
+			disposeDetail,
+			disposeLocation,
+			disposeMethod,
+		};
+
 		try {
 			const response = await axios.post(
 				`${urlConfig}/disposeDemand/${assetCode}`,
@@ -116,11 +162,14 @@ const AssetTable = () => {
 
 			if (response.status === 200) {
 				console.log('자산 폐기 요청 성공:', assetCode);
+				// UI를 즉시 업데이트
 				setUpdateList((prevList) =>
 					prevList.map((item) =>
 						item.assetCode === assetCode ? { ...item, isDisposed: true } : item
 					)
 				);
+				resetForm();
+				handleClose();
 			} else {
 				console.error('자산 폐기 요청 실패:', assetCode);
 			}
@@ -129,7 +178,16 @@ const AssetTable = () => {
 		}
 	};
 
-	// 컬럼에 휴지통 아이콘 handleDisposeAsset 전달
+	// 폐기 요청 버튼 클릭 핸들러
+	const handleRequest = async () => {
+		if (isDisposed) {
+			setErrorMessage('폐기 요청이 이미 들어간 자산입니다.');
+		} else {
+			await handleDisposeDemand(selectedAssetCode); // await을 추가하여 비동기 작업 완료 후 상태 업데이트
+		}
+	};
+
+	// 컬럼 설정에 handleDisposeAsset 전달
 	const columns = baseColumns.map((column) => {
 		if (column.Header === 'Action') {
 			return {

@@ -3,7 +3,6 @@ import { PageBreadcrumb, CustomDatePicker, TextInput, Form as RHForm } from '@/c
 import { Table } from './Table';
 import { columns } from './ColumnsSet';
 import { useState, useEffect } from 'react';
-import { demands } from './data';
 import { InfoModal, ActionModal } from './DemandModal';
 import axios from 'axios';
 
@@ -12,7 +11,8 @@ const urlConfig = import.meta.env.VITE_BASIC_URL;
 import Select from 'react-select';
 
 const DemandHistory = () => {
-	const [demandsList, setDemandsList] = useState(demands);
+	const [demands, setDemands] = useState([]);
+	const [demandsList, setDemandsList] = useState([]);
 	const [selectedOrderType, setSelectedOrderType] = useState('');
 	const [selectedRequester, setSelectedRequester] = useState('');
 	const [selectedStatus, setSelectedStatus] = useState('');
@@ -29,13 +29,17 @@ const DemandHistory = () => {
 		const fetchData = async () => {
 			try {
 				const response = await axios.get(`${urlConfig}/DemandHistory`);
-				setDemandsList(response.data);
+				setDemands(response.data);
 			} catch (error) {
 				console.error('데이터를 가져오는 중 오류 발생:', error);
 			}
 		};
 		fetchData();
 	}, []);
+
+	useEffect(() => {
+		setDemandsList(demands);
+	}, [demands]);
 
 	const handleOpenModal = (type, rowSelect) => {
 		console.log(rowSelect);

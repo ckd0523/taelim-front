@@ -42,7 +42,7 @@ const ActionModal = ({ show, handleClose, actionData, actionType, handleSubmit }
 				reason,
 				actionType,
 			};
-			console.log('여깁니다' + JSON.stringify(dataToSend));
+
 			switch (item.demandType) {
 				case 'update':
 					axios

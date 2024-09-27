@@ -98,7 +98,7 @@ const SurveyTable = ({ tableChange, setSelectedRows }) => {
 
 const DetailTable = ({ detailColumn, detailData }) => {
   return (
-    <Table
+    <Table2
       columns={detailColumn}
       data={detailData}
       pagesize={5}

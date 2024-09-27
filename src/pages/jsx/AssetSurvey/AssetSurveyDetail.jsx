@@ -164,15 +164,6 @@ const AssetSurveyDetail = () => {
                 <strong>미확인 자산 보기</strong>
               </Button>
             </Col>
-
-            <Col>
-              <Form>
-                <Form.Switch
-                  id="custom-switch"
-                >
-                </Form.Switch>
-              </Form>
-            </Col>
           </Row>
         </Col>
 

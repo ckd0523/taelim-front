@@ -214,6 +214,12 @@ const Table2 = (props) => {
   } = dataTable;
 
   useEffect(() => {
+    //console.log("이거 뭔데 : " + selectedRowIds);
+    //밑에 map을 했을 때 undifined 값이 들어가서 오류가 발생
+    //selectedRowIds가 undifined 이거나 null이면 그냥 return 하도록 함
+    if (!selectedRowIds) {
+      return;
+    }
 
     //전체 선택 시 완료된 자산 조사도 select가 됨
     const selectedRowsData = selectedFlatRows.map((row) => row.original);

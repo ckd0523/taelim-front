@@ -12,7 +12,7 @@ import logoDarkSm from '@/assets/images/logo-dark-sm.png';
 import taelimlogo from '@/assets/images/Taelimlogo.png';
 import taelimlogo_sm from '@/assets/images/Taelimlogo-sm.png';
 import { getMenuItems } from './utils/menu';
-import { Button, Modal, Col, Nav, Tab, Row } from 'react-bootstrap';
+import { Button, Modal, Col, Nav, Tab, Row, Form, InputGroup, Card } from 'react-bootstrap';
 import { useToggle } from '@/hooks';
 
 // const UserBox = () => {
@@ -106,11 +106,12 @@ const SideBarContent = () => {
 		<>
 			{/* 모달 컴포넌트 */}
 			<Modal show={signUpModal} onHide={toggleSignUp} size='lg'>
-				<Modal.Header closeButton>
+				<Modal.Header>
 					<Modal.Title>시스템 설정</Modal.Title>
 				</Modal.Header>
 				<Modal.Body>
 					<Tab.Container id="left-tabs-example" defaultActiveKey="first">
+
 						<Row>
 							<Col sm={3}>
 								<Nav variant="pills" className="flex-column">
@@ -127,7 +128,21 @@ const SideBarContent = () => {
 								<Tab.Content>
 									<Tab.Pane eventKey="first">
 										<Row>
-											<Col>
+											<Col lg={4}>
+												<label>고가치 기준 금액</label>
+												<InputGroup>
+													<Form.Control type='number'
+														value={amountSetData ? amountSetData.high_value_standard : -1}
+														readOnly={modify}
+														onChange={(e) => setAmountSetData(prev => ({
+															...prev,
+															high_value_standard: e.target.value
+														}))}
+														min={0}
+													/>
+												</InputGroup>
+
+												{/* 
 												<label>고가치 기준 금액</label>
 												<input
 													type='number'
@@ -151,33 +166,41 @@ const SideBarContent = () => {
 													}))}
 													min={0}
 												/>
+												*/}
 											</Col>
-											<br></br>
-											<Col>
-												<Button onClick={ChangeModify}>{modify ? ('수정') : ('저장')}</Button>
+											<Col lg={4}>
+												<label>저가치 기준 금액</label>
+												<InputGroup>
+													<Form.Control type='number'
+														value={amountSetData ? amountSetData.low_value_standard : -1}
+														readOnly={modify}
+														onChange={(e) => setAmountSetData(prev => ({
+															...prev,
+															low_value_standard: e.target.value
+														}))}
+														min={0}
+													/>
+												</InputGroup>
 											</Col>
 										</Row>
+										<br></br>
+										<Modal.Footer>
+											<Button onClick={ChangeModify}>{modify ? ('수정') : ('저장')}</Button>
+											<Button variant="secondary" onClick={toggleSignUp}>닫기</Button>
+										</Modal.Footer>
 									</Tab.Pane>
 
-									<Tab.Pane eventKey="second">설정2에 필요한 것이 있으면 말씀해주세요</Tab.Pane>
+									<Tab.Pane eventKey="second">
+										설정2에 필요한 것이 있으면 말씀해주세요
+										<Modal.Footer>
+											<Button variant="secondary" onClick={toggleSignUp}>닫기</Button>
+										</Modal.Footer>
+									</Tab.Pane>
 								</Tab.Content>
 							</Col>
 						</Row>
 					</Tab.Container>
-					{/* 
-					<h3>자산 기준 금액 설정</h3>
-					<label>고가치 기준 금액</label>
-					<input type='number' value={amountSetData ? amountSetData.high_value_standard : -1} readOnly={true} />
-					<br></br>
-					<label>저가치 기준 금액</label>
-					<input type='number' value={amountSetData ? amountSetData.low_value_standard : -1} readOnly={true} />
-					*/}
 				</Modal.Body>
-				<Modal.Footer>
-					<Button variant="secondary" onClick={toggleSignUp}>
-						닫기
-					</Button>
-				</Modal.Footer>
 			</Modal>
 
 			{/* 메뉴 */}

@@ -6,7 +6,6 @@ import { useState, useEffect } from "react";
 const URL = import.meta.env.VITE_BASIC_URL;
 
 const AssetSurveyHistory2 = () => {
-
   //다른 페이지에서 이 페이지로 넘어올 때 스크롤을 최상단으로
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -59,15 +58,20 @@ const AssetSurveyHistory2 = () => {
     //console.log(selectedRows);
   };
 
+  //검색 버튼과 테이블이 같은 레벨에 있기 때문에
+  //최상위 컴포넌트에 필터될 데이터인 data, 원본 데이터인 originalData를 useState로 만들어서
+  //검색 바에 데이터를 넘겨줌
+  const [data, setData] = useState([]);
+  const [originalData, setOriginalData] = useState([]);
 
   return (
     <div>
       {/* 검색 바 */}
-      <SearchBar />
+      <SearchBar setData={setData} originalData={originalData} />
       {/* 각종 버튼 */}
       <Buttons onClickRegister={onClickRegister} onDelete={handleDelete} />
       {/* 자산 조사 이력 테이블 */}
-      <SurveyTable tableChange={tableChange} setSelectedRows={setSelectedRows} />
+      <SurveyTable tableChange={tableChange} setSelectedRows={setSelectedRows} data={data} setData={setData} setOriginalData={setOriginalData} />
     </div>
   );
 };

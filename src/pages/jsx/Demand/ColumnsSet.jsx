@@ -37,11 +37,17 @@ const columns = (setModalData, setShowModal) => [
 				setShowModal(true);
 			}, [row.original]);
 
-			return (
-				<span onClick={handleRowClick} style={{ cursor: 'pointer', color: 'blue' }}>
-					{row.original.demandType}
-				</span>
-			);
+			// demandType에 따른 UI 변화
+			if (row.original.assetNo) {
+				return (
+					<span onClick={handleRowClick} style={{ cursor: 'pointer', color: 'blue' }}>
+						{row.original.demandType}
+					</span>
+				);
+			} else {
+				// 기본 렌더링
+				return <span>{row.original.demandType}</span>;
+			}
 		},
 	},
 	{

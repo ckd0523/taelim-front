@@ -40,7 +40,6 @@ const MaintainRegister = ({ assetCode, assetNo }) => {
 				const fileName = await fileResponse.text();
 				uploadFileNames.push(fileName);
 				console.log(fileName);
-				alert('파일이 성공적으로 업로드 됨');
 			} else {
 				alert('파일 업로드 실패');
 			}
@@ -77,17 +76,17 @@ const MaintainRegister = ({ assetCode, assetNo }) => {
 				}));
 
 				console.log('uploadFile1: ' + formData.repairFiles);
-				alert('파일이 성공적으로 등록');
+				alert('유지보수가 성공적으로 등록되었습니다.');
 				// }
 
 				handleClose();
 				window.location.reload();
 			} else {
-				alert('유지보수 등록 실패');
+				alert('유지보수 등록 실패하였습니다.');
 			}
 		} catch (error) {
 			console.error('에러발생 : ', error);
-			alert('유지보수 등록 중 에러가 발생');
+			alert('유지보수 등록 중 에러가 발생하였습니다.');
 		}
 	};
 
@@ -97,8 +96,22 @@ const MaintainRegister = ({ assetCode, assetNo }) => {
 			...prevState,
 			[name]: value,
 		}));
-		// console.log('name: ', name);
-		// console.log('value: ', value);
+
+		console.log('name: ', name);
+		console.log('value: ', value);
+
+		if (name === 'repairEndDate') {
+			const startDate = new Date(formData.repairStartDate);
+			const endDate = new Date(value);
+
+			if (endDate < startDate) {
+				alert('완료일은 시작일보다 이전일 수 없습니다.');
+				setFormData((prevState) => ({
+					...prevState,
+					repairEndDate: '',
+				}));
+			}
+		}
 	};
 	return (
 		<>
@@ -127,7 +140,7 @@ const MaintainRegister = ({ assetCode, assetNo }) => {
 							<Form.Label>완료일</Form.Label>
 							<Form.Control
 								name="repairEndDate"
-								value={formData.repairEndDate}
+								value={formData.repairEndDate || ''}
 								onChange={handleChange}
 								type="date"
 							/>

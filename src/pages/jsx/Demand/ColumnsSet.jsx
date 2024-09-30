@@ -8,8 +8,8 @@ const StatusColumn = ({ row }) => {
 		<h5>
 			<span
 				className={classNames('badge', {
-					'badge-success-lighten': row.original.demandStatus === 'UNCONFIRMED',
-					'badge-danger-lighten': row.original.demandStatus === 'Processing',
+					'badge-danger-lighten': row.original.demandStatus === 'UNCONFIRMED',
+					'badge-success-lighten': row.original.demandStatus === 'completed',
 					'badge-info-lighten': row.original.demandStatus === 'APPROVE',
 					'badge-warning-lighten': row.original.demandStatus === 'REFUSAL',
 				})}
@@ -37,11 +37,17 @@ const columns = (setModalData, setShowModal) => [
 				setShowModal(true);
 			}, [row.original]);
 
-			return (
-				<span onClick={handleRowClick} style={{ cursor: 'pointer', color: 'blue' }}>
-					{row.original.demandType}
-				</span>
-			);
+			// demandType에 따른 UI 변화
+			if (row.original.assetNo) {
+				return (
+					<span onClick={handleRowClick} style={{ cursor: 'pointer', color: 'blue' }}>
+						{row.original.demandType}
+					</span>
+				);
+			} else {
+				// 기본 렌더링
+				return <span>{row.original.demandType}</span>;
+			}
 		},
 	},
 	{

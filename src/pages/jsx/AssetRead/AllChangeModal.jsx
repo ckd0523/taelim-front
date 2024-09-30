@@ -42,51 +42,47 @@ const ActionModal = ({ show, handleClose, actionData, actionType }) => {
 			detail,
 		};
 
+		const handleSuccessResponse = (response) => {
+			console.log('Success:', response.data);
+			alert(response.data); // 성공 메시지 띄우기
+			window.location.reload(); // 2초 뒤 새로고침
+		};
+
+		const handleErrorResponse = (error) => {
+			console.error('Error:', error);
+			alert(error.response.data); // 에러 메시지 띄우기
+		};
+
 		switch (actionType) {
 			case 'AllUpdate':
 				axios
 					.post(`${API_URL}/allUpdate`, updateToSend)
-					.then((response) => {
-						console.log('Update successful:', response.data);
-					})
-					.catch((error) => {
-						console.error('Update error:', error);
-					});
+					.then(handleSuccessResponse)
+					.catch(handleErrorResponse);
 				break;
 			case 'AllDispose':
 				axios
 					.post(`${API_URL}/allDelete`, disposeToSend)
-					.then((response) => {
-						console.log('Delete successful:', response.data);
-					})
-					.catch((error) => {
-						console.error('Delete error:', error);
-					});
+					.then(handleSuccessResponse)
+					.catch(handleErrorResponse);
 				break;
 			case 'AllUpdateDemand':
 				axios
 					.post(`${API_URL}/allUpdateDemand`, updateToSend)
-					.then((response) => {
-						console.log('Delete successful:', response.data);
-					})
-					.catch((error) => {
-						console.error('Delete error:', error);
-					});
+					.then(handleSuccessResponse)
+					.catch(handleErrorResponse);
 				break;
 			case 'AllDisposeDemand':
 				axios
 					.post(`${API_URL}/allDeleteDemand`, disposeToSend)
-					.then((response) => {
-						console.log('Delete successful:', response.data);
-					})
-					.catch((error) => {
-						console.error('Delete error:', error);
-					});
+					.then(handleSuccessResponse)
+					.catch(handleErrorResponse);
 				break;
+			default:
+				console.log('Invalid action type');
 		}
 
 		handleClose(); // 모달 닫기
-		window.location.reload();
 	};
 
 	return (

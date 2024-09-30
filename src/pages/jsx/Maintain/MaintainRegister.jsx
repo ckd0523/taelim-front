@@ -4,6 +4,7 @@ import RepairFileUpload from '@/pages/jsx/Maintain/RepairFileUpload';
 
 const urlConfig = import.meta.env.VITE_BASIC_URL;
 const MaintainRegister = ({ assetCode, assetNo }) => {
+	const [files, setFiles] = useState([]);
 	const [show, setShow] = useState(false);
 	const [formData, setFormData] = useState({
 		assetNo: assetNo,
@@ -12,11 +13,45 @@ const MaintainRegister = ({ assetCode, assetNo }) => {
 		repairEndDate: '',
 		repairBy: '',
 		repairResult: '',
+		repairFiles: [],
 	});
 
 	const handleClose = () => setShow(false);
 	const handleShow = () => setShow(true);
 
+	const handleFileUpload = async (repairNo) => {
+		const uploadFileNames = [];
+		for (let { file, repairType } of files) {
+			const fileFormData = new FormData();
+			fileFormData.append('repairNo', repairNo);
+			fileFormData.append('file', file);
+			fileFormData.append('repairType', repairType);
+
+			console.log('repairNo: ', fileFormData.get('repairNo'));
+			console.log('fileFormData: ', fileFormData.get('file'));
+			console.log('repairType: ', fileFormData.get('repairType'));
+
+			const fileResponse = await fetch(`${urlConfig}/maintain/file/upload`, {
+				method: 'POST',
+				body: fileFormData,
+			});
+
+			if (fileResponse.ok) {
+				const fileName = await fileResponse.text();
+				uploadFileNames.push(fileName);
+				console.log(fileName);
+				alert('파일이 성공적으로 업로드 됨');
+			} else {
+				alert('파일 업로드 실패');
+			}
+		}
+
+		// setFormData((prevState) => ({
+		// 	...prevState,
+		// 	repairFiles: [...prevState.fileName, ...uploadFileNames],
+		// }));
+		return uploadFileNames;
+	};
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 		try {
@@ -27,12 +62,25 @@ const MaintainRegister = ({ assetCode, assetNo }) => {
 				},
 				body: JSON.stringify(formData),
 			});
+			console.log('assetNo : ', assetNo);
+			console.log('assetCode: ', assetCode);
 
-			console.log(assetNo);
-			console.log(assetCode);
 			if (maintainResponse.ok) {
-				const assetNo = await maintainResponse.text();
-				alert('유지보수가 성공적으로 등록');
+				const repairNo = await maintainResponse.text();
+				console.log('repairNo : ', repairNo);
+
+				// if (files.length > 0) {
+				const uploadedFileNames = await handleFileUpload(repairNo);
+				setFormData((prevState) => ({
+					...prevState,
+					repairFiles: [...prevState.fileName, ...uploadedFileNames], // Properly set the file name state
+				}));
+
+				console.log('uploadFile1: ' + formData.repairFiles);
+				alert('파일이 성공적으로 등록');
+				// }
+
+				handleClose();
 				window.location.reload();
 			} else {
 				alert('유지보수 등록 실패');
@@ -42,20 +90,15 @@ const MaintainRegister = ({ assetCode, assetNo }) => {
 			alert('유지보수 등록 중 에러가 발생');
 		}
 	};
-	// const today = new Date();
-	// const todayMonth =
-	// 	today.getMonth() + 1 > 9 ? today.getMonth() + 1 : '0' + (today.getMonth() + 1);
-	// const todayDate = today.getDate() > 9 ? today.getDate() : '0' + today.getDate();
 
-	// repairStartDate = `${today.getFullYear()}-` + todayMonth + '-' + todayDate;
 	const handleChange = (e) => {
 		const { name, value } = e.target;
 		setFormData((prevState) => ({
 			...prevState,
 			[name]: value,
 		}));
-		console.log('name: ', name);
-		console.log('value: ', value);
+		// console.log('name: ', name);
+		// console.log('value: ', value);
 	};
 	return (
 		<>
@@ -99,7 +142,11 @@ const MaintainRegister = ({ assetCode, assetNo }) => {
 								onChange={handleChange}
 							/>
 						</Form.Group>
-						<RepairFileUpload />
+						<RepairFileUpload
+							files={files}
+							setFiles={setFiles}
+							value={formData.repairFiles}
+						/>
 					</Form>
 				</Modal.Body>
 				<Modal.Footer>

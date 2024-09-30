@@ -88,10 +88,11 @@ const MaintainHist = () => {
 		setShow(true);
 	};
 	const handleClose = () => setShow(false);
+
 	useEffect(() => {
 		const requestOptions = {
 			method: 'GET',
-			redirect: 'follow',
+			// redirect: 'follow',
 		};
 		fetch(`${urlConfig}/maintain/get`, requestOptions)
 			.then((response) => response.json())
@@ -176,7 +177,7 @@ const MaintainHist = () => {
 												xs={1}
 												md={1}
 												lg={1}
-												className="d-flex justify-content-center pt-1 text-center fw-bold"
+												className="justify-content-center pt-1 text-center fw-bold"
 											>
 												~
 											</Col>
@@ -199,7 +200,9 @@ const MaintainHist = () => {
 					</StyledCard>
 				</Col>
 			</Row>
-
+			<Row className="px-3 pt-5">
+				<Col>{/* <MaintainRegister onSubmitSuccess={handleRegisterSubmit} /> */}</Col>
+			</Row>
 			<Row className="align-items-center">
 				{/* <h4 className="header-title text-center">유지보수 이력</h4> */}
 				<Col className="pt-5 d-flex justify-content-center align-items-center">

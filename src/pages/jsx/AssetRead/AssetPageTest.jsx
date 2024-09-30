@@ -7,6 +7,7 @@ import { Table } from './ExpandableTable';
 import { SearchForm } from './AssetSearchBar';
 import { AssetButtons } from './AssetButton';
 import { DisposeModal } from './DisposeModal';
+import { ActionModal } from './AllChangeModal';
 
 import axios from 'axios';
 
@@ -15,6 +16,16 @@ const urlConfig = import.meta.env.VITE_BASIC_URL;
 const AssetPageTest = () => {
 	const [data, setData] = useState([]);
 	const [UpdateList, setUpdateList] = useState([]);
+
+	// 선택된 Row 배열,
+	const [rowSelect, setRowSelect] = useState([]); // 선택된 row 배열
+	const [actionType, setActionType] = useState(null); // 어떤 액션 타입인지
+	const [showActModal, setShowActModal] = useState(false); // 모달창 열기/닫기 상태
+
+	const handleOpenModal = (type) => {
+		setActionType(type); // 액션 타입 설정
+		setShowActModal(true); // 모달창 열기
+	};
 
 	// 폐기 모달창 부분
 	const [showModal, setShowModal] = useState(false); // 모달창 열기/닫기 상태
@@ -146,7 +157,12 @@ const AssetPageTest = () => {
 				<SearchForm onSearch={handleSearch} />
 
 				{/*각종 버튼들*/}
-				<AssetButtons />
+				<AssetButtons
+					rowSelect={rowSelect} // 선택된 row 데이터 전달
+					handleButtonClick={handleOpenModal} // 공통 핸들러 전달
+					handleQrClick={() => console.log('QR 출력 클릭')}
+					handleExcelClick={() => console.log('엑셀 출력 클릭')}
+				/>
 
 				<Card></Card>
 
@@ -163,6 +179,7 @@ const AssetPageTest = () => {
 								theadClass="table-light"
 								searchBoxClass="mb-2"
 								isExpandable={true} // 확장 가능
+								setRowSelect={setRowSelect}
 							/>
 						</Card.Body>
 					</Card>
@@ -177,6 +194,13 @@ const AssetPageTest = () => {
 				handleDisposeAsset={handleDisposeAsset}
 				isDisposed={isDisposed}
 				setErrorMessage={setErrorMessage}
+			/>
+			{/*일괄 관련 모달창 */}
+			<ActionModal
+				show={showActModal}
+				handleClose={() => setShowActModal(false)}
+				actionType={actionType}
+				actionData={rowSelect}
 			/>
 		</>
 	);

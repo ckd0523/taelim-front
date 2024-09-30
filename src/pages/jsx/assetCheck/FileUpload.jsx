@@ -55,18 +55,6 @@ function CustomToggle({ children, eventKey }) {
 	);
 }
 const FileUpload = ({ files = [], setFiles }) => {
-	// const handleFileUpload = useCallback(
-	//    (acceptedFiles) => {
-	//       setFiles(acceptedFiles);
-
-	//       acceptedFiles.forEach((file) =>
-	//          Object.assign(file, {
-	//             preview: URL.createObjectURL(file),
-	//          })
-	//       );
-	//    },
-	//    [setFiles]
-	// );
 	const handleFileUpload = (file, fileType) => {
 		const updateFiles = [...files, { file, fileType }];
 		setFiles(updateFiles);

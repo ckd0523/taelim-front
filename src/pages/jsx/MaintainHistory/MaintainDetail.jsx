@@ -3,13 +3,12 @@ import { Form, FormGroup, Modal, Button } from 'react-bootstrap';
 import { BsImage } from 'react-icons/bs';
 const urlConfig = import.meta.env.VITE_BASIC_URL;
 const MaintainDetail = ({ show, selectData, handleClose }) => {
-	const [change, setChange] = useState();
+	const [change, setChange] = useState(selectData.repairEndDate || '');
 	const [imgPath, setImgPath] = useState();
 	const [AfterPath, setAfterPath] = useState();
 	const [files, setFiles] = useState([]);
 	const imgRef = useRef();
 	const afterImgRef = useRef();
-	const [repairFiles, setRepairFiles] = useState(selectData.repairFiles || []);
 
 	const previewImage = (e) => {
 		e.preventDefault();
@@ -44,44 +43,87 @@ const MaintainDetail = ({ show, selectData, handleClose }) => {
 	);
 	const saveImages = async () => {
 		const uploadData = new FormData();
-		if (imgPath) {
-			uploadData.append('repairNo', selectData.repairNo);
-			uploadData.append('file', imgRef.current.files[0]);
-			uploadData.append('repairType', 'BEFORE_REPAIR');
-		}
-		if (afterImgRef) {
-			uploadData.append('repairNo', selectData.repairNo);
-			uploadData.append('file', afterImgRef.current.files[0]);
-			uploadData.append('repairType', 'AFTER_REPAIR');
-		}
-		try {
-			const response = await fetch(
-				`${urlConfig}/maintain/file/upload/${selectData.repairNo}`,
-				{
-					method: 'POST',
-					body: uploadData,
-				}
-			);
-			if (response.ok) {
-				alert('이미지 업로드 성공');
-				handleClose();
-			} else {
-				alert('이미지 업로드 실패');
+		let imageUploadSuccess = true;
+		let endDateSaveSuccess = true;
+		if (imgPath || AfterImage) {
+			if (imgPath) {
+				uploadData.append('repairNo', selectData.repairNo);
+				uploadData.append('file', imgRef.current.files[0]);
+				uploadData.append('repairType', 'BEFORE_REPAIR');
 			}
-		} catch (error) {
-			console.error(error);
+			if (afterImgRef) {
+				uploadData.append('repairNo', selectData.repairNo);
+				uploadData.append('file', afterImgRef.current.files[0]);
+				uploadData.append('repairType', 'AFTER_REPAIR');
+			}
+			try {
+				const response = await fetch(
+					`${urlConfig}/maintain/file/upload/${selectData.repairNo}`,
+					{
+						method: 'POST',
+						body: uploadData,
+					}
+				);
+				if (response.ok) {
+					alert('이미지 업로드 성공');
+					handleClose();
+				} else {
+					imageUploadSuccess = false;
+					alert('이미지 업로드 실패');
+				}
+			} catch (error) {
+				imageUploadSuccess = false;
+				console.error(error);
+			}
 		}
-		console.log(uploadData);
+		if (change && change !== selectData.repairEndDate) {
+			try {
+				const response = await fetch(
+					`${urlConfig}/maintain/file/upload/${selectData.repairNo}`,
+					{
+						method: 'POST',
+						headers: {
+							'Content-Type': 'application/json',
+						},
+						body: JSON.stringify({
+							repairEndDate: change,
+						}),
+					}
+				);
+
+				if (response.ok) {
+					alert('완료일 저장 성공');
+					handleClose();
+				} else {
+					endDateSaveSuccess = false;
+					alert('완료일 저장 실패');
+				}
+			} catch (error) {
+				endDateSaveSuccess = false;
+				console.error(error);
+			}
+		}
+		if (imageUploadSuccess || endDateSaveSuccess) {
+			alert('저장성공');
+			handleClose();
+		}
 	};
 
 	const handleChange = (e) => {
 		const { name, value } = e.target;
-		setChange((prevState) => ({
-			...prevState,
-			[name]: value,
-		}));
+		setChange(value);
+
 		console.log('name: ', name);
 		console.log('value: ', value);
+		if (name === 'repairEndDate') {
+			const startDate = new Date(selectData.repairStartDate);
+			const endDate = new Date(value);
+
+			if (endDate < startDate) {
+				alert('완료일은 시작일보다 이전일 수 없습니다.');
+				setChange('');
+			}
+		}
 	};
 	return (
 		<>
@@ -102,13 +144,13 @@ const MaintainDetail = ({ show, selectData, handleClose }) => {
 							<Form.Control
 								type="date"
 								name="repairEndDate"
-								value={selectData.repairEndDate}
+								value={change || ''}
 								onChange={handleChange}
 							/>
 						) : (
 							<Form.Control type="text" value={selectData.repairEndDate} readOnly />
 						)}
-						<Form.Label>유지보수 내용</Form.Label>
+						<Form.Label className="pt-2">유지보수 내용</Form.Label>
 						<Form.Control
 							as="textarea"
 							value={selectData.repairResult}
@@ -144,11 +186,11 @@ const MaintainDetail = ({ show, selectData, handleClose }) => {
 										onChange={previewImage}
 									></Form.Control>
 								</FormGroup>
-								<Button>저장</Button>
 							</>
 						)}
 						<p>유지보수 후 사진</p>
-						{selectData.repairFiles.length > 1 ? (
+						{selectData.repairFiles.length > 1 &&
+						selectData.repairFiles.repairType === 'AFTER_REPAIR' ? (
 							<img
 								src={selectData.repairFiles[1].fileURL}
 								width="100%"
@@ -172,15 +214,10 @@ const MaintainDetail = ({ show, selectData, handleClose }) => {
 										accept="image/*"
 										onChange={AfterImage}
 									></Form.Control>
-									<Button onClick={saveImages}>저장</Button>
 								</FormGroup>
-								{/* <RepairFileUpload
-									files={files}
-									setFiles={setFiles}
-									handleFileUplaod={handleFileUpload}
-								/> */}
 							</>
 						)}
+						<Button onClick={saveImages}>저장</Button>
 					</Form.Group>
 				</Modal.Body>
 			</Modal>

@@ -165,14 +165,14 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
 										<StyledCardBody className="card-body">
 											<Row>
 												<Col lg={5}>
-													<TextInput
-														label="서비스범위"
-														type="text"
+													<Form.Label>서비스범위</Form.Label>
+													<Form.Control
 														placeholder="서비스범위를 입력해주세요"
-														name="serviceScope"
-														containerClass={'mb-3'}
+														className="mb-2"
+														type="text"
 														value={formData.serviceScope}
 														onChange={handleChange}
+														name="serviceScope"
 													/>
 												</Col>
 											</Row>
@@ -195,50 +195,50 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
 										<StyledCardBody className="card-body">
 											<Row>
 												<Col lg={5}>
-													<TextInput
-														label="서비스범위"
-														type="text"
+													<Form.Label>서비스범위</Form.Label>
+													<Form.Control
 														placeholder="서비스범위를 입력해주세요"
-														name="serviceScope"
-														containerClass={'mb-3'}
+														className="mb-2"
+														type="text"
 														value={formData.serviceScope}
 														onChange={handleChange}
+														name="serviceScope"
 													/>
-													<TextInput
-														label="OS"
-														type="text"
+													<Form.Label>OS</Form.Label>
+													<Form.Control
 														placeholder="OS를 입력해주세요"
-														name="os"
-														containerClass={'mb-3'}
+														className="mb-2"
+														type="text"
 														value={formData.os}
 														onChange={handleChange}
+														name="os"
 													/>
-													<TextInput
-														label="관련DB"
-														type="text"
+													<Form.Label>관련DB</Form.Label>
+													<Form.Control
 														placeholder="관련DB를 입력해주세요"
-														name="relatedDB"
-														containerClass={'mb-3'}
+														className="mb-2"
+														type="text"
 														value={formData.relatedDB}
 														onChange={handleChange}
+														name="relatedDB"
 													/>
-													<TextInput
-														label="IP"
-														type="text"
+													<Form.Label>IP</Form.Label>
+													<Form.Control
 														placeholder="IP를 입력해주세요"
-														name="ip"
-														containerClass={'mb-3'}
+														className="mb-2"
+														type="text"
 														value={formData.ip}
 														onChange={handleChange}
+														name="ip"
 													/>
-													<TextInput
-														label="화면수"
-														type="number"
+													<Form.Label>화면수</Form.Label>
+													<Form.Control
 														placeholder="화면수를 입력해주세요"
-														name="screenNumber"
-														containerClass={'mb-3'}
+														className="mb-2"
+														type="number"
 														value={formData.screenNumber}
 														onChange={handleChange}
+														name="screenNumber"
 													/>
 												</Col>
 											</Row>
@@ -260,50 +260,50 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
 										<StyledCardBody className="card-body">
 											<Row>
 												<Col lg={5}>
-													<TextInput
-														label="IP"
-														type="text"
+													<Form.Label>IP</Form.Label>
+													<Form.Control
 														placeholder="IP를 입력해주세요"
-														name="ip"
-														containerClass={'mb-3'}
+														className="mb-2"
+														type="text"
 														value={formData.ip}
 														onChange={handleChange}
+														name="ip"
 													/>
-													<TextInput
-														label="ID"
-														type="text"
+													<Form.Label>ID</Form.Label>
+													<Form.Control
 														placeholder="ID를 입력해주세요"
-														name="serverId"
-														containerClass={'mb-3'}
+														className="mb-2"
+														type="text"
 														value={formData.serverId}
 														onChange={handleChange}
+														name="serverId"
 													/>
-													<TextInput
-														label="PW"
-														type="text"
+													<Form.Label>PW</Form.Label>
+													<Form.Control
 														placeholder="PW를 입력해주세요"
-														name="serverPassword"
-														containerClass={'mb-3'}
+														className="mb-2"
+														type="text"
 														value={formData.serverPassword}
 														onChange={handleChange}
+														name="serverPassword"
 													/>
-													<TextInput
-														label="담당업체"
-														type="text"
+													<Form.Label>담당업체</Form.Label>
+													<Form.Control
 														placeholder="담당업체를 입력해주세요"
-														name="companyManager"
-														containerClass={'mb-3'}
+														className="mb-2"
+														type="text"
 														value={formData.companyManager}
 														onChange={handleChange}
+														name="companyManager"
 													/>
-													<TextInput
-														label="OS"
-														type="text"
+													<Form.Label>OS</Form.Label>
+													<Form.Control
 														placeholder="OS를 입력해주세요"
-														name="os"
-														containerClass={'mb-3'}
+														className="mb-2"
+														type="text"
 														value={formData.os}
 														onChange={handleChange}
+														name="os"
 													/>
 												</Col>
 											</Row>
@@ -325,32 +325,32 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
 										<StyledCardBody className="card-body">
 											<Row>
 												<Col lg={5}>
-													<TextInput
-														label="OS"
-														type="text"
+													<Form.Label>OS</Form.Label>
+													<Form.Control
 														placeholder="OS를 입력해주세요"
-														name="os"
-														containerClass={'mb-3'}
+														className="mb-2"
+														type="text"
 														value={formData.os}
 														onChange={handleChange}
+														name="os"
 													/>
-													<TextInput
-														label="시스템"
-														type="text"
+													<Form.Label>시스템</Form.Label>
+													<Form.Control
 														placeholder="시스템을 입력해주세요"
-														name="system"
-														containerClass={'mb-3'}
+														className="mb-2"
+														type="text"
 														value={formData.system}
 														onChange={handleChange}
+														name="system"
 													/>
-													<TextInput
-														label="DB종류"
-														type="text"
+													<Form.Label>DB종류</Form.Label>
+													<Form.Control
 														placeholder="DB종류를 입력해주세요"
-														name="dbtype"
-														containerClass={'mb-3'}
+														className="mb-2"
+														type="text"
 														value={formData.dbtype}
 														onChange={handleChange}
+														name="dbtype"
 													/>
 												</Col>
 											</Row>
@@ -412,14 +412,14 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
 														}
 														options={documentType}
 													></Select>
-													<TextInput
-														label="문서링크"
-														type="text"
+													<Form.Label>문서링크</Form.Label>
+													<Form.Control
 														placeholder="문서링크를 입력해주세요"
-														name="documentLink"
-														containerClass={'mb-3'}
+														className="mb-2"
+														type="text"
 														value={formData.documentLink}
 														onChange={handleChange}
+														name="documentLink"
 													/>
 												</Col>
 											</Row>
@@ -583,32 +583,32 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
 														}
 														options={patentItem}
 													></Select>
-													<TextInput
-														label="출원번호"
-														type="text"
+													<Form.Label>출원번호</Form.Label>
+													<Form.Control
 														placeholder="출원번호를 입력해주세요"
-														name="applicationNo"
-														containerClass={'mb-3'}
+														className="mb-2"
+														type="text"
 														value={formData.applicationNo}
 														onChange={handleChange}
+														name="applicationNo"
 													/>
-													<TextInput
-														label="발명자"
-														type="text"
+													<Form.Label>발명자</Form.Label>
+													<Form.Control
 														placeholder="발명자를 입력해주세요"
-														name="inventor"
-														containerClass={'mb-3'}
+														className="mb-2"
+														type="text"
 														value={formData.inventor}
 														onChange={handleChange}
+														name="inventor"
 													/>
-													<TextInput
-														label="권리권자"
-														type="text"
+													<Form.Label>권리권자</Form.Label>
+													<Form.Control
 														placeholder="권리권자를 입력해주세요"
-														name="assignee"
-														containerClass={'mb-3'}
+														className="mb-2"
+														type="text"
 														value={formData.assignee}
 														onChange={handleChange}
+														name="assignee"
 													/>
 													<TextInput
 														label="관련문서"
@@ -618,6 +618,15 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
 														containerClass={'mb-3'}
 														value={formData.relatedDocuments}
 														onChange={handleChange}
+													/>
+													<Form.Label>관련문서</Form.Label>
+													<Form.Control
+														placeholder="관련문서를 입력해주세요"
+														className="mb-2"
+														type="text"
+														value={formData.relatedDocuments}
+														onChange={handleChange}
+														name="relatedDocuments"
 													/>
 												</Col>
 											</Row>
@@ -639,86 +648,86 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
 										<StyledCardBody className="card-body">
 											<Row>
 												<Col lg={5}>
-													<TextInput
-														label="장비유형"
-														type="text"
+													<Form.Label>장비유형</Form.Label>
+													<Form.Control
 														placeholder="장비유형을 입력해주세요"
-														name="equipmentType"
-														containerClass={'mb-3'}
+														className="mb-2"
+														type="text"
 														value={formData.equipmentType}
 														onChange={handleChange}
+														name="equipmentType"
 													/>
-													<TextInput
-														label="랙유닛"
-														type="number"
+													<Form.Label>랙유닛</Form.Label>
+													<Form.Control
 														placeholder="랙유닛을 입력해주세요"
-														name="rackUnit"
-														containerClass={'mb-3'}
+														className="mb-2"
+														type="number"
 														value={formData.rackUnit}
 														onChange={handleChange}
+														name="rackUnit"
 													/>
-													<TextInput
-														label="전원공급장치"
-														type="text"
+													<Form.Label>전원공급장치</Form.Label>
+													<Form.Control
 														placeholder="전원공급장치를 입력해주세요"
-														name="powerSupply"
-														containerClass={'mb-3'}
+														className="mb-2"
+														type="text"
 														value={formData.powerSupply}
 														onChange={handleChange}
+														name="powerSupply"
 													/>
-													<TextInput
-														label="쿨링시스템"
-														type="text"
+													<Form.Label>쿨링시스템</Form.Label>
+													<Form.Control
 														placeholder="쿨링시스템을 입력해주세요"
-														name="coolingSystem"
-														containerClass={'mb-3'}
+														className="mb-2"
+														type="text"
 														value={formData.coolingSystem}
 														onChange={handleChange}
+														name="coolingSystem"
 													/>
-													<TextInput
-														label="인터페이스 포트"
-														type="text"
+													<Form.Label>인터페이스 포트</Form.Label>
+													<Form.Control
 														placeholder="인터페이스 포트를 입력해주세요"
-														name="interfacePorts"
-														containerClass={'mb-3'}
+														className="mb-2"
+														type="text"
 														value={formData.interfacePorts}
 														onChange={handleChange}
+														name="interfacePorts"
 													/>
-													<TextInput
-														label="폼팩터"
-														type="text"
+													<Form.Label>폼팩터</Form.Label>
+													<Form.Control
 														placeholder="폼팩터를 입력해주세요"
-														name="formFactor"
-														containerClass={'mb-3'}
+														className="mb-2"
+														type="text"
 														value={formData.formFactor}
 														onChange={handleChange}
+														name="formFactor"
 													/>
-													<TextInput
-														label="확장슬롯수"
-														type="number"
+													<Form.Label>확장슬롯수</Form.Label>
+													<Form.Control
 														placeholder="확장슬롯수를 입력해주세요"
-														name="expansionSlots"
-														containerClass={'mb-3'}
+														className="mb-2"
+														type="number"
 														value={formData.expansionSlots}
 														onChange={handleChange}
+														name="expansionSlots"
 													/>
-													<TextInput
-														label="그래픽카드"
-														type="text"
+													<Form.Label>그래픽카드</Form.Label>
+													<Form.Control
 														placeholder="그래픽카드를 입력해주세요"
-														name="graphicsCard"
-														containerClass={'mb-3'}
+														className="mb-2"
+														type="text"
 														value={formData.graphicsCard}
 														onChange={handleChange}
+														name="graphicsCard"
 													/>
-													<TextInput
-														label="포트 구성"
-														type="text"
+													<Form.Label>포트 구성</Form.Label>
+													<Form.Control
 														placeholder="포트 구성을 입력해주세요"
-														name="portConfiguration"
-														containerClass={'mb-3'}
+														className="mb-2"
+														type="text"
 														value={formData.portConfiguration}
 														onChange={handleChange}
+														name="portConfiguration"
 													/>
 													<Form.Group className="mt-2">
 														<Form.Label className="form-label">
@@ -789,50 +798,50 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
 										<StyledCardBody className="card-body">
 											<Row>
 												<Col lg={5}>
-													<TextInput
-														label="장비유형"
-														type="text"
+													<Form.Label>장비유형</Form.Label>
+													<Form.Control
 														placeholder="장비유형을 입력해주세요"
-														name="equipmentType"
-														containerClass={'mb-3'}
+														className="mb-2"
+														type="text"
 														value={formData.equipmentType}
 														onChange={handleChange}
+														name="equipmentType"
 													/>
-													<TextInput
-														label="포트수"
-														type="number"
+													<Form.Label>포트수</Form.Label>
+													<Form.Control
 														placeholder="포트수를 입력해주세요"
-														name="numberOfPorts"
-														containerClass={'mb-3'}
+														className="mb-2"
+														type="number"
 														value={formData.numberOfPorts}
 														onChange={handleChange}
+														name="numberOfPorts"
 													/>
-													<TextInput
-														label="지원프로토콜"
-														type="text"
+													<Form.Label>지원프로토콜</Form.Label>
+													<Form.Control
 														placeholder="지원프로토콜을 입력해주세요"
-														name="supportedProtocols"
-														containerClass={'mb-3'}
+														className="mb-2"
+														type="text"
 														value={formData.supportedProtocols}
 														onChange={handleChange}
+														name="supportedProtocols"
 													/>
-													<TextInput
-														label="펌웨어 버전"
-														type="text"
+													<Form.Label>펌웨어 버전</Form.Label>
+													<Form.Control
 														placeholder="펌웨어 버전을 입력해주세요"
-														name="firmwareVersion"
-														containerClass={'mb-3'}
+														className="mb-2"
+														type="text"
 														value={formData.firmwareVersion}
 														onChange={handleChange}
+														name="firmwareVersion"
 													/>
-													<TextInput
-														label="네트워크 속도"
-														type="number"
+													<Form.Label>네트워크 속도</Form.Label>
+													<Form.Control
 														placeholder="네트워크 속도를 입력해주세요"
-														name="networkSpeed"
-														containerClass={'mb-3'}
+														className="mb-2"
+														type="number"
 														value={formData.networkSpeed}
 														onChange={handleChange}
+														name="networkSpeed"
 													/>
 													<TextInput
 														label="서비스범위"
@@ -842,6 +851,15 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
 														containerClass={'mb-3'}
 														value={formData.serviceScope}
 														onChange={handleChange}
+													/>
+													<Form.Label>서비스범위</Form.Label>
+													<Form.Control
+														placeholder="서비스범위를 입력해주세요"
+														className="mb-2"
+														type="text"
+														value={formData.serviceScope}
+														onChange={handleChange}
+														name="serviceScope"
 													/>
 												</Col>
 											</Row>
@@ -863,32 +881,32 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
 										<StyledCardBody className="card-body">
 											<Row>
 												<Col lg={5}>
-													<TextInput
-														label="IP"
-														type="text"
+													<Form.Label>IP</Form.Label>
+													<Form.Control
 														placeholder="IP를 입력해주세요"
-														name="ip"
-														containerClass={'mb-3'}
+														className="mb-2"
+														type="text"
 														value={formData.ip}
 														onChange={handleChange}
+														name="ip"
 													/>
-													<TextInput
-														label="제품 시리얼 번호"
-														type="text"
+													<Form.Label>제품 시리얼 번호</Form.Label>
+													<Form.Control
 														placeholder="제품 시리얼 번호를 입력해주세요"
-														name="productSerialNumber"
-														containerClass={'mb-3'}
+														className="mb-2"
+														type="text"
 														value={formData.productSerialNumber}
 														onChange={handleChange}
+														name="productSerialNumber"
 													/>
-													<TextInput
-														label="OS"
-														type="text"
+													<Form.Label>OS</Form.Label>
+													<Form.Control
 														placeholder="OS를 입력해주세요"
-														name="os"
-														containerClass={'mb-3'}
+														className="mb-2"
+														type="text"
 														value={formData.os}
 														onChange={handleChange}
+														name="os"
 													/>
 													<p className="mb-2 c fw-bold">보안관제</p>
 													<Select
@@ -910,14 +928,14 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
 														}
 														options={securityControl}
 													></Select>
-													<TextInput
-														label="내부정보 유출 방지"
-														type="text"
+													<Form.Label>내부정보 유출 방지</Form.Label>
+													<Form.Control
 														placeholder="내부정보 유출 방지를 입력해주세요"
-														name="kaitsKeeper"
-														containerClass={'mb-3'}
+														className="mb-2"
+														type="text"
 														value={formData.kaitsKeeper}
 														onChange={handleChange}
+														name="kaitsKeeper"
 													/>
 													<div className="form-group mb-3">
 														<label className="form-label">
@@ -1002,14 +1020,14 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
 										<StyledCardBody className="card-body">
 											<Row>
 												<Col lg={5}>
-													<TextInput
-														label="크기"
-														type="text"
+													<Form.Label>크기</Form.Label>
+													<Form.Control
 														placeholder="크기를 입력해주세요"
-														name="furnitureSize"
-														containerClass={'mb-3'}
+														className="mb-2"
+														type="text"
 														value={formData.furnitureSize}
 														onChange={handleChange}
+														name="furnitureSize"
 													/>
 												</Col>
 											</Row>
@@ -1031,41 +1049,41 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
 										<StyledCardBody className="card-body">
 											<Row>
 												<Col lg={5}>
-													<TextInput
-														label="기기유형"
-														type="text"
+													<Form.Label>기기유형</Form.Label>
+													<Form.Control
 														placeholder="기기유형을 입력해주세요"
-														name="deviceType"
-														containerClass={'mb-3'}
+														className="mb-2"
+														type="text"
 														value={formData.deviceType}
 														onChange={handleChange}
+														name="deviceType"
 													/>
-													<TextInput
-														label="모델번호"
+													<Form.Label>모델번호</Form.Label>
+													<Form.Control
+														placeholder="모델번호를 입력해주세요"
+														className="mb-2"
 														type="text"
-														placeholder="모델번호을 입력해주세요"
-														name="modelNumber"
-														containerClass={'mb-3'}
 														value={formData.modelNumber}
 														onChange={handleChange}
+														name="modelNumber"
 													/>
-													<TextInput
-														label="연결방식"
-														type="text"
+													<Form.Label>연결방식</Form.Label>
+													<Form.Control
 														placeholder="연결방식을 입력해주세요"
-														name="connectionType"
-														containerClass={'mb-3'}
+														className="mb-2"
+														type="text"
 														value={formData.connectionType}
 														onChange={handleChange}
+														name="connectionType"
 													/>
-													<TextInput
-														label="전원사양"
-														type="text"
+													<Form.Label>전원사양</Form.Label>
+													<Form.Control
 														placeholder="전원사양을 입력해주세요"
-														name="powerSpecifications"
-														containerClass={'mb-3'}
+														className="mb-2"
+														type="text"
 														value={formData.powerSpecifications}
 														onChange={handleChange}
+														name="powerSpecifications"
 													/>
 												</Col>
 											</Row>
@@ -1087,23 +1105,23 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
 										<StyledCardBody className="card-body">
 											<Row>
 												<Col lg={5}>
-													<TextInput
-														label="배기량"
-														type="number"
+													<Form.Label>배기량</Form.Label>
+													<Form.Control
 														placeholder="배기량을 입력해주세요"
-														name="displacement"
-														containerClass={'mb-3'}
+														className="mb-2"
+														type="number"
 														value={formData.displacement}
 														onChange={handleChange}
+														name="displacement"
 													/>
-													<TextInput
-														label="차량의 문 수"
-														type="number"
+													<Form.Label>차량의 문 수</Form.Label>
+													<Form.Control
 														placeholder="차량의 문 수를 입력해주세요"
-														name="doorsCount"
-														containerClass={'mb-3'}
+														className="mb-2"
+														type="number"
 														value={formData.doorsCount}
 														onChange={handleChange}
+														name="doorsCount"
 													/>
 													<p className="mb-2 c fw-bold">엔진 형식</p>
 													<Select
@@ -1143,32 +1161,32 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
 														}
 														options={carType}
 													></Select>
-													<TextInput
-														label="차량 식별번호"
-														type="text"
+													<Form.Label>차량 식별번호</Form.Label>
+													<Form.Control
 														placeholder="차량 식별번호를 입력해주세요"
-														name="identificationNo"
-														containerClass={'mb-3'}
+														className="mb-2"
+														type="text"
 														value={formData.identificationNo}
 														onChange={handleChange}
+														name="identificationNo"
 													/>
-													<TextInput
-														label="차량 색상"
-														type="text"
+													<Form.Label>차량 색상</Form.Label>
+													<Form.Control
 														placeholder="차량 색상을 입력해주세요"
-														name="carColor"
-														containerClass={'mb-3'}
+														className="mb-2"
+														type="text"
 														value={formData.carColor}
 														onChange={handleChange}
+														name="carColor"
 													/>
-													<TextInput
-														label="연식"
-														type="number"
+													<Form.Label>연식</Form.Label>
+													<Form.Control
 														placeholder="연식을 입력해주세요"
-														name="modelYear"
-														containerClass={'mb-3'}
+														className="mb-2"
+														type="number"
 														value={formData.modelYear}
 														onChange={handleChange}
+														name="modelYear"
 													/>
 												</Col>
 											</Row>
@@ -1190,23 +1208,23 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
 										<StyledCardBody className="card-body">
 											<Row>
 												<Col lg={5}>
-													<TextInput
-														label="기타 세부 설명"
-														type="text"
+													<Form.Label>기타 세부 설명</Form.Label>
+													<Form.Control
 														placeholder="기타 세부 설명을 입력해주세요"
-														name="otherDescription"
-														containerClass={'mb-3'}
+														className="mb-2"
+														type="text"
 														value={formData.otherDescription}
 														onChange={handleChange}
+														name="otherDescription"
 													/>
-													<TextInput
-														label="사용 빈도"
-														type="text"
+													<Form.Label>사용 빈도</Form.Label>
+													<Form.Control
 														placeholder="사용 빈도를 입력해주세요"
-														name="usageFrequency"
-														containerClass={'mb-3'}
+														className="mb-2"
+														type="text"
 														value={formData.usageFrequency}
 														onChange={handleChange}
+														name="usageFrequency"
 													/>
 												</Col>
 											</Row>

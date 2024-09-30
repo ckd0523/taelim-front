@@ -51,8 +51,13 @@ const columns = [
 		defaultCanSort: true,
 	},
 	{
-		Header: '유지보수일자',
+		Header: '시작일자',
 		accessor: 'repairStartDate',
+		defaultCanSort: true,
+	},
+	{
+		Header: '종료일자',
+		accessor: 'repairEndDate',
 		defaultCanSort: true,
 	},
 	{

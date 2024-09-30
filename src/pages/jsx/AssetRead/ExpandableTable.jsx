@@ -155,7 +155,7 @@ const Table = (props) => {
 	} = dataTable;
 
 	useEffect(() => {
-		console.log('Selected row IDs:', selectedRowIds);
+		//	console.log('Selected row IDs:', selectedRowIds);
 		console.log(
 			'selectedFlatRows[].original',
 			selectedFlatRows.map((d) => d.original)

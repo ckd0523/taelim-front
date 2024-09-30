@@ -1,8 +1,6 @@
 import { Row, Button, Col } from 'react-bootstrap';
 
 const AssetButtons = ({ handleButtonClick, handleQrClick, handleExcelClick, rowSelect }) => {
-	console.log('넘겨받은 rowSelect:', rowSelect); // 확인용 로그
-
 	return (
 		<Row className="row-cols-auto justify-content-end">
 			<Col>

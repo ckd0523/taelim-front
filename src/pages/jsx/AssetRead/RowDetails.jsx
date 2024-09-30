@@ -96,40 +96,61 @@ const RowDetails = ({ row, assetCode, onClose, formData: initialFormData }) => {
 
 	// 수정  api 받아서 처리
 	const handleSubmit = async () => {
+		console.log('handleSubmit:', formData); // 상태 확인
 		try {
 			// 수정 요청 처리
 			const response = await axios.post(
 				`${urlConfig}/asset/update/${formData.assetCode}`,
 				formData
 			);
-			alert(response.data); // 성공 메시지
-			setShowModal(false);
-			console.log(formData);
+
+			// 백엔드에서 받은 메시지 처리
+			if (response.data.includes('이미 수정 요청이 들어간 자산입니다.')) {
+				// 경고 메시지를 띄우기
+				alert(
+					`경고: 자산 수정 요청 처리부터 처리해주세요. 자산 코드: ${formData.assetCode}`
+				);
+			} else {
+				// 성공 메시지 띄우기
+				alert(response.data); // 성공 메시지
+				setShowModal(false); // 모달 닫기
+			}
 		} catch (error) {
 			console.error('Error updating asset data:', error);
-			setErrorMessage('자산 수정  중 오류가 발생했습니다.');
+			// setErrorMessage('자산 수정 요청 중 오류가 발생했습니다.');
 		} finally {
+			// 필요에 따라 페이지 새로고침 가능
 			window.location.reload();
 		}
 	};
 
-	// 수정 요청 api 받아서 처리
 	const handleSubmit1 = async () => {
+		console.log('handleSubmit1:', formData); // 상태 확인
 		try {
 			// 수정 요청 처리
 			const response = await axios.post(
 				`${urlConfig}/asset/updateDemand/${formData.assetCode}`,
 				formData
 			);
-			alert(response.data); // 성공 메시지
-			setShowModal(false);
+
+			// 백엔드에서 받은 메시지 처리
+			if (response.data.includes('이미 수정 요청이 들어간 자산입니다.')) {
+				// 경고 메시지를 띄우기
+				alert(`경고: 이미 수정 요청이 들어간 자산입니다. 자산 코드: ${formData.assetCode}`);
+			} else {
+				// 성공 메시지 띄우기
+				alert(response.data); // 성공 메시지
+				setShowModal(false); // 모달 닫기
+			}
 		} catch (error) {
 			console.error('Error updating asset data:', error);
-			setErrorMessage('자산 수정 요청 중 오류가 발생했습니다.');
+			// setErrorMessage('자산 수정 요청 중 오류가 발생했습니다.');
 		} finally {
-			window.location.reload();
+			// 필요에 따라 페이지 새로고침 가능
+			// window.location.reload();
 		}
 	};
+
 	function CustomToggle({ children, eventKey }) {
 		const [isOpen, setIsOpen] = useState(false);
 		const decoratedOnClick = useAccordionButton(eventKey, () =>
@@ -607,23 +628,17 @@ const RowDetails = ({ row, assetCode, onClose, formData: initialFormData }) => {
 											<tbody>
 												{formData.updateHistory.map((update, index) => (
 													<tr key={index}>
-														<td>{update.updateNo || index + 1}</td>{' '}
-														{/* 번호, 없으면 인덱스 + 1 */}
+														<td>{update.updateNo || index + 1}</td>
 														<td>{update.assetCode}</td>
 														<td>{update.assetName}</td>
 														<td>{update.updateDate}</td>
-														<td>
-															{update.updateBy || '정보 없음'}
-														</td>{' '}
-														{/* 수정요청자, 없으면 '정보 없음' */}
+														<td>{update.updateBy || '정보 없음'}</td>
 														<td>
 															{update.updateReason || '정보 없음'}
-														</td>{' '}
-														{/* 수정사유, 없으면 '정보 없음' */}
+														</td>
 														<td>
 															{update.updateDetail || '정보 없음'}
-														</td>{' '}
-														{/* 수정내용, 없으면 '정보 없음' */}
+														</td>
 													</tr>
 												))}
 											</tbody>

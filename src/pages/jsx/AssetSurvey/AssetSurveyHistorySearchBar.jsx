@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Row, Col, Card, Button, InputGroup, Form } from 'react-bootstrap';
 import Select from 'react-select';
 import { CustomDatePicker } from '@/components';
@@ -22,7 +22,7 @@ const SearchBar = ({ setData, originalData }) => {
         //includes는 문자열만 가능!!!!!!!!!
         (round === '' || originalData.round == round) &&
         (surveyBy === '' || originalData.assetSurveyBy.includes(surveyBy)) &&
-        (location === '' || originalData.assetSurveyLocation.includes(location)) &&
+        (location === '' || originalData.assetSurveyLocation === location) &&
         (surveyStartDate === null || new Date(originalData.assetSurveyStartDate) >= surveyStartDate) &&
         (surveyEndDate === null || new Date(originalData.assetSurveyEndDate) <= surveyEndDate)
       );
@@ -30,10 +30,16 @@ const SearchBar = ({ setData, originalData }) => {
     console.log("originalTableData" + JSON.stringify(originalData));
     console.log("위치 label : " + location);
     setData(filteredData);
+
+    //검색 후 검색어 초기화
+    setRound('');
+    setSurveyBy('');
+    setLocation('');
+    setSurveyStartDate(null);
+    setSurveyEndDate(null);
   };
 
-  console.log("회차 : " + round);
-
+  //console.log("회차 : " + round);
 
   return (
     <>
@@ -51,7 +57,7 @@ const SearchBar = ({ setData, originalData }) => {
                     <Form.Control
                       type="number"
                       name="round"
-                      min="0"
+                      min="1"
                       value={round}
                       onChange={(e) => setRound(e.target.value)}
                     />
@@ -75,10 +81,13 @@ const SearchBar = ({ setData, originalData }) => {
                     className="react-select"
                     classNamePrefix="react-select"
                     options={locations}
-                    onChange={(selectedOption) =>
+                    // location이 "전체"인 경우에도 value를 '전체'로 설정하여 placeholder로 가지 않도록 처리
+                    value={location === '' ? locations[0] : locations.find((option) => option.label === location)}
+                    onChange={(selectedOption) => {
                       //백에서 location이 한글 즉 label 값으로 넘어오기 때문에 전체일 때의 경우를 한 번 더 생각
-                      setLocation(selectedOption && selectedOption.label === '전체' ? '' : selectedOption.label)
-                    }
+                      // "전체" 선택 시 location을 빈 문자열로 설정, 그 외에는 label 값을 설정
+                      setLocation(selectedOption && selectedOption.value === '' ? '' : selectedOption.label);
+                    }}
                   />
                 </Col>
 

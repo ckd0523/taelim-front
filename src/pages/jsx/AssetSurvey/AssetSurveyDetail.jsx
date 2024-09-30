@@ -19,8 +19,8 @@ const columns = [
     Cell: ({ row }) => (
       <input
         type='checkbox'
-        //checked={row.original.exactLocation}
-        onChange={(e) => handleCheckboxChange(e, row, 'exactLocation')}
+        checked={row.values.exactLocation}
+        onChange={(e) => handleExactLocation(e, row, 'exactLocation')}
       />
     )
   },
@@ -29,8 +29,8 @@ const columns = [
     Cell: ({ row }) => (
       <input
         type='checkbox'
-        //checked={row.original.assetStatus}
-        onChange={(e) => handleCheckboxChange(e, row, 'assetStatus')}
+        checked={row.values.assetStatus}
+        onChange={(e) => handleAssetStatus(e, row, 'assetStatus')}
       />
     )
   },
@@ -44,13 +44,38 @@ const columns = [
   },
 ];
 
-//정위치 유무, 상태 체크박스 선택 시 동작
-const handleCheckboxChange = (e, row, fieldName) => {
+//정위치 유무 체크박스 선택 시 동작
+const handleExactLocation = (e, row, fieldName) => {
   const updatedRow = {
     ...row.original,
     [fieldName]: e.target.checked,
   };
-  console.log('Updated Row:', updatedRow);
+
+  if (row.values.exactLocation) {
+    row.values.exactLocation = false;
+  } else {
+    row.values.exactLocation = true;
+  }
+
+  console.log('exactLocation Row:', updatedRow);
+  console.log("exactLocation state : " + updatedRow.exactLocation);
+  // 상태를 업데이트하는 로직 추가
+};
+
+//상태 체크박스 선택 시 동작
+const handleAssetStatus = (e, row, fieldName) => {
+  const updatedRow = {
+    ...row.original,
+    [fieldName]: e.target.checked,
+  };
+
+  if (row.values.assetStatus) {
+    row.values.assetStatus = false;
+  } else {
+    row.values.assetStatus = true;
+  }
+
+  console.log('assetStatus Row:', updatedRow);
   // 상태를 업데이트하는 로직 추가
 };
 
@@ -76,16 +101,33 @@ const AssetSurveyDetail = () => {
   //그 데이터가 자산 조사 이력에서 넘어오지 않아 null이 되어 useState로 값을 유지해야함
   // useState로 locationParam의 값을 저장
   const [locationState, setLocationState] = useState({
-    location: locationParam.state?.location || '', // 초기값이 없을 경우 ''로 설정
-    surveyStartDate: locationParam.state?.surveyStartDate || '',
-    surveyBy: locationParam.state?.surveyBy || '',
-    assetSurveyNo: locationParam.state?.assetSurveyNo || ''
+    location: locationParam.state?.location || localStorage.getItem('location') || '', // 초기값이 없을 경우 ''로 설정
+    surveyStartDate: locationParam.state?.surveyStartDate || localStorage.getItem('surveyStartDate') || '',
+    surveyBy: locationParam.state?.surveyBy || localStorage.getItem('surveyBy') || '',
+    assetSurveyNo: locationParam.state?.assetSurveyNo || localStorage.getItem('assetSurveyNo') || ''
   });
 
   // locationState.location을 기반으로 매칭되는 label을 찾음
   const matchedLocation = assetSurveyLocation.find(
     loc => loc.value === locationState.location
   );
+
+  // 테이블의 페이지를 변경했을 때 위치, 자산 조사일, 자산 조사자가 초기화되어
+  // 페이지에서 데이터를 받아왔을 때 localStorage에 저장
+  useEffect(() => {
+    if (locationState.location) {
+      localStorage.setItem('location', locationState.location);
+    }
+    if (locationState.surveyStartDate) {
+      localStorage.setItem('surveyStartDate', locationState.surveyStartDate);
+    }
+    if (locationState.surveyBy) {
+      localStorage.setItem('surveyBy', locationState.surveyBy);
+    }
+    if (locationState.assetSurveyNo) {
+      localStorage.setItem('assetSurveyNo', locationState.assetSurveyNo);
+    }
+  }, [locationState]);
 
   const [isChecked, setIsChecked] = useState(false);
 

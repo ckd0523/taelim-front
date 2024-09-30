@@ -215,6 +215,7 @@ const Table2 = (props) => {
 
   useEffect(() => {
     //console.log("이거 뭔데 : " + selectedRowIds);
+    //자산 조사 상세에서도 이 테이블 컴포넌트를 쓰기 때문에  row를 선택하면
     //밑에 map을 했을 때 undifined 값이 들어가서 오류가 발생
     //selectedRowIds가 undifined 이거나 null이면 그냥 return 하도록 함
     if (!selectedRowIds) {

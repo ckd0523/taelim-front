@@ -45,6 +45,7 @@ const ActionModal = ({ show, handleClose, actionData, actionType, handleSubmit }
 
 			switch (item.demandType) {
 				case 'update':
+				case 'allUpdateDemand':
 					axios
 						.post(`${API_URL}/updateAction`, dataToSend)
 						.then((response) => {
@@ -54,7 +55,9 @@ const ActionModal = ({ show, handleClose, actionData, actionType, handleSubmit }
 							console.error('Update error:', error);
 						});
 					break;
+
 				case 'delete':
+				case 'allDisposeDemand':
 					axios
 						.post(`${API_URL}/deleteAction`, dataToSend)
 						.then((response) => {
@@ -64,6 +67,9 @@ const ActionModal = ({ show, handleClose, actionData, actionType, handleSubmit }
 							console.error('Delete error:', error);
 						});
 					break;
+
+				default:
+					console.error('Unknown demand type:', item.demandType);
 			}
 		}
 		handleSubmit(reason); // 사유를 넘겨주면서 처리

@@ -8,8 +8,8 @@ const StatusColumn = ({ row }) => {
 		<h5>
 			<span
 				className={classNames('badge', {
-					'badge-success-lighten': row.original.demandStatus === 'UNCONFIRMED',
-					'badge-danger-lighten': row.original.demandStatus === 'Processing',
+					'badge-danger-lighten': row.original.demandStatus === 'UNCONFIRMED',
+					'badge-success-lighten': row.original.demandStatus === 'completed',
 					'badge-info-lighten': row.original.demandStatus === 'APPROVE',
 					'badge-warning-lighten': row.original.demandStatus === 'REFUSAL',
 				})}

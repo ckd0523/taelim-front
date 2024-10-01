@@ -285,7 +285,13 @@ const RowDetails = ({ row, assetCode, onClose, formData: initialFormData }) => {
 
 	return (
 		<>
-			<div style={{ padding: '20px', display: 'flex', alignItems: 'flex-start' }}>
+			<div
+				style={{
+					padding: '20px',
+					display: 'flex',
+					alignItems: 'flex-start',
+				}}
+			>
 				{/* 큰 부모 div */}
 				<div style={{ display: 'flex', alignItems: 'center', flexGrow: 1 }}>
 					{/* 이미지 표시 부분 */}

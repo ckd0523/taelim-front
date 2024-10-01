@@ -219,7 +219,7 @@ const Table = (props) => {
 									{row.isExpanded && isExpandable && (
 										<tr>
 											<td colSpan={dataTable.headerGroups[0].headers.length}>
-												<div>
+												<div className="expanded-content">
 													<RowDetails
 														// row={row}
 														// assetCode={row.original.assetCode}

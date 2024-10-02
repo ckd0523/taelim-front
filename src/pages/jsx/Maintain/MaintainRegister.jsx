@@ -13,6 +13,7 @@ const MaintainRegister = ({ assetCode, assetNo }) => {
 		repairEndDate: '',
 		repairBy: '',
 		repairResult: '',
+		repairStatus: '',
 		repairFiles: [],
 	});
 
@@ -53,13 +54,31 @@ const MaintainRegister = ({ assetCode, assetNo }) => {
 	};
 	const handleSubmit = async (e) => {
 		e.preventDefault();
+
+		let newStatus = '진행중';
+		const hasBeforeRepair = formData.repairFiles?.some((file) => file.repairType === '보수전');
+		const hasAfterRepair = formData.repairFiles?.some((file) => file.repairType === '보수후');
+		if (
+			formData.repairStartDate &&
+			formData.repairEndDate &&
+			formData.repairResult &&
+			hasBeforeRepair &&
+			hasAfterRepair
+		) {
+			newStatus = '완료';
+		}
+
+		const updatedFormData = {
+			...formData,
+			reapirStatus: newStatus,
+		};
 		try {
 			const maintainResponse = await fetch(`${urlConfig}/maintain/register`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
 				},
-				body: JSON.stringify(formData),
+				body: JSON.stringify(updatedFormData),
 			});
 			console.log('assetNo : ', assetNo);
 			console.log('assetCode: ', assetCode);

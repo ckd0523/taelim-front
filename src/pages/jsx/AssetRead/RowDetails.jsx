@@ -9,6 +9,8 @@ import {
 	useAccordionButton,
 	Card,
 	Accordion,
+	Tab,
+	Tabs,
 } from 'react-bootstrap';
 import { BsCaretUpFill } from 'react-icons/bs';
 import { BsCaretDownFill } from 'react-icons/bs';
@@ -156,6 +158,7 @@ const RowDetails = ({ row, assetCode, onClose, formData: initialFormData }) => {
 		const decoratedOnClick = useAccordionButton(eventKey, () =>
 			setIsOpen((prevOpen) => !prevOpen)
 		);
+
 		return (
 			<button
 				className="custom-button fw-bold h4"
@@ -176,6 +179,7 @@ const RowDetails = ({ row, assetCode, onClose, formData: initialFormData }) => {
 			</button>
 		);
 	}
+
 	const renderCellContent = (key) => {
 		// 수정모드 설정
 		if (isEditing) {
@@ -285,11 +289,17 @@ const RowDetails = ({ row, assetCode, onClose, formData: initialFormData }) => {
 
 	return (
 		<>
-			<div style={{ padding: '20px', display: 'flex', alignItems: 'flex-start' }}>
+			<div
+				style={{
+					padding: '20px',
+					display: 'flex',
+					alignItems: 'flex-start',
+				}}
+			>
 				{/* 큰 부모 div */}
 				<div style={{ display: 'flex', alignItems: 'center', flexGrow: 1 }}>
 					{/* 이미지 표시 부분 */}
-					<div style={{ marginRight: '80px' }}>
+					<div style={{ marginRight: '40px' }}>
 						{formData.files &&
 						formData.files.length > 0 &&
 						formData.files.some((file) => file.fileType === 'PHOTO') ? (
@@ -301,7 +311,7 @@ const RowDetails = ({ row, assetCode, onClose, formData: initialFormData }) => {
 									formData.files.find((file) => file.fileType === 'PHOTO')
 										.oriFileName
 								}
-								style={{ width: '300px', height: 'auto' }}
+								style={{ width: '350px', height: 'auto' }}
 							/>
 						) : (
 							<div
@@ -324,7 +334,13 @@ const RowDetails = ({ row, assetCode, onClose, formData: initialFormData }) => {
 						{/* 기본 자산 정보 및 관리 정보 테이블 */}
 						<div className="info-section" style={{ flexGrow: 1 }}>
 							<h4>기본 자산 정보 및 관리 정보</h4>
-							<BootstrapTable striped bordered hover className="table-detail">
+							<BootstrapTable
+								striped
+								bordered
+								hover
+								className="table-detail"
+								style={{ width: '100%' }}
+							>
 								<thead>
 									<tr>
 										<th>자산코드</th>
@@ -375,7 +391,13 @@ const RowDetails = ({ row, assetCode, onClose, formData: initialFormData }) => {
 
 							{/* 재무 및 구매 정보 테이블 */}
 							<h4>재무 및 구매 정보</h4>
-							<BootstrapTable striped bordered hover className="table-detail">
+							<BootstrapTable
+								striped
+								bordered
+								hover
+								className="table-detail"
+								style={{ width: '100%' }}
+							>
 								<thead>
 									<tr>
 										<th>구매비용</th>
@@ -410,7 +432,13 @@ const RowDetails = ({ row, assetCode, onClose, formData: initialFormData }) => {
 							{dynamicColumns.length > 0 ? (
 								<>
 									<h4>{formData?.assetClassification}에 따른 칼럼</h4>
-									<BootstrapTable striped bordered hover className="table-detail">
+									<BootstrapTable
+										striped
+										bordered
+										hover
+										className="table-detail"
+										style={{ width: '100%' }}
+									>
 										<thead>
 											<tr>
 												{dynamicColumns.map((col) => (
@@ -498,154 +526,261 @@ const RowDetails = ({ row, assetCode, onClose, formData: initialFormData }) => {
 							)}
 						</div>
 						{/* 새로 추가할 div: 테이블 바로 아래에 위치 */}
-						<div style={{ marginTop: '20px' }}>
-							<div
-								className="info-section"
-								style={{
-									display: 'grid',
-									gridTemplateColumns: '1fr 1fr',
-									gap: '20px',
-								}}
-							>
-								{/* 왼쪽 상단 데이터: 보증세부사항 */}
-								<div>
-									<h4 style={{ margin: '0 0 10px' }}>보증세부사항</h4>
-									<Form.Control
-										type="text"
-										value={formData.warrantyDetails || '파일없음'} // 상태에서 값 가져오기
-										readOnly
-										style={{
-											border: '1px solid #ccc',
-											padding: '10px',
-											backgroundColor: '#f9f9f9',
-										}}
-									/>
-								</div>
-								{/* 오른쪽 상단 데이터: 사용자 메뉴얼 */}
-								<div>
-									<h4 style={{ margin: '0 0 10px' }}>사용자 메뉴얼</h4>
-									<Form.Control
-										type="text"
-										value={formData.attachment || '파일없음'} // 상태에서 값 가져오기
-										readOnly
-										style={{
-											border: '1px solid #ccc',
-											padding: '10px',
-											backgroundColor: '#f9f9f9',
-										}}
-									/>
-								</div>
-								{/* 왼쪽 하단 데이터: 보증세부사항 파일 */}
-								<div>
-									<h4 style={{ margin: '0 0 10px' }}>보증세부사항 파일</h4>
-									{formData.files &&
-									formData.files.length > 0 &&
-									formData.files.some(
-										(file) => file.fileType === 'WARRANTY_DETAILS'
-									) ? (
-										<a
-											href={
-												formData.files.find(
-													(file) => file.fileType === 'WARRANTY_DETAILS'
-												).fileURL
-											}
-											download // 클릭 시 다운로드
+						<div>
+							<div style={{ marginTop: '20px' }}>
+								<Tabs defaultActiveKey="attachments" id="uncontrolled-tab-example">
+									<Tab eventKey="attachments" title="첨부파일">
+										<div
 											style={{
-												display: 'block', // 블록으로 표시하여 줄바꿈
-												border: '1px solid #ccc',
-												padding: '10px',
-												backgroundColor: '#f9f9f9',
-												textDecoration: 'none', // 기본 링크 스타일 제거
-												color: '#000', // 글자 색상
-												cursor: 'pointer', // 마우스 커서 포인터로 변경
-												borderRadius: '4px', // 모서리 둥글게
-												width: '100%', // 상자 크기 조정
-												textAlign: 'left', // 텍스트 왼쪽 정렬
+												padding: '20px',
+												border: '2px solid #000',
+												display: 'grid',
+												gridTemplateColumns: '1fr 1fr',
+												gap: '20px',
 											}}
 										>
-											{
-												formData.files.find(
+											{/* 보증세부사항 */}
+											<div>
+												<h4 style={{ margin: '0 0 10px' }}>보증세부사항</h4>
+												<Form.Control
+													type="text"
+													value={formData.warrantyDetails || '파일없음'}
+													readOnly
+													style={{
+														border: '1px solid #ccc',
+														padding: '10px',
+														backgroundColor: '#f9f9f9',
+													}}
+												/>
+											</div>
+											{/* 사용자 메뉴얼 */}
+											<div>
+												<h4 style={{ margin: '0 0 10px' }}>
+													사용자 메뉴얼
+												</h4>
+												<Form.Control
+													type="text"
+													value={formData.attachment || '파일없음'}
+													readOnly
+													style={{
+														border: '1px solid #ccc',
+														padding: '10px',
+														backgroundColor: '#f9f9f9',
+													}}
+												/>
+											</div>
+											{/* 보증세부사항 파일 */}
+											<div>
+												<h4 style={{ margin: '0 0 10px' }}>
+													보증세부사항 파일
+												</h4>
+												{formData.files &&
+												formData.files.length > 0 &&
+												formData.files.some(
 													(file) => file.fileType === 'WARRANTY_DETAILS'
-												).oriFileName
-											}{' '}
-											{/* 파일 이름 */}
-										</a>
-									) : (
-										<span style={{ color: '#aaa' }}>파일 없음</span> // 파일이 없을 경우 메시지
-									)}
-								</div>
+												) ? (
+													<a
+														href={
+															formData.files.find(
+																(file) =>
+																	file.fileType ===
+																	'WARRANTY_DETAILS'
+															).fileURL
+														}
+														download
+														style={{
+															display: 'block',
+															border: '1px solid #ccc',
+															padding: '10px',
+															backgroundColor: '#f9f9f9',
+															textDecoration: 'none',
+															color: '#000',
+															cursor: 'pointer',
+															borderRadius: '4px',
+															width: '100%',
+															textAlign: 'left',
+														}}
+													>
+														{
+															formData.files.find(
+																(file) =>
+																	file.fileType ===
+																	'WARRANTY_DETAILS'
+															).oriFileName
+														}{' '}
+													</a>
+												) : (
+													<div
+														style={{
+															display: 'block',
+															border: '1px solid #ccc',
+															padding: '10px',
+															backgroundColor: '#f9f9f9',
+															color: '#aaa',
+															borderRadius: '4px',
+															width: '100%',
+															textAlign: 'left',
+														}}
+													>
+														파일 없음
+													</div>
+												)}
+											</div>
+											{/* 사용자 메뉴얼 파일 */}
+											<div>
+												<h4 style={{ margin: '0 0 10px' }}>
+													사용자 메뉴얼 파일
+												</h4>
+												{formData.files &&
+												formData.files.length > 0 &&
+												formData.files.some(
+													(file) => file.fileType === 'USER_MANUAL'
+												) ? (
+													<a
+														href={
+															formData.files.find(
+																(file) =>
+																	file.fileType === 'USER_MANUAL'
+															).fileURL
+														}
+														download
+														style={{
+															display: 'block',
+															border: '1px solid #ccc',
+															padding: '10px',
+															backgroundColor: '#f9f9f9',
+															textDecoration: 'none',
+															color: '#000',
+															cursor: 'pointer',
+															borderRadius: '4px',
+															width: '100%',
+															textAlign: 'left',
+														}}
+													>
+														{
+															formData.files.find(
+																(file) =>
+																	file.fileType === 'USER_MANUAL'
+															).oriFileName
+														}{' '}
+													</a>
+												) : (
+													<div
+														style={{
+															display: 'block',
+															border: '1px solid #ccc',
+															padding: '10px',
+															backgroundColor: '#f9f9f9',
+															color: '#aaa',
+															borderRadius: '4px',
+															width: '100%',
+															textAlign: 'left',
+														}}
+													>
+														파일 없음
+													</div>
+												)}
+											</div>
+										</div>
+									</Tab>
 
-								{/* 오른쪽 하단 데이터: 사용자 메뉴얼 파일 */}
-								<div>
-									<h4 style={{ margin: '0 0 10px' }}>사용자 메뉴얼 파일</h4>
-									<Form.Control
-										type="text"
-										value={
-											formData.files &&
-											formData.files.length > 0 &&
-											formData.files.some(
-												(file) => file.fileType === 'USER_MANUAL'
-											)
-												? formData.files.find(
-														(file) => file.fileType === 'USER_MANUAL'
-												  ).oriFileName
-												: '파일 없음'
-										} // 상태에서 값 가져오기
-										readOnly
-										style={{
-											border: '1px solid #ccc',
-											padding: '10px',
-											backgroundColor: '#f9f9f9',
-										}}
-									/>
-								</div>
-							</div>
-						</div>
-						{/* 이력 부문  추가 하기 */}
-						<div style={{ marginTop: '20px' }}>
-							<Accordion defaultActiveKey="0">
-								<div className="info-section">
-									<CustomToggle eventKey="0">수정이력</CustomToggle>
-									<Accordion.Collapse eventKey="0">
-										{/* 직접 테이블을 아코디언 안에 추가 */}
-										<BootstrapTable
-											striped
-											bordered
-											hover
-											className="table-detail"
-										>
-											<thead>
-												<tr>
-													<th>번호</th>
-													<th>자산코드</th>
-													<th>자산명</th>
-													<th>수정일자</th>
-													<th>수정요청자</th>
-													<th>수정사유</th>
-													<th>수정내용</th>
-												</tr>
-											</thead>
-											<tbody>
-												{formData.updateHistory.map((update, index) => (
-													<tr key={index}>
-														<td>{update.updateNo || index + 1}</td>
-														<td>{update.assetCode}</td>
-														<td>{update.assetName}</td>
-														<td>{update.updateDate}</td>
-														<td>{update.updateBy || '정보 없음'}</td>
-														<td>
-															{update.updateReason || '정보 없음'}
-														</td>
-														<td>
-															{update.updateDetail || '정보 없음'}
-														</td>
+									<Tab eventKey="updateHistory" title="수정이력">
+										<div style={{ padding: '20px', border: '2px solid #000' }}>
+											<BootstrapTable
+												striped
+												bordered
+												hover
+												className="table-detail"
+											>
+												<thead>
+													<tr>
+														<th>번호</th>
+														<th>자산코드</th>
+														<th>자산명</th>
+														<th>수정일자</th>
+														<th>수정요청자</th>
+														<th>수정사유</th>
+														<th>수정내용</th>
 													</tr>
-												))}
-											</tbody>
-										</BootstrapTable>
-									</Accordion.Collapse>
-								</div>
-							</Accordion>
+												</thead>
+												<tbody>
+													{formData.updateHistory.map((update, index) => (
+														<tr key={index}>
+															<td>{update.updateNo || index + 1}</td>
+															<td>{update.assetCode}</td>
+															<td>{update.assetName}</td>
+															<td>{update.updateDate}</td>
+															<td>
+																{update.updateBy || '정보 없음'}
+															</td>
+															<td>
+																{update.updateReason || '정보 없음'}
+															</td>
+															<td>
+																{update.updateDetail || '정보 없음'}
+															</td>
+														</tr>
+													))}
+												</tbody>
+											</BootstrapTable>
+										</div>
+									</Tab>
+
+									<Tab eventKey="maintenanceHistory" title="유지보수이력">
+										{/* 유지보수이력 테이블 */}
+										<div style={{ padding: '20px', border: '2px solid #000' }}>
+											<BootstrapTable
+												striped
+												bordered
+												hover
+												className="table-detail"
+											>
+												<thead>
+													<tr>
+														<th>번호</th>
+														<th>자산코드</th>
+														<th>자산명</th>
+														<th>수정일자</th>
+														<th>수정요청자</th>
+														<th>수정사유</th>
+														<th>수정내용</th>
+													</tr>
+												</thead>
+												<tbody>
+													{/* 유지보수 이력 데이터를 맵핑하여 출력 */}
+												</tbody>
+											</BootstrapTable>
+										</div>
+									</Tab>
+
+									<Tab eventKey="investigationHistory" title="자산조사이력">
+										{/* 자산조사이력 테이블 */}
+										<div style={{ padding: '20px', border: '2px solid #000' }}>
+											<BootstrapTable
+												striped
+												bordered
+												hover
+												className="table-detail"
+											>
+												<thead>
+													<tr>
+														<th>번호</th>
+														<th>자산코드</th>
+														<th>자산명</th>
+														<th>수정일자</th>
+														<th>수정요청자</th>
+														<th>수정사유</th>
+														<th>수정내용</th>
+													</tr>
+												</thead>
+												<tbody>
+													{/* 조사 이력 데이터를 맵핑하여 출력 */}
+												</tbody>
+											</BootstrapTable>
+										</div>
+									</Tab>
+								</Tabs>
+							</div>
 						</div>
 					</div>
 				</div>

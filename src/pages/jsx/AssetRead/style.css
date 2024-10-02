@@ -29,3 +29,15 @@
 	overflow-x: auto; /*가로 스크롤 추가*/
 	/*width: calc(100% - 5rem); /* 테이블 너비를 여백을 제외하고 설정 */
 }
+.table-responsive {
+	overflow-x: auto; /* 테이블이 클 때 스크롤 허용 */
+}
+
+table.react-table {
+	table-layout: fixed; /* 테이블 셀 크기를 고정 */
+	width: 100%;
+}
+.expanded-content div {
+	display: block;
+	overflow-x: auto; /* 내용이 테이블의 너비를 넘을 경우 스크롤바 표시 */
+}

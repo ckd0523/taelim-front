@@ -27,7 +27,7 @@ export default function jsx() {
 				<Route path="ExcelRegister" element={<ExcelRegister />} />
 				<Route path="MaintainRegister" element={<MaintainRegister />} />
 				<Route path="MaintainHist" element={<MaintainHist />} />
-				<Route path="ProductDetailsEcom" element={<ProductDetailsEcom />} />
+				<Route path="ProductDetailsEcom/*" element={<ProductDetailsEcom />} />
 				<Route path="BackupHistory" element={<BackupHistory />} />
 				<Route path="AssetSurveyHistory" element={<AssetSurveyHistory />} />
 				<Route path="DemandHistory" element={<DemandHistory />} />
@@ -37,6 +37,7 @@ export default function jsx() {
 				<Route path="AssetPage" element={<AssetPage />} />
 				<Route path="AssetPageTest" element={<AssetPageTest />} />
 				<Route path="AssetSurveyDetail" element={<AssetSurveyDetail />} />
+
 				{/* <Route path="SystemSetting" element={<SystemSetting />} /> */}
 			</Route>
 		</Routes>

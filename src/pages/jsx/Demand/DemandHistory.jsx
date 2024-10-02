@@ -191,7 +191,7 @@ const DemandHistory = () => {
 							<Row className="g-0">
 								<Col className="d-flex align-items-center justify-content-end mb-2">
 									<Button
-										variant="secondary"
+										variant="success"
 										onClick={() => processOpenModal()}
 										className="me-2"
 									>

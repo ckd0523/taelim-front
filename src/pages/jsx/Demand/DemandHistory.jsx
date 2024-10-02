@@ -3,7 +3,7 @@ import { PageBreadcrumb, CustomDatePicker, TextInput, Form as RHForm } from '@/c
 import { Table } from './Table';
 import { columns } from './ColumnsSet';
 import { useState, useEffect } from 'react';
-import { InfoModal, ActionModal } from './DemandModal';
+import { InfoModal, ActionModal, ProcessModal } from './DemandModal';
 import axios from 'axios';
 
 const urlConfig = import.meta.env.VITE_BASIC_URL;
@@ -24,6 +24,8 @@ const DemandHistory = () => {
 	const [actionData, setActionData] = useState([]); // ActionModal로 보낼 데이터
 	const [actionType, setActionType] = useState(null);
 	const [rowSelect, setRowSelect] = useState([]);
+	//미확인 자산 처리 모달
+	const [process, setProcess] = useState(false);
 
 	useEffect(() => {
 		const fetchData = async () => {
@@ -40,6 +42,10 @@ const DemandHistory = () => {
 	useEffect(() => {
 		setDemandsList(demands);
 	}, [demands]);
+
+	const processOpenModal = () => {
+		setProcess(true);
+	};
 
 	const handleOpenModal = (type, rowSelect) => {
 		console.log(rowSelect);
@@ -185,6 +191,13 @@ const DemandHistory = () => {
 							<Row className="g-0">
 								<Col className="d-flex align-items-center justify-content-end mb-2">
 									<Button
+										variant="success"
+										onClick={() => processOpenModal()}
+										className="me-2"
+									>
+										미확인 자산 처리
+									</Button>
+									<Button
 										variant="secondary"
 										onClick={() => handleOpenModal('approve', rowSelect)}
 										className="me-2"
@@ -221,6 +234,7 @@ const DemandHistory = () => {
 								handleClose={() => setShowModal(false)}
 								modalData={modalData}
 							/>
+							<ProcessModal show={process} handleClose={() => setProcess(false)} />
 							<ActionModal
 								show={showActModal}
 								handleClose={() => setShowActModal(false)}

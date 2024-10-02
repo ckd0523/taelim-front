@@ -739,15 +739,26 @@ const RowDetails = ({ row, assetCode, onClose, formData: initialFormData }) => {
 													<tr>
 														<th>번호</th>
 														<th>자산코드</th>
-														<th>자산명</th>
-														<th>수정일자</th>
-														<th>수정요청자</th>
-														<th>수정사유</th>
-														<th>수정내용</th>
+														<th>유지보수자</th>
+														<th>유지보수내용</th>
+														<th>시작일자</th>
+														<th>종료일자</th>
+														<th>완료/진행중</th>
 													</tr>
 												</thead>
 												<tbody>
 													{/* 유지보수 이력 데이터를 맵핑하여 출력 */}
+													{formData.repairHistory.map((repair, index) => (
+														<tr key={index}>
+															<td>{repair.repairNo || index + 1}</td>
+															<td>{repair.assetCode}</td>
+															<td>{repair.repairBy}</td>
+															<td>{repair.repairResult}</td>
+															<td>{repair.repairStartDate}</td>
+															<td>{repair.repairEnDate}</td>
+															<td>{repair.status}</td>
+														</tr>
+													))}
 												</tbody>
 											</BootstrapTable>
 										</div>

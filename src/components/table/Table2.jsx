@@ -79,15 +79,25 @@ const Table2 = (props) => {
 
   // 행 클릭 이벤트 핸들러
   const handleRowClick = (row) => {
-    //자산 조사의 위치가 없거나 자산 조사가 완료된 자산 조사는 클릭 안됨
-    if (row.values.assetSurveyLocation === '' || row.values.surveyStatus === true) {
+    //자산 조사의 위치가 없으면 row 클릭 안됨
+    //얘가 없으면 테이블이 계속 리렌더링이 되어버려서 이상한 문제들이 자꾸 생김
+    if (row.values.assetSurveyLocation === undefined) {
       //console.log('1');
       return;
     }
-
     //setSelectedRow(row);
     //setShowModal(true);
+
+    //console.log(row.values.assetSurveyLocation);
+    console.log(row);
     console.log(row.values.assetSurveyLocation);
+
+    //완료된 자산 조사에 기존 값이 삭제되지 않게 만들어야 disable이 풀리지 않음
+    if (row.original.surveyStatus === false) {
+      //얘를 안해주면 이전에 있던 localStorage 값이 유지가 되어 surveyStatus가 갱신되지 않음
+      localStorage.removeItem('surveyStatus');  // 기존 값 삭제
+    }
+
     //const location = row.values.assetSurveyLocation;
     navigate('/jsx/AssetSurveyDetail/', {
       state: {
@@ -95,6 +105,7 @@ const Table2 = (props) => {
         surveyStartDate: row.values.assetSurveyStartDate,
         surveyBy: row.values.assetSurveyBy,
         assetSurveyNo: row.values.assetSurveyNo,
+        surveyStatus: row.values.surveyStatus,
       }
     });  // 클릭된 행의 location으로 페이지 이동
   };
@@ -135,7 +146,7 @@ const Table2 = (props) => {
       columns: props.columns,
       data: props['data'],
       //안보이게 할 컬럼을 여기 init에 적어주면 됨.
-      initialState: { pageSize: props['pageSize'] || 10, hiddenColumns: ['assetSurveyNo'] },
+      initialState: { pageSize: props['pageSize'] || 10, hiddenColumns: ['assetSurveyNo', 'infoNo'] },
     },
 
     otherProps.hasOwnProperty('useGlobalFilter') && otherProps['useGlobalFilter'],

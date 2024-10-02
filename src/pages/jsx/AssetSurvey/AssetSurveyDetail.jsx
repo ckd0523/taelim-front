@@ -1,5 +1,5 @@
 import { Row, Col, Card, Button, Form } from 'react-bootstrap';
-import { useLocation } from 'react-router-dom';
+import { useLocation, Link } from 'react-router-dom';
 import assetSurveyLocation from './assetSurveyLocation';
 import { useState, useEffect } from 'react';
 //import { Table } from '@/components';
@@ -9,76 +9,6 @@ import { SurveyCompleteButton, SruveyCancelButton } from './AssetSurveyButtons';
 
 const URL = import.meta.env.VITE_BASIC_URL;
 
-const columns = [
-  { Header: '자산 코드', accessor: 'assetCode', defaultCanSort: true, },
-  { Header: '자산명', accessor: 'assetName', defaultCanSort: false, },
-  { Header: '자산 소유자', accessor: 'assetOwner', defaultCanSort: false, },
-  { Header: '자산 담당자', accessor: 'assetSecurityManager', defaultCanSort: false, },
-  {
-    Header: '정위치 유무', accessor: 'exactLocation',
-    Cell: ({ row }) => (
-      <input
-        type='checkbox'
-        checked={row.values.exactLocation}
-        onChange={(e) => handleExactLocation(e, row, 'exactLocation')}
-      />
-    )
-  },
-  {
-    Header: '상태', accessor: 'assetStatus',
-    Cell: ({ row }) => (
-      <input
-        type='checkbox'
-        checked={row.values.assetStatus}
-        onChange={(e) => handleAssetStatus(e, row, 'assetStatus')}
-      />
-    )
-  },
-  {
-    Header: '내용', accessor: 'assetSurveyContent',
-    Cell: ({ }) => (
-      <input
-        type='text'
-      />
-    )
-  },
-];
-
-//정위치 유무 체크박스 선택 시 동작
-const handleExactLocation = (e, row, fieldName) => {
-  const updatedRow = {
-    ...row.original,
-    [fieldName]: e.target.checked,
-  };
-
-  if (row.values.exactLocation) {
-    row.values.exactLocation = false;
-  } else {
-    row.values.exactLocation = true;
-  }
-
-  console.log('exactLocation Row:', updatedRow);
-  console.log("exactLocation state : " + updatedRow.exactLocation);
-  // 상태를 업데이트하는 로직 추가
-};
-
-//상태 체크박스 선택 시 동작
-const handleAssetStatus = (e, row, fieldName) => {
-  const updatedRow = {
-    ...row.original,
-    [fieldName]: e.target.checked,
-  };
-
-  if (row.values.assetStatus) {
-    row.values.assetStatus = false;
-  } else {
-    row.values.assetStatus = true;
-  }
-
-  console.log('assetStatus Row:', updatedRow);
-  // 상태를 업데이트하는 로직 추가
-};
-
 const AssetSurveyDetail = () => {
   //다른 페이지에서 이 페이지로 넘어올 때 스크롤을 최상단으로
   useEffect(() => {
@@ -86,16 +16,6 @@ const AssetSurveyDetail = () => {
   }, []);
 
   const locationParam = useLocation();
-  /*
-  //console.log(locationParam);
-  const locationValue = locationParam.state.location;
-
-  // locationValue를 기반으로 매칭되는 label을 찾음
-  const matchedLocation = assetSurveyLocation.find(loc => loc.value === locationValue);
-  const surveyStartDate = locationParam.state.surveyStartDate;
-  const surveyBy = locationParam.state.surveyBy;
-  const assetSurveyNo = locationParam.state.assetSurveyNo;
-  */
 
   //테이블의 페이지가 넘어갈 때 계속 locationValue를 세팅하는 코드가 작동하는데
   //그 데이터가 자산 조사 이력에서 넘어오지 않아 null이 되어 useState로 값을 유지해야함
@@ -104,7 +24,8 @@ const AssetSurveyDetail = () => {
     location: locationParam.state?.location || localStorage.getItem('location') || '', // 초기값이 없을 경우 ''로 설정
     surveyStartDate: locationParam.state?.surveyStartDate || localStorage.getItem('surveyStartDate') || '',
     surveyBy: locationParam.state?.surveyBy || localStorage.getItem('surveyBy') || '',
-    assetSurveyNo: locationParam.state?.assetSurveyNo || localStorage.getItem('assetSurveyNo') || ''
+    assetSurveyNo: locationParam.state?.assetSurveyNo || localStorage.getItem('assetSurveyNo') || '',
+    surveyStatus: locationParam.state?.surveyStatus || localStorage.getItem('surveyStatus') || ''
   });
 
   // locationState.location을 기반으로 매칭되는 label을 찾음
@@ -127,10 +48,14 @@ const AssetSurveyDetail = () => {
     if (locationState.assetSurveyNo) {
       localStorage.setItem('assetSurveyNo', locationState.assetSurveyNo);
     }
+    if (locationState.surveyStatus) {
+      //console.log("얘가 참이라고??" + locationState.surveyStatus);
+      localStorage.setItem('surveyStatus', locationState.surveyStatus);
+    }
   }, [locationState]);
 
+  //미확인된 자산 확인할 때 사용
   const [isChecked, setIsChecked] = useState(false);
-
   const handleToggle = () => {
     setIsChecked(!isChecked);
   };
@@ -153,9 +78,154 @@ const AssetSurveyDetail = () => {
     }
   };
 
+  const [data, setData] = useState([]);
+  //console.log('얘가 실행되긴해?');
+
+  useEffect(() => {
+    //console.log('test');
+    fetch(`${URL}/assetSurveyDetail/${locationState.assetSurveyNo}`)
+      .then((response) => response.json())
+      .then((data) => {
+        //console.log('받은 데이터 : ' + data);
+        setData(data);
+      })
+      .catch((error) => console.error('error : ', error));
+  }, [locationState.assetSurveyNo]);
+
   //console.log('선택한 레코드 자산 번호 : ' + locationState.assetSurveyNo);
-  const data = getDetailTable(locationState.assetSurveyNo);
-  //console.log('얘가 null이라고? : ' + data);
+  //const data = getDetailTable(locationState.assetSurveyNo);
+  //console.log('얘가 null이라고? : ' + JSON.stringify(data));
+
+  //console.log("로컬 스토리지 : " + JSON.stringify(localStorage));
+
+  //--------------------------------------------------------------------------------------------------------------------------
+  // 체크박스 상태 관리를 위한 상태 추가
+  const [exactLocationStates, setExactLocationStates] = useState({});
+  const [assetStatusStates, setAssetStatusStates] = useState({});
+  //assetSurveyContent 관리
+  const [assetSurveyContent, setAssetSurveyContent] = useState({});
+
+  const columns = [
+    { Header: '자산 조사 상세 번호', accessor: 'infoNo' },
+    { Header: '자산 코드', accessor: 'assetCode', defaultCanSort: true, },
+    { Header: '자산명', accessor: 'assetName', defaultCanSort: false, },
+    { Header: '자산 소유자', accessor: 'assetOwner', defaultCanSort: false, },
+    { Header: '자산 담당자', accessor: 'assetSecurityManager', defaultCanSort: false, },
+    {
+      Header: '정위치 유무', accessor: 'exactLocation',
+      Cell: ({ row }) => (
+        <input
+          type='checkbox'
+          checked={exactLocationStates[row.id] ?? row.values.exactLocation}
+          onChange={(e) => handleExactLocation(e, row)}
+          //disabled는 true, false를 넣어야 하는데
+          //localStorage.getItem은 항상 문자열('true', 'false')을 반환
+          disabled={localStorage.getItem('surveyStatus') === 'true'}
+        />
+      )
+    },
+    {
+      Header: '상태', accessor: 'assetStatus',
+      Cell: ({ row }) => (
+        <input
+          type='checkbox'
+          checked={assetStatusStates[row.id] ?? row.values.assetStatus}
+          onChange={(e) => handleAssetStatus(e, row)}
+          disabled={localStorage.getItem('surveyStatus') === 'true'}
+        />
+      )
+    },
+    {
+      Header: '내용', accessor: 'assetSurveyContent',
+      Cell: ({ row }) => (
+        <input
+          type='text'
+          value={assetSurveyContent[row.original.infoNo] || row.values.assetSurveyContent || ''}
+          onChange={(e) => handleAssetSurveyContentChange(e, row)}
+          disabled={localStorage.getItem('surveyStatus') === 'true'}
+        />
+      )
+    },
+  ];
+
+  //정위치 유무 체크박스 선택 시 동작
+  const handleExactLocation = (e, row) => {
+    const updatedState = {
+      ...exactLocationStates,
+      [row.id]: e.target.checked,
+    };
+    setExactLocationStates(updatedState);
+
+    //console.log('exactLocation Row:', updatedRow);
+
+    fetch(`${URL}/updateAssetSurveyDetail`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json', // JSON 형식으로 데이터 전송
+      },
+      body: JSON.stringify({ // 여기에서 JSON.stringify()를 사용하여 객체를 문자열로 변환
+        "requestType": true,
+        "infoNo": row.original.infoNo,
+        "updateValue": e.target.checked,
+      }),
+    })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('네트워크 응답이 올바르지 않습니다.');
+        }
+        console.log('성공'); // 성공 시 서버 응답 출력
+      })
+      .catch((error) => {
+        alert('네트워크 응답이 올바르지 않습니다.');
+        console.error('오류 발생:', error); // 오류 발생 시 오류 메시지 출력
+      });
+  };
+
+  //상태 체크박스 선택 시 동작
+  const handleAssetStatus = (e, row) => {
+    const updatedState = {
+      ...assetStatusStates,
+      [row.id]: e.target.checked,
+    };
+    setAssetStatusStates(updatedState);
+
+    //console.log('assetStatus Row:', updatedRow);
+
+    fetch(`${URL}/updateAssetSurveyDetail`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json', // JSON 형식으로 데이터 전송
+      },
+      body: JSON.stringify({ // 여기에서 JSON.stringify()를 사용하여 객체를 문자열로 변환
+        "requestType": false,
+        "infoNo": row.original.infoNo,
+        "updateValue": e.target.checked,
+      }),
+    })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('네트워크 응답이 올바르지 않습니다.');
+        }
+        console.log('성공'); // 성공 시 서버 응답 출력
+      })
+      .catch((error) => {
+        alert('네트워크 응답이 올바르지 않습니다.');
+        console.error('오류 발생:', error); // 오류 발생 시 오류 메시지 출력
+      });
+  };
+
+  //내용을 입력하면 너무 느려 터져서 글자가 안적힘
+
+  //내용을 입력하고 포커싱 아웃이 일어났을 때 동작
+  const handleAssetSurveyContentChange = (e, row) => {
+    const updatedContent = e.target.value;
+
+    // 현재 입력된 내용을 상태에 저장, row ID를 키로 사용
+    setAssetSurveyContent(prevState => ({
+      ...prevState,
+      [row.original.infoNo]: updatedContent,
+    }));
+  }
 
   return (
     <div>
@@ -218,7 +288,6 @@ const AssetSurveyDetail = () => {
 
       <Card>
         <Card.Body>
-
           {/* 
           <p>테이블 들어갈 자리</p>  */}
           {data && data.length > 0 ? (
@@ -226,22 +295,26 @@ const AssetSurveyDetail = () => {
           ) : (
             <p>데이터가 없습니다.</p>  // 데이터가 없을 때 보여줄 내용
           )}
-
         </Card.Body>
       </Card>
 
       <Row className='row-cols-auto justify-content-end'>
         <Col>
           {/* 자산 조사 완료 버튼 */}
-          <SurveyCompleteButton onClickCompleteSurvey={onClickCompleteSurvey} />
+          {localStorage.getItem('surveyStatus') === 'true' ? '' : <SurveyCompleteButton onClickCompleteSurvey={onClickCompleteSurvey} />}
         </Col>
         <Col>
           {/* 자산 조사 뒤로가기 버튼 */}
-          <SruveyCancelButton />
+          {localStorage.getItem('surveyStatus') === 'true' ?
+            <Link to={"/jsx/AssetSurveyHistory"}>
+              <Button variant="primary">뒤로가기</Button>
+            </Link>
+            : <SruveyCancelButton />
+          }
         </Col>
       </Row>
-      <Card></Card>
 
+      <Card></Card>
     </div >
   );
 };

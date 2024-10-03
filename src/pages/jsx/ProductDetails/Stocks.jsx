@@ -4,6 +4,7 @@ import Tabs from './Tab';
 import QuickAccess from '@/pages/apps/FileManager/QuickAccess';
 import { quickAccessFiles } from './data';
 import { Row, Col, Card } from 'react-bootstrap';
+import { useParams } from 'react-router-dom';
 const urlConfig = import.meta.env.VITE_BASIC_URL;
 
 const Stocks = () => {
@@ -13,6 +14,7 @@ const Stocks = () => {
 	const [subColumns, setSubColumns] = useState([]);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(null);
+	const { assetCode } = useParams(); // URL에서 파라미터 추출
 
 	// columns 저장
 	const generateColumns = (data) => {
@@ -98,7 +100,7 @@ const Stocks = () => {
 	};
 
 	useEffect(() => {
-		fetchData('ASSET002').catch((error) => {
+		fetchData(`${assetCode}`).catch((error) => {
 			console.error('Fetch data error in useEffect:', error);
 			setError(error);
 			setLoading(false);

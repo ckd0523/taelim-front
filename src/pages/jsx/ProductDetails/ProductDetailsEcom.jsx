@@ -17,14 +17,7 @@ const ProductDetailsEcom = () => {
 					<Card>
 						<Card.Body>
 							<Row>
-								<Col lg={3}>
-									<img
-										src={productImg1}
-										className="img-fluid"
-										alt="Product-img"
-									/>
-								</Col>
-								<Col lg={9}>
+								<Col lg={12}>
 									<Stocks />
 								</Col>
 							</Row>

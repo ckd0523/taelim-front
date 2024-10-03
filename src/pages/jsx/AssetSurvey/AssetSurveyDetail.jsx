@@ -7,7 +7,7 @@ import { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import { DetailTable } from './AssetSurveyHistoryTable';
 import { SurveyCompleteButton, SruveyCancelButton } from './AssetSurveyButtons';
 import React from 'react';
-import QRScanner from 'qr-scanner'; // qr-scanner 라이브러리 import
+import QRScanner from 'qr-scanner'; // qr-scanner 라이브러리 import00
 
 const URL = import.meta.env.VITE_BASIC_URL;
 

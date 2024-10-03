@@ -16,7 +16,7 @@ import { BsCaretUpFill } from 'react-icons/bs';
 import { BsCaretDownFill } from 'react-icons/bs';
 import axios from 'axios';
 import MaintainRegister from '@/pages/jsx/Maintain';
-import './Style.css'; // 같은 폴더에서 CSS 파일 import
+import './style.css'; // 같은 폴더에서 CSS 파일 import
 import {
 	getClassificationColumns,
 	calculateImportanceScore,

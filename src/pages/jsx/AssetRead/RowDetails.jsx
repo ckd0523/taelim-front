@@ -85,7 +85,7 @@ const RowDetails = ({ row, assetCode, onClose, formData: initialFormData }) => {
 		setShowModal(true);
 	};
 
-	// formData를 변경하는 함수
+	// formData를 변경하는 함수11
 	const handleInputChange = (event, key) => {
 		const { value } = event.target; // 이벤트 객체에서 value 추출
 		setFormData((prevData) => ({

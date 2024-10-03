@@ -58,7 +58,7 @@ const RegisterButton = ({ onClickRegister }) => {
   // 자산 조사 등록 요청 보내는 함수
   const handleRegistRequest = async () => {
     if (selectedLocation == '') {
-      alert('위치를 다시 선택하세요.');
+      alert('위치를 선택하세요.');
       return; // 선택된 위치가 없으면 실행하지 않음
     }
 

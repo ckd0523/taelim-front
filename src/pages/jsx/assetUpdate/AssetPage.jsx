@@ -9,6 +9,7 @@ import RowDetails from './RowDetails'; // 새로 추가된 컴포넌트 임포�
 import './style.css';
 const urlConfig = import.meta.env.VITE_BASIC_URL;
 
+/*이거 안쓰는 페이지 나중에버리기 */
 const columns = [
 	{ Header: '번호', accessor: 'assetNo' },
 	{ Header: '자산기준', accessor: 'assetBasis' },

@@ -17,6 +17,7 @@ const DatepickerInput = forwardRef((props, ref) => {
       value={props.value}
       onChange={onDateValueChange}
       ref={ref}
+      readOnly
     />
   );
 });

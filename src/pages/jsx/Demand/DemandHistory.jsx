@@ -3,8 +3,7 @@ import { PageBreadcrumb, CustomDatePicker, TextInput, Form as RHForm } from '@/c
 import { Table } from './Table';
 import { columns } from './ColumnsSet';
 import { useState, useEffect } from 'react';
-import { demands } from './data';
-import { InfoModal, ActionModal } from './DemandModal';
+import { InfoModal, ActionModal, ProcessModal } from './DemandModal';
 import axios from 'axios';
 
 const urlConfig = import.meta.env.VITE_BASIC_URL;
@@ -12,7 +11,8 @@ const urlConfig = import.meta.env.VITE_BASIC_URL;
 import Select from 'react-select';
 
 const DemandHistory = () => {
-	const [demandsList, setDemandsList] = useState(demands);
+	const [demands, setDemands] = useState([]);
+	const [demandsList, setDemandsList] = useState([]);
 	const [selectedOrderType, setSelectedOrderType] = useState('');
 	const [selectedRequester, setSelectedRequester] = useState('');
 	const [selectedStatus, setSelectedStatus] = useState('');
@@ -21,14 +21,17 @@ const DemandHistory = () => {
 	const [showModal, setShowModal] = useState(false);
 	const [modalData, setModalData] = useState(null);
 	const [showActModal, setShowActModal] = useState(false);
-	const [actionData, setActionData] = useState(null); // ActionModal로 보낼 데이터
+	const [actionData, setActionData] = useState([]); // ActionModal로 보낼 데이터
 	const [actionType, setActionType] = useState(null);
+	const [rowSelect, setRowSelect] = useState([]);
+	//미확인 자산 처리 모달
+	const [process, setProcess] = useState(false);
 
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
 				const response = await axios.get(`${urlConfig}/DemandHistory`);
-				setDemandsList(response.data);
+				setDemands(response.data);
 			} catch (error) {
 				console.error('데이터를 가져오는 중 오류 발생:', error);
 			}
@@ -36,9 +39,18 @@ const DemandHistory = () => {
 		fetchData();
 	}, []);
 
-	const handleOpenModal = (type, rowData) => {
+	useEffect(() => {
+		setDemandsList(demands);
+	}, [demands]);
+
+	const processOpenModal = () => {
+		setProcess(true);
+	};
+
+	const handleOpenModal = (type, rowSelect) => {
+		console.log(rowSelect);
 		setActionType(type);
-		setActionData(rowData); // rowData 또는 선택한 데이터를 설정
+		setActionData(rowSelect); // rowData 또는 선택한 데이터를 설정
 		setShowActModal(true);
 	};
 
@@ -57,8 +69,8 @@ const DemandHistory = () => {
 		setSelectedRequester(e.target.value);
 	};
 
-	const handleRowClick = (rowData) => {
-		setModalData(rowData);
+	const handleRowClick = (rowSelect) => {
+		setModalData(rowSelect);
 		setShowModal(true);
 	};
 
@@ -179,15 +191,22 @@ const DemandHistory = () => {
 							<Row className="g-0">
 								<Col className="d-flex align-items-center justify-content-end mb-2">
 									<Button
+										variant="success"
+										onClick={() => processOpenModal()}
+										className="me-2"
+									>
+										미확인 자산 처리
+									</Button>
+									<Button
 										variant="secondary"
-										onClick={() => handleOpenModal('approve')}
+										onClick={() => handleOpenModal('approve', rowSelect)}
 										className="me-2"
 									>
 										승인
 									</Button>
 									<Button
 										variant="danger"
-										onClick={() => handleOpenModal('reject')}
+										onClick={() => handleOpenModal('reject', rowSelect)}
 									>
 										거절
 									</Button>
@@ -206,6 +225,7 @@ const DemandHistory = () => {
 									theadClass="table-light"
 									tableClass="border-black"
 									searchBoxClass="mb-2"
+									setRowSelect={setRowSelect}
 								/>
 							</Row>
 							{/* Modal */}
@@ -214,6 +234,7 @@ const DemandHistory = () => {
 								handleClose={() => setShowModal(false)}
 								modalData={modalData}
 							/>
+							<ProcessModal show={process} handleClose={() => setProcess(false)} />
 							<ActionModal
 								show={showActModal}
 								handleClose={() => setShowActModal(false)}

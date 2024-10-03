@@ -1,2 +1,1 @@
-export * from './Table';
-export * from './Pagination';
+export { QRCodeDisplay as default } from './QRCodeDisplay';

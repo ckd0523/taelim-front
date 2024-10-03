@@ -2,25 +2,39 @@ import BasisAssetInfo from './BasisAssetInfo';
 import { useState } from 'react';
 import FileUpload from './FileUpload';
 import { Button, Row, Col, Container } from 'react-bootstrap';
+import styled from 'styled-components';
 const urlConfig = import.meta.env.VITE_BASIC_URL;
+const ResponsivePadding = styled.div`
+	@media (max-width: 768px) {
+		padding-top: 20px;
+	}
 
+	@media (min-width: 769px) and (max-width: 1280px) {
+		padding: 20px;
+	}
+
+	@media (min-width: 1281px) {
+		padding: 50px;
+	}
+`;
 //자산등록
 const AssetRegister = () => {
 	const [files, setFiles] = useState([]);
 	const [formData, setFormData] = useState({
-		assetClassification: 'INFORMATION_PROTECTION_SYSTEM',
+		assetClassification: '',
 		assetName: '',
 		assetBasis: '',
 		manufacturingCompany: '',
 		purpose: '',
-		department: 'IT_DEPARTMENT',
-		assetLocation: 'MAIN_B1_DOCUMENT_STORAGE',
+		department: '',
+		assetLocation: '',
 		assetUser: '',
 		assetOwner: '',
 		assetSecurityManager: '',
 		quantity: 1,
-		ownership: 'OWNED',
-		operationStatus: 'OPERATING',
+		ownership: '',
+		usestate: '',
+		operationStatus: '',
 		introducedDate: new Date(),
 		confidentiality: 0,
 		integrity: 0,
@@ -29,7 +43,7 @@ const AssetRegister = () => {
 		purchaseCost: 0,
 		purchaseDate: new Date(),
 		usefulLife: 0,
-		depreciationMethod: 'FIXED_AMOUNT',
+		depreciationMethod: '',
 		purchaseSource: '',
 		contactInformation: '',
 		acquisitionRoute: '',
@@ -154,27 +168,30 @@ const AssetRegister = () => {
 	};
 
 	return (
-		<Container fluid>
-			<Row className="d-flex justify-content-center col-md-8">
-				<Col xs={12} md={8} lg={6}>
-					<BasisAssetInfo formData={formData} handleChange={handleChange} />
+		<Container>
+			<Row>
+				<Col xs={12} md={8} lg={12}>
+					<ResponsivePadding>
+						<BasisAssetInfo formData={formData} handleChange={handleChange} />
+					</ResponsivePadding>
 				</Col>
 			</Row>
-			<Row className="d-flex justify-content-center col-md-8">
-				<Col xs={12} md={8} lg={6}>
-					<FileUpload files={files} setFiles={setFiles} />
+			<Row>
+				<Col xs={12} md={8} lg={12}>
+					<ResponsivePadding>
+						<FileUpload files={files} setFiles={setFiles} />
+					</ResponsivePadding>
 				</Col>
 			</Row>
-			<Row className="d-flex justify-content-center">
-				<Col xs={12} md={8} lg={6} className="text-center">
-					<Button size="lg" variant="primary" type="submit" onClick={handleSubmit}>
-						저장
-					</Button>
-					<Button size="lg" variant="secondary" type="button">
-						취소
-					</Button>
-				</Col>
-			</Row>
+			<div className="pt-2 d-flex justify-content-center">
+				<Button size="lg" variant="primary" type="submit" onClick={handleSubmit}>
+					저장
+				</Button>
+				<p className="px-2"></p>
+				<Button size="lg" variant="secondary" type="button">
+					취소
+				</Button>
+			</div>
 		</Container>
 	);
 };

@@ -1,11 +1,15 @@
 import SearchBar from "./AssetSurveyHistorySearchBar";
 import { SurveyTable } from "./AssetSurveyHistoryTable";
-import Buttons from "./AssetSurveyButtons";
-import { useState } from "react";
+import { Buttons } from "./AssetSurveyButtons";
+import { useState, useEffect } from "react";
 
 const URL = import.meta.env.VITE_BASIC_URL;
 
 const AssetSurveyHistory2 = () => {
+  //다른 페이지에서 이 페이지로 넘어올 때 스크롤을 최상단으로
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   //자산 조사 삭제를 위해 어떤 행이 선택되었는지
   const [selectedRows, setSelectedRows] = useState([]);
@@ -41,6 +45,8 @@ const AssetSurveyHistory2 = () => {
       }
 
       alert('자산 조사 삭제가 완료되었습니다.');
+      //삭제 성공 후 선택된 행 초기화
+      setSelectedRows([]);
       //삭제 성공 후 테이블 리렌더링
       onClickRegister();
     } catch (error) {
@@ -52,15 +58,20 @@ const AssetSurveyHistory2 = () => {
     //console.log(selectedRows);
   };
 
+  //검색 버튼과 테이블이 같은 레벨에 있기 때문에
+  //최상위 컴포넌트에 필터될 데이터인 data, 원본 데이터인 originalData를 useState로 만들어서
+  //검색 바에 데이터를 넘겨줌
+  const [data, setData] = useState([]);
+  const [originalData, setOriginalData] = useState([]);
 
   return (
     <div>
       {/* 검색 바 */}
-      <SearchBar />
+      <SearchBar setData={setData} originalData={originalData} />
       {/* 각종 버튼 */}
       <Buttons onClickRegister={onClickRegister} onDelete={handleDelete} />
       {/* 자산 조사 이력 테이블 */}
-      <SurveyTable tableChange={tableChange} setSelectedRows={setSelectedRows} />
+      <SurveyTable tableChange={tableChange} setSelectedRows={setSelectedRows} data={data} setData={setData} setOriginalData={setOriginalData} />
     </div>
   );
 };

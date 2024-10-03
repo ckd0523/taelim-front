@@ -9,7 +9,7 @@ import {
 	useExpanded,
 } from 'react-table';
 import classNames from 'classnames';
-import { Pagination } from '@/components';
+import { Pagination } from './Pagination';
 
 const GlobalFilter = ({ preGlobalFilteredRows, globalFilter, setGlobalFilter, searchBoxClass }) => {
 	const count = preGlobalFilteredRows.length;
@@ -52,7 +52,7 @@ const IndeterminateCheckbox = forwardRef(({ indeterminate, ...rest }, ref) => {
 	);
 });
 
-const Table = (props) => {
+const Table3 = ({ onRowClick, ...props }) => {
 	const isSearchable = props['isSearchable'] || false;
 	const isSortable = props['isSortable'] || false;
 	const pagination = props['pagination'] || false;
@@ -60,7 +60,6 @@ const Table = (props) => {
 	const isExpandable = props['isExpandable'] || false;
 	const sizePerPageList = props['sizePerPageList'] || [];
 	const hiddenColumns = props.initialState?.hiddenColumns || [];
-	const setRowSelect = props['setRowSelect'] || [];
 
 	let otherProps = {};
 
@@ -84,13 +83,10 @@ const Table = (props) => {
 		{
 			columns: props.columns,
 			data: props['data'],
-			initialState: {
-				pageSize: props['pageSize'] || 10,
-				hiddenColumns: hiddenColumns, // 숨길 열 설정
-			},
-			//selectedFlatRows,
-			//selectedRowIds,
+			initialState: { pageSize: props['pageSize'] || 10 },
+			hiddenColumns: hiddenColumns, // 숨길 열 설정
 		},
+
 		otherProps.hasOwnProperty('useGlobalFilter') && otherProps['useGlobalFilter'],
 		otherProps.hasOwnProperty('useSortBy') && otherProps['useSortBy'],
 		otherProps.hasOwnProperty('useExpanded') && otherProps['useExpanded'],
@@ -113,11 +109,7 @@ const Table = (props) => {
 						// The cell can use the individual row's getToggleRowSelectedProps method
 						// to the render a checkbox
 						Cell: ({ row }) => (
-							<div
-								style={{
-									paddingLeft: `${row.depth * 2}rem`,
-								}}
-							>
+							<div>
 								<IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
 							</div>
 						),
@@ -167,22 +159,6 @@ const Table = (props) => {
 		}
 	);
 
-	const {
-		selectedFlatRows,
-		state: { selectedRowIds },
-		// ...other destructured values
-	} = dataTable;
-
-	useEffect(() => {
-		console.log('Selected row IDs:', selectedRowIds);
-		console.log(
-			'selectedFlatRows[].original',
-			selectedFlatRows.map((d) => d.original)
-		);
-		const Rows = selectedFlatRows.map((d) => d.original);
-		setRowSelect(Rows);
-	}, [selectedRowIds]);
-
 	const rows = pagination ? dataTable.page : dataTable.rows;
 
 	return (
@@ -223,22 +199,21 @@ const Table = (props) => {
 						))}
 					</thead>
 					<tbody {...dataTable.getTableBodyProps()}>
-						{rows.map((row, index) => {
-							dataTable.prepareRow(row); // 각 행에 대해 한 번만 호출
+						{(rows || []).map((row, index) => {
+							dataTable.prepareRow(row);
 							return (
-								<React.Fragment key={row.id}>
-									<tr
-										{...row.getRowProps()}
-										style={{
-											backgroundColor:
-												row.depth === 1 ? '#f0f8ff' : 'transparent', // 상위 요소일 때 색상 설정
-										}}
-									>
-										{row.cells.map((cell) => (
+								<tr
+									{...row.getRowProps()}
+									onClick={() => onRowClick(row.original)}
+									style={{ cursor: 'pointer' }}
+									key={index}
+								>
+									{row.cells.map((cell) => {
+										return (
 											<td {...cell.getCellProps()}>{cell.render('Cell')}</td>
-										))}
-									</tr>
-								</React.Fragment>
+										);
+									})}
+								</tr>
 							);
 						})}
 					</tbody>
@@ -250,4 +225,4 @@ const Table = (props) => {
 	);
 };
 
-export { Table };
+export { Table3 };

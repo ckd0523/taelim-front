@@ -220,7 +220,7 @@ const AssetSurveyDetail = () => {
     },
   ], [assetSurveyContent, handleContentChange, exactLocationStates, assetStatusStates]);
 
-  //정위치 유무 체크박스 선택 시 동작
+  //정위치 유무 체크박스 선택 시 동작00
   const handleExactLocation = (e, row) => {
     const updatedState = {
       ...exactLocationStates,

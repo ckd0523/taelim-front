@@ -16,7 +16,7 @@ pipeline {
                 }
 
                 git branch: 'distribution',
-                    url: 'https://github.com/ckd0523/taelim-front'
+                    url: 'https://github.com/ckd0523/taelim-front.git'
             }
 
             post {

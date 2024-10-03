@@ -8,6 +8,7 @@ import { useParams } from 'react-router-dom';
 const urlConfig = import.meta.env.VITE_BASIC_URL;
 
 const Stocks = () => {
+	// 공통칼럼 데이터
 	const [commonData, setCommonData] = useState({});
 	const [subData, setSubData] = useState({});
 	const [commonColumns, setCommonColumns] = useState([]);

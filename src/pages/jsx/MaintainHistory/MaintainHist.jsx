@@ -71,7 +71,7 @@ const columns = [
 		defaultCanSort: true,
 		Cell: ({ row }) => {
 			const { repairStartDate, repairEndDate, repairResult, repairFiles } = row.original;
-			let status = '진행중';
+			row.repairStatus = '진행중';
 			const hasBeforeRepair = repairFiles?.some((file) => file.repairType === '보수전');
 			const hasAfterRepair = repairFiles?.some((file) => file.repairType === '보수후');
 			if (
@@ -81,9 +81,9 @@ const columns = [
 				hasBeforeRepair &&
 				hasAfterRepair
 			) {
-				status = '완료';
+				row.repairStatus = '완료';
 			}
-			return status;
+			return row.repairStatus;
 		},
 	},
 ];

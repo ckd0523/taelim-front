@@ -5,13 +5,13 @@ import { useAccordionButton, Form } from 'react-bootstrap';
 import PurchasingInfo from './PurchasingInfo';
 import './ButtonStyle.css';
 
-import { Row, Col, Card, Accordion } from 'react-bootstrap';
+import { Row, Col, Accordion } from 'react-bootstrap';
 import { BsCaretUpFill } from 'react-icons/bs';
 import { BsCaretDownFill } from 'react-icons/bs';
 
-import { useForm, FormProvider, useFormContext } from 'react-hook-form';
+import { useForm, FormProvider } from 'react-hook-form';
 import { CustomDatePicker } from '@/components/Form';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Select from 'react-select';
 import styled from 'styled-components';
 const StyledCard = styled.div`
@@ -40,7 +40,6 @@ const StyledCardBody = styled.div`
 	flex-direction: column;
 	justify-content: space-between;
 `;
-// const { register } = useFormContext;
 function CustomToggle({ children, eventKey }) {
 	const [isOpen, setIsOpen] = useState(false);
 	const decoratedOnClick = useAccordionButton(eventKey, () => setIsOpen((prevOpen) => !prevOpen));
@@ -156,7 +155,28 @@ const operationStatus = [
 ];
 //기본 자산 정보 및 관리 정보 컬럼
 const BasisAssetInfo = ({ formData, handleChange }) => {
-	const methods = useForm();
+	// const methods = useForm();
+	const methods = useForm({
+		defaultValues: formData, // 초기 formData 설정
+		mode: 'onBlur', // validation 체크 트리거 모드 (onSubmit, onBlur, onChange 등)
+	});
+	const {
+		register,
+		formState: { errors },
+		setValue,
+	} = methods;
+
+	useEffect(() => {
+		if (errors.confidentiality) {
+			setValue('confidentiality', ''); // 기밀성 필드를 빈 값으로 리셋
+		}
+		if (errors.integrity) {
+			setValue('integrity', ''); // 무결성 필드를 빈 값으로 리셋
+		}
+		if (errors.availability) {
+			setValue('availability', ''); // 가용성 필드를 빈 값으로 리셋
+		}
+	}, [errors, setValue]);
 	return (
 		<div>
 			<Accordion defaultActiveKey="0">
@@ -381,16 +401,83 @@ const BasisAssetInfo = ({ formData, handleChange }) => {
 												}
 											/>
 										</div>
-										<Form.Label>기밀성</Form.Label>
-										<Form.Control
+										{/* <Form.Label>기밀성</Form.Label> */}
+										{/* <Form.Control
 											placeholder="기밀성을 입력해주세요"
 											className="mb-2"
 											type="number"
 											value={formData.confidentiality}
 											onChange={handleChange}
 											name="confidentiality"
-										/>
-										<Form.Label>무결성</Form.Label>
+										/> */}
+										<Form.Group controlId="confidentiality">
+											<Form.Label>기밀성</Form.Label>
+											<Form.Control
+												{...register('confidentiality', {
+													required: '기밀성을 입력해주세요',
+													min: { value: 1, message: '최소값은 1입니다' },
+													max: { value: 3, message: '최대값은 3입니다' },
+													valueAsNumber: true, // 숫자 처리
+												})}
+												placeholder="기밀성을 입력해주세요"
+												className="mb-2"
+												type="number"
+												value={formData.confidentiality}
+												onChange={handleChange}
+												name="confidentiality"
+											/>
+											{errors.confidentiality && (
+												<p className="text-danger">
+													{errors.confidentiality.message}
+												</p>
+											)}
+										</Form.Group>
+										<Form.Group controlId="integrity">
+											<Form.Label>무결성</Form.Label>
+											<Form.Control
+												{...register('integrity', {
+													required: '무결성을 입력해주세요',
+													min: { value: 1, message: '최소값은 1입니다' },
+													max: { value: 3, message: '최대값은 3입니다' },
+													valueAsNumber: true,
+												})}
+												placeholder="무결성을 입력해주세요"
+												className="mb-2"
+												type="number"
+												value={formData.integrity}
+												onChange={handleChange}
+												name="integrity"
+											/>
+											{errors.integrity && (
+												<p className="text-danger">
+													{errors.integrity.message}
+												</p>
+											)}
+										</Form.Group>
+
+										<Form.Group controlId="availability">
+											<Form.Label>가용성</Form.Label>
+											<Form.Control
+												{...register('availability', {
+													required: '가용성을 입력해주세요',
+													min: { value: 1, message: '최소값은 1입니다' },
+													max: { value: 3, message: '최대값은 3입니다' },
+													valueAsNumber: true,
+												})}
+												placeholder="가용성을 입력해주세요"
+												className="mb-2"
+												type="number"
+												value={formData.availability}
+												onChange={handleChange}
+												name="availability"
+											/>
+											{errors.availability && (
+												<p className="text-danger">
+													{errors.availability.message}
+												</p>
+											)}
+										</Form.Group>
+										{/* <Form.Label>무결성</Form.Label>
 										<Form.Control
 											placeholder="무결성을 입력해주세요"
 											className="mb-2"
@@ -407,7 +494,7 @@ const BasisAssetInfo = ({ formData, handleChange }) => {
 											value={formData.availability}
 											onChange={handleChange}
 											name="availability"
-										/>
+										/> */}
 										<Form.Label>비고</Form.Label>
 										<Form.Control
 											placeholder="비고를 입력해주세요"
@@ -427,7 +514,6 @@ const BasisAssetInfo = ({ formData, handleChange }) => {
 			</Accordion>
 			<Col xs={12} md={8} lg={12}>
 				<PurchasingInfo formData={formData} handleChange={handleChange} />
-
 				<AssetCategories
 					formData={formData}
 					assetClassification={formData.assetClassification}

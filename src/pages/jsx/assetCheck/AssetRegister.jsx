@@ -3,6 +3,7 @@ import { useState } from 'react';
 import FileUpload from './FileUpload';
 import { Button, Row, Col, Container } from 'react-bootstrap';
 import styled from 'styled-components';
+import { redirect } from 'react-router-dom';
 const urlConfig = import.meta.env.VITE_BASIC_URL;
 const ResponsivePadding = styled.div`
 	@media (max-width: 768px) {
@@ -106,6 +107,8 @@ const AssetRegister = () => {
 		modelYear: 0,
 		otherDescription: '',
 		usageFrequency: '',
+		warrantyDetails: '',
+		attachment: '',
 	});
 
 	const handleSubmit = async (e) => {
@@ -148,6 +151,7 @@ const AssetRegister = () => {
 						}
 					}
 				}
+				window.location.replace('/jsx/AssetPage');
 			} else {
 				alert('자산 등록 실패');
 			}
@@ -170,18 +174,19 @@ const AssetRegister = () => {
 	return (
 		<Container>
 			<Row>
-				<Col xs={12} md={8} lg={12}>
-					<ResponsivePadding>
+				<ResponsivePadding>
+					<Col xs={12} md={8} lg={12}>
 						<BasisAssetInfo formData={formData} handleChange={handleChange} />
-					</ResponsivePadding>
-				</Col>
-			</Row>
-			<Row>
-				<Col xs={12} md={8} lg={12}>
-					<ResponsivePadding>
-						<FileUpload files={files} setFiles={setFiles} />
-					</ResponsivePadding>
-				</Col>
+					</Col>
+					<Col xs={12} md={8} lg={12} style={{ paddingTop: '20px' }}>
+						<FileUpload
+							formData={formData}
+							handleChange={handleChange}
+							files={files}
+							setFiles={setFiles}
+						/>
+					</Col>
+				</ResponsivePadding>
 			</Row>
 			<div className="pt-2 d-flex justify-content-center">
 				<Button size="lg" variant="primary" type="submit" onClick={handleSubmit}>

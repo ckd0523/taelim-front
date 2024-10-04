@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Accordion, Card } from 'react-bootstrap';
+import { Accordion, Form } from 'react-bootstrap';
 import { useAccordionButton } from 'react-bootstrap';
 import { FileUploader } from '@/components/FileUploader';
 import { BsCaretUpFill } from 'react-icons/bs';
@@ -54,9 +54,9 @@ function CustomToggle({ children, eventKey }) {
 		</button>
 	);
 }
-const FileUpload = ({ files = [], setFiles }) => {
+const FileUpload = ({ files = [], setFiles, formData, handleChange }) => {
 	const handleFileUpload = (file, fileType) => {
-		const updateFiles = [...files, { file, fileType }];
+		const updateFiles = [{ file, fileType }];
 		setFiles(updateFiles);
 	};
 
@@ -74,22 +74,40 @@ const FileUpload = ({ files = [], setFiles }) => {
 				<CustomToggle eventKey="3">첨부파일 등록</CustomToggle>
 				<Accordion.Collapse eventKey="3">
 					<StyledCardBody className="card-body">
-						<p className="pt-2 mb-2 c fw-bold">이미지 등록</p>
-						<FileUploader
-							showPreview={true}
-							onFileUpload={(file) => handleFileUpload(file, 'PHOTO')}
-						/>
+						<Form>
+							<p className="pt-2 mb-2 c fw-bold">이미지 등록</p>
+							<FileUploader
+								showPreview={true}
+								onFileUpload={(file) => handleFileUpload(file, 'PHOTO')}
+							/>
 
-						<p className="pt-2 mb-2 c fw-bold">보증 세부사항</p>
-						<FileUploader
-							showPreview={true}
-							onFileUpload={(file) => handleFileUpload(file, 'WARRANTY_DETAILS')}
-						/>
-						<p className="pt-2 mb-2 c fw-bold">사용자 메뉴얼 및 기술문서</p>
-						<FileUploader
-							showPreview={true}
-							onFileUpload={(file) => handleFileUpload(file, 'USER_MANUAL')}
-						/>
+							<p className="pt-2 mb-2 c fw-bold">보증 세부사항</p>
+							<FileUploader
+								showPreview={true}
+								onFileUpload={(file) => handleFileUpload(file, 'WARRANTY_DETAILS')}
+							/>
+							<Form.Label className="pt-2">보증 세부사항(글)</Form.Label>
+							<Form.Control
+								type="textarea"
+								rows={4}
+								name="warrantyDetails"
+								value={formData.warrantyDetails}
+								onChange={handleChange}
+							/>
+							<p className="pt-2 mb-2 c fw-bold">사용자 메뉴얼 및 기술문서</p>
+							<FileUploader
+								showPreview={true}
+								onFileUpload={(file) => handleFileUpload(file, 'USER_MANUAL')}
+							/>
+							<Form.Label className="pt-2">사용자 메뉴얼 및 기술문서(글)</Form.Label>
+							<Form.Control
+								type="textarea"
+								rows={4}
+								name="attachment"
+								value={formData.attachment}
+								onChange={handleChange}
+							/>
+						</Form>
 					</StyledCardBody>
 				</Accordion.Collapse>
 			</StyledCard>

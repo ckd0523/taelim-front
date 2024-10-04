@@ -13,7 +13,9 @@ const MaintainDetail = ({ show, selectData, handleClose }) => {
 		repairEndDate: selectData.repairEndDate || '',
 		repairResult: selectData.repairResult,
 		repairFiles: selectData.repairFiles || [],
+		repairStatus: selectData.repairStatus,
 	});
+	console.log('repairStatus : ', formData.repairStatus);
 	const imgRef = useRef();
 	const afterImgRef = useRef();
 
@@ -106,7 +108,6 @@ const MaintainDetail = ({ show, selectData, handleClose }) => {
 		if (imgRef.current.files[0]) {
 			uploadData.append('file', imgRef.current.files[0]);
 			uploadData.append('repairNo', selectData.repairNo);
-
 			uploadData.append('repairType', 'BEFORE_REPAIR');
 		}
 		if (afterImgRef.current.files[0]) {
@@ -124,14 +125,25 @@ const MaintainDetail = ({ show, selectData, handleClose }) => {
 			);
 			if (response.ok) {
 				alert('이미지 업로드 성공');
-				handleClose();
-			} else {
-				imageUploadSuccess = false;
-				alert('이미지 업로드 실패');
 			}
 		} catch (error) {
 			imageUploadSuccess = false;
 			console.error(error);
+		}
+
+		const hasBeforeRepair = formData.repairFiles?.some((file) => file.repairType === '보수전');
+		const hasAfterRepair = formData.repairFiles?.some((file) => file.repairType === '보수후');
+		if (
+			formData.repairStartDate &&
+			formData.repairEndDate &&
+			formData.repairResult &&
+			hasBeforeRepair &&
+			hasAfterRepair
+		) {
+			setFormData((prevState) => ({
+				...prevState,
+				repairStatus: '완료',
+			}));
 		}
 
 		try {
@@ -145,11 +157,7 @@ const MaintainDetail = ({ show, selectData, handleClose }) => {
 
 			if (response.ok) {
 				alert('수정 성공');
-				handleClose();
 				window.location.reload();
-			} else {
-				endDateSaveSuccess = false;
-				alert('수정 실패');
 			}
 		} catch (error) {
 			endDateSaveSuccess = false;
@@ -158,6 +166,7 @@ const MaintainDetail = ({ show, selectData, handleClose }) => {
 
 		if (imageUploadSuccess || endDateSaveSuccess) {
 			alert('저장성공');
+
 			handleClose();
 		}
 	};
@@ -205,13 +214,15 @@ const MaintainDetail = ({ show, selectData, handleClose }) => {
 							selectData.repairFiles
 								.filter((file) => file.repairType === '보수전')
 								.map((file, index) => {
-									return (
+									return file.fileURL ? (
 										<img
 											key={index}
 											src={file.fileURL}
 											width="100%"
 											alt="Before Repair"
 										/>
+									) : (
+										<p>사진/파일이 없습니다</p>
 									);
 								})
 						) : (
@@ -220,7 +231,7 @@ const MaintainDetail = ({ show, selectData, handleClose }) => {
 									{imgPath ? (
 										<img width="200" src={imgPath} />
 									) : (
-										<img width="200" setImgPath={imgPath} />
+										<BsImage size={120} />
 									)}
 								</Form.Label>
 								<Form.Control
@@ -239,6 +250,7 @@ const MaintainDetail = ({ show, selectData, handleClose }) => {
 							selectData.repairFiles
 								.filter((file) => file.repairType === '보수후')
 								.map((file, index) => {
+									// return file.fileURL ? (
 									return (
 										<img
 											key={index}
@@ -247,6 +259,9 @@ const MaintainDetail = ({ show, selectData, handleClose }) => {
 											alt="After Repair"
 										/>
 									);
+									// ) : (
+									// 	<p>사진/파일이 없습니다</p>
+									// );
 								})
 						) : (
 							<FormGroup>
@@ -254,7 +269,7 @@ const MaintainDetail = ({ show, selectData, handleClose }) => {
 									{afterPath ? (
 										<img width="200" src={afterPath} />
 									) : (
-										<img width="200" setafterPath={afterPath} />
+										<BsImage size={120} />
 									)}
 								</Form.Label>
 								<Form.Control

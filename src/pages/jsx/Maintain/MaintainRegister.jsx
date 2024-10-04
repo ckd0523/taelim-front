@@ -55,30 +55,19 @@ const MaintainRegister = ({ assetCode, assetNo }) => {
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 
-		let newStatus = '진행중';
-		const hasBeforeRepair = formData.repairFiles?.some((file) => file.repairType === '보수전');
-		const hasAfterRepair = formData.repairFiles?.some((file) => file.repairType === '보수후');
-		if (
-			formData.repairStartDate &&
-			formData.repairEndDate &&
-			formData.repairResult &&
-			hasBeforeRepair &&
-			hasAfterRepair
-		) {
-			newStatus = '완료';
-		}
+		formData.repairStatus = '진행중';
 
-		const updatedFormData = {
-			...formData,
-			reapirStatus: newStatus,
-		};
+		// const updatedFormData = {
+		// 	...formData,
+		// 	repairStatus: newStatus,
+		// };
 		try {
 			const maintainResponse = await fetch(`${urlConfig}/maintain/register`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
 				},
-				body: JSON.stringify(updatedFormData),
+				body: JSON.stringify(formData),
 			});
 			console.log('assetNo : ', assetNo);
 			console.log('assetCode: ', assetCode);
@@ -89,17 +78,41 @@ const MaintainRegister = ({ assetCode, assetNo }) => {
 
 				// if (files.length > 0) {
 				const uploadedFileNames = await handleFileUpload(repairNo);
+
 				setFormData((prevState) => ({
 					...prevState,
-					repairFiles: [...prevState.fileName, ...uploadedFileNames], // Properly set the file name state
+					// repairFiles: [...prevState.fileName, ...uploadedFileNames], // Properly set the file name state
+					repairFiles: uploadedFileNames,
+					// repairStatus: prevState.repairStatus,
 				}));
 
+				const hasBeforeRepair = formData.repairFiles?.some(
+					(file) => file.repairType === '보수전'
+				);
+				const hasAfterRepair = formData.repairFiles?.some(
+					(file) => file.repairType === '보수후'
+				);
+				if (
+					formData.repairStartDate &&
+					formData.repairEndDate &&
+					formData.repairResult
+					// hasBeforeRepair &&
+					// hasAfterRepair
+				) {
+					formData.repairStatus = '완료';
+					setFormData((prevState) => ({
+						...prevState,
+						repairStatus: '완료',
+					}));
+				}
+				console.log('repairStatus', formData.repairStatus);
 				console.log('uploadFile1: ' + formData.repairFiles);
-				alert('유지보수가 성공적으로 등록되었습니다.');
+
 				// }
 
+				alert('유지보수가 성공적으로 등록되었습니다.');
 				handleClose();
-				window.location.reload();
+				window.location.replace('/jsx/MaintainHist');
 			} else {
 				alert('유지보수 등록 실패하였습니다.');
 			}

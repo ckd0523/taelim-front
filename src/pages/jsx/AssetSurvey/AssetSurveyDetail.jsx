@@ -68,6 +68,7 @@ const AssetSurveyContentCell = React.memo(({ row, assetSurveyContent, onContentC
   );
 });
 
+//--------------------------------------------------------------------------------------------------------------------------
 
 const AssetSurveyDetail = () => {
   //페이지에 들어올 때 QR로 찍은 assetCode가 바로 들어갈 수 있게 바로 input에 focus를 두기 위함
@@ -288,6 +289,7 @@ const AssetSurveyDetail = () => {
 
   const videoRef = useRef(null);
   const [isScanning, setIsScanning] = useState(false);
+  //const [scanInterval, setScanInterval] = useState(null); // 스캔 주기 상태 관리
 
   // QR 코드 인식 함수
   const startScanning = async () => {
@@ -297,21 +299,37 @@ const AssetSurveyDetail = () => {
     const stream = await navigator.mediaDevices.getUserMedia({ video: true });
     videoRef.current.srcObject = stream; // 비디오 요소에 스트림 설정
 
-    QRScanner.scanImage(videoRef.current, { returnDetailedScanResult: true })
-      .then(result => {
-        console.log('QR 코드 인식 결과:', result);
-        setIsScanning(false);
-        // QR 코드 인식 후 추가 로직을 여기에 작성
-      })
-      .catch(err => {
-        console.error('QR 코드 인식 오류:', err);
-        setIsScanning(false);
-      });
+    // 1초마다 QR 코드를 스캔하도록 설정
+    const intervalId = setInterval(() => {
+      //setScanInterval(intervalId); // interval ID를 저장하여 스캔 종료 시 활용
+      console.log(intervalId);
+      QRScanner.scanImage(videoRef.current, { returnDetailedScanResult: true })
+        .then(result => {
+          console.log('QR 코드 인식 결과:', result);
+          alert(`QR 코드가 인식되었습니다: ${result.data}`);
+          stopScanning(intervalId); // 성공적으로 스캔되면 스캔을 중지
+        })
+        .catch(err => {
+          console.error('QR 코드 인식 오류:', err);
+          // 에러 발생 시에도 계속 스캔을 시도
+        });
+    }, 1000); // 1초마다 스캔
+
+
   };
 
-  const stopScanning = () => {
+  // 스캔 중지 함수
+  const stopScanning = (intervalId) => {
     setIsScanning(false);
-    QRScanner.stop(); // 스캔 중지
+
+    clearInterval(intervalId); // 스캔 주기를 중지
+    //setScanInterval(null);
+
+
+    // 비디오 스트림 중지
+    const stream = videoRef.current.srcObject;
+    const tracks = stream.getTracks();
+    tracks.forEach(track => track.stop());
   };
 
   return (
@@ -341,7 +359,7 @@ const AssetSurveyDetail = () => {
       </Card>
 
       <Row className='justify-content-between'>
-        <Col lg={4}>
+        <Col>
           <Row>
             <Col>
               {/* <p style={{ marginBottom: 8, marginTop: 4 }}><strong>미확인 자산</strong></p> */}
@@ -364,21 +382,22 @@ const AssetSurveyDetail = () => {
               </Button>
             </Col>
 
-            <Col>
-              <InputGroup>
-                <Form.Control
-                  ref={inputRef}
-                />
-              </InputGroup>
-
+            <Col sm={2}>
+              {localStorage.getItem('surveyStatus') === 'true' ? '' :
+                <InputGroup>
+                  <Form.Control
+                    placeholder='QR 리더기'
+                    ref={inputRef}
+                  />
+                </InputGroup>
+              }
             </Col>
           </Row>
         </Col>
 
-
-
         <Col className='col-auto'>
-          <Button onClick={startScanning}>QR인식</Button>
+          {localStorage.getItem('surveyStatus') === 'true' ? '' : isScanning ? <Button onClick={stopScanning}>QR인식 중지</Button> : <Button onClick={startScanning}>QR인식</Button>}
+
           <>
             {isScanning && (
               <video ref={videoRef} style={{ width: '100%', height: 'auto' }} autoPlay />

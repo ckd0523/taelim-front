@@ -289,48 +289,70 @@ const AssetSurveyDetail = () => {
 
   const videoRef = useRef(null);
   const [isScanning, setIsScanning] = useState(false);
-  //const [scanInterval, setScanInterval] = useState(null); // 스캔 주기 상태 관리
+  const scanIntervalRef = useRef(null);
 
-  // QR 코드 인식 함수
-  const startScanning = async () => {
+  const startScanning = useCallback(async () => {
     setIsScanning(true);
 
-    // 비디오 스트림 가져오기
-    const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-    videoRef.current.srcObject = stream; // 비디오 요소에 스트림 설정
+    try {
+      let stream;
+      const constraints = {
+        video: { facingMode: "environment" }
+      };
 
-    // 1초마다 QR 코드를 스캔하도록 설정
-    const intervalId = setInterval(() => {
-      //setScanInterval(intervalId); // interval ID를 저장하여 스캔 종료 시 활용
-      console.log(intervalId);
-      QRScanner.scanImage(videoRef.current, { returnDetailedScanResult: true })
-        .then(result => {
-          console.log('QR 코드 인식 결과:', result);
-          alert(`QR 코드가 인식되었습니다: ${result.data}`);
-          stopScanning(intervalId); // 성공적으로 스캔되면 스캔을 중지
-        })
-        .catch(err => {
-          console.error('QR 코드 인식 오류:', err);
-          // 에러 발생 시에도 계속 스캔을 시도
-        });
-    }, 1000); // 1초마다 스캔
+      try {
+        // 먼저 후면 카메라로 시도
+        stream = await navigator.mediaDevices.getUserMedia(constraints);
+      } catch (err) {
+        console.log('후면 카메라 사용 불가, 다른 카메라로 시도합니다.', err);
+        // 후면 카메라가 없거나 사용할 수 없는 경우, 사용 가능한 카메라로 시도
+        stream = await navigator.mediaDevices.getUserMedia({ video: true });
+      }
 
+      if (videoRef.current) {
+        videoRef.current.srcObject = stream;
+      }
 
-  };
+      scanIntervalRef.current = setInterval(() => {
+        if (videoRef.current) {
+          QRScanner.scanImage(videoRef.current, { returnDetailedScanResult: true })
+            .then(result => {
+              console.log('QR 코드 인식 결과:', result);
+              alert(`QR 코드가 인식되었습니다: ${result.data}`);
+              // QR 코드 인식 후 추가 작업을 여기에 구현하세요.
+              // 예: 인식된 데이터로 자산 정보 업데이트
+            })
+            .catch(err => {
+              // QR 코드를 찾지 못한 경우 조용히 넘어갑니다.
+              if (err.name !== 'QRScannerError') {
+                console.error('QR 코드 인식 오류:', err);
+              }
+            });
+        }
+      }, 1000);
 
-  // 스캔 중지 함수
-  const stopScanning = (intervalId) => {
+    } catch (err) {
+      console.error('카메라 접근 오류:', err);
+      setIsScanning(false);
+      alert('카메라에 접근할 수 없습니다. 카메라 권한을 확인해주세요.');
+    }
+  }, []);
+
+  const stopScanning = useCallback(() => {
     setIsScanning(false);
 
-    clearInterval(intervalId); // 스캔 주기를 중지
-    //setScanInterval(null);
+    if (scanIntervalRef.current) {
+      clearInterval(scanIntervalRef.current);
+      scanIntervalRef.current = null;
+    }
 
-
-    // 비디오 스트림 중지
-    const stream = videoRef.current.srcObject;
-    const tracks = stream.getTracks();
-    tracks.forEach(track => track.stop());
-  };
+    if (videoRef.current && videoRef.current.srcObject) {
+      const stream = videoRef.current.srcObject;
+      const tracks = stream.getTracks();
+      tracks.forEach(track => track.stop());
+      videoRef.current.srcObject = null;
+    }
+  }, []);
 
   return (
     <div>
@@ -380,6 +402,9 @@ const AssetSurveyDetail = () => {
               >
                 <strong>미확인 자산 보기</strong>
               </Button>
+            </Col>
+            <Col>
+              <label>현재 http 환경이므로 IOS는 카메라 사용불가,<br /> 다른 OS는 크롬 설정을 통해 가능</label>
             </Col>
 
             <Col sm={2}>

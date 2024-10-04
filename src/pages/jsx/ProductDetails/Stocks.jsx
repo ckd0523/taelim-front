@@ -20,13 +20,12 @@ const Stocks = () => {
 	const [attachment, setAttachment] = useState([]);
 	//수정이력 데이터
 	const [updateHistoryData, setUpdateHistoryData] = useState([]);
-	const [updateHistoryColumns, setUpdateHistoryColumns] = useState([]);
+
 	//유지보수이력
 	const [maintainHistoryData, setMaintainHistoryData] = useState([]);
-	const [maintainHistoryColumns, setMaintainHistoryColumns] = useState([]);
+
 	//자산조사이력
 	const [surveyHistoryData, setSurveyHistoryData] = useState([]);
-	const [surveyHistoryColumns, setSurveyHistoryColumns] = useState([]);
 
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(null);
@@ -242,7 +241,11 @@ const Stocks = () => {
 				</Col>
 			</Row>
 			<Row>
-				<Tabs1 updateList={updateHistoryData} repairList={maintainHistoryData} />
+				<Tabs1
+					updateList={updateHistoryData}
+					repairList={maintainHistoryData}
+					surveyList={surveyHistoryData}
+				/>
 			</Row>
 		</>
 	);

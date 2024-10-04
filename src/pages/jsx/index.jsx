@@ -37,6 +37,7 @@ export default function jsx() {
 				<Route path="AssetPage" element={<AssetPage />} />
 				<Route path="AssetPageTest" element={<AssetPageTest />} />
 				<Route path="AssetSurveyDetail" element={<AssetSurveyDetail />} />
+
 				{/* <Route path="SystemSetting" element={<SystemSetting />} /> */}
 			</Route>
 		</Routes>

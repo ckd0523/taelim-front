@@ -1,6 +1,6 @@
 //기본 자산 정보
 import AssetCategories from './AssetCategories';
-import { useAccordionButton } from 'react-bootstrap';
+import { useAccordionButton, Form } from 'react-bootstrap';
 
 import PurchasingInfo from './PurchasingInfo';
 import './ButtonStyle.css';
@@ -9,8 +9,7 @@ import { Row, Col, Card, Accordion } from 'react-bootstrap';
 import { BsCaretUpFill } from 'react-icons/bs';
 import { BsCaretDownFill } from 'react-icons/bs';
 
-import { TextInput, TextAreaInput } from '@/components/Form';
-import { useForm, FormProvider } from 'react-hook-form';
+import { useForm, FormProvider, useFormContext } from 'react-hook-form';
 import { CustomDatePicker } from '@/components/Form';
 import { useState } from 'react';
 import Select from 'react-select';
@@ -41,7 +40,7 @@ const StyledCardBody = styled.div`
 	flex-direction: column;
 	justify-content: space-between;
 `;
-
+// const { register } = useFormContext;
 function CustomToggle({ children, eventKey }) {
 	const [isOpen, setIsOpen] = useState(false);
 	const decoratedOnClick = useAccordionButton(eventKey, () => setIsOpen((prevOpen) => !prevOpen));
@@ -143,7 +142,7 @@ const ownership = [
 	{ value: 'OWNED', label: '소유' },
 	{ value: 'LEASED', label: '임대' },
 ];
-const useSta = [
+const usestate = [
 	{ value: 'NEW', label: '신규' },
 	{ value: 'IN_USE', label: '사용중' },
 	{ value: 'UNDER_MAINTENANCE', label: '유지관리 중' },
@@ -170,7 +169,7 @@ const BasisAssetInfo = ({ formData, handleChange }) => {
 									<Col lg={5}>
 										<p className="mb-2 c fw-bold">자산분류</p>
 										<Select
-											className="mb-3"
+											className="mb-2"
 											placeholder="자산분류를 선택해주세요"
 											name="assetClassification"
 											value={assetClassification.find(
@@ -187,18 +186,18 @@ const BasisAssetInfo = ({ formData, handleChange }) => {
 											}
 											options={assetClassification}
 										></Select>
-										<TextInput
-											label="자산명"
-											type="text"
+										<Form.Label>자산명</Form.Label>
+										<Form.Control
 											placeholder="자산명을 입력해주세요"
-											name="assetName"
-											containerClass={'mb-3'}
+											className="mb-2"
+											type="text"
 											value={formData.assetName}
 											onChange={handleChange}
+											name="assetName"
 										/>
 										<p className="mb-2 c fw-bold">자산기준</p>
 										<Select
-											className="mb-3"
+											className="mb-2"
 											placeholder="자산기준을 선택해주세요"
 											name="assetBasis"
 											value={assetBasis.find(
@@ -214,27 +213,27 @@ const BasisAssetInfo = ({ formData, handleChange }) => {
 											}
 											options={assetBasis}
 										></Select>
-										<TextInput
-											label="제조사"
-											type="text"
+										<Form.Label>제조사</Form.Label>
+										<Form.Control
 											placeholder="제조사를 입력해주세요"
-											name="manufacturingCompany"
-											containerClass={'mb-3'}
+											className="mb-2"
+											type="text"
 											value={formData.manufacturingCompany}
 											onChange={handleChange}
+											name="manufacturingCompany"
 										/>
-										<TextInput
-											label="목적"
-											type="text"
+										<Form.Label>목적</Form.Label>
+										<Form.Control
 											placeholder="목적을 입력해주세요"
-											name="purpose"
-											containerClass={'mb-3'}
+											className="mb-2"
+											type="text"
 											value={formData.purpose}
 											onChange={handleChange}
+											name="purpose"
 										/>
 										<p className="mb-2 c fw-bold">부서</p>
 										<Select
-											className="mb-3"
+											className="mb-2"
 											placeholder="부서를 선택해주세요"
 											name="department"
 											value={department.find(
@@ -252,7 +251,7 @@ const BasisAssetInfo = ({ formData, handleChange }) => {
 										></Select>
 										<p className="mb-2 c fw-bold">위치</p>
 										<Select
-											className="mb-3"
+											className="mb-2"
 											placeholder="위치를 선택해주세요"
 											name="assetLocation"
 											value={assetLocation.find(
@@ -268,50 +267,50 @@ const BasisAssetInfo = ({ formData, handleChange }) => {
 											}
 											options={assetLocation}
 										></Select>
-										<TextInput
-											label="사용자"
+										<Form.Label>사용자</Form.Label>
+										<Form.Control
+											placeholder="사용자를 입력해주세요"
+											className="mb-2"
 											type="text"
-											placeholder="사용자을 입력해주세요"
-											name="assetUser"
-											containerClass={'mb-3'}
 											value={formData.assetUser}
 											onChange={handleChange}
+											name="assetUser"
 										/>
-										<TextInput
-											label="소유자"
-											type="text"
+										<Form.Label>소유자</Form.Label>
+										<Form.Control
 											placeholder="소유자를 입력해주세요"
-											name="assetOwner"
-											containerClass={'mb-3'}
+											className="mb-2"
+											type="text"
 											value={formData.assetOwner}
 											onChange={handleChange}
+											name="assetOwner"
 										/>
-										<TextInput
-											label="보안담당자"
-											type="text"
+										<Form.Label>보안담당자</Form.Label>
+										<Form.Control
 											placeholder="보안담당자를 입력해주세요"
-											name="assetSecurityManager"
-											containerClass={'mb-3'}
+											className="mb-2"
+											type="text"
 											value={formData.assetSecurityManager}
 											onChange={handleChange}
+											name="assetSecurityManager"
 										/>
 									</Col>
 									<Col lg={1} className="d-flex align-items-stretch">
 										<div className="vertical-divider"></div>
 									</Col>
 									<Col lg={5}>
-										<TextInput
-											label="수량"
-											type="number"
+										<Form.Label>수량</Form.Label>
+										<Form.Control
 											placeholder="수량을 입력해주세요"
-											name="quantity"
-											containerClass={'mb-3'}
+											className="mb-2"
+											type="number"
 											value={formData.quantity}
 											onChange={handleChange}
+											name="quantity"
 										/>
 										<p className="mb-2 c fw-bold">소유권</p>
 										<Select
-											className="mb-3"
+											className="mb-2"
 											placeholder="소유권을 선택해주세요"
 											name="ownership"
 											value={ownership.find(
@@ -329,25 +328,25 @@ const BasisAssetInfo = ({ formData, handleChange }) => {
 										></Select>
 										<p className="mb-2 c fw-bold">사용상태</p>
 										<Select
-											className="mb-3"
+											className="mb-2"
 											placeholder="사용상태를 선택해주세요"
-											name="useSta"
-											value={useSta.find(
-												(option) => option.value === formData.useState
+											name="usestate"
+											value={usestate.find(
+												(option) => option.value === formData.usestate
 											)}
 											onChange={(selectedOption) =>
 												handleChange({
 													target: {
-														name: 'useSta',
+														name: 'usestate',
 														value: selectedOption.value,
 													},
 												})
 											}
-											options={useSta}
+											options={usestate}
 										></Select>
 										<p className="mb-2 c fw-bold">가동여부</p>
 										<Select
-											className="mb-3"
+											className="mb-2"
 											placeholder="가동여부를 선택해주세요"
 											name="operationStatus"
 											value={operationStatus.find(
@@ -364,7 +363,7 @@ const BasisAssetInfo = ({ formData, handleChange }) => {
 											}
 											options={operationStatus}
 										></Select>
-										<div className="form-group mb-3">
+										<div className="form-group mb-2">
 											<label className="form-label">도입일자</label> <br />
 											<CustomDatePicker
 												type="date"
@@ -382,41 +381,42 @@ const BasisAssetInfo = ({ formData, handleChange }) => {
 												}
 											/>
 										</div>
-										<TextInput
-											label="기밀성"
+										<Form.Label>기밀성</Form.Label>
+										<Form.Control
+											placeholder="기밀성을 입력해주세요"
+											className="mb-2"
 											type="number"
-											placeholder="기밀성 입력해주세요"
-											name="confidentiality"
-											containerClass={'mb-3'}
 											value={formData.confidentiality}
 											onChange={handleChange}
+											name="confidentiality"
 										/>
-										<TextInput
-											label="무결성"
-											type="number"
+										<Form.Label>무결성</Form.Label>
+										<Form.Control
 											placeholder="무결성을 입력해주세요"
-											name="integrity"
-											containerClass={'mb-3'}
+											className="mb-2"
+											type="number"
 											value={formData.integrity}
 											onChange={handleChange}
+											name="integrity"
 										/>
-										<TextInput
-											label="가용성"
-											type="number"
+										<Form.Label>가용성</Form.Label>
+										<Form.Control
 											placeholder="가용성을 입력해주세요"
-											name="availability"
-											containerClass={'mb-3'}
+											className="mb-2"
+											type="number"
 											value={formData.availability}
 											onChange={handleChange}
+											name="availability"
 										/>
-										<TextAreaInput
-											label="비고"
-											name="note"
-											rows={4}
-											containerClass={'mb-3'}
-											key="textarea"
+										<Form.Label>비고</Form.Label>
+										<Form.Control
+											placeholder="비고를 입력해주세요"
+											className="mb-2"
+											as="textarea"
 											value={formData.note}
 											onChange={handleChange}
+											name="note"
+											rows={4}
 										/>
 									</Col>
 								</Row>

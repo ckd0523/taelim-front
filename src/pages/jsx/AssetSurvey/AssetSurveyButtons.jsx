@@ -5,6 +5,8 @@ import { useToggle } from '@/hooks';
 import { Link } from 'react-router-dom';
 
 const Buttons = ({ onClickRegister, onDelete }) => {
+  const [signUpModal, toggleSignUp] = useToggle();
+
   return (
     <Row className='row-cols-auto justify-content-end'>
       <Col>

@@ -1,8 +1,8 @@
 //재무 및 구매정보 컬럼
-import { Row, Col, Accordion, Card } from 'react-bootstrap';
+import { Row, Col, Accordion, Form } from 'react-bootstrap';
 import { useAccordionButton } from 'react-bootstrap';
 
-import { TextInput, TextAreaInput } from '@/components/Form';
+import { TextInput } from '@/components/Form';
 import { useForm, FormProvider } from 'react-hook-form';
 import { CustomDatePicker } from '@/components/Form';
 import { BsCaretUpFill } from 'react-icons/bs';
@@ -73,19 +73,19 @@ const PurchasingInfo = ({ formData, handleChange }) => {
 							<StyledCardBody className="card-body">
 								<Row>
 									<Col lg={5}>
-										<TextInput
-											containerClass={'mb-3'}
-											name="purchaseCost"
-											label="구매비용"
-											type="number"
+										<Form.Label>구매비용</Form.Label>
+										<Form.Control
 											placeholder="구매비용을 입력해주세요"
+											className="mb-2"
+											type="number"
 											value={formData.purchaseCost}
 											onChange={handleChange}
+											name="purchaseCost"
 										/>
-										<div className="form-group mb-3">
+										<div className="form-group mb-2">
 											<label className="form-label">구매날짜</label> <br />
 											<CustomDatePicker
-												containerClass={'mb-3'}
+												className="mb-2"
 												type="date"
 												name="purchaseDate"
 												hideAddon={true}
@@ -101,14 +101,14 @@ const PurchasingInfo = ({ formData, handleChange }) => {
 												}
 											/>
 										</div>
-										<TextInput
-											containerClass={'mb-3'}
-											name="usefulLife"
-											label="내용연수"
-											type="number"
+										<Form.Label>내용연수</Form.Label>
+										<Form.Control
 											placeholder="내용연수를 입력해주세요"
+											className="mb-2"
+											type="number"
 											value={formData.usefulLife}
 											onChange={handleChange}
+											name="usefulLife"
 										/>
 										<p className="mb-2 c fw-bold">감가상각방법</p>
 										<Select
@@ -134,29 +134,32 @@ const PurchasingInfo = ({ formData, handleChange }) => {
 										<div className="vertical-divider"></div>
 									</Col>
 									<Col lg={5}>
-										<TextInput
-											containerClass={'mb-3'}
-											label="구입처"
+										<Form.Label>구입처</Form.Label>
+										<Form.Control
+											placeholder="구입처를 입력해주세요"
+											className="mb-2"
 											type="text"
-											name="purchaseSource"
 											value={formData.purchaseSource}
 											onChange={handleChange}
+											name="purchaseSource"
 										/>
-										<TextInput
-											containerClass={'mb-3'}
-											label="구입처연락처"
+										<Form.Label>구입처연락처</Form.Label>
+										<Form.Control
+											placeholder="구입처연락처를 입력해주세요"
+											className="mb-2"
 											type="text"
-											name="contactInformation"
 											value={formData.contactInformation}
 											onChange={handleChange}
+											name="contactInformation"
 										/>
-										<TextInput
-											containerClass={'mb-3'}
-											label="취득경로"
+										<Form.Label>취득경로</Form.Label>
+										<Form.Control
+											placeholder="취득경로를 입력해주세요"
+											className="mb-2"
 											type="text"
-											name="acquisitionRoute"
 											value={formData.acquisitionRoute}
 											onChange={handleChange}
+											name="acquisitionRoute"
 										/>
 										<div className="form-group mb-3">
 											<label className="form-label">유지기간</label> <br />

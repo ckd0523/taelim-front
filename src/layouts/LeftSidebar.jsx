@@ -133,7 +133,7 @@ const SideBarContent = () => {
 												<InputGroup>
 													<Form.Control type='number'
 														value={amountSetData ? amountSetData.high_value_standard : -1}
-														readOnly={modify}
+														disabled={modify}
 														onChange={(e) => setAmountSetData(prev => ({
 															...prev,
 															high_value_standard: e.target.value
@@ -141,39 +141,14 @@ const SideBarContent = () => {
 														min={0}
 													/>
 												</InputGroup>
-
-												{/* 
-												<label>고가치 기준 금액</label>
-												<input
-													type='number'
-													value={amountSetData ? amountSetData.high_value_standard : -1}
-													readOnly={modify}
-													onChange={(e) => setAmountSetData(prev => ({
-														...prev,
-														high_value_standard: e.target.value
-													}))}
-													min={0}
-												/>
-												<br></br>
-												<label>저가치 기준 금액</label>
-												<input
-													type='number'
-													value={amountSetData ? amountSetData.low_value_standard : -1}
-													readOnly={modify}
-													onChange={(e) => setAmountSetData(prev => ({
-														...prev,
-														low_value_standard: e.target.value
-													}))}
-													min={0}
-												/>
-												*/}
 											</Col>
+
 											<Col lg={4}>
 												<label>저가치 기준 금액</label>
 												<InputGroup>
 													<Form.Control type='number'
 														value={amountSetData ? amountSetData.low_value_standard : -1}
-														readOnly={modify}
+														disabled={modify}
 														onChange={(e) => setAmountSetData(prev => ({
 															...prev,
 															low_value_standard: e.target.value
@@ -244,7 +219,7 @@ const LeftSidebar = ({ isCondensed, leftbarDark }) => {
 			</Link>
 
 			{!isCondensed && (
-				<SimpleBar style={{ maxHeight: '100%' }} scrollbarMaxSize={320}>
+				<SimpleBar style={{ maxHeight: '100%' }} scrollbarMaxSize={320} >
 					<SideBarContent />
 				</SimpleBar>
 			)}

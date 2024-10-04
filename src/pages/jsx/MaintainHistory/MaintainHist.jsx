@@ -51,8 +51,13 @@ const columns = [
 		defaultCanSort: true,
 	},
 	{
-		Header: '유지보수일자',
+		Header: '시작일자',
 		accessor: 'repairStartDate',
+		defaultCanSort: true,
+	},
+	{
+		Header: '종료일자',
+		accessor: 'repairEndDate',
 		defaultCanSort: true,
 	},
 	{
@@ -62,8 +67,24 @@ const columns = [
 	},
 	{
 		Header: '상태',
-		accessor: 'maintainStatus',
+		accessor: 'repairStatus',
 		defaultCanSort: true,
+		Cell: ({ row }) => {
+			const { repairStartDate, repairEndDate, repairResult, repairFiles } = row.original;
+			let status = '진행중';
+			const hasBeforeRepair = repairFiles?.some((file) => file.repairType === '보수전');
+			const hasAfterRepair = repairFiles?.some((file) => file.repairType === '보수후');
+			if (
+				repairStartDate &&
+				repairEndDate &&
+				repairResult &&
+				hasBeforeRepair &&
+				hasAfterRepair
+			) {
+				status = '완료';
+			}
+			return status;
+		},
 	},
 ];
 
@@ -87,7 +108,10 @@ const MaintainHist = () => {
 		setSelectData(rowdata);
 		setShow(true);
 	};
-	const handleClose = () => setShow(false);
+	const handleClose = () => {
+		setShow(false);
+		setSelectData('');
+	};
 
 	useEffect(() => {
 		const requestOptions = {

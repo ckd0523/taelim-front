@@ -748,6 +748,17 @@ const RowDetails = ({ row, assetCode, onClose, formData: initialFormData }) => {
 												</thead>
 												<tbody>
 													{/* 유지보수 이력 데이터를 맵핑하여 출력 */}
+													{formData.repairHistory.map((repair, index) => (
+														<tr key={index}>
+															<td>{repair.repairNo || index + 1}</td>
+															<td>{repair.assetCode}</td>
+															<td>{repair.repairBy}</td>
+															<td>{repair.repairResult}</td>
+															<td>{repair.repairStartDate}</td>
+															<td>{repair.repairEnDate}</td>
+															<td>{repair.status}</td>
+														</tr>
+													))}
 												</tbody>
 											</BootstrapTable>
 										</div>
@@ -767,14 +778,41 @@ const RowDetails = ({ row, assetCode, onClose, formData: initialFormData }) => {
 														<th>번호</th>
 														<th>자산코드</th>
 														<th>자산명</th>
-														<th>수정일자</th>
-														<th>수정요청자</th>
-														<th>수정사유</th>
-														<th>수정내용</th>
+														<th>회차</th>
+														<th>자산위치</th>
+														<th>자산소유자</th>
+														<th>자산담당자</th>
+														<th>정위치유무</th>
+														<th>상태</th>
+														<th>내용</th>
 													</tr>
 												</thead>
 												<tbody>
 													{/* 조사 이력 데이터를 맵핑하여 출력 */}
+													{formData.surveyHistory.map((survey, index) => (
+														<tr key={index}>
+															<td>{survey.assetSurveyDetailNo}</td>
+															<td>{survey.assetCode}</td>
+															<td>{survey.assetName}</td>
+															<td>{survey.round}</td>
+															<td>{survey.assetSurveyLocation}</td>
+															<td>{survey.assetSurveyBy}</td>
+															<td>{survey.assetSurveyBy}</td>
+															{/* exactLocation 값이 true면 "정위치 유", false면 "정위치 무" */}
+															<td>
+																{survey.exactLocation
+																	? '정위치 유'
+																	: '정위치 무'}
+															</td>
+															{/* assetStatus 값이 true면 "정상", false면 "파손" */}
+															<td>
+																{survey.assetStatus
+																	? '정상'
+																	: '파손'}
+															</td>
+															<td>{survey.assetSurveyContent}</td>
+														</tr>
+													))}
 												</tbody>
 											</BootstrapTable>
 										</div>

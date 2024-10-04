@@ -17,4 +17,5 @@ const quickAccessFiles = [
 		location: '[태림]화면설계서_V4_240813.pdf',
 	},
 ];
+
 export { quickAccessFiles };

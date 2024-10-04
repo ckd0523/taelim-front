@@ -1,93 +1,121 @@
-import { Row, Col, Tab, Nav, Table } from 'react-bootstrap'; // Table 컴포넌트를 추가로 임포트합니다.
+import { Row, Col, Tab, Tabs, Nav, Table as BootstrapTable } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import classnames from 'classnames';
 
-const Tabs = () => {
-	const tabContents = [
-		{
-			id: '1',
-			title: '수정내역',
-			tableData: [
-				{ id: 1, name: 'Item 1', description: 'Description 1' },
-				{ id: 2, name: 'Item 2', description: 'Description 2' },
-			],
-		},
-		{
-			id: '2',
-			title: '유지보수이력',
-			tableData: [
-				{ id: 1, name: 'Item 3', description: 'Description 3' },
-				{ id: 2, name: 'Item 4', description: 'Description 4' },
-			],
-		},
-		{
-			id: '3',
-			title: '자산조사이력',
-			tableData: [
-				{ id: 1, name: 'Item 5', description: 'Description 5' },
-				{ id: 2, name: 'Item 6', description: 'Description 6' },
-			],
-		},
-	];
-
+const Tabs1 = ({ updateList, repairList, surveyList }) => {
+	console.log('잘들어오나', updateList);
 	return (
 		<>
-			<Tab.Container defaultActiveKey="Profile">
-				<Nav variant="tabs">
-					{tabContents.map((tab, index) => {
-						return (
-							<Nav.Item key={index.toString()}>
-								<Nav.Link as={Link} to="" eventKey={tab.title}>
-									<i
-										className={classnames(
-											// icon 관련 코드를 제거하거나 추가 필요
-											'd-md-none',
-											'd-block',
-											'me-1'
-										)}
-									></i>
-									<span className="d-none d-md-block">{tab.title}</span>
-								</Nav.Link>
-							</Nav.Item>
-						);
-					})}
-				</Nav>
+			<div style={{ marginTop: '20px' }}>
+				<Tabs defaultActiveKey="updateHistory" id="uncontrolled-tab-example">
+					<Tab eventKey="updateHistory" title="수정이력">
+						<div style={{ padding: '20px', border: '2px solid #000' }}>
+							<BootstrapTable striped bordered hover className="table-detail">
+								<thead>
+									<tr>
+										<th>번호</th>
+										<th>자산코드</th>
+										<th>수정일자</th>
+										<th>수정요청자</th>
+										<th>수정사유</th>
+										<th>수정내용</th>
+									</tr>
+								</thead>
+								<tbody>
+									{updateList.map((update, index) => (
+										<tr key={index}>
+											<td>{update.assetNo || index + 1}</td>
+											<td>{update.assetCode}</td>
+											<td>{update.demandDate}</td>
+											<td>{update.demandBy || '정보 없음'}</td>
+											<td>{update.updateReason || '정보 없음'}</td>
+											<td>{update.updateDetail || '정보 없음'}</td>
+										</tr>
+									))}
+								</tbody>
+							</BootstrapTable>
+						</div>
+					</Tab>
 
-				<Tab.Content>
-					{tabContents.map((tab, index) => {
-						return (
-							<Tab.Pane eventKey={tab.title} id={tab.id} key={index.toString()}>
-								<Row>
-									<Col sm="12">
-										<p className="mt-3">{tab.text}</p>
-										{/* 테이블 추가 부분 */}
-										<Table striped bordered hover>
-											<thead>
-												<tr>
-													<th>ID</th>
-													<th>Name</th>
-													<th>Description</th>
-												</tr>
-											</thead>
-											<tbody>
-												{tab.tableData &&
-													tab.tableData.map((item) => (
-														<tr key={item.id}>
-															<td>{item.id}</td>
-															<td>{item.name}</td>
-															<td>{item.description}</td>
-														</tr>
-													))}
-											</tbody>
-										</Table>
-									</Col>
-								</Row>
-							</Tab.Pane>
-						);
-					})}
-				</Tab.Content>
-			</Tab.Container>
+					<Tab eventKey="maintenanceHistory" title="유지보수이력">
+						{/* 유지보수이력 테이블 */}
+						<div style={{ padding: '20px', border: '2px solid #000' }}>
+							<BootstrapTable striped bordered hover className="table-detail">
+								<thead>
+									<tr>
+										<th>번호</th>
+										<th>자산코드</th>
+										<th>유지보수자</th>
+										<th>유지보수내용</th>
+										<th>시작일자</th>
+										<th>종료일자</th>
+										<th>완료/진행중</th>
+									</tr>
+								</thead>
+								<tbody>
+									{/* 유지보수 이력 데이터를 맵핑하여 출력 */}
+									{repairList.map((repair, index) => (
+										<tr key={index}>
+											<td>{repair.repairNo || index + 1}</td>
+											<td>{repair.assetCode}</td>
+											<td>{repair.repairBy}</td>
+											<td>{repair.repairResult}</td>
+											<td>{repair.repairStartDate}</td>
+											<td>{repair.repairEndDate}</td>
+											<td>{repair.repairStatus}</td>
+										</tr>
+									))}
+								</tbody>
+							</BootstrapTable>
+						</div>
+					</Tab>
+
+					<Tab eventKey="investigationHistory" title="자산조사이력">
+						{/* 자산조사이력 테이블 */}
+						<div style={{ padding: '20px', border: '2px solid #000' }}>
+							<BootstrapTable striped bordered hover className="table-detail">
+								<thead>
+									<tr>
+										<th>번호</th>
+										<th>자산코드</th>
+										<th>자산명</th>
+										<th>회차</th>
+										<th>자산위치</th>
+										<th>자산소유자</th>
+										<th>자산담당자</th>
+										<th>정위치유무</th>
+										<th>상태</th>
+										<th>내용</th>
+									</tr>
+								</thead>
+								<tbody>
+									{/* 조사 이력 데이터를 맵핑하여 출력 */}
+									{surveyList.map((survey, index) => (
+										<tr key={index}>
+											<td>{survey.assetSurveyDetailNo}</td>
+											<td>{survey.assetCode}</td>
+											<td>{survey.assetName}</td>
+											<td>{survey.round}</td>
+											<td>{survey.assetSurveyLocation}</td>
+											<td>{survey.assetSurveyBy}</td>
+											<td>{survey.assetSurveyBy}</td>
+											{/* exactLocation 값이 true면 "정위치 유", false면 "정위치 무" */}
+											<td>
+												{survey.exactLocation ? '정위치 유' : '정위치 무'}
+											</td>
+											{/* assetStatus 값이 true면 "정상", false면 "파손" */}
+											<td>{survey.assetStatus ? '정상' : '파손'}</td>
+											<td>{survey.assetSurveyContent}</td>
+										</tr>
+									))}
+								</tbody>
+							</BootstrapTable>
+						</div>
+					</Tab>
+				</Tabs>
+			</div>
 		</>
 	);
 };
-export default Tabs;
+
+export default Tabs1;

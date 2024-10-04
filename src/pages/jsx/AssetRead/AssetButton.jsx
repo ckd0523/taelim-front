@@ -36,7 +36,7 @@ const AssetButtons = ({ handleButtonClick, handleQrClick, handleExcelClick, rowS
 				</Button>
 			</Col>
 			<Col>
-				<Button className="btn btn-info" onClick={handleQrClick}>
+				<Button className="btn btn-info" onClick={() => handleQrClick(rowSelect)}>
 					QR출력
 				</Button>
 			</Col>

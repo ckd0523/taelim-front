@@ -5,7 +5,6 @@ import Stocks from './Stocks';
 
 // images
 import productImg1 from '@/assets/images/products/product-5.jpg';
-import Tabs from './Tab';
 
 const ProductDetailsEcom = () => {
 	return (
@@ -20,9 +19,6 @@ const ProductDetailsEcom = () => {
 								<Col lg={12}>
 									<Stocks />
 								</Col>
-							</Row>
-							<Row>
-								<Tabs />
 							</Row>
 						</Card.Body>
 					</Card>

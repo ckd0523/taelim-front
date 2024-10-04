@@ -16,7 +16,7 @@ import { BsCaretUpFill } from 'react-icons/bs';
 import { BsCaretDownFill } from 'react-icons/bs';
 import axios from 'axios';
 import MaintainRegister from '@/pages/jsx/Maintain';
-import './style.css'; // 같은 폴더에서 CSS 파일 import
+import './Style.css'; // 같은 폴더에서 CSS 파일 import
 import {
 	getClassificationColumns,
 	calculateImportanceScore,
@@ -739,11 +739,11 @@ const RowDetails = ({ row, assetCode, onClose, formData: initialFormData }) => {
 													<tr>
 														<th>번호</th>
 														<th>자산코드</th>
-														<th>유지보수자</th>
-														<th>유지보수내용</th>
-														<th>시작일자</th>
-														<th>종료일자</th>
-														<th>완료/진행중</th>
+														<th>자산명</th>
+														<th>수정일자</th>
+														<th>수정요청자</th>
+														<th>수정사유</th>
+														<th>수정내용</th>
 													</tr>
 												</thead>
 												<tbody>
@@ -778,14 +778,41 @@ const RowDetails = ({ row, assetCode, onClose, formData: initialFormData }) => {
 														<th>번호</th>
 														<th>자산코드</th>
 														<th>자산명</th>
-														<th>수정일자</th>
-														<th>수정요청자</th>
-														<th>수정사유</th>
-														<th>수정내용</th>
+														<th>회차</th>
+														<th>자산위치</th>
+														<th>자산소유자</th>
+														<th>자산담당자</th>
+														<th>정위치유무</th>
+														<th>상태</th>
+														<th>내용</th>
 													</tr>
 												</thead>
 												<tbody>
 													{/* 조사 이력 데이터를 맵핑하여 출력 */}
+													{formData.surveyHistory.map((survey, index) => (
+														<tr key={index}>
+															<td>{survey.assetSurveyDetailNo}</td>
+															<td>{survey.assetCode}</td>
+															<td>{survey.assetName}</td>
+															<td>{survey.round}</td>
+															<td>{survey.assetSurveyLocation}</td>
+															<td>{survey.assetSurveyBy}</td>
+															<td>{survey.assetSurveyBy}</td>
+															{/* exactLocation 값이 true면 "정위치 유", false면 "정위치 무" */}
+															<td>
+																{survey.exactLocation
+																	? '정위치 유'
+																	: '정위치 무'}
+															</td>
+															{/* assetStatus 값이 true면 "정상", false면 "파손" */}
+															<td>
+																{survey.assetStatus
+																	? '정상'
+																	: '파손'}
+															</td>
+															<td>{survey.assetSurveyContent}</td>
+														</tr>
+													))}
 												</tbody>
 											</BootstrapTable>
 										</div>

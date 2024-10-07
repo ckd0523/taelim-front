@@ -50,6 +50,7 @@ pipeline {
                         sh """
                         docker run \
                           --name=fe_taelim \
+                          -p 80:80 \
                           -p 443:443 \
                           -v /docker_projects/fe_taelim/volumes/gen:/gen \
                           --restart unless-stopped \

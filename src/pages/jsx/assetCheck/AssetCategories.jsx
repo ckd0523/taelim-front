@@ -222,6 +222,11 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
 														onChange={handleChange}
 														name="relatedDB"
 													/>
+												</Col>
+												<Col lg={1} className="d-flex align-items-stretch">
+													<div className="vertical-divider"></div>
+												</Col>
+												<Col lg={5}>
 													<Form.Label>IP</Form.Label>
 													<Form.Control
 														placeholder="IP를 입력해주세요"
@@ -287,6 +292,11 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
 														onChange={handleChange}
 														name="serverPassword"
 													/>
+												</Col>
+												<Col lg={1} className="d-flex align-items-stretch">
+													<div className="vertical-divider"></div>
+												</Col>
+												<Col lg={5}>
 													<Form.Label>담당업체</Form.Label>
 													<Form.Control
 														placeholder="담당업체를 입력해주세요"
@@ -343,14 +353,19 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
 														onChange={handleChange}
 														name="system"
 													/>
+												</Col>
+												<Col lg={1} className="d-flex align-items-stretch">
+													<div className="vertical-divider"></div>
+												</Col>
+												<Col lg={5}>
 													<Form.Label>DB종류</Form.Label>
 													<Form.Control
 														placeholder="DB종류를 입력해주세요"
 														className="mb-2"
 														type="text"
-														value={formData.dbtype}
+														value={formData.DBType}
 														onChange={handleChange}
-														name="dbtype"
+														name="DBType"
 													/>
 												</Col>
 											</Row>
@@ -412,6 +427,11 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
 														}
 														options={documentType}
 													></Select>
+												</Col>
+												<Col lg={1} className="d-flex align-items-stretch">
+													<div className="vertical-divider"></div>
+												</Col>
+												<Col lg={5}>
 													<Form.Label>문서링크</Form.Label>
 													<Form.Control
 														placeholder="문서링크를 입력해주세요"
@@ -441,10 +461,10 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
 										<StyledCardBody className="card-body">
 											<Row>
 												<Col lg={5}>
-													<div className="form-group mb-3">
+													<div className="form-group mb-2">
 														<label className="form-label">
 															출원일자
-														</label>{' '}
+														</label>
 														<br />
 														<CustomDatePicker
 															type="date"
@@ -462,7 +482,7 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
 															}
 														/>
 													</div>
-													<div className="form-group mb-3">
+													<div className="form-group mb-2">
 														<label className="form-label">
 															등록일자
 														</label>{' '}
@@ -483,7 +503,7 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
 															}
 														/>
 													</div>
-													<div className="form-group mb-3">
+													<div className="form-group mb-2">
 														<label className="form-label">
 															만료일자
 														</label>{' '}
@@ -506,7 +526,7 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
 													</div>
 													<p className="mb-2 c fw-bold">특허/상표 상태</p>
 													<Select
-														className="mb-3"
+														className="mb-2"
 														placeholder="특허/상표 상태를 선택해주세요"
 														name="patentTrademarkStatus"
 														value={patentTrademarkStatus.find(
@@ -526,7 +546,7 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
 													></Select>
 													<p className="mb-2 c fw-bold">출원국가</p>
 													<Select
-														className="mb-3"
+														className="mb-2"
 														placeholder="출원국가를 선택해주세요"
 														name="countryApplication"
 														value={countryApplication.find(
@@ -546,7 +566,7 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
 													></Select>
 													<p className="mb-2 c fw-bold">특허분류</p>
 													<Select
-														className="mb-3"
+														className="mb-2"
 														placeholder="특허분류를 선택해주세요"
 														name="patentClassification"
 														value={patentClassification.find(
@@ -564,9 +584,14 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
 														}
 														options={patentClassification}
 													></Select>
+												</Col>
+												<Col lg={1} className="d-flex align-items-stretch">
+													<div className="vertical-divider"></div>
+												</Col>
+												<Col lg={5}>
 													<p className="mb-2 c fw-bold">특허세목</p>
 													<Select
-														className="mb-3"
+														className="mb-2"
 														placeholder="특허세목을 선택해주세요"
 														name="patentItem"
 														value={patentItem.find(
@@ -609,15 +634,6 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
 														value={formData.assignee}
 														onChange={handleChange}
 														name="assignee"
-													/>
-													<TextInput
-														label="관련문서"
-														type="text"
-														placeholder="관련문서를 입력해주세요"
-														name="relatedDocuments"
-														containerClass={'mb-3'}
-														value={formData.relatedDocuments}
-														onChange={handleChange}
 													/>
 													<Form.Label>관련문서</Form.Label>
 													<Form.Control
@@ -693,6 +709,11 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
 														onChange={handleChange}
 														name="interfacePorts"
 													/>
+												</Col>
+												<Col lg={1} className="d-flex align-items-stretch">
+													<div className="vertical-divider"></div>
+												</Col>
+												<Col lg={5}>
 													<Form.Label>폼팩터</Form.Label>
 													<Form.Control
 														placeholder="폼팩터를 입력해주세요"
@@ -834,6 +855,11 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
 														onChange={handleChange}
 														name="firmwareVersion"
 													/>
+												</Col>
+												<Col lg={1} className="d-flex align-items-stretch">
+													<div className="vertical-divider"></div>
+												</Col>
+												<Col lg={5}>
 													<Form.Label>네트워크 속도</Form.Label>
 													<Form.Control
 														placeholder="네트워크 속도를 입력해주세요"
@@ -910,7 +936,7 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
 													/>
 													<p className="mb-2 c fw-bold">보안관제</p>
 													<Select
-														className="mb-3"
+														className="mb-2"
 														placeholder="보안관제를 선택해주세요"
 														name="securityControl"
 														value={securityControl.find(
@@ -928,6 +954,11 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
 														}
 														options={securityControl}
 													></Select>
+												</Col>
+												<Col lg={1} className="d-flex align-items-stretch">
+													<div className="vertical-divider"></div>
+												</Col>
+												<Col lg={5}>
 													<Form.Label>내부정보 유출 방지</Form.Label>
 													<Form.Control
 														placeholder="내부정보 유출 방지를 입력해주세요"
@@ -937,10 +968,10 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
 														onChange={handleChange}
 														name="kaitsKeeper"
 													/>
-													<div className="form-group mb-3">
+													<div className="form-group mb-2">
 														<label className="form-label">
 															악성코드,랜섬웨어 탐지
-														</label>{' '}
+														</label>
 														<br />
 														<CustomDatePicker
 															type="date"
@@ -958,7 +989,7 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
 															}
 														/>
 													</div>
-													<div className="form-group mb-3">
+													<div className="form-group mb-2">
 														<label className="form-label">
 															안티랜섬웨어
 														</label>{' '}
@@ -1067,6 +1098,11 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
 														onChange={handleChange}
 														name="modelNumber"
 													/>
+												</Col>
+												<Col lg={1} className="d-flex align-items-stretch">
+													<div className="vertical-divider"></div>
+												</Col>
+												<Col lg={5}>
 													<Form.Label>연결방식</Form.Label>
 													<Form.Control
 														placeholder="연결방식을 입력해주세요"
@@ -1161,6 +1197,11 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
 														}
 														options={carType}
 													></Select>
+												</Col>
+												<Col lg={1} className="d-flex align-items-stretch">
+													<div className="vertical-divider"></div>
+												</Col>
+												<Col lg={5}>
 													<Form.Label>차량 식별번호</Form.Label>
 													<Form.Control
 														placeholder="차량 식별번호를 입력해주세요"
@@ -1217,6 +1258,11 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
 														onChange={handleChange}
 														name="otherDescription"
 													/>
+												</Col>
+												<Col lg={1} className="d-flex align-items-stretch">
+													<div className="vertical-divider"></div>
+												</Col>
+												<Col lg={5}>
 													<Form.Label>사용 빈도</Form.Label>
 													<Form.Control
 														placeholder="사용 빈도를 입력해주세요"

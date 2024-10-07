@@ -22,6 +22,8 @@ const MaintainRegister = ({ assetCode, assetNo }) => {
 
 	const handleFileUpload = async (repairNo) => {
 		const uploadFileNames = [];
+		let hasBeforeRepair = false;
+		let hasAfterRepair = false;
 		for (let { file, repairType } of files) {
 			const fileFormData = new FormData();
 			fileFormData.append('repairNo', repairNo);
@@ -46,20 +48,11 @@ const MaintainRegister = ({ assetCode, assetNo }) => {
 			}
 		}
 
-		// setFormData((prevState) => ({
-		// 	...prevState,
-		// 	repairFiles: [...prevState.fileName, ...uploadFileNames],
-		// }));
 		return uploadFileNames;
 	};
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 
-		formData.repairStatus = '진행중';
-
-		// const updatedFormData = {
-		// 	...formData,
-		// 	repairStatus: newStatus,
 		// };
 		try {
 			const maintainResponse = await fetch(`${urlConfig}/maintain/register`, {
@@ -83,29 +76,8 @@ const MaintainRegister = ({ assetCode, assetNo }) => {
 					...prevState,
 					// repairFiles: [...prevState.fileName, ...uploadedFileNames], // Properly set the file name state
 					repairFiles: uploadedFileNames,
-					// repairStatus: prevState.repairStatus,
 				}));
 
-				const hasBeforeRepair = formData.repairFiles?.some(
-					(file) => file.repairType === '보수전'
-				);
-				const hasAfterRepair = formData.repairFiles?.some(
-					(file) => file.repairType === '보수후'
-				);
-				if (
-					formData.repairStartDate &&
-					formData.repairEndDate &&
-					formData.repairResult
-					// hasBeforeRepair &&
-					// hasAfterRepair
-				) {
-					formData.repairStatus = '완료';
-					setFormData((prevState) => ({
-						...prevState,
-						repairStatus: '완료',
-					}));
-				}
-				console.log('repairStatus', formData.repairStatus);
 				console.log('uploadFile1: ' + formData.repairFiles);
 
 				// }

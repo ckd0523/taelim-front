@@ -13,9 +13,7 @@ const MaintainDetail = ({ show, selectData, handleClose }) => {
 		repairEndDate: selectData.repairEndDate || '',
 		repairResult: selectData.repairResult,
 		repairFiles: selectData.repairFiles || [],
-		repairStatus: selectData.repairStatus,
 	});
-	console.log('repairStatus : ', formData.repairStatus);
 	const imgRef = useRef();
 	const afterImgRef = useRef();
 
@@ -109,11 +107,13 @@ const MaintainDetail = ({ show, selectData, handleClose }) => {
 			uploadData.append('file', imgRef.current.files[0]);
 			uploadData.append('repairNo', selectData.repairNo);
 			uploadData.append('repairType', 'BEFORE_REPAIR');
+			uploadData.append('deleteExisting', 'true');
 		}
 		if (afterImgRef.current.files[0]) {
 			uploadData.append('file', afterImgRef.current.files[0]);
 			uploadData.append('repairNo', selectData.repairNo);
 			uploadData.append('repairType', 'AFTER_REPAIR');
+			uploadData.append('deleteExisting', 'true');
 		}
 		try {
 			const response = await fetch(
@@ -129,21 +129,6 @@ const MaintainDetail = ({ show, selectData, handleClose }) => {
 		} catch (error) {
 			imageUploadSuccess = false;
 			console.error(error);
-		}
-
-		const hasBeforeRepair = formData.repairFiles?.some((file) => file.repairType === '보수전');
-		const hasAfterRepair = formData.repairFiles?.some((file) => file.repairType === '보수후');
-		if (
-			formData.repairStartDate &&
-			formData.repairEndDate &&
-			formData.repairResult &&
-			hasBeforeRepair &&
-			hasAfterRepair
-		) {
-			setFormData((prevState) => ({
-				...prevState,
-				repairStatus: '완료',
-			}));
 		}
 
 		try {
@@ -211,20 +196,26 @@ const MaintainDetail = ({ show, selectData, handleClose }) => {
 						<Form.Label className="pt-2">유지보수 사진</Form.Label>
 						<p>유지보수 전 사진</p>
 						{!isEditing ? (
-							selectData.repairFiles
-								.filter((file) => file.repairType === '보수전')
-								.map((file, index) => {
-									return file.fileURL ? (
-										<img
-											key={index}
-											src={file.fileURL}
-											width="100%"
-											alt="Before Repair"
-										/>
-									) : (
-										<p>사진/파일이 없습니다</p>
-									);
-								})
+							selectData.repairFiles &&
+							selectData.repairFiles.filter((file) => file.repairType === '보수전')
+								.length > 0 ? (
+								selectData.repairFiles
+									.filter((file) => file.repairType === '보수전')
+									.map((file, index) =>
+										file.fileURL ? (
+											<img
+												key={index}
+												src={file.fileURL}
+												width="100%"
+												alt="Before Repair"
+											/>
+										) : (
+											<p key={index}>사진/파일이 없습니다</p>
+										)
+									)
+							) : (
+								<p>사진/파일이 없습니다.</p>
+							)
 						) : (
 							<FormGroup>
 								<Form.Label htmlFor="maintainBefore">
@@ -247,22 +238,26 @@ const MaintainDetail = ({ show, selectData, handleClose }) => {
 
 						<p className="pt-2">유지보수 후 사진</p>
 						{!isEditing ? (
-							selectData.repairFiles
-								.filter((file) => file.repairType === '보수후')
-								.map((file, index) => {
-									// return file.fileURL ? (
-									return (
-										<img
-											key={index}
-											src={file.fileURL}
-											width="100%"
-											alt="After Repair"
-										/>
-									);
-									// ) : (
-									// 	<p>사진/파일이 없습니다</p>
-									// );
-								})
+							selectData.repairFiles &&
+							selectData.repairFiles.filter((file) => file.repairType === '보수후')
+								.length > 0 ? (
+								selectData.repairFiles
+									.filter((file) => file.repairType === '보수후')
+									.map((file, index) =>
+										file.fileURL ? (
+											<img
+												key={index}
+												src={file.fileURL}
+												width="100%"
+												alt="After Repair"
+											/>
+										) : (
+											<p key={index}>사진/파일이 없습니다</p>
+										)
+									)
+							) : (
+								<p>사진/파일이 없습니다.</p>
+							)
 						) : (
 							<FormGroup>
 								<Form.Label htmlFor="maintainAfter">

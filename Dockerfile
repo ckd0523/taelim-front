@@ -12,30 +12,34 @@
 # EXPOSE 80  
 # CMD ["nginx", "-g", "daemon off;"]
 
-# 1. Build the frontend application
-FROM node:lts-alpine as build  
+# Stage 1: Build the frontend
+FROM node:lts-alpine as build
 WORKDIR /app
 COPY package.json yarn.lock ./
 RUN yarn install
-COPY . .  
+COPY . .
 ENV NODE_OPTIONS="--max-old-space-size=4096"
 RUN yarn build
 
-# 2. Use nginx:stable-alpine and add Certbot for SSL
+# Stage 2: Set up Nginx with Certbot
 FROM nginx:stable-alpine
 
-# Install Certbot
+# Install Certbot and bash
 RUN apk add --no-cache certbot certbot-nginx bash
 
 # Copy the frontend build from the previous stage
 COPY --from=build /app/dist /usr/share/nginx/html
 
-# Copy the custom nginx config file
+# Copy the custom Nginx config file
 COPY nginx.conf /etc/nginx/nginx.conf
 
 # Expose HTTP and HTTPS ports
 EXPOSE 80 443
 
-# Start Nginx and Certbot
-CMD ["sh", "-c", "certbot certonly --nginx -d taelimasset.com --non-interactive --agree-tos --email ckd0523@naver.com --expand && nginx -g 'daemon off;'"]
+# Copy the entrypoint script
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+# Set the entrypoint
+ENTRYPOINT ["/entrypoint.sh"]
 

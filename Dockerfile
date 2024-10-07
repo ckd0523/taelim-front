@@ -37,4 +37,5 @@ COPY nginx.conf /etc/nginx/nginx.conf
 EXPOSE 80 443
 
 # Start Nginx and Certbot
-CMD ["sh", "-c", "nginx -g 'daemon off;' & certbot --nginx -d taelimasset.com --non-interactive --agree-tos --email ckd0523@naver.com --redirect"]
+CMD ["sh", "-c", "certbot certonly --nginx -d taelimasset.com --non-interactive --agree-tos --email ckd0523@naver.com --expand && nginx -g 'daemon off;'"]
+

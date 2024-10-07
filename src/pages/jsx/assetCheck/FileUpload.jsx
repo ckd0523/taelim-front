@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Accordion, Card } from 'react-bootstrap';
+import { Accordion, Form } from 'react-bootstrap';
 import { useAccordionButton } from 'react-bootstrap';
 import { FileUploader } from '@/components/FileUploader';
 import { BsCaretUpFill } from 'react-icons/bs';
@@ -9,16 +9,22 @@ const StyledCard = styled.div`
 	display: flex;
 	flex-direction: column;
 
-	@media (max-width: 768px) {
-		width: 30rem;
+	@media (max-width: 767px) {
+		width: 100%;
+		margin: 0 auto;
+		display: block;
 	}
 
-	@media (min-width: 769px) and (max-width: 1280px) {
-		width: 42rem;
+	@media (min-width: 768px) and (max-width: 1023px) {
+		width: 100%;
+		margin: 0 auto;
+		display: block;
 	}
 
-	@media (min-width: 1281px) {
-		width: 100rem;
+	@media (min-width: 1024px) {
+		width: 100%;
+		margin: 0 auto;
+		display: block;
 	}
 `;
 
@@ -28,27 +34,15 @@ const StyledCardBody = styled.div`
 	flex-direction: column;
 	justify-content: space-between;
 `;
-const ResponsivePadding = styled.div`
-	@media (max-width: 768px) {
-		padding-top: 20px;
-	}
 
-	@media (min-width: 769px) and (max-width: 1280px) {
-		padding: 20px;
-	}
-
-	@media (min-width: 1281px) {
-		padding: 50px;
-	}
-`;
 function CustomToggle({ children, eventKey }) {
 	const [isOpen, setIsOpen] = useState(false);
 	const decoratedOnClick = useAccordionButton(eventKey, () => setIsOpen((prevOpen) => !prevOpen));
 	return (
 		<button
-			className="custom-button px-3 pt-2"
+			className="custom-button px-3 pt-2 fw-bold"
 			type="button"
-			style={{ backgroundColor: 'white', textAlign: 'left' }}
+			style={{ width: '100%', backgroundColor: '#dcefdc', textAlign: 'left' }}
 			onClick={decoratedOnClick}
 		>
 			{isOpen ? (
@@ -60,39 +54,38 @@ function CustomToggle({ children, eventKey }) {
 		</button>
 	);
 }
-const FileUpload = ({ files = [], setFiles }) => {
-	// const handleFileUpload = useCallback(
-	//    (acceptedFiles) => {
-	//       setFiles(acceptedFiles);
-
-	//       acceptedFiles.forEach((file) =>
-	//          Object.assign(file, {
-	//             preview: URL.createObjectURL(file),
-	//          })
-	//       );
-	//    },
-	//    [setFiles]
-	// );
+const FileUpload = ({ files = [], setFiles, formData, handleChange }) => {
+	// const handleFileUpload = (file, fileType) => {
+	// 	const updateFiles = [...files, { file, fileType }];
+	// 	setFiles(updateFiles);
+	// 	console.log(updateFiles);
+	// };
 	const handleFileUpload = (file, fileType) => {
-		const updateFiles = [...files, { file, fileType }];
+		const updateFiles = [
+			...files.filter((f) => f.fileType !== fileType),
+			...file.map((f) => ({ file: f, fileType })),
+		];
 		setFiles(updateFiles);
+		console.log(updateFiles);
 	};
 
-	useEffect(
-		() => () => {
-			// 메모리 누수를 방지하기 위해 파일 URL을 정리
-			files.forEach((file) => URL.revokeObjectURL(file.preview));
-		},
-		[files]
-	);
+	useEffect(() => {
+		return () => {
+			files.forEach((file) => {
+				if (file.file && file.file.preview) {
+					URL.revokeObjectURL(file.file.preview);
+				}
+			});
+		};
+	}, [files]);
 
 	return (
-		<ResponsivePadding>
-			<Accordion defaultActiveKey="0">
-				<StyledCard className="card">
-					<CustomToggle eventKey="0">첨부파일 등록</CustomToggle>
-					<Accordion.Collapse eventKey="0">
-						<StyledCardBody className="card-body">
+		<Accordion defaultActiveKey="3">
+			<StyledCard className="card">
+				<CustomToggle eventKey="3">첨부파일 등록</CustomToggle>
+				<Accordion.Collapse eventKey="3">
+					<StyledCardBody className="card-body">
+						<Form>
 							<p className="pt-2 mb-2 c fw-bold">이미지 등록</p>
 							<FileUploader
 								showPreview={true}
@@ -104,16 +97,32 @@ const FileUpload = ({ files = [], setFiles }) => {
 								showPreview={true}
 								onFileUpload={(file) => handleFileUpload(file, 'WARRANTY_DETAILS')}
 							/>
+							<Form.Label className="pt-2">보증 세부사항(글)</Form.Label>
+							<Form.Control
+								type="textarea"
+								rows={4}
+								name="warrantyDetails"
+								value={formData.warrantyDetails}
+								onChange={handleChange}
+							/>
 							<p className="pt-2 mb-2 c fw-bold">사용자 메뉴얼 및 기술문서</p>
 							<FileUploader
 								showPreview={true}
 								onFileUpload={(file) => handleFileUpload(file, 'USER_MANUAL')}
 							/>
-						</StyledCardBody>
-					</Accordion.Collapse>
-				</StyledCard>
-			</Accordion>
-		</ResponsivePadding>
+							<Form.Label className="pt-2">사용자 메뉴얼 및 기술문서(글)</Form.Label>
+							<Form.Control
+								type="textarea"
+								rows={4}
+								name="attachment"
+								value={formData.attachment}
+								onChange={handleChange}
+							/>
+						</Form>
+					</StyledCardBody>
+				</Accordion.Collapse>
+			</StyledCard>
+		</Accordion>
 	);
 };
 

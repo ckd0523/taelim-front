@@ -97,9 +97,9 @@ const ExcelRegister = () => {
 										case '자산위치':
 											updatedFormData['assetLocation'] = excelRow[index];
 											break;
-										// case '렉번호':
-										// 	updatedFormData['rackUnit'] = excelRow[index];
-										// 	break;
+										case '렉번호':
+											updatedFormData['rackUnit'] = excelRow[index];
+											break;
 										case '위치':
 											updatedFormData['department'] = excelRow[index];
 											break;
@@ -119,18 +119,29 @@ const ExcelRegister = () => {
 										case '도입일자':
 											updatedFormData['introducedDate'] = excelRow[index];
 											break;
-										case '기밀성 (C)':
+										case '기밀성':
 											updatedFormData['confidentiality'] = excelRow[index];
-											console.log(updatedFormData['confidentiality']);
 											break;
-										case '무결성 (l)':
+										case '무결성':
 											updatedFormData['integrity'] = excelRow[index];
 											break;
-										case '가용성 (A)':
+										case '가용성':
 											updatedFormData['availability'] = excelRow[index];
 											break;
 										case '서비스 범위':
 											updatedFormData['serviceScope'] = excelRow[index];
+											break;
+										case '비고':
+											updatedFormData['note'] = excelRow[index];
+											break;
+										case 'IP':
+											updatedFormData['ip'] = excelRow[index];
+											break;
+										case 'ID':
+											updatedFormData['serverId'] = excelRow[index];
+											break;
+										case 'PW':
+											updatedFormData['serverPassword'] = excelRow[index];
 											break;
 
 										default:
@@ -181,7 +192,6 @@ const ExcelRegister = () => {
 
 			if (excelResponse.ok) {
 				alert('엑셀이 정상적으로 등록되었습니다.');
-				// window.location.reload();
 				setSelectValue(null); // 선택한 셀렉트 값 초기화
 				setFormData([]); // 폼 데이터 초기화
 				setData({}); // 엑셀 데이터 초기화
@@ -232,19 +242,37 @@ const ExcelRegister = () => {
 									<div key={sheetName}>
 										<h3>Sheet: {sheetName.substring(4, 12)}</h3>
 										<Table bordered>
-											<thead>
+											<thead className="table-light">
 												<tr>
-													{headers.map((header, index) => (
+													{/* {headers.map((header, index) => (
 														<th key={index}>{header}</th>
-													))}
+													))} */}
+													<th>자산기준</th>
+													<th>자산코드</th>
+													<th>자산명</th>
+													<th>자산분류</th>
+													<th>목적/기능</th>
+													<th>자산위치</th>
+													<th>부서</th>
+													<th>사용자</th>
+													<th>소유자</th>
 												</tr>
 											</thead>
 											<tbody>
 												{data[sheetName].map((row, rowIndex) => (
 													<tr key={rowIndex}>
-														{headers.map((header, colIndex) => (
+														{/* {headers.map((header, colIndex) => (
 															<td key={colIndex}>{row[header]}</td>
-														))}
+														))} */}
+														<td>{row['자산기준']}</td>
+														<td>{row['자산코드']}</td>
+														<td>{row['자산명']}</td>
+														<td>{sheetName.substring(4, 12)}</td>
+														<td>{row['목적/기능']}</td>
+														<td>{row['자산위치']}</td>
+														<td>{row['부서']}</td>
+														<td>{row['사용자']}</td>
+														<td>{row['소유자']}</td>
 													</tr>
 												))}
 											</tbody>

@@ -88,6 +88,12 @@ const MENU_ITEMS = [
 				url: '/jsx/Expand',
 				parentKey: 'check',
 			},
+			{
+				key: 'ds-AssetPageTest',
+				label: '자산조회테스트',
+				url: '/jsx/AssetPageTest',
+				parentKey: 'check',
+			},
 		],
 	},
 	{
@@ -133,12 +139,6 @@ const MENU_ITEMS = [
 		label: '요청내역',
 		url: '/jsx/DemandHistory',
 		icon: 'uil-bell',
-	},
-	{
-		key: 'ds-MaintainRegister',
-		label: '유지보수등록',
-		url: '/jsx/MaintainRegister',
-		icon: 'uil-traffic-barrier',
 	},
 	{
 		key: 'ds-SystemSetting',

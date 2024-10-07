@@ -25,7 +25,7 @@ const columns = [
   {
     Header: '상태',
     accessor: 'surveyStatus',
-    defaultCanSort: false,
+    defaultCanSort: true,
     //Cell: StatusColumn,
     Cell: ({ value }) => (value === '' ? null : value ? '완료' : '진행 중'),
   },
@@ -41,15 +41,17 @@ const tableData = [
   },
 ];
 
+/*
 const sizePerPageList = [
   { text: '5', value: 5 },
   { text: '10', value: 10 },
   { text: '25', value: 25 },
   { text: '100', value: 100 },
 ];
+*/
 
-const SurveyTable = ({ tableChange, setSelectedRows }) => {
-  const [data, setData] = useState([]);
+const SurveyTable = ({ tableChange, setSelectedRows, data, setData, setOriginalData }) => {
+
   const [isDataExist, setIsDataExist] = useState(false); //fetch로 데이터를 못불러 왔는지
   //const [loading, setLoading] = useState(true); // fetch로 데이터 불러오는 중인지
 
@@ -57,9 +59,12 @@ const SurveyTable = ({ tableChange, setSelectedRows }) => {
     const fetchData = async () => {
       try {
         const response = await axios.get(`${URL}/assetSurveyHistory`);
+        //검색을 위해서 불변 데이터를 하나 더 만들어줌
         setData(response.data); // API로부터 받은 데이터 설정
+        setOriginalData(response.data);
       } catch (error) {
         setData(tableData);
+
         setIsDataExist(true);
         console.error('Error fetching data:', error);
       }
@@ -79,7 +84,7 @@ const SurveyTable = ({ tableChange, setSelectedRows }) => {
               columns={columns}
               data={data}
               pagesize={5}
-              sizePerPageList={sizePerPageList}
+              //sizePerPageList={sizePerPageList}
               theadClass="table-light"
               isSortable={true}
               pagination={true}
@@ -96,7 +101,7 @@ const SurveyTable = ({ tableChange, setSelectedRows }) => {
 
 const DetailTable = ({ detailColumn, detailData }) => {
   return (
-    <Table
+    <Table2
       columns={detailColumn}
       data={detailData}
       pagesize={5}

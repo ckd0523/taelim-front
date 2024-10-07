@@ -16,7 +16,7 @@ const Expand = lazy(() => import('./Expand'));
 const AssetPage = lazy(() => import('./assetUpdate'));
 const AssetSurveyDetail = lazy(() => import('./AssetSurvey/AssetSurveyDetail'));
 const SystemSetting = lazy(() => import('./SystemSetting'));
-
+const AssetPageTest = lazy(() => import('./AssetRead'));
 export default function jsx() {
 	return (
 		<Routes>
@@ -27,7 +27,7 @@ export default function jsx() {
 				<Route path="ExcelRegister" element={<ExcelRegister />} />
 				<Route path="MaintainRegister" element={<MaintainRegister />} />
 				<Route path="MaintainHist" element={<MaintainHist />} />
-				<Route path="ProductDetailsEcom" element={<ProductDetailsEcom />} />
+				<Route path=":assetCode" element={<ProductDetailsEcom />} />
 				<Route path="BackupHistory" element={<BackupHistory />} />
 				<Route path="AssetSurveyHistory" element={<AssetSurveyHistory />} />
 				<Route path="DemandHistory" element={<DemandHistory />} />
@@ -35,8 +35,10 @@ export default function jsx() {
 				<Route path="DeleteHistory" element={<DeleteHistory />} />
 				<Route path="Expand" element={<Expand />} />
 				<Route path="AssetPage" element={<AssetPage />} />
+				<Route path="AssetPageTest" element={<AssetPageTest />} />
 				<Route path="AssetSurveyDetail" element={<AssetSurveyDetail />} />
-				<Route path="SystemSetting" element={<SystemSetting />} />
+
+				{/* <Route path="SystemSetting" element={<SystemSetting />} /> */}
 			</Route>
 		</Routes>
 	);

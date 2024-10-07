@@ -6,6 +6,13 @@ import useFileUploader from './useFileUploader';
 const FileUploader = ({ showPreview = true, onFileUpload }) => {
 	const { selectedFiles, handleAcceptedFiles, removeFile } = useFileUploader(showPreview);
 
+	const handleFileRemove = (file) => {
+		removeFile(file);
+		const updateFiles = selectedFiles.filter((f) => f !== file);
+		if (onFileUpload) {
+			onFileUpload(updateFiles);
+		}
+	};
 	return (
 		<>
 			<Dropzone onDrop={(acceptedFiles) => handleAcceptedFiles(acceptedFiles, onFileUpload)}>
@@ -61,7 +68,10 @@ const FileUploader = ({ showPreview = true, onFileUpload }) => {
 											>
 												<i
 													className="ri-close-line"
-													onClick={() => removeFile(f)}
+													onClick={() => {
+														console.log('RemoveFile : ', f);
+														handleFileRemove(f);
+													}}
 												></i>
 											</Link>
 										</Col>

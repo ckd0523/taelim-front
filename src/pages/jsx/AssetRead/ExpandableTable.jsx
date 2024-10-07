@@ -9,7 +9,8 @@ import {
 	useExpanded,
 } from 'react-table';
 import classNames from 'classnames';
-import { Pagination } from './Pagination';
+import { Pagination } from '@/components';
+import RowDetails from './RowDetails';
 
 const GlobalFilter = ({ preGlobalFilteredRows, globalFilter, setGlobalFilter, searchBoxClass }) => {
 	const count = preGlobalFilteredRows.length;
@@ -59,7 +60,8 @@ const Table = (props) => {
 	const isSelectable = props['isSelectable'] || false;
 	const isExpandable = props['isExpandable'] || false;
 	const sizePerPageList = props['sizePerPageList'] || [];
-	const hiddenColumns = props.initialState?.hiddenColumns || [];
+	// 선택된 Row SetState 해주는 곳
+	const setRowSelect = props['setRowSelect'] || [];
 
 	let otherProps = {};
 
@@ -70,7 +72,7 @@ const Table = (props) => {
 		otherProps['useSortBy'] = useSortBy;
 	}
 	if (isExpandable) {
-		otherProps['useExpanded'] = useExpanded;
+		otherProps['useExpanded'] = useExpanded; // 확장 훅 추가
 	}
 	if (pagination) {
 		otherProps['usePagination'] = usePagination;
@@ -84,30 +86,24 @@ const Table = (props) => {
 			columns: props.columns,
 			data: props['data'],
 			initialState: { pageSize: props['pageSize'] || 10 },
-			hiddenColumns: hiddenColumns, // 숨길 열 설정
 		},
 
-		otherProps.hasOwnProperty('useGlobalFilter') && otherProps['useGlobalFilter'],
-		otherProps.hasOwnProperty('useSortBy') && otherProps['useSortBy'],
-		otherProps.hasOwnProperty('useExpanded') && otherProps['useExpanded'],
-		otherProps.hasOwnProperty('usePagination') && otherProps['usePagination'],
-		otherProps.hasOwnProperty('useRowSelect') && otherProps['useRowSelect'],
+		otherProps['useGlobalFilter'] || (() => {}),
+		otherProps['useSortBy'] || (() => {}),
+		otherProps['useExpanded'] || (() => {}),
+		otherProps['usePagination'] || (() => {}),
+		otherProps['useRowSelect'] || (() => {}),
 
 		(hooks) => {
 			isSelectable &&
 				hooks.visibleColumns.push((columns) => [
-					// Let's make a column for selection
 					{
 						id: 'selection',
-						// The header can use the table's getToggleAllRowsSelectedProps method
-						// to render a checkbox
 						Header: ({ getToggleAllPageRowsSelectedProps }) => (
 							<div>
 								<IndeterminateCheckbox {...getToggleAllPageRowsSelectedProps()} />
 							</div>
 						),
-						// The cell can use the individual row's getToggleRowSelectedProps method
-						// to the render a checkbox
 						Cell: ({ row }) => (
 							<div>
 								<IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
@@ -119,10 +115,8 @@ const Table = (props) => {
 
 			isExpandable &&
 				hooks.visibleColumns.push((columns) => [
-					// Let's make a column for selection
 					{
-						// Build our expander column
-						id: 'expander', // Make sure it has an ID
+						id: 'expander',
 						Header: ({ getToggleAllRowsExpandedProps, isAllRowsExpanded }) => (
 							<span {...getToggleAllRowsExpandedProps()}>
 								{isAllRowsExpanded ? (
@@ -132,37 +126,49 @@ const Table = (props) => {
 								)}
 							</span>
 						),
-						Cell: ({ row }) =>
-							// Use the row.canExpand and row.getToggleRowExpandedProps prop getter
-							// to build the toggle for expanding a row
-							row.canExpand ? (
-								<span
-									{...row.getToggleRowExpandedProps({
-										style: {
-											// We can even use the row.depth property
-											// and paddingLeft to indicate the depth
-											// of the row
-											paddingLeft: `${row.depth * 2}rem`,
-										},
-									})}
-								>
-									{row.isExpanded ? (
-										<i className={`ri-arrow-up-s-fill`} />
-									) : (
-										<i className={`ri-arrow-down-s-fill`} />
-									)}
-								</span>
-							) : null,
+						Cell: ({ row }) => (
+							<span
+								{...row.getToggleRowExpandedProps({
+									style: {
+										paddingLeft: `${row.depth * 2}rem`,
+									},
+								})}
+							>
+								{row.isExpanded ? (
+									<i className={`ri-arrow-up-s-fill`} />
+								) : (
+									<i className={`ri-arrow-down-s-fill`} />
+								)}
+							</span>
+						),
 					},
 					...columns,
 				]);
 		}
 	);
 
+	// 일괄때문에 추가 부분
+	const {
+		selectedFlatRows,
+		state: { selectedRowIds },
+		// ...other destructured values
+	} = dataTable;
+
+	useEffect(() => {
+		//	console.log('Selected row IDs:', selectedRowIds);
+		console.log(
+			'selectedFlatRows[].original',
+			selectedFlatRows.map((d) => d.original)
+		);
+		const Rows = selectedFlatRows.map((d) => d.original);
+		setRowSelect(Rows);
+	}, [selectedRowIds]);
+
 	const rows = pagination ? dataTable.page : dataTable.rows;
 
 	return (
 		<>
+			{/* 검색 필터 */}
 			{isSearchable && (
 				<GlobalFilter
 					preGlobalFilteredRows={dataTable.preGlobalFilteredRows}
@@ -172,6 +178,7 @@ const Table = (props) => {
 				/>
 			)}
 
+			{/* 테이블 */}
 			<div className="table-responsive">
 				<table
 					{...dataTable.getTableProps()}
@@ -202,13 +209,28 @@ const Table = (props) => {
 						{(rows || []).map((row, index) => {
 							dataTable.prepareRow(row);
 							return (
-								<tr {...row.getRowProps()} key={index}>
-									{row.cells.map((cell) => {
-										return (
+								<React.Fragment key={index}>
+									<tr {...row.getRowProps()}>
+										{row.cells.map((cell) => (
 											<td {...cell.getCellProps()}>{cell.render('Cell')}</td>
-										);
-									})}
-								</tr>
+										))}
+									</tr>
+									{/* 확장된 내용 렌더링 */}
+									{row.isExpanded && isExpandable && (
+										<tr>
+											<td colSpan={dataTable.headerGroups[0].headers.length}>
+												<div className="expanded-content">
+													<RowDetails
+														// row={row}
+														// assetCode={row.original.assetCode}
+														assetCode={row.original.assetCode} // assetCode 전달
+														formData={row.original} // 전체 데이터를 formData로 전달
+													/>
+												</div>
+											</td>
+										</tr>
+									)}
+								</React.Fragment>
 							);
 						})}
 					</tbody>

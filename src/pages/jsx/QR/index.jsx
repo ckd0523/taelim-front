@@ -1,1 +1,1 @@
-export { DemandHistory as default } from './DemandHistory';
+export { QRCodeDisplay as default } from './QRCodeDisplay';

@@ -16,12 +16,15 @@ import { BsCaretUpFill } from 'react-icons/bs';
 import { BsCaretDownFill } from 'react-icons/bs';
 import axios from 'axios';
 import MaintainRegister from '@/pages/jsx/Maintain';
-import './Style.css'; // 같은 폴더에서 CSS 파일 import
+import './style.css'; // 같은 폴더에서 CSS 파일 import
 import {
 	getClassificationColumns,
 	calculateImportanceScore,
 	calculateImportanceRating,
 } from './RowDetailColumn';
+import { UpdateHistoryTable } from './UpdateHistoryTable';
+import { MaintenanceHistoryTable } from './MaintenanceHistoryTable';
+import { InvestigationHistoryTable } from './InvestigationHistoryTable';
 
 const urlConfig = import.meta.env.VITE_BASIC_URL;
 
@@ -30,6 +33,7 @@ const RowDetails = ({ row, assetCode, onClose, formData: initialFormData }) => {
 	const [formData, setFormData] = useState(initialFormData || {}); // 상위 컴포넌트에서 받은 formData를 상태로 설정
 	const [showModal, setShowModal] = useState(false); // 모달 열기/닫기 상태
 	const [isLoading, setIsLoading] = useState(true); // 로딩 상태
+	const [selectedFile, setSelectedFile] = useState(null);
 
 	const importanceScore = calculateImportanceScore(formData);
 	const importanceRating = calculateImportanceRating(importanceScore);
@@ -84,7 +88,39 @@ const RowDetails = ({ row, assetCode, onClose, formData: initialFormData }) => {
 	const handleNextClick = () => {
 		setShowModal(true);
 	};
+	// 파일 선택 처리
+	const handleFileChange = (e) => {
+		const file = e.target.files[0];
+		if (file) {
+			const fileURL = URL.createObjectURL(file);
+			setSelectedFile({ file, fileURL, oriFileName: file.name, fileType: 'PHOTO' });
 
+			// formData의 files 배열 업데이트
+			const updatedFiles = [...formData.files];
+			const existingPhotoIndex = updatedFiles.findIndex((f) => f.fileType === 'PHOTO');
+
+			if (existingPhotoIndex !== -1) {
+				// 기존 이미지가 있는 경우, 해당 이미지를 새 이미지로 교체
+				updatedFiles[existingPhotoIndex] = {
+					file,
+					fileURL,
+					oriFileName: file.name,
+					fileType: 'PHOTO',
+				};
+			} else {
+				// 기존 이미지가 없는 경우, 새 이미지를 추가
+				updatedFiles.push({
+					file,
+					fileURL,
+					oriFileName: file.name,
+					fileType: 'PHOTO',
+				});
+			}
+
+			// formData 업데이트
+			setFormData({ ...formData, files: updatedFiles });
+		}
+	};
 	// formData를 변경하는 함수
 	const handleInputChange = (event, key) => {
 		const { value } = event.target; // 이벤트 객체에서 value 추출
@@ -98,13 +134,32 @@ const RowDetails = ({ row, assetCode, onClose, formData: initialFormData }) => {
 
 	// 수정  api 받아서 처리
 	const handleSubmit = async () => {
-		console.log('handleSubmit:', formData); // 상태 확인
+		const formDataToSend = new FormData();
+		// files 배열이 비어있지 않은 경우에만 추가
+		if (formData.files && formData.files.length > 0) {
+			formData.files.forEach((file) => {
+				formDataToSend.append('files', file.file); // 파일 객체 추가
+			});
+		} else {
+			console.error('No files to send.');
+		}
+
+		// AssetDto를 JSON 문자열로 추가
+		formDataToSend.append('assetDto', JSON.stringify(formData)); // 수정할 DTO를 정확히 전달합니다.
+
 		try {
-			// 수정 요청 처리
 			const response = await axios.post(
 				`${urlConfig}/asset/update/${formData.assetCode}`,
-				formData
+				formDataToSend,
+				{
+					headers: {
+						'Content-Type': 'multipart/form-data',
+					},
+				}
 			);
+
+			// 성공적인 응답 처리
+			alert(response.data);
 
 			// 백엔드에서 받은 메시지 처리
 			if (response.data.includes('이미 수정 요청이 들어간 자산입니다.')) {
@@ -122,7 +177,7 @@ const RowDetails = ({ row, assetCode, onClose, formData: initialFormData }) => {
 			// setErrorMessage('자산 수정 요청 중 오류가 발생했습니다.');
 		} finally {
 			// 필요에 따라 페이지 새로고침 가능
-			window.location.reload();
+			//window.location.reload();
 		}
 	};
 
@@ -299,17 +354,30 @@ const RowDetails = ({ row, assetCode, onClose, formData: initialFormData }) => {
 				{/* 큰 부모 div */}
 				<div style={{ display: 'flex', alignItems: 'center', flexGrow: 1 }}>
 					{/* 이미지 표시 부분 */}
-					<div style={{ marginRight: '40px' }}>
+					<div
+						style={{
+							display: 'flex',
+							flexDirection: 'column',
+							alignItems: 'center',
+							marginRight: '40px',
+						}}
+					>
+						{/* 이미지 표시 로직 */}
 						{formData.files &&
 						formData.files.length > 0 &&
 						formData.files.some((file) => file.fileType === 'PHOTO') ? (
 							<img
 								src={
-									formData.files.find((file) => file.fileType === 'PHOTO').fileURL
+									selectedFile
+										? selectedFile.fileURL // 수정 모드에서 선택된 파일 미리보기
+										: formData.files.find((file) => file.fileType === 'PHOTO')
+												.fileURL
 								}
 								alt={
-									formData.files.find((file) => file.fileType === 'PHOTO')
-										.oriFileName
+									selectedFile
+										? selectedFile.oriFileName // 수정 모드에서 선택된 파일 이름
+										: formData.files.find((file) => file.fileType === 'PHOTO')
+												.oriFileName
 								}
 								style={{ width: '350px', height: 'auto' }}
 							/>
@@ -318,18 +386,29 @@ const RowDetails = ({ row, assetCode, onClose, formData: initialFormData }) => {
 								style={{
 									width: '300px',
 									height: 'auto',
-									backgroundColor: '#f0f0f0', // 배경색을 추가하여 빈 공간을 시각적으로 표현
-									border: '1px dashed #ccc', // 경계선을 추가하여 빈 공간을 표시
+									backgroundColor: '#f0f0f0', // 배경색
+									border: '1px dashed #ccc', // 경계선
 									display: 'flex',
 									justifyContent: 'center',
 									alignItems: 'center',
 									color: '#aaa', // 텍스트 색상
 								}}
 							>
-								<span>이미지가 없습니다</span> {/* 빈 상태를 나타내는 텍스트 */}
+								<span>이미지가 없습니다</span>
 							</div>
 						)}
+
+						{/* 수정 모드일 때 파일 입력: 이미지 아래에 위치 */}
+						{isEditing && (
+							<input
+								type="file"
+								accept="image/*"
+								onChange={handleFileChange}
+								style={{ marginTop: '10px' }}
+							/>
+						)}
 					</div>
+
 					<div style={{ flex: 1 }}>
 						{/* 기본 자산 정보 및 관리 정보 테이블 */}
 						<div className="info-section" style={{ flexGrow: 1 }}>
@@ -466,65 +545,56 @@ const RowDetails = ({ row, assetCode, onClose, formData: initialFormData }) => {
 											</tr>
 										</tbody>
 									</BootstrapTable>
-
-									{/* 모달 */}
-									<Modal show={showModal} onHide={handleModalClose}>
-										<Modal.Header closeButton>
-											<Modal.Title>수정 요청</Modal.Title>
-										</Modal.Header>
-										<Modal.Body>
-											<Form>
-												<Form.Group className="mb-3">
-													<Form.Label>구분</Form.Label>
-													<Form.Control
-														type="text"
-														value="수정"
-														readOnly
-													/>
-												</Form.Group>
-												<Form.Group className="mb-3">
-													<Form.Label>수정사유</Form.Label>
-													<Form.Select
-														value={formData.updateReason}
-														onChange={(e) =>
-															handleInputChange(e, 'updateReason')
-														}
-													>
-														<option value="사유 1">사유 1</option>
-														<option value="사유 2">사유 2</option>
-														<option value="사유 3">사유 3</option>
-													</Form.Select>
-												</Form.Group>
-												<Form.Group className="mb-3">
-													<Form.Label>수정내용</Form.Label>
-													<Form.Control
-														as="textarea"
-														rows={3}
-														value={formData.updateDetail}
-														onChange={(e) =>
-															handleInputChange(e, 'updateDetail')
-														}
-													/>
-												</Form.Group>
-											</Form>
-										</Modal.Body>
-										<Modal.Footer>
-											<Button variant="secondary" onClick={handleModalClose}>
-												취소
-											</Button>
-											<Button variant="primary" onClick={handleSubmit1}>
-												수정 요청
-											</Button>
-											<Button variant="primary" onClick={handleSubmit}>
-												수정
-											</Button>
-										</Modal.Footer>
-									</Modal>
 								</>
 							) : (
 								<p>데이터를 불러오는 중입니다...</p>
 							)}
 						</div>
+						{/* 모달 */}
+						<Modal show={showModal} onHide={handleModalClose}>
+							<Modal.Header closeButton>
+								<Modal.Title>수정 요청</Modal.Title>
+							</Modal.Header>
+							<Modal.Body>
+								<Form>
+									<Form.Group className="mb-3">
+										<Form.Label>구분</Form.Label>
+										<Form.Control type="text" value="수정" readOnly />
+									</Form.Group>
+									<Form.Group className="mb-3">
+										<Form.Label>수정사유</Form.Label>
+										<Form.Select
+											value={formData.updateReason}
+											onChange={(e) => handleInputChange(e, 'updateReason')}
+										>
+											<option value="사유 1">사유 1</option>
+											<option value="사유 2">사유 2</option>
+											<option value="사유 3">사유 3</option>
+										</Form.Select>
+									</Form.Group>
+									<Form.Group className="mb-3">
+										<Form.Label>수정내용</Form.Label>
+										<Form.Control
+											as="textarea"
+											rows={3}
+											value={formData.updateDetail}
+											onChange={(e) => handleInputChange(e, 'updateDetail')}
+										/>
+									</Form.Group>
+								</Form>
+							</Modal.Body>
+							<Modal.Footer>
+								<Button variant="secondary" onClick={handleModalClose}>
+									취소
+								</Button>
+								<Button variant="primary" onClick={handleSubmit1}>
+									수정 요청
+								</Button>
+								<Button variant="primary" onClick={handleSubmit}>
+									수정
+								</Button>
+							</Modal.Footer>
+						</Modal>
 						{/* 새로 추가할 div: 테이블 바로 아래에 위치 */}
 						<div>
 							<div style={{ marginTop: '20px' }}>
@@ -685,137 +755,23 @@ const RowDetails = ({ row, assetCode, onClose, formData: initialFormData }) => {
 									</Tab>
 
 									<Tab eventKey="updateHistory" title="수정이력">
-										<div style={{ padding: '20px', border: '2px solid #000' }}>
-											<BootstrapTable
-												striped
-												bordered
-												hover
-												className="table-detail"
-											>
-												<thead>
-													<tr>
-														<th>번호</th>
-														<th>자산코드</th>
-														<th>자산명</th>
-														<th>수정일자</th>
-														<th>수정요청자</th>
-														<th>수정사유</th>
-														<th>수정내용</th>
-													</tr>
-												</thead>
-												<tbody>
-													{formData.updateHistory.map((update, index) => (
-														<tr key={index}>
-															<td>{update.updateNo || index + 1}</td>
-															<td>{update.assetCode}</td>
-															<td>{update.assetName}</td>
-															<td>{update.updateDate}</td>
-															<td>
-																{update.updateBy || '정보 없음'}
-															</td>
-															<td>
-																{update.updateReason || '정보 없음'}
-															</td>
-															<td>
-																{update.updateDetail || '정보 없음'}
-															</td>
-														</tr>
-													))}
-												</tbody>
-											</BootstrapTable>
-										</div>
+										<UpdateHistoryTable
+											updateHistory={formData.updateHistory}
+										/>
 									</Tab>
 
 									<Tab eventKey="maintenanceHistory" title="유지보수이력">
 										{/* 유지보수이력 테이블 */}
-										<div style={{ padding: '20px', border: '2px solid #000' }}>
-											<BootstrapTable
-												striped
-												bordered
-												hover
-												className="table-detail"
-											>
-												<thead>
-													<tr>
-														<th>번호</th>
-														<th>자산코드</th>
-														<th>자산명</th>
-														<th>수정일자</th>
-														<th>수정요청자</th>
-														<th>수정사유</th>
-														<th>수정내용</th>
-													</tr>
-												</thead>
-												<tbody>
-													{/* 유지보수 이력 데이터를 맵핑하여 출력 */}
-													{formData.repairHistory.map((repair, index) => (
-														<tr key={index}>
-															<td>{repair.repairNo || index + 1}</td>
-															<td>{repair.assetCode}</td>
-															<td>{repair.repairBy}</td>
-															<td>{repair.repairResult}</td>
-															<td>{repair.repairStartDate}</td>
-															<td>{repair.repairEnDate}</td>
-															<td>{repair.status}</td>
-														</tr>
-													))}
-												</tbody>
-											</BootstrapTable>
-										</div>
+										<MaintenanceHistoryTable
+											repairHistory={formData.repairHistory}
+										/>
 									</Tab>
 
 									<Tab eventKey="investigationHistory" title="자산조사이력">
 										{/* 자산조사이력 테이블 */}
-										<div style={{ padding: '20px', border: '2px solid #000' }}>
-											<BootstrapTable
-												striped
-												bordered
-												hover
-												className="table-detail"
-											>
-												<thead>
-													<tr>
-														<th>번호</th>
-														<th>자산코드</th>
-														<th>자산명</th>
-														<th>회차</th>
-														<th>자산위치</th>
-														<th>자산소유자</th>
-														<th>자산담당자</th>
-														<th>정위치유무</th>
-														<th>상태</th>
-														<th>내용</th>
-													</tr>
-												</thead>
-												<tbody>
-													{/* 조사 이력 데이터를 맵핑하여 출력 */}
-													{formData.surveyHistory.map((survey, index) => (
-														<tr key={index}>
-															<td>{survey.assetSurveyDetailNo}</td>
-															<td>{survey.assetCode}</td>
-															<td>{survey.assetName}</td>
-															<td>{survey.round}</td>
-															<td>{survey.assetSurveyLocation}</td>
-															<td>{survey.assetSurveyBy}</td>
-															<td>{survey.assetSurveyBy}</td>
-															{/* exactLocation 값이 true면 "정위치 유", false면 "정위치 무" */}
-															<td>
-																{survey.exactLocation
-																	? '정위치 유'
-																	: '정위치 무'}
-															</td>
-															{/* assetStatus 값이 true면 "정상", false면 "파손" */}
-															<td>
-																{survey.assetStatus
-																	? '정상'
-																	: '파손'}
-															</td>
-															<td>{survey.assetSurveyContent}</td>
-														</tr>
-													))}
-												</tbody>
-											</BootstrapTable>
-										</div>
+										<InvestigationHistoryTable
+											surveyHistory={formData.surveyHistory}
+										/>
 									</Tab>
 								</Tabs>
 							</div>

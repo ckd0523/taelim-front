@@ -2,7 +2,6 @@
 import { Row, Col, Accordion, Form } from 'react-bootstrap';
 import { useAccordionButton } from 'react-bootstrap';
 
-import { TextInput } from '@/components/Form';
 import { useForm, FormProvider } from 'react-hook-form';
 import { CustomDatePicker } from '@/components/Form';
 import { BsCaretUpFill } from 'react-icons/bs';
@@ -11,6 +10,7 @@ import Select from 'react-select';
 import { useState } from 'react';
 import './ButtonStyle.css';
 import styled from 'styled-components';
+import { useEffect } from 'react';
 const StyledCard = styled.div`
 	display: flex;
 	flex-direction: column;
@@ -63,8 +63,9 @@ function CustomToggle({ children, eventKey }) {
 }
 const PurchasingInfo = ({ formData, handleChange }) => {
 	const methods = useForm();
+
 	return (
-		<div>
+		<div style={{ paddingTop: '20px' }}>
 			<Accordion defaultActiveKey="1">
 				<StyledCard className="card">
 					<CustomToggle eventKey="1">재무 및 구매정보</CustomToggle>

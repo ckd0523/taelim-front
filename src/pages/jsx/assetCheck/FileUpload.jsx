@@ -55,18 +55,29 @@ function CustomToggle({ children, eventKey }) {
 	);
 }
 const FileUpload = ({ files = [], setFiles, formData, handleChange }) => {
+	// const handleFileUpload = (file, fileType) => {
+	// 	const updateFiles = [...files, { file, fileType }];
+	// 	setFiles(updateFiles);
+	// 	console.log(updateFiles);
+	// };
 	const handleFileUpload = (file, fileType) => {
-		const updateFiles = [{ file, fileType }];
+		const updateFiles = [
+			...files.filter((f) => f.fileType !== fileType),
+			...file.map((f) => ({ file: f, fileType })),
+		];
 		setFiles(updateFiles);
+		console.log(updateFiles);
 	};
 
-	useEffect(
-		() => () => {
-			// 메모리 누수를 방지하기 위해 파일 URL을 정리
-			files.forEach((file) => URL.revokeObjectURL(file.preview));
-		},
-		[files]
-	);
+	useEffect(() => {
+		return () => {
+			files.forEach((file) => {
+				if (file.file && file.file.preview) {
+					URL.revokeObjectURL(file.file.preview);
+				}
+			});
+		};
+	}, [files]);
 
 	return (
 		<Accordion defaultActiveKey="3">

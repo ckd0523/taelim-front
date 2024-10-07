@@ -4,6 +4,7 @@ import FileUpload from './FileUpload';
 import { Button, Row, Col, Container } from 'react-bootstrap';
 import styled from 'styled-components';
 import { redirect } from 'react-router-dom';
+import { useEffect } from 'react';
 const urlConfig = import.meta.env.VITE_BASIC_URL;
 const ResponsivePadding = styled.div`
 	@media (max-width: 768px) {
@@ -132,7 +133,7 @@ const AssetRegister = () => {
 					for (let { file, fileType } of files) {
 						const fileFormData = new FormData();
 						fileFormData.append('assetNo', assetNo);
-						fileFormData.append('file', file[0]);
+						fileFormData.append('file', file);
 						fileFormData.append('fileType', fileType);
 						// console.log(fileFormData.assetNo);
 						console.log('fileFormData:', fileFormData.get('file'));
@@ -170,7 +171,26 @@ const AssetRegister = () => {
 		console.log('name: ', name);
 		console.log('value: ', value);
 	};
-
+	useEffect(() => {
+		if (formData.contactInformation?.length === 10) {
+			setFormData((prevState) => ({
+				...prevState,
+				contactInformation: formData.contactInformation
+					.replace(/[^0-9.]/g, '')
+					.replace(/^(\d{0,3})(\d{0,4})(\d{0,4})$/g, '$1-$2-$3')
+					.replace(/(-{1,2})$/g, ''),
+			}));
+		}
+		if (formData.contactInformation?.length === 13) {
+			setFormData((prevState) => ({
+				...prevState,
+				contactInformation: formData.contactInformation
+					.replace(/[^0-9.]/g, '')
+					.replace(/^(\d{0,3})(\d{0,4})(\d{0,4})$/g, '$1-$2-$3')
+					.replace(/(-{1,2})$/g, ''),
+			}));
+		}
+	}, [formData.contactInformation]);
 	return (
 		<Container>
 			<Row>
@@ -178,7 +198,7 @@ const AssetRegister = () => {
 					<Col xs={12} md={8} lg={12}>
 						<BasisAssetInfo formData={formData} handleChange={handleChange} />
 					</Col>
-					<Col xs={12} md={8} lg={12} style={{ paddingTop: '20px' }}>
+					<Col xs={12} md={8} lg={12}>
 						<FileUpload
 							formData={formData}
 							handleChange={handleChange}

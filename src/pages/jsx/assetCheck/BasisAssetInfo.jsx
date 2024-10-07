@@ -155,10 +155,9 @@ const operationStatus = [
 ];
 //기본 자산 정보 및 관리 정보 컬럼
 const BasisAssetInfo = ({ formData, handleChange }) => {
-	// const methods = useForm();
 	const methods = useForm({
-		defaultValues: formData, // 초기 formData 설정
-		mode: 'onBlur', // validation 체크 트리거 모드 (onSubmit, onBlur, onChange 등)
+		defaultValues: formData,
+		mode: 'onBlur',
 	});
 	const {
 		register,
@@ -477,24 +476,6 @@ const BasisAssetInfo = ({ formData, handleChange }) => {
 												</p>
 											)}
 										</Form.Group>
-										{/* <Form.Label>무결성</Form.Label>
-										<Form.Control
-											placeholder="무결성을 입력해주세요"
-											className="mb-2"
-											type="number"
-											value={formData.integrity}
-											onChange={handleChange}
-											name="integrity"
-										/>
-										<Form.Label>가용성</Form.Label>
-										<Form.Control
-											placeholder="가용성을 입력해주세요"
-											className="mb-2"
-											type="number"
-											value={formData.availability}
-											onChange={handleChange}
-											name="availability"
-										/> */}
 										<Form.Label>비고</Form.Label>
 										<Form.Control
 											placeholder="비고를 입력해주세요"
@@ -513,12 +494,12 @@ const BasisAssetInfo = ({ formData, handleChange }) => {
 				</StyledCard>
 			</Accordion>
 			<Col xs={12} md={8} lg={12}>
-				<PurchasingInfo formData={formData} handleChange={handleChange} />
 				<AssetCategories
 					formData={formData}
 					assetClassification={formData.assetClassification}
 					handleChange={handleChange}
 				/>
+				<PurchasingInfo formData={formData} handleChange={handleChange} />
 			</Col>
 		</div>
 	);

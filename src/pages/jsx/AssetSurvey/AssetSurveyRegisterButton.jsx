@@ -42,6 +42,7 @@ const RegisterButton = ({ onClickRegister }) => {
         }
 
       } catch (error) {
+        alert("네트워크 오류 발생");
         console.error('에러 발생:', error);
       }
     };

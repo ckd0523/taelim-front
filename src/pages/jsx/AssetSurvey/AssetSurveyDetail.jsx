@@ -517,9 +517,9 @@ const AssetSurveyDetail = () => {
       <Card></Card>
 
       {/* Toast 컴포넌트 추가 */}
-      <ToastContainer position='top-center'>
-        <Toast show={showToast} onClose={() => setShowToast(false)} delay={10000} autohide bg='primary'>
-          <Toast.Body style={{ color: 'white' }}>여기입니다</Toast.Body>
+      <ToastContainer position='top-center' style={{ width: '125px' }}>
+        <Toast show={showToast} onClose={() => setShowToast(false)} delay={1500} autohide bg='primary'>
+          <Toast.Body style={{ color: 'white' }} className='text-center'>자산 확인 완료</Toast.Body>
         </Toast>
       </ToastContainer>
 

@@ -6,7 +6,7 @@ CERT_PATH="/etc/letsencrypt/live/taelimasset.com/fullchain.pem"
 # SSL 인증서가 없으면 Certbot으로 인증서 발급
 if [ ! -f "$CERT_PATH" ]; then
   echo "SSL 인증서가 존재하지 않습니다. Certbot을 통해 인증서를 발급합니다."
-  certbot certonly --nginx -d taelimasset.com --non-interactive --agree-tos -m your-email@example.com
+  certbot certonly --nginx -d taelimasset.com --non-interactive --agree-tos -m ckd0523@naver.com -v
   
   # 인증서 발급 성공 여부 확인
   if [ $? -ne 0 ]; then

@@ -53,7 +53,7 @@ pipeline {
                           -p 80:80 \
                           -p 443:443 \
                           -v /docker_projects/fe_taelim/volumes/gen:/gen \
-                          -v /docker_projects/fe_taelim/volumes/etc/letsencrypt:/etc/letsencrypt \
+                          -v /etc/letsencrypt:/etc/letsencrypt \
                           --restart unless-stopped \
                           --network app \
                           -e TZ=Asia/Seoul \

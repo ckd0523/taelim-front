@@ -518,7 +518,7 @@ const ProcessModal = ({ show, handleClose }) => {
 	};
 
 	if (isLoading) {
-		return <div>로딩 중...</div>;
+		return <div></div>;
 	}
 
 	const currentData = demandList[currentIndex];

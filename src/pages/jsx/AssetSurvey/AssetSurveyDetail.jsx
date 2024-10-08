@@ -1,4 +1,4 @@
-import { Row, Col, Card, Button, Form, InputGroup } from 'react-bootstrap';
+import { Row, Col, Card, Button, Form, InputGroup, Toast, ToastContainer } from 'react-bootstrap';
 import { useLocation, Link } from 'react-router-dom';
 import assetSurveyLocation from './assetSurveyLocation';
 import { useState, useEffect, useMemo, useCallback, useRef } from 'react';
@@ -71,6 +71,10 @@ const AssetSurveyContentCell = React.memo(({ row, assetSurveyContent, onContentC
 //--------------------------------------------------------------------------------------------------------------------------
 
 const AssetSurveyDetail = () => {
+  // Toast 관련 상태 추가
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
+
   //페이지에 들어올 때 QR로 찍은 assetCode가 바로 들어갈 수 있게 바로 input에 focus를 두기 위함
   const inputRef = useRef(null); // input 요소에 대한 ref 생성
 
@@ -155,9 +159,17 @@ const AssetSurveyDetail = () => {
       .then((data) => {
         //console.log('받은 데이터 : ' + data);
         setData(data);
+
+        const initialExactLocationStates = {};
+        data.forEach(item => {
+          initialExactLocationStates[item.infoNo] = item.exactLocation;
+        });
+        setExactLocationStates(initialExactLocationStates);
       })
       .catch((error) => console.error('error : ', error));
   }, [locationState.assetSurveyNo]);
+
+  //console.log("받은 데이터 : " + JSON.stringify(data));
 
   //console.log('선택한 레코드 자산 번호 : ' + locationState.assetSurveyNo);
   //const data = getDetailTable(locationState.assetSurveyNo);
@@ -190,7 +202,7 @@ const AssetSurveyDetail = () => {
       Cell: ({ row }) => (
         <input
           type='checkbox'
-          checked={exactLocationStates[row.id] ?? row.values.exactLocation}
+          checked={exactLocationStates[row.original.infoNo] ?? row.values.exactLocation}
           onChange={(e) => handleExactLocation(e, row)}
           //disabled는 true, false를 넣어야 하는데
           //localStorage.getItem은 항상 문자열('true', 'false')을 반환
@@ -222,13 +234,38 @@ const AssetSurveyDetail = () => {
   ], [assetSurveyContent, handleContentChange, exactLocationStates, assetStatusStates]);
 
   //정위치 유무 체크박스 선택 시 동작
-  const handleExactLocation = (e, row) => {
-    const updatedState = {
-      ...exactLocationStates,
-      [row.id]: e.target.checked,
-    };
-    setExactLocationStates(updatedState);
+  const handleExactLocation = useCallback((e, row, isQRScan = false) => {
+    //console.log(row);
 
+    const infoNo = row.original.infoNo;
+    //const currentState = exactLocationStates[infoNo];
+
+    // QR 스캔의 경우
+    if (isQRScan) {
+      setExactLocationStates(prevState => {
+        const currentState = prevState[infoNo];
+        if (currentState) {
+          alert("이미 조사된 자산입니다.");
+          return prevState; // 상태를 변경하지 않음
+        }
+
+        // 새로운 상태로 업데이트
+        return {
+          ...prevState,
+          [infoNo]: true,
+        };
+      });
+    }
+    // 수동 체크의 경우
+    else {
+      setExactLocationStates(prevState => ({
+        ...prevState,
+        [infoNo]: e.target.checked
+      }));
+    }
+
+    //console.log("이미 조사된 거 판별 : " + row.id);
+    //console.log("이미 조사된 거 판별2 : " + exactLocationStates[row.original.infoNo]);
     //console.log('exactLocation Row:', updatedRow);
 
     fetch(`${URL}/updateAssetSurveyDetail`, {
@@ -239,7 +276,7 @@ const AssetSurveyDetail = () => {
       body: JSON.stringify({ // 여기에서 JSON.stringify()를 사용하여 객체를 문자열로 변환
         "requestType": true,
         "infoNo": row.original.infoNo,
-        "updateValue": e.target.checked,
+        "updateValue": isQRScan ? true : e?.target?.checked,
       }),
     })
       .then(response => {
@@ -252,7 +289,8 @@ const AssetSurveyDetail = () => {
         alert('네트워크 응답이 올바르지 않습니다.');
         console.error('오류 발생:', error); // 오류 발생 시 오류 메시지 출력
       });
-  };
+  }, [exactLocationStates]);
+  //console.log("애라이" + JSON.stringify(exactLocationStates));
 
   //상태 체크박스 선택 시 동작
   const handleAssetStatus = (e, row) => {
@@ -318,9 +356,22 @@ const AssetSurveyDetail = () => {
           QRScanner.scanImage(videoRef.current, { returnDetailedScanResult: true })
             .then(result => {
               console.log('QR 코드 인식 결과:', result);
-              alert(`QR 코드가 인식되었습니다: ${result.data}`);
+              //alert(`QR 코드가 인식되었습니다: ${result.data}`);
               // QR 코드 인식 후 추가 작업을 여기에 구현하세요.
-              // 예: 인식된 데이터로 자산 정보 업데이트
+              console.log("자산 코드 : " + result.data.split('/').pop());
+              const QrAssetCode = result.data.split('/').pop();
+              //console.log("받은 데이터2 : " + JSON.stringify(data));
+
+              // 테이블에서 해당 assetCode를 가진 행을 찾아 "정위치 유무" 체크박스 체크
+              const matchedRow = data.find(row => row.assetCode === QrAssetCode);
+              if (matchedRow) {
+                console.log("일치하는 행의 id : " + matchedRow.id);
+                handleExactLocation(null, { id: matchedRow.id, original: matchedRow }, true);
+                console.log("일치하는 행 : " + JSON.stringify(matchedRow));
+                setShowToast(true);
+              } else {
+                alert('해당하는 자산을 찾을 수 없습니다.');
+              }
             })
             .catch(err => {
               // QR 코드를 찾지 못한 경우 조용히 넘어갑니다.
@@ -336,7 +387,9 @@ const AssetSurveyDetail = () => {
       setIsScanning(false);
       alert('카메라에 접근할 수 없습니다. 카메라 권한을 확인해주세요.');
     }
-  }, []);
+    //callBack 함수의 의존성 배열에 data 추가 안하면 data 못 씀.
+    //startScanning 함수가 정의될 때 data 값을 참조하는데 초기 빈 배열을 계속 사용해서 그런듯 
+  }, [data, handleExactLocation]);
 
   const stopScanning = useCallback(() => {
     setIsScanning(false);
@@ -421,11 +474,11 @@ const AssetSurveyDetail = () => {
         </Col>
 
         <Col className='col-auto'>
-          {localStorage.getItem('surveyStatus') === 'true' ? '' : isScanning ? <Button onClick={stopScanning}>QR인식 중지</Button> : <Button onClick={startScanning}>QR인식</Button>}
+          {localStorage.getItem('surveyStatus') === 'true' ? '' : isScanning ? <Button onClick={stopScanning}>QR인식 중지 <i className='mdi mdi-record' style={{ color: 'red' }} /></Button> : <Button onClick={startScanning}>QR인식</Button>}
 
           <>
             {isScanning && (
-              <video ref={videoRef} style={{ width: '100%', height: 'auto' }} autoPlay />
+              <video ref={videoRef} style={{ width: '100%', height: 'auto', display: 'none' }} autoPlay />
             )}
           </>
         </Col>
@@ -462,6 +515,14 @@ const AssetSurveyDetail = () => {
       </Row>
 
       <Card></Card>
+
+      {/* Toast 컴포넌트 추가 */}
+      <ToastContainer position='top-center' style={{ width: '125px' }}>
+        <Toast show={showToast} onClose={() => setShowToast(false)} delay={1500} autohide bg='primary'>
+          <Toast.Body style={{ color: 'white' }} className='text-center'>자산 확인 완료</Toast.Body>
+        </Toast>
+      </ToastContainer>
+
     </div >
   );
 };

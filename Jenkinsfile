@@ -31,7 +31,7 @@ pipeline {
 
         stage('Docker Build') {  
             steps {  
-                sh 'docker build --no-cache -t fe_taelim:${timestamp} .'
+                sh 'docker build -t fe_taelim:${timestamp} .'
             }  
         }
 

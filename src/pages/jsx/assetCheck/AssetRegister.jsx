@@ -1,10 +1,9 @@
 import BasisAssetInfo from './BasisAssetInfo';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import FileUpload from './FileUpload';
 import { Button, Row, Col, Container } from 'react-bootstrap';
 import styled from 'styled-components';
-import { redirect } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 const urlConfig = import.meta.env.VITE_BASIC_URL;
 const ResponsivePadding = styled.div`
 	@media (max-width: 768px) {
@@ -21,6 +20,7 @@ const ResponsivePadding = styled.div`
 `;
 //자산등록
 const AssetRegister = () => {
+	const navigate = useNavigate();
 	const [files, setFiles] = useState([]);
 	const [formData, setFormData] = useState({
 		assetClassification: '',
@@ -126,7 +126,6 @@ const AssetRegister = () => {
 			if (assetResponse.ok) {
 				const assetNo = await assetResponse.text();
 				alert('자산이 성공적으로 등록');
-
 				console.log(typeof assetNo);
 
 				if (files.length > 0) {
@@ -135,7 +134,6 @@ const AssetRegister = () => {
 						fileFormData.append('assetNo', assetNo);
 						fileFormData.append('file', file);
 						fileFormData.append('fileType', fileType);
-						// console.log(fileFormData.assetNo);
 						console.log('fileFormData:', fileFormData.get('file'));
 						console.log('assetNo:', fileFormData.get('assetNo'));
 						console.log('fileType:', fileFormData.get('fileType'));
@@ -213,7 +211,14 @@ const AssetRegister = () => {
 					저장
 				</Button>
 				<p className="px-2"></p>
-				<Button size="lg" variant="secondary" type="button">
+				<Button
+					size="lg"
+					variant="secondary"
+					type="button"
+					onClick={() => {
+						navigate('/jsx/AssetPage');
+					}}
+				>
 					취소
 				</Button>
 			</div>

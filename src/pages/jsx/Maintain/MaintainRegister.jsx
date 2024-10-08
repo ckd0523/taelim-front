@@ -22,8 +22,6 @@ const MaintainRegister = ({ assetCode, assetNo }) => {
 
 	const handleFileUpload = async (repairNo) => {
 		const uploadFileNames = [];
-		let hasBeforeRepair = false;
-		let hasAfterRepair = false;
 		for (let { file, repairType } of files) {
 			const fileFormData = new FormData();
 			fileFormData.append('repairNo', repairNo);
@@ -129,27 +127,39 @@ const MaintainRegister = ({ assetCode, assetNo }) => {
 				</Modal.Header>
 				<Modal.Body>
 					<Form>
-						<Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+						<Form.Group controlId="exampleForm.ControlInput1">
 							<Form.Label>자산코드</Form.Label>
-							<Form.Control value={formData.assetCode} type="text" readOnly />
-							<Form.Label>유지보수 담당자</Form.Label>
-							<Form.Control value={formData.repairBy} type="text" readOnly />
-							<Form.Label>시작일</Form.Label>
 							<Form.Control
-								name="repairStartDate"
-								value={formData.repairStartDate}
+								className="mb-2"
+								value={formData.assetCode}
 								type="text"
 								readOnly
 							/>
+							<Form.Label>유지보수 담당자</Form.Label>
+							<Form.Control
+								className="mb-2"
+								value={formData.repairBy}
+								type="text"
+								readOnly
+							/>
+							<Form.Label>시작일</Form.Label>
+							<Form.Control
+								className="mb-2"
+								name="repairStartDate"
+								value={formData.repairStartDate || ''}
+								onChange={handleChange}
+								type="date"
+							/>
 							<Form.Label>완료일</Form.Label>
 							<Form.Control
+								className="mb-2"
 								name="repairEndDate"
 								value={formData.repairEndDate || ''}
 								onChange={handleChange}
 								type="date"
 							/>
 						</Form.Group>
-						<Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
+						<Form.Group className="mb-2" controlId="exampleForm.ControlTextarea1">
 							<Form.Label>유지보수 내용</Form.Label>
 							<Form.Control
 								name="repairResult"

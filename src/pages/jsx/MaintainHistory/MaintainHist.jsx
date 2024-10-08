@@ -1,4 +1,4 @@
-import { Row, Col, Form, Button } from 'react-bootstrap';
+import { Row, Col, Form, Button, Card, CardBody } from 'react-bootstrap';
 import { CustomDatePicker } from '@/components';
 import { Table3 } from '@/components/table/Table3';
 import { MaintainDetail } from '@/pages/jsx/MaintainHistory/MaintainDetail';
@@ -6,34 +6,34 @@ import { useState } from 'react';
 import styled from 'styled-components';
 import { useEffect } from 'react';
 
-const StyledCard = styled.div`
-	display: flex;
-	flex-direction: column;
+// const StyledCard = styled.div`
+// 	display: flex;
+// 	flex-direction: column;
 
-	@media (max-width: 767px) {
-		width: 100%;
-		margin: 0 auto;
-		display: flex;
-		font-size: 80%;
-	}
+// 	@media (max-width: 767px) {
+// 		width: 100%;
+// 		margin: 0 auto;
+// 		display: flex;
+// 		font-size: 80%;
+// 	}
 
-	@media (min-width: 768px) and (max-width: 1023px) {
-		width: 100%;
-		margin: 0 auto;
-		display: flex;
-	}
+// 	@media (min-width: 768px) and (max-width: 1023px) {
+// 		width: 100%;
+// 		margin: 0 auto;
+// 		display: flex;
+// 	}
 
-	@media (min-width: 1024px) {
-		width: 100%;
-		margin: 0 auto;
-		display: flex;
-	}
-`;
-const StyledCardBody = styled.div`
-	flex-grow: 1;
-	flex-direction: column;
-	justify-content: space-between;
-`;
+// 	@media (min-width: 1024px) {
+// 		width: 100%;
+// 		margin: 0 auto;
+// 		display: flex;
+// 	}
+// `;
+// const StyledCardBody = styled.div`
+// 	flex-grow: 1;
+// 	flex-direction: column;
+// 	justify-content: space-between;
+// `;
 const columns = [
 	{
 		Header: '번호',
@@ -102,8 +102,35 @@ const urlConfig = import.meta.env.VITE_BASIC_URL;
 const MaintainHist = () => {
 	const [show, setShow] = useState(false);
 	const [selectData, setSelectData] = useState();
-	const [data, setData] = useState([]);
+	const [searchData, setSearchData] = useState([]); // 필터할 테이블 데이터
+	const [data, setData] = useState([]); //기존 테이블 데이터
+	const [searchAssetName, setSearchAssetName] = useState();
+	const [searchAssetCode, setSearchAssetCode] = useState();
+	const [searchMaintainBy, setSearchMaintainBy] = useState();
+	const [searchStartDate, setSearchStartDate] = useState();
+	const [searchEndDate, setSearchEndDate] = useState();
 
+	const handleSearch = (e) => {
+		const filteredData = data.filter((item) => {
+			return (
+				(!searchAssetName ||
+					item.assetName.toUpperCase().includes(searchAssetName.toUpperCase())) &&
+				(!searchAssetCode ||
+					item.assetCode.toUpperCase().includes(searchAssetCode.toUpperCase())) &&
+				(!searchMaintainBy ||
+					item.maintainBy.toUpperCase().includes(searchMaintainBy.toUpperCase())) &&
+				(!searchStartDate || new Date(item.repairStartDate) >= searchStartDate) &&
+				(!searchEndDate || new Date(item.repairEndDate) <= searchEndDate)
+			);
+		});
+		setSearchData(filteredData);
+		console.log(filteredData);
+		setSearchAssetName('');
+		setSearchAssetCode('');
+		setSearchMaintainBy('');
+		setSearchStartDate('');
+		setSearchEndDate('');
+	};
 	const handleClick = (rowdata) => {
 		setSelectData(rowdata);
 		setShow(true);
@@ -124,19 +151,24 @@ const MaintainHist = () => {
 				if (Array.isArray(result)) {
 					console.log(result);
 					setData(result);
+					setSearchData(result);
 				} else {
 					console.error('error');
 					setData([]);
+					setSearchData([]);
 				}
 			})
 			.catch((error) => console.log('error', error));
 	}, []);
 	return (
 		<>
-			<Row className="px-3 pt-5">
-				<Col className="d-flex justify-content-center">
-					<StyledCard className="px-3 card">
-						<StyledCardBody className="card-body ">
+			<Row>
+				<Card></Card>
+			</Row>
+			<Row>
+				<Col>
+					<Card className="card">
+						<CardBody className="card-body">
 							<Form>
 								<Row className="align-items-center">
 									<Col xs={12} md={4} lg={2}>
@@ -149,6 +181,10 @@ const MaintainHist = () => {
 													type="text"
 													name="자산명"
 													id="assetName"
+													value={searchAssetName || ''}
+													onChange={(e) =>
+														setSearchAssetName(e.target.value)
+													}
 												/>
 											</Col>
 										</Form.Group>
@@ -164,6 +200,10 @@ const MaintainHist = () => {
 													type="text"
 													name="자산코드"
 													id="assetCode"
+													value={searchAssetCode || ''}
+													onChange={(e) =>
+														setSearchAssetCode(e.target.value)
+													}
 												/>
 											</Col>
 										</Form.Group>
@@ -179,6 +219,10 @@ const MaintainHist = () => {
 													type="text"
 													name="유지보수자"
 													id="maintainBy"
+													value={searchMaintainBy || ''}
+													onChange={(e) =>
+														setSearchMaintainBy(e.target.value)
+													}
 												/>
 											</Col>
 										</Form.Group>
@@ -195,6 +239,10 @@ const MaintainHist = () => {
 													dateFormat="yyyy-MM-dd"
 													name="startDate"
 													hideAddon={true}
+													value={searchStartDate || ''}
+													onChange={(s) => {
+														setSearchStartDate(s || '');
+													}}
 												/>
 											</Col>
 											<Col
@@ -211,39 +259,46 @@ const MaintainHist = () => {
 													dateFormat="yyyy-MM-dd"
 													name="endDate"
 													hideAddon={true}
+													value={searchEndDate || ''}
+													onChange={(s) => {
+														setSearchEndDate(s || '');
+													}}
 												/>
 											</Col>
 										</Form.Group>
 									</Col>
 									<Col className="px-2 pt-3">
-										<Button>검색</Button>
+										<Button
+											type="button"
+											onClick={() => {
+												handleSearch();
+											}}
+										>
+											검색
+										</Button>
 									</Col>
 								</Row>
 							</Form>
-						</StyledCardBody>
-					</StyledCard>
+						</CardBody>
+					</Card>
 				</Col>
 			</Row>
-			<Row className="px-3 pt-5">
-				<Col>{/* <MaintainRegister onSubmitSuccess={handleRegisterSubmit} /> */}</Col>
-			</Row>
 			<Row className="align-items-center">
-				{/* <h4 className="header-title text-center">유지보수 이력</h4> */}
-				<Col className="pt-5 d-flex justify-content-center align-items-center">
-					<StyledCard className="card">
-						<StyledCardBody className="card-body">
+				<Col>
+					<Card className="card">
+						<CardBody className="card-body">
 							<Table3
 								theadClass="table-light"
 								sizePerPageList={sizePerPageList}
 								columns={columns}
-								data={data}
+								data={searchData}
 								isSortable={true}
 								pagination={true}
 								pageSize={5}
 								onRowClick={handleClick}
 							/>
-						</StyledCardBody>
-					</StyledCard>
+						</CardBody>
+					</Card>
 				</Col>
 			</Row>
 

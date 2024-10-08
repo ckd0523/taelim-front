@@ -30,6 +30,10 @@ const MaintainDetail = ({ show, selectData, handleClose }) => {
 		}
 	};
 
+	const handleFileUpload = (file, repairType) => {
+		const updateFiles = [...files, { file, repairType }];
+		setFiles(updateFiles);
+	};
 	const handleInputChange = (e) => {
 		const { name, value } = e.target;
 		setFormData((prevState) => ({
@@ -50,15 +54,16 @@ const MaintainDetail = ({ show, selectData, handleClose }) => {
 			}
 		}
 	};
+
+	const reader = new FileReader();
 	const previewImage = (e) => {
 		e.preventDefault();
 		const file = e.target.files[0];
 		if (!file) return;
 
-		const reader = new FileReader();
-
 		reader.onloadend = () => {
 			setImgPath(reader.result);
+			handleFileUpload(file, 'BEFORE_REPAIR');
 		};
 		reader.readAsDataURL(file);
 		console.log(reader);
@@ -67,10 +72,10 @@ const MaintainDetail = ({ show, selectData, handleClose }) => {
 		e.preventDefault();
 		const file = e.target.files[0];
 		if (!file) return;
-		const reader = new FileReader();
 
 		reader.onloadend = () => {
 			setafterPath(reader.result);
+			handleFileUpload(file, 'AFTER_REPAIR');
 		};
 		reader.readAsDataURL(file);
 	};
@@ -80,10 +85,10 @@ const MaintainDetail = ({ show, selectData, handleClose }) => {
 
 	// 	const reader = new FileReader();
 	// 	reader.onloadend = () => {
-	// 		if (type === 'BEFORE_REPAIR') {
-	// 			setImgPath(reader.path);
+	// 		if (type === '보수전') {
+	// 			setImgPath(reader.result);
 	// 		} else {
-	// 			setAfterPath(reader.result);
+	// 			setafterPath(reader.result);
 	// 		}
 	// 	};
 	// 	reader.readAsDataURL(file);
@@ -96,39 +101,47 @@ const MaintainDetail = ({ show, selectData, handleClose }) => {
 		[files]
 	);
 	const saveImages = async () => {
-		// const updateFileNames = [];
+		const updateFileNames = [];
 		// for(let {file, repairType} of files) {
 
 		// }
-		const uploadData = new FormData();
+
 		let imageUploadSuccess = true;
 		let endDateSaveSuccess = true;
-		if (imgRef.current.files[0]) {
-			uploadData.append('file', imgRef.current.files[0]);
+		for (let { file, repairType } of files) {
+			// if (imgRef.current?.files) {
+			const uploadData = new FormData();
+			uploadData.append('file', file);
 			uploadData.append('repairNo', selectData.repairNo);
-			uploadData.append('repairType', 'BEFORE_REPAIR');
+			uploadData.append('repairType', repairType);
 			uploadData.append('deleteExisting', 'true');
-		}
-		if (afterImgRef.current.files[0]) {
-			uploadData.append('file', afterImgRef.current.files[0]);
-			uploadData.append('repairNo', selectData.repairNo);
-			uploadData.append('repairType', 'AFTER_REPAIR');
-			uploadData.append('deleteExisting', 'true');
-		}
-		try {
-			const response = await fetch(
-				`${urlConfig}/maintain/file/upload/${selectData.repairNo}`,
-				{
-					method: 'POST',
-					body: uploadData,
+			// }
+			// if (afterImgRef.current?.files) {
+			// 	uploadData.append('file', file);
+			// 	uploadData.append('repairNo', selectData.repairNo);
+			// 	uploadData.append('repairType', repairType);
+			// 	uploadData.append('deleteExisting', 'true');
+			// }
+			try {
+				if (uploadData.has('file')) {
+					const response = await fetch(
+						`${urlConfig}/maintain/file/upload/${selectData.repairNo}`,
+						{
+							method: 'POST',
+							body: uploadData,
+						}
+					);
+					if (response.ok) {
+						const fileName = await response.text();
+						updateFileNames.push(fileName);
+						console.log(fileName);
+						alert('이미지 업로드 성공');
+					}
 				}
-			);
-			if (response.ok) {
-				alert('이미지 업로드 성공');
+			} catch (error) {
+				imageUploadSuccess = false;
+				console.error(error);
 			}
-		} catch (error) {
-			imageUploadSuccess = false;
-			console.error(error);
 		}
 
 		try {
@@ -232,6 +245,7 @@ const MaintainDetail = ({ show, selectData, handleClose }) => {
 									id="maintainBefore"
 									accept="image/*"
 									onChange={previewImage}
+									// onChange={(e) => handleImageChange(e, '보수전')}
 								></Form.Control>
 							</FormGroup>
 						)}
@@ -274,6 +288,7 @@ const MaintainDetail = ({ show, selectData, handleClose }) => {
 									id="maintainAfter"
 									accept="image/*"
 									onChange={AfterImage}
+									// onChange={(e) => handleImageChange(e, '보수후')}
 								></Form.Control>
 							</FormGroup>
 						)}

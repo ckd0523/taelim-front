@@ -97,9 +97,9 @@ const ExcelRegister = () => {
 										case '자산위치':
 											updatedFormData['assetLocation'] = excelRow[index];
 											break;
-										// case '렉번호':
-										// 	updatedFormData['rackUnit'] = excelRow[index];
-										// 	break;
+										case '렉번호':
+											updatedFormData['rackUnit'] = excelRow[index];
+											break;
 										case '위치':
 											updatedFormData['department'] = excelRow[index];
 											break;
@@ -119,18 +119,29 @@ const ExcelRegister = () => {
 										case '도입일자':
 											updatedFormData['introducedDate'] = excelRow[index];
 											break;
-										case '기밀성 (C)':
+										case '기밀성':
 											updatedFormData['confidentiality'] = excelRow[index];
-											console.log(updatedFormData['confidentiality']);
 											break;
-										case '무결성 (l)':
+										case '무결성':
 											updatedFormData['integrity'] = excelRow[index];
 											break;
-										case '가용성 (A)':
+										case '가용성':
 											updatedFormData['availability'] = excelRow[index];
 											break;
 										case '서비스 범위':
 											updatedFormData['serviceScope'] = excelRow[index];
+											break;
+										case '비고':
+											updatedFormData['note'] = excelRow[index];
+											break;
+										case 'IP':
+											updatedFormData['ip'] = excelRow[index];
+											break;
+										case 'ID':
+											updatedFormData['serverId'] = excelRow[index];
+											break;
+										case 'PW':
+											updatedFormData['serverPassword'] = excelRow[index];
 											break;
 
 										default:
@@ -181,7 +192,6 @@ const ExcelRegister = () => {
 
 			if (excelResponse.ok) {
 				alert('엑셀이 정상적으로 등록되었습니다.');
-				// window.location.reload();
 				setSelectValue(null); // 선택한 셀렉트 값 초기화
 				setFormData([]); // 폼 데이터 초기화
 				setData({}); // 엑셀 데이터 초기화

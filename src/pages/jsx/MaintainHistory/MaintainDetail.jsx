@@ -30,6 +30,10 @@ const MaintainDetail = ({ show, selectData, handleClose }) => {
 		}
 	};
 
+	const handleFileUpload = (file, repairType) => {
+		const updateFiles = [...files, { file, repairType }];
+		setFiles(updateFiles);
+	};
 	const handleInputChange = (e) => {
 		const { name, value } = e.target;
 		setFormData((prevState) => ({
@@ -50,15 +54,16 @@ const MaintainDetail = ({ show, selectData, handleClose }) => {
 			}
 		}
 	};
+
+	const reader = new FileReader();
 	const previewImage = (e) => {
 		e.preventDefault();
 		const file = e.target.files[0];
 		if (!file) return;
 
-		const reader = new FileReader();
-
 		reader.onloadend = () => {
 			setImgPath(reader.result);
+			handleFileUpload(file, 'BEFORE_REPAIR');
 		};
 		reader.readAsDataURL(file);
 		console.log(reader);
@@ -67,10 +72,10 @@ const MaintainDetail = ({ show, selectData, handleClose }) => {
 		e.preventDefault();
 		const file = e.target.files[0];
 		if (!file) return;
-		const reader = new FileReader();
 
 		reader.onloadend = () => {
 			setafterPath(reader.result);
+			handleFileUpload(file, 'AFTER_REPAIR');
 		};
 		reader.readAsDataURL(file);
 	};
@@ -80,10 +85,10 @@ const MaintainDetail = ({ show, selectData, handleClose }) => {
 
 	// 	const reader = new FileReader();
 	// 	reader.onloadend = () => {
-	// 		if (type === 'BEFORE_REPAIR') {
-	// 			setImgPath(reader.path);
+	// 		if (type === '보수전') {
+	// 			setImgPath(reader.result);
 	// 		} else {
-	// 			setAfterPath(reader.result);
+	// 			setafterPath(reader.result);
 	// 		}
 	// 	};
 	// 	reader.readAsDataURL(file);
@@ -96,42 +101,47 @@ const MaintainDetail = ({ show, selectData, handleClose }) => {
 		[files]
 	);
 	const saveImages = async () => {
-		// const updateFileNames = [];
+		const updateFileNames = [];
 		// for(let {file, repairType} of files) {
 
 		// }
-		const uploadData = new FormData();
+
 		let imageUploadSuccess = true;
 		let endDateSaveSuccess = true;
-		if (imgRef.current.files[0]) {
-			uploadData.append('file', imgRef.current.files[0]);
+		for (let { file, repairType } of files) {
+			// if (imgRef.current?.files) {
+			const uploadData = new FormData();
+			uploadData.append('file', file);
 			uploadData.append('repairNo', selectData.repairNo);
-
-			uploadData.append('repairType', 'BEFORE_REPAIR');
-		}
-		if (afterImgRef.current.files[0]) {
-			uploadData.append('file', afterImgRef.current.files[0]);
-			uploadData.append('repairNo', selectData.repairNo);
-			uploadData.append('repairType', 'AFTER_REPAIR');
-		}
-		try {
-			const response = await fetch(
-				`${urlConfig}/maintain/file/upload/${selectData.repairNo}`,
-				{
-					method: 'POST',
-					body: uploadData,
+			uploadData.append('repairType', repairType);
+			uploadData.append('deleteExisting', 'true');
+			// }
+			// if (afterImgRef.current?.files) {
+			// 	uploadData.append('file', file);
+			// 	uploadData.append('repairNo', selectData.repairNo);
+			// 	uploadData.append('repairType', repairType);
+			// 	uploadData.append('deleteExisting', 'true');
+			// }
+			try {
+				if (uploadData.has('file')) {
+					const response = await fetch(
+						`${urlConfig}/maintain/file/upload/${selectData.repairNo}`,
+						{
+							method: 'POST',
+							body: uploadData,
+						}
+					);
+					if (response.ok) {
+						const fileName = await response.text();
+						updateFileNames.push(fileName);
+						console.log(fileName);
+						alert('이미지 업로드 성공');
+					}
 				}
-			);
-			if (response.ok) {
-				alert('이미지 업로드 성공');
-				handleClose();
-			} else {
+			} catch (error) {
 				imageUploadSuccess = false;
-				alert('이미지 업로드 실패');
+				console.error(error);
 			}
-		} catch (error) {
-			imageUploadSuccess = false;
-			console.error(error);
 		}
 
 		try {
@@ -145,11 +155,7 @@ const MaintainDetail = ({ show, selectData, handleClose }) => {
 
 			if (response.ok) {
 				alert('수정 성공');
-				handleClose();
 				window.location.reload();
-			} else {
-				endDateSaveSuccess = false;
-				alert('수정 실패');
 			}
 		} catch (error) {
 			endDateSaveSuccess = false;
@@ -158,6 +164,7 @@ const MaintainDetail = ({ show, selectData, handleClose }) => {
 
 		if (imageUploadSuccess || endDateSaveSuccess) {
 			alert('저장성공');
+
 			handleClose();
 		}
 	};
@@ -202,25 +209,33 @@ const MaintainDetail = ({ show, selectData, handleClose }) => {
 						<Form.Label className="pt-2">유지보수 사진</Form.Label>
 						<p>유지보수 전 사진</p>
 						{!isEditing ? (
-							selectData.repairFiles
-								.filter((file) => file.repairType === '보수전')
-								.map((file, index) => {
-									return (
-										<img
-											key={index}
-											src={file.fileURL}
-											width="100%"
-											alt="Before Repair"
-										/>
-									);
-								})
+							selectData.repairFiles &&
+							selectData.repairFiles.filter((file) => file.repairType === '보수전')
+								.length > 0 ? (
+								selectData.repairFiles
+									.filter((file) => file.repairType === '보수전')
+									.map((file, index) =>
+										file.fileURL ? (
+											<img
+												key={index}
+												src={file.fileURL}
+												width="100%"
+												alt="Before Repair"
+											/>
+										) : (
+											<p key={index}>사진/파일이 없습니다</p>
+										)
+									)
+							) : (
+								<p>사진/파일이 없습니다.</p>
+							)
 						) : (
 							<FormGroup>
 								<Form.Label htmlFor="maintainBefore">
 									{imgPath ? (
 										<img width="200" src={imgPath} />
 									) : (
-										<img width="200" setImgPath={imgPath} />
+										<BsImage size={120} />
 									)}
 								</Form.Label>
 								<Form.Control
@@ -230,31 +245,40 @@ const MaintainDetail = ({ show, selectData, handleClose }) => {
 									id="maintainBefore"
 									accept="image/*"
 									onChange={previewImage}
+									// onChange={(e) => handleImageChange(e, '보수전')}
 								></Form.Control>
 							</FormGroup>
 						)}
 
 						<p className="pt-2">유지보수 후 사진</p>
 						{!isEditing ? (
-							selectData.repairFiles
-								.filter((file) => file.repairType === '보수후')
-								.map((file, index) => {
-									return (
-										<img
-											key={index}
-											src={file.fileURL}
-											width="100%"
-											alt="After Repair"
-										/>
-									);
-								})
+							selectData.repairFiles &&
+							selectData.repairFiles.filter((file) => file.repairType === '보수후')
+								.length > 0 ? (
+								selectData.repairFiles
+									.filter((file) => file.repairType === '보수후')
+									.map((file, index) =>
+										file.fileURL ? (
+											<img
+												key={index}
+												src={file.fileURL}
+												width="100%"
+												alt="After Repair"
+											/>
+										) : (
+											<p key={index}>사진/파일이 없습니다</p>
+										)
+									)
+							) : (
+								<p>사진/파일이 없습니다.</p>
+							)
 						) : (
 							<FormGroup>
 								<Form.Label htmlFor="maintainAfter">
 									{afterPath ? (
 										<img width="200" src={afterPath} />
 									) : (
-										<img width="200" setafterPath={afterPath} />
+										<BsImage size={120} />
 									)}
 								</Form.Label>
 								<Form.Control
@@ -264,6 +288,7 @@ const MaintainDetail = ({ show, selectData, handleClose }) => {
 									id="maintainAfter"
 									accept="image/*"
 									onChange={AfterImage}
+									// onChange={(e) => handleImageChange(e, '보수후')}
 								></Form.Control>
 							</FormGroup>
 						)}

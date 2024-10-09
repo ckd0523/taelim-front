@@ -47,6 +47,31 @@ const AssetPageTest = () => {
 		setShowModal(false);
 	};
 
+	const QRPrint = (rowSelect) => {
+		const assetNoList = [];
+		for (const row of rowSelect) {
+			assetNoList.push(row.assetNo);
+		}
+		console.log('큐알', rowSelect);
+		console.log('큐알', assetNoList);
+
+		const fetchData = async () => {
+			try {
+				axios
+					.post(`${urlConfig}/generateQRCode`, assetNoList)
+					.then((response) => {
+						console.log('Update successful:', response.data);
+					})
+					.catch((error) => {
+						console.error('Update error:', error);
+					});
+			} catch (error) {
+				console.error('데이터를 가져오는 중 오류 발생:', error);
+			}
+		};
+		fetchData();
+	};
+
 	// 자산 테이블 List 불러옴
 	useEffect(() => {
 		const fetchData = async () => {
@@ -160,7 +185,7 @@ const AssetPageTest = () => {
 				<AssetButtons
 					rowSelect={rowSelect} // 선택된 row 데이터 전달
 					handleButtonClick={handleOpenModal} // 공통 핸들러 전달
-					handleQrClick={() => console.log('QR 출력 클릭')}
+					handleQrClick={QRPrint}
 					handleExcelClick={() => console.log('엑셀 출력 클릭')}
 				/>
 

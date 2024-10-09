@@ -48,34 +48,32 @@ const RepairFileUpload = ({ files = [], setFiles, formData, handleFileUplaod }) 
 	const MAX_IMAGE_SIZE_BYTES = 1024 * 1024 * 2;
 
 	return (
-		<div>
-			<Form.Group>
-				<p>유지보수 전 사진</p>
-				<Form.Label htmlFor="maintainBefore">
-					{imgPath ? <img width="200" src={imgPath} /> : <BsImage size={120} />}
-				</Form.Label>
-				<Form.Control
-					hidden
-					ref={imgRef}
-					type="file"
-					id="maintainBefore"
-					accept="image/*"
-					onChange={previewImage}
-				></Form.Control>
-				<p>유지보수 후 사진</p>
-				<Form.Label htmlFor="maintainAfter">
-					{AfterPath ? <img width="200" src={AfterPath} /> : <BsImage size={120} />}
-				</Form.Label>
-				<Form.Control
-					hidden
-					ref={imgRef}
-					type="file"
-					id="maintainAfter"
-					accept="image/*"
-					onChange={AfterImage}
-				></Form.Control>
-			</Form.Group>
-		</div>
+		<Form.Group>
+			<p>유지보수 전 사진</p>
+			<Form.Label htmlFor="maintainBefore">
+				{imgPath ? <img width="200" src={imgPath} /> : <BsImage size={120} />}
+			</Form.Label>
+			<Form.Control
+				hidden
+				ref={imgRef}
+				type="file"
+				id="maintainBefore"
+				accept="image/*"
+				onChange={previewImage}
+			></Form.Control>
+			<p>유지보수 후 사진</p>
+			<Form.Label htmlFor="maintainAfter">
+				{AfterPath ? <img width="200" src={AfterPath} /> : <BsImage size={120} />}
+			</Form.Label>
+			<Form.Control
+				hidden
+				ref={imgRef}
+				type="file"
+				id="maintainAfter"
+				accept="image/*"
+				onChange={AfterImage}
+			></Form.Control>
+		</Form.Group>
 	);
 };
 

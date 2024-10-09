@@ -1,18 +1,35 @@
 import React, { useEffect, useState } from 'react';
 import { Table } from '@/components/table';
-import Tabs from './Tab';
+import Tabs1 from './Tab';
 import QuickAccess from '@/pages/apps/FileManager/QuickAccess';
 import { quickAccessFiles } from './data';
 import { Row, Col, Card } from 'react-bootstrap';
+import { useParams } from 'react-router-dom';
 const urlConfig = import.meta.env.VITE_BASIC_URL;
 
 const Stocks = () => {
+	// 공통칼럼 데이터
 	const [commonData, setCommonData] = useState({});
 	const [subData, setSubData] = useState({});
+	//서브칼럼 데이터
 	const [commonColumns, setCommonColumns] = useState([]);
 	const [subColumns, setSubColumns] = useState([]);
+	//파일 데이터
+	const [photo, setPhoto] = useState([]);
+	const [warrantyDetail, setWarrantyDetail] = useState([]);
+	const [attachment, setAttachment] = useState([]);
+	//수정이력 데이터
+	const [updateHistoryData, setUpdateHistoryData] = useState([]);
+
+	//유지보수이력
+	const [maintainHistoryData, setMaintainHistoryData] = useState([]);
+
+	//자산조사이력
+	const [surveyHistoryData, setSurveyHistoryData] = useState([]);
+
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(null);
+	const { assetCode } = useParams(); // URL에서 파라미터 추출
 
 	// columns 저장
 	const generateColumns = (data) => {
@@ -89,6 +106,26 @@ const Stocks = () => {
 			}
 			setSubColumns(subColumnsMap);
 
+			setMaintainHistoryData(data.repairList);
+			setSurveyHistoryData(data.assetSurveyList);
+			setUpdateHistoryData(data.updateList);
+
+			for (const file of data.fileList) {
+				switch (file.fileType) {
+					case 'PHOTO':
+						setPhoto(file);
+						break;
+
+					case 'USER_MANUAL':
+						setAttachment(file);
+						break;
+
+					case 'WARRANTY_DETAILS':
+						setWarrantyDetail(file);
+						break;
+				}
+			}
+
 			setLoading(false);
 		} catch (error) {
 			console.error('Fetch data error:', error);
@@ -98,7 +135,7 @@ const Stocks = () => {
 	};
 
 	useEffect(() => {
-		fetchData('ASSET002').catch((error) => {
+		fetchData(`${assetCode}`).catch((error) => {
 			console.error('Fetch data error in useEffect:', error);
 			setError(error);
 			setLoading(false);
@@ -113,8 +150,53 @@ const Stocks = () => {
 		return <div>Error: {error.message}</div>;
 	}
 
+	const USERMANUAL = [
+		{
+			icon: 'mdi mdi-file-pdf-box font-16',
+			name: attachment.oriFileName,
+			size: attachment.fileSize,
+			location: attachment.fileURL,
+		},
+	];
+
+	const WARRANTYDETAILS = [
+		{
+			icon: 'mdi mdi-file-pdf-box font-16',
+			name: warrantyDetail.oriFileName,
+			size: warrantyDetail.fileSize,
+			location: warrantyDetail.fileURL,
+		},
+	];
+
 	return (
 		<>
+			<Row className="mb-3">
+				{/* 이미지 표시 부분 */}
+				<div style={{ marginRight: '80px' }}>
+					{photo && photo.fileURL ? ( // photo가 존재하고 fileURL이 있을 경우
+						<img
+							src={photo.fileURL}
+							alt={photo.oriFileName}
+							style={{ width: '300px', height: 'auto' }}
+						/>
+					) : (
+						<div
+							style={{
+								width: '300px',
+								height: 'auto',
+								backgroundColor: '#f0f0f0', // 배경색을 추가하여 빈 공간을 시각적으로 표현
+								border: '1px dashed #ccc', // 경계선을 추가하여 빈 공간을 표시
+								display: 'flex',
+								justifyContent: 'center',
+								alignItems: 'center',
+								color: '#aaa', // 텍스트 색상
+							}}
+						>
+							<span>이미지가 없습니다</span> {/* 빈 상태를 나타내는 텍스트 */}
+						</div>
+					)}
+				</div>
+			</Row>
 			<Row className="mb-3">
 				<h2>자산 정보</h2>
 				<Table
@@ -149,14 +231,21 @@ const Stocks = () => {
 			<Row className="mb-3">
 				<Col>
 					<h2>보증세부사항</h2>
-					<QuickAccess quickAccessFiles={quickAccessFiles} />
+					<QuickAccess quickAccessFiles={WARRANTYDETAILS} />
 					{commonData.warrantyDetails}
 				</Col>
 				<Col>
 					<h2>사용자 메뉴얼</h2>
-					<QuickAccess quickAccessFiles={quickAccessFiles} />
+					<QuickAccess quickAccessFiles={USERMANUAL} />
 					{commonData.attachment}
 				</Col>
+			</Row>
+			<Row>
+				<Tabs1
+					updateList={updateHistoryData}
+					repairList={maintainHistoryData}
+					surveyList={surveyHistoryData}
+				/>
 			</Row>
 		</>
 	);

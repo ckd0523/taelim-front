@@ -46,39 +46,19 @@ const MaintainRegister = ({ assetCode, assetNo }) => {
 			}
 		}
 
-		// setFormData((prevState) => ({
-		// 	...prevState,
-		// 	repairFiles: [...prevState.fileName, ...uploadFileNames],
-		// }));
 		return uploadFileNames;
 	};
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 
-		let newStatus = '진행중';
-		const hasBeforeRepair = formData.repairFiles?.some((file) => file.repairType === '보수전');
-		const hasAfterRepair = formData.repairFiles?.some((file) => file.repairType === '보수후');
-		if (
-			formData.repairStartDate &&
-			formData.repairEndDate &&
-			formData.repairResult &&
-			hasBeforeRepair &&
-			hasAfterRepair
-		) {
-			newStatus = '완료';
-		}
-
-		const updatedFormData = {
-			...formData,
-			reapirStatus: newStatus,
-		};
+		// };
 		try {
 			const maintainResponse = await fetch(`${urlConfig}/maintain/register`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
 				},
-				body: JSON.stringify(updatedFormData),
+				body: JSON.stringify(formData),
 			});
 			console.log('assetNo : ', assetNo);
 			console.log('assetCode: ', assetCode);
@@ -89,17 +69,20 @@ const MaintainRegister = ({ assetCode, assetNo }) => {
 
 				// if (files.length > 0) {
 				const uploadedFileNames = await handleFileUpload(repairNo);
+
 				setFormData((prevState) => ({
 					...prevState,
-					repairFiles: [...prevState.fileName, ...uploadedFileNames], // Properly set the file name state
+					// repairFiles: [...prevState.fileName, ...uploadedFileNames], // Properly set the file name state
+					repairFiles: uploadedFileNames,
 				}));
 
 				console.log('uploadFile1: ' + formData.repairFiles);
-				alert('유지보수가 성공적으로 등록되었습니다.');
+
 				// }
 
+				alert('유지보수가 성공적으로 등록되었습니다.');
 				handleClose();
-				window.location.reload();
+				window.location.replace('/jsx/MaintainHist');
 			} else {
 				alert('유지보수 등록 실패하였습니다.');
 			}
@@ -144,27 +127,39 @@ const MaintainRegister = ({ assetCode, assetNo }) => {
 				</Modal.Header>
 				<Modal.Body>
 					<Form>
-						<Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+						<Form.Group controlId="exampleForm.ControlInput1">
 							<Form.Label>자산코드</Form.Label>
-							<Form.Control value={formData.assetCode} type="text" readOnly />
-							<Form.Label>유지보수 담당자</Form.Label>
-							<Form.Control value={formData.repairBy} type="text" readOnly />
-							<Form.Label>시작일</Form.Label>
 							<Form.Control
-								name="repairStartDate"
-								value={formData.repairStartDate}
+								className="mb-2"
+								value={formData.assetCode}
 								type="text"
 								readOnly
 							/>
+							<Form.Label>유지보수 담당자</Form.Label>
+							<Form.Control
+								className="mb-2"
+								value={formData.repairBy}
+								type="text"
+								readOnly
+							/>
+							<Form.Label>시작일</Form.Label>
+							<Form.Control
+								className="mb-2"
+								name="repairStartDate"
+								value={formData.repairStartDate || ''}
+								onChange={handleChange}
+								type="date"
+							/>
 							<Form.Label>완료일</Form.Label>
 							<Form.Control
+								className="mb-2"
 								name="repairEndDate"
 								value={formData.repairEndDate || ''}
 								onChange={handleChange}
 								type="date"
 							/>
 						</Form.Group>
-						<Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
+						<Form.Group className="mb-2" controlId="exampleForm.ControlTextarea1">
 							<Form.Label>유지보수 내용</Form.Label>
 							<Form.Control
 								name="repairResult"

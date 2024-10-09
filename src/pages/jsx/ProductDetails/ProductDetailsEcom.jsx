@@ -5,7 +5,6 @@ import Stocks from './Stocks';
 
 // images
 import productImg1 from '@/assets/images/products/product-5.jpg';
-import Tabs from './Tab';
 
 const ProductDetailsEcom = () => {
 	return (
@@ -17,19 +16,9 @@ const ProductDetailsEcom = () => {
 					<Card>
 						<Card.Body>
 							<Row>
-								<Col lg={3}>
-									<img
-										src={productImg1}
-										className="img-fluid"
-										alt="Product-img"
-									/>
-								</Col>
-								<Col lg={9}>
+								<Col lg={12}>
 									<Stocks />
 								</Col>
-							</Row>
-							<Row>
-								<Tabs />
 							</Row>
 						</Card.Body>
 					</Card>

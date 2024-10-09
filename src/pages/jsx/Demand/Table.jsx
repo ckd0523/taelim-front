@@ -118,7 +118,11 @@ const Table = (props) => {
 									paddingLeft: `${row.depth * 2}rem`,
 								}}
 							>
-								<IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
+								{row.original.demandStatus === 'UNCONFIRMED' ? (
+									<IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
+								) : (
+									<div></div> // 선택할 수 없는 경우에 대한 대체 내용
+								)}
 							</div>
 						),
 					},

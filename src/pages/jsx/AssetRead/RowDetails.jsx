@@ -106,36 +106,13 @@ const RowDetails = ({ row, assetCode, onClose, formData: initialFormData }) => {
 
 	// 수정  api 받아서 처리
 	const handleSubmit = async () => {
-		const formDataToSend = new FormData(); // 새로운 FormData 객체 생성
-
-		// 기존 formData의 값들을 FormData에 추가
-		for (const key in formData) {
-			if (formData.hasOwnProperty(key)) {
-				formDataToSend.append(key, formData[key]); // 일반 데이터 추가
-			}
-		}
-
-		// 파일 배열이 비어있지 않은 경우에만 추가
-		if (formData.files && formData.files.length > 0) {
-			formData.files.forEach((file) => {
-				formDataToSend.append('files', file.file); // 파일 객체 추가
-			});
-		} else {
-			console.error('No files to send.');
-		}
-
-		console.log('handleSubmit:', formDataToSend); // 상태 확인
+		console.log('handleSubmit:', formData); // 상태 확인
 
 		try {
-			// 1. 자산 수정 요청 처리
+			// 수정 요청 처리
 			const response = await axios.post(
 				`${urlConfig}/asset/update/${formData.assetCode}`,
-				formDataToSend, // FormData 전송
-				{
-					headers: {
-						'Content-Type': 'multipart/form-data', // 멀티파트 폼 데이터로 설정
-					},
-				}
+				formData
 			);
 
 			// 백엔드에서 받은 메시지 처리
@@ -144,32 +121,48 @@ const RowDetails = ({ row, assetCode, onClose, formData: initialFormData }) => {
 				alert(
 					`경고: 자산 수정 요청 처리부터 처리해주세요. 자산 코드: ${formData.assetCode}`
 				);
-				return; // 수정을 중단합니다.
 			} else {
 				// 성공 메시지 띄우기
 				alert(response.data); // 성공 메시지
-			}
 
-			// 2. 파일 업데이트 요청 처리
-			const fileResponse = await axios.post(
-				`${urlConfig}/asset/${formData.assetCode}/files`, // 파일 업데이트 API 호출
-				formDataToSend, // 같은 FormData 사용
-				{
-					headers: {
-						'Content-Type': 'multipart/form-data', // 멀티파트 폼 데이터로 설정
-					},
+				// 2. 파일 업로드가 필요할 때만 실행
+				if (selectedFile) {
+					console.log('Selected File:', selectedFile);
+					const fileData = new FormData();
+					fileData.append('files', selectedFile.file); // 파일 추가
+					fileData.append('fileType', 'PHOTO'); // 파일 타입 설정 (여기서는 PHOTO)
+
+					// 파일 업로드 API 호출
+					const fileResponse = await axios.post(
+						`${urlConfig}/${formData.assetCode}/files`,
+						fileData,
+						{ headers: { 'Content-Type': 'multipart/form-data' } }
+					);
+
+					console.log('File upload response:', fileResponse.data); // 추가된 로그
+
+					if (fileResponse.status !== 200) {
+						// 에러 상세 정보 출력
+						console.error('File upload failed:', fileResponse.data);
+						alert(
+							'파일 업데이트 중 오류가 발생했습니다. 상태 코드: ' +
+								fileResponse.status
+						);
+					} else {
+						// 파일 업로드가 성공했을 때의 메시지
+						alert('파일이 성공적으로 업로드되었습니다.');
+					}
 				}
-			);
 
-			// 파일 업데이트 성공 메시지
-			alert(fileResponse.data); // 파일 업데이트 결과 메시지
-			setShowModal(false); // 모달 닫기
+				setShowModal(false); // 모달 닫기
+			}
 		} catch (error) {
-			console.error('Error updating asset data:', error);
-			alert('자산 수정 또는 파일 업데이트 중 오류가 발생했습니다.');
-		} finally {
-			// 필요에 따라 페이지 새로고침 가능
-			window.location.reload();
+			console.error('Error updating asset data:', error.response || error);
+			if (error.response) {
+				alert(`Error: ${error.response.data}`);
+			} else {
+				alert('자산 수정 요청 중 오류가 발생했습니다.');
+			}
 		}
 	};
 

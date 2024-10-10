@@ -32,11 +32,11 @@ export default function Login() {
       {isAuthenticated && <Navigate to={redirectUrl} replace />}
 
       <PageBreadcrumb title="Login" />
-      <AccountWrapper bottomLinks={<BottomLink />}>
+      <AccountWrapper>
         <div className="text-center w-75 m-auto">
-          <h4 className="text-dark-50 text-center mt-0 fw-bold">{t('Sign In')}</h4>
+          <h4 className="text-dark-50 text-center mt-0 fw-bold">{t('로그인')}</h4>
           <p className="text-muted mb-4">
-            {t('Enter your username and password to access admin panel.')}
+            {t('이메일과 비밀번호를 입력하세요.')}
           </p>
         </div>
 
@@ -62,9 +62,11 @@ export default function Login() {
             placeholder={t('Enter your password')}
             containerClass="mb-3"
           >
+            {/*
             <Link to="/account/recover-password" className="text-muted float-end">
               <small>Forgot your password?</small>
             </Link>
+            */}
           </PasswordInput>
 
           {/* <CheckInput

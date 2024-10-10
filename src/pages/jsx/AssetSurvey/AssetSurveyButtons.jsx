@@ -3,12 +3,22 @@ import RegisterButton from './AssetSurveyRegisterButton';
 import { useState } from 'react';
 import { useToggle } from '@/hooks';
 import { Link } from 'react-router-dom';
+import { useAuthContext } from '@/common';
+
+
 
 const Buttons = ({ onClickRegister, onDelete }) => {
-  const [signUpModal, toggleSignUp] = useToggle();
+  const { removeSession } = useAuthContext();
+
+  const logout = () => {
+    removeSession();
+  }
 
   return (
     <Row className='row-cols-auto justify-content-end'>
+      <Col>
+        <Button className='btn btn-success' onClick={logout}>로그아웃</Button>
+      </Col>
       <Col>
         <Button className='btn btn-success'>엑셀 출력</Button>
       </Col>

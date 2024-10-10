@@ -61,6 +61,37 @@ const Table = (props) => {
 	const sizePerPageList = props['sizePerPageList'] || [];
 	const hiddenColumns = props.initialState?.hiddenColumns || [];
 	const setRowSelect = props['setRowSelect'] || [];
+	const setModalData = props['setModalData']; // 개별적으로 받음
+	const setShowModal = props['setShowModal']; // 개별적으로 받음
+
+	const handleRowClick = (row) => {
+		//자산 조사의 위치가 없으면 row 클릭 안됨
+		//얘가 없으면 테이블이 계속 리렌더링이 되어버려서 이상한 문제들이 자꾸 생김
+		if (row === undefined) {
+			//console.log('1');
+			return;
+		}
+		//setSelectedRow(row);
+		//setShowModal(true);
+
+		//console.log(row.values.assetSurveyLocation);
+		console.log(row);
+		setModalData(row.original);
+		setShowModal(true);
+	};
+
+	//onClick을 row 전체에 걸어버리면 checkbox를 선택했을 때 row를 선택한 것으로 인식해서 문제가 생김
+	const handleCellClick = (event, row) => {
+		// 첫 번째 컬럼이 클릭되었는지 확인
+		const clickedCell = event.target.closest('td');
+		const cells = Array.from(clickedCell.parentNode.children);
+		const cellIndex = cells.indexOf(clickedCell);
+
+		// 첫 번째 컬럼(0번 index)이 아닌 경우에만 handleRowClick 호출
+		if (cellIndex !== 0 && cellIndex !== 1) {
+			handleRowClick(row);
+		}
+	};
 
 	let otherProps = {};
 
@@ -232,7 +263,9 @@ const Table = (props) => {
 							return (
 								<React.Fragment key={row.id}>
 									<tr
-										{...row.getRowProps()}
+										{...row.getRowProps({
+											onClick: (e) => handleCellClick(e, row),
+										})}
 										style={{
 											backgroundColor:
 												row.depth === 1 ? '#f0f8ff' : 'transparent', // 상위 요소일 때 색상 설정

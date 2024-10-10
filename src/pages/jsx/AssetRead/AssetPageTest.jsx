@@ -23,8 +23,12 @@ const AssetPageTest = () => {
 	const [showActModal, setShowActModal] = useState(false); // 모달창 열기/닫기 상태
 
 	const handleOpenModal = (type) => {
-		setActionType(type); // 액션 타입 설정
-		setShowActModal(true); // 모달창 열기
+		if (rowSelect.length === 0) {
+			alert('데이터를 선택을 해주세요');
+		} else {
+			setActionType(type); // 액션 타입 설정
+			setShowActModal(true); // 모달창 열기
+		}
 	};
 
 	// 폐기 모달창 부분

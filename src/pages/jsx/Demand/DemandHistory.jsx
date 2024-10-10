@@ -44,14 +44,34 @@ const DemandHistory = () => {
 	}, [demands]);
 
 	const processOpenModal = () => {
-		setProcess(true);
+		const fetchRowData = async () => {
+			try {
+				const response = await axios.get(`${urlConfig}/DemandList`);
+				const responseData = response.data;
+
+				// 데이터를 불러온 후 첫 번째 데이터를 기준으로 modalType 설정
+				if (responseData.length > 0) {
+					setProcess(true);
+				} else {
+					alert('미처리된 자산이 없습니다.');
+				}
+				console.log('미확인 요청 자산 리스트: ', responseData);
+			} catch (error) {
+				console.error('Error fetching data: ', error);
+			}
+		};
+		fetchRowData();
 	};
 
 	const handleOpenModal = (type, rowSelect) => {
 		console.log(rowSelect);
-		setActionType(type);
-		setActionData(rowSelect); // rowData 또는 선택한 데이터를 설정
-		setShowActModal(true);
+		if (rowSelect.length === 0) {
+			alert('데이터를 선택을 해주세요');
+		} else {
+			setActionType(type);
+			setActionData(rowSelect); // rowData 또는 선택한 데이터를 설정
+			setShowActModal(true);
+		}
 	};
 
 	const handleModalSubmit = (reason) => {
@@ -92,6 +112,9 @@ const DemandHistory = () => {
 		<>
 			<PageBreadcrumb title="Demand" subName="Demand" />
 
+			<Row>
+				<Card></Card>
+			</Row>
 			<Row>
 				<Col xs={12}>
 					<Card>
@@ -158,7 +181,12 @@ const DemandHistory = () => {
 														}}
 													/>
 												</Col>
-												~
+												<Col
+													lg={1}
+													className="d-flex justify-content-center pt-1 text-center fw-bold"
+												>
+													~
+												</Col>
 												<Col>
 													<CustomDatePicker
 														hideAddon={true}
@@ -173,48 +201,55 @@ const DemandHistory = () => {
 										</div>
 									</Col>
 									<Col
-										xl={2}
+										lg={2}
 										className="d-flex align-items-center justify-content-end"
 									>
-										<Button
-											variant="primary"
-											type="button"
-											onClick={() => {
-												handleSearch();
-											}}
-										>
-											검색
-										</Button>
+										<div className="text-lg mt-xl-0 mt-2">
+											<Button
+												variant="primary"
+												type="button"
+												onClick={() => {
+													handleSearch();
+												}}
+											>
+												검색
+											</Button>
+										</div>
 									</Col>
 								</Row>
 							</RHForm>
-							<Row className="g-0">
-								<Col className="d-flex align-items-center justify-content-end mb-2">
-									<Button
-										variant="success"
-										onClick={() => processOpenModal()}
-										className="me-2"
-									>
-										미확인 자산 처리
-									</Button>
-									<Button
-										variant="secondary"
-										onClick={() => handleOpenModal('approve', rowSelect)}
-										className="me-2"
-									>
-										승인
-									</Button>
-									<Button
-										variant="danger"
-										onClick={() => handleOpenModal('reject', rowSelect)}
-									>
-										거절
-									</Button>
-								</Col>
-							</Row>
+						</Card.Body>
+					</Card>
+
+					<Row className="row-cols-auto justify-content-end">
+						<Col>
+							<Button variant="success" onClick={() => processOpenModal()}>
+								미처리 자산 처리
+							</Button>
+						</Col>
+						<Col>
+							<Button
+								variant="secondary"
+								onClick={() => handleOpenModal('approve', rowSelect)}
+							>
+								승인
+							</Button>
+						</Col>
+						<Col>
+							<Button
+								variant="danger"
+								onClick={() => handleOpenModal('reject', rowSelect)}
+							>
+								거절
+							</Button>
+						</Col>
+					</Row>
+					<Card></Card>
+					<Card>
+						<Card.Body>
 							<Row>
 								<Table
-									columns={columns(setModalData, setShowModal)}
+									columns={columns()}
 									data={demandsList}
 									pageSize={10}
 									isExpandable={true}
@@ -226,6 +261,8 @@ const DemandHistory = () => {
 									tableClass="border-black"
 									searchBoxClass="mb-2"
 									setRowSelect={setRowSelect}
+									setModalData={setModalData}
+									setShowModal={setShowModal}
 								/>
 							</Row>
 							{/* Modal */}

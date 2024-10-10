@@ -523,7 +523,7 @@ const ProcessModal = ({ show, handleClose }) => {
 
 	const currentData = demandList[currentIndex];
 	if (!currentData) {
-		return <div>데이터가 없습니다.</div>; // currentData가 없는 경우를 대비한 처리
+		return <div>미처리 자산이 없습니다.</div>; // currentData가 없는 경우를 대비한 처리
 	}
 
 	const { demandHistoryDto, assetDto } = currentData;
@@ -540,7 +540,7 @@ const ProcessModal = ({ show, handleClose }) => {
 		>
 			<Modal.Header closeButton>
 				<Modal.Title>
-					미확인 자산 처리 ({currentIndex + 1}/{demandList.length})
+					미처리 자산 처리 ({currentIndex + 1}/{demandList.length})
 				</Modal.Title>
 			</Modal.Header>
 			<Modal.Body ref={modalContentRef}>

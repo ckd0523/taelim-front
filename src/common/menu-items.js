@@ -77,8 +77,20 @@ const MENU_ITEMS = [
 		icon: ' uil-list-ul',
 		children: [
 			{
-				key: 'ds-AssetPageTest',
+				key: 'ds-AssetPage',
 				label: '자산조회',
+				url: '/jsx/AssetPage',
+				parentKey: 'check',
+			},
+			{
+				key: 'ds-Expand',
+				label: '확장',
+				url: '/jsx/Expand',
+				parentKey: 'check',
+			},
+			{
+				key: 'ds-AssetPageTest',
+				label: '자산조회테스트',
 				url: '/jsx/AssetPageTest',
 				parentKey: 'check',
 			},
@@ -135,6 +147,7 @@ const MENU_ITEMS = [
 		icon: ' ri-settings-3-line',
 	},
 	// 여기까지
+
 	// {
 	// 	key: 'apps-chat',
 	// 	label: 'Chat',

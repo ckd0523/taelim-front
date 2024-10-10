@@ -14,7 +14,7 @@ const quickAccessFiles = [
 		icon: 'mdi mdi-file-pdf-box font-16',
 		name: 'Docs PDF',
 		size: '7.5 MB',
-		location: '[태림]화면설계서_V24_240813.pdf',
+		location: '[태림]화면설계서_V4_240813.pdf',
 	},
 ];
 

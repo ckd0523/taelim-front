@@ -12,8 +12,8 @@ const AssetSurveyHistory = lazy(() => import('./AssetSurvey'));
 const DemandHistory = lazy(() => import('./Demand'));
 const UpdateHistory = lazy(() => import('./UpdateHistory'));
 const DeleteHistory = lazy(() => import('./DeleteHistory'));
-//const Expand = lazy(() => import('./Expand'));
-//const AssetPage = lazy(() => import('./assetUpdate'));
+const Expand = lazy(() => import('./Expand'));
+const AssetPage = lazy(() => import('./assetUpdate'));
 const AssetSurveyDetail = lazy(() => import('./AssetSurvey/AssetSurveyDetail'));
 const SystemSetting = lazy(() => import('./SystemSetting'));
 const AssetPageTest = lazy(() => import('./AssetRead'));
@@ -33,6 +33,8 @@ export default function jsx() {
 				<Route path="DemandHistory" element={<DemandHistory />} />
 				<Route path="UpdateHistory" element={<UpdateHistory />} />
 				<Route path="DeleteHistory" element={<DeleteHistory />} />
+				<Route path="Expand" element={<Expand />} />
+				<Route path="AssetPage" element={<AssetPage />} />
 				<Route path="AssetPageTest" element={<AssetPageTest />} />
 				<Route path="AssetSurveyDetail" element={<AssetSurveyDetail />} />
 

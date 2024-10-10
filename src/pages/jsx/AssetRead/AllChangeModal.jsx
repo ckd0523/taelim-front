@@ -106,73 +106,98 @@ const ActionModal = ({ show, handleClose, actionData, actionType }) => {
 								? '수정 내용을 입력하세요'
 								: '폐기 내용을 입력하세요'}
 						</Form.Label>
+
 						{(actionType === 'AllUpdate' || actionType === 'AllUpdateDemand') && (
 							<>
-								<Form.Control
-									type="text"
-									value={department}
-									onChange={departmentChange}
-									placeholder={'자산소재지'}
-								/>
-								<Form.Control
-									type="text"
-									value={assetLocation}
-									onChange={assetLocationChange}
-									placeholder={'위치'}
-								/>
-								<Form.Control
-									type="text"
-									value={assetSecurityManager}
-									onChange={assetSecurityManagerChange}
-									placeholder={'관리자'}
-								/>
-								<Form.Control
-									type="text"
-									value={assetOwner}
-									onChange={assetOwnerChange}
-									placeholder={'소유자'}
-								/>
+								<Form.Group className="mb-1">
+									<Form.Control
+										type="text"
+										value={department}
+										onChange={departmentChange}
+										placeholder={'자산소재지'}
+									/>
+								</Form.Group>
+
+								<Form.Group className="mb-1">
+									<Form.Control
+										type="text"
+										value={assetLocation}
+										onChange={assetLocationChange}
+										placeholder={'위치'}
+									/>
+								</Form.Group>
+
+								<Form.Group className="mb-1">
+									<Form.Control
+										type="text"
+										value={assetSecurityManager}
+										onChange={assetSecurityManagerChange}
+										placeholder={'관리자'}
+									/>
+								</Form.Group>
+
+								<Form.Group className="mb-1">
+									<Form.Control
+										type="text"
+										value={assetOwner}
+										onChange={assetOwnerChange}
+										placeholder={'소유자'}
+									/>
+								</Form.Group>
 							</>
 						)}
+
 						{(actionType === 'AllDispose' || actionType === 'AllDisposeDemand') && (
 							<>
-								<Form.Control
-									type="text"
-									value={department}
-									onChange={disposeLocationChange}
-									placeholder={'폐기위치'}
-								/>
-								<Form.Control
-									type="text"
-									value={assetLocation}
-									onChange={disposeMethodChange}
-									placeholder={'폐기방법'}
-								/>
+								<Form.Group className="mb-1">
+									<Form.Control
+										type="text"
+										value={department}
+										onChange={disposeLocationChange}
+										placeholder={'폐기위치'}
+									/>
+								</Form.Group>
+
+								<Form.Group className="mb-1">
+									<Form.Control
+										type="text"
+										value={assetLocation}
+										onChange={disposeMethodChange}
+										placeholder={'폐기방법'}
+									/>
+								</Form.Group>
 							</>
 						)}
-						<Form.Control
-							type="text"
-							value={reason}
-							onChange={reasonChange}
-							placeholder={
-								actionType === 'AllUpdate' || actionType === 'AllUpdateDemand'
-									? '수정 사유'
-									: '폐기 사유'
-							}
-						/>
-						<Form.Control
-							type="text"
-							value={detail}
-							onChange={detailChange}
-							placeholder={
-								actionType === 'AllUpdate' || actionType === 'AllUpdateDemand'
-									? '수정 내용'
-									: '폐기 내용'
-							}
-						/>
+
+						<Form.Group className="mb-1">
+							<Form.Control
+								type="text"
+								value={reason}
+								onChange={reasonChange}
+								placeholder={
+									actionType === 'AllUpdate' || actionType === 'AllUpdateDemand'
+										? '수정 사유'
+										: '폐기 사유'
+								}
+							/>
+						</Form.Group>
+
+						<Form.Group className="mb-1">
+							<Form.Control
+								type="text"
+								value={detail}
+								onChange={detailChange}
+								placeholder={
+									actionType === 'AllUpdate' || actionType === 'AllUpdateDemand'
+										? '수정 내용'
+										: '폐기 내용'
+								}
+							/>
+						</Form.Group>
 					</Form.Group>
 				</Form>
 			</Modal.Body>
+
 			<Modal.Footer>
 				<Button
 					variant={

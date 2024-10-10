@@ -60,39 +60,41 @@ const RowDetails = ({ row, assetCode, onClose, formData: initialFormData }) => {
 	const handleNextClick = () => {
 		setShowModal(true);
 	};
+
 	// 파일 선택 처리
-	const handleFileChange = (e) => {
+	const handleFileChange = (e, fileType) => {
 		const file = e.target.files[0];
 		if (file) {
 			const fileURL = URL.createObjectURL(file);
-			setSelectedFile({ file, fileURL, oriFileName: file.name, fileType: 'PHOTO' });
 
-			// formData의 files 배열 업데이트
 			const updatedFiles = [...formData.files];
-			const existingPhotoIndex = updatedFiles.findIndex((f) => f.fileType === 'PHOTO');
+			const existingFileIndex = updatedFiles.findIndex((f) => f.fileType === fileType);
 
-			if (existingPhotoIndex !== -1) {
-				// 기존 이미지가 있는 경우, 해당 이미지를 새 이미지로 교체
-				updatedFiles[existingPhotoIndex] = {
-					file,
-					fileURL,
-					oriFileName: file.name,
-					fileType: 'PHOTO',
-				};
+			const newFile = {
+				file,
+				fileURL,
+				oriFileName: file.name,
+				fileType: fileType,
+			};
+
+			if (existingFileIndex !== -1) {
+				// 이미 존재하는 파일 타입이면 교체
+				updatedFiles[existingFileIndex] = newFile;
 			} else {
-				// 기존 이미지가 없는 경우, 새 이미지를 추가
-				updatedFiles.push({
-					file,
-					fileURL,
-					oriFileName: file.name,
-					fileType: 'PHOTO',
-				});
+				// 새로운 파일 타입이면 추가
+				updatedFiles.push(newFile);
 			}
 
 			// formData 업데이트
 			setFormData({ ...formData, files: updatedFiles });
+
+			// 이미지 파일이면 화면에 바로 보여주기
+			if (fileType === 'PHOTO') {
+				setSelectedFile(newFile); // 이미지 상태를 업데이트하여 보여주기
+			}
 		}
 	};
+
 	// formData를 변경하는 함수
 	const handleInputChange = (event, key) => {
 		const { value } = event.target; // 이벤트 객체에서 value 추출
@@ -115,43 +117,53 @@ const RowDetails = ({ row, assetCode, onClose, formData: initialFormData }) => {
 				formData
 			);
 
+			console.log('Update response:', response.data); // 응답 확인
+
 			// 백엔드에서 받은 메시지 처리
 			if (response.data.includes('이미 수정 요청이 들어간 자산입니다.')) {
-				// 경고 메시지를 띄우기
 				alert(
 					`경고: 자산 수정 요청 처리부터 처리해주세요. 자산 코드: ${formData.assetCode}`
 				);
 			} else {
-				// 성공 메시지 띄우기
 				alert(response.data); // 성공 메시지
 
-				// 2. 파일 업로드가 필요할 때만 실행
-				if (selectedFile) {
-					console.log('Selected File:', selectedFile);
+				// 파일 업로드가 필요할 때만 실행
+				if (formData.files && formData.files.length > 0) {
+					console.log('Files to upload:', formData.files); // 파일 확인
 					const fileData = new FormData();
-					fileData.append('files', selectedFile.file); // 파일 추가
-					fileData.append('fileType', 'PHOTO'); // 파일 타입 설정 (여기서는 PHOTO)
 
-					// 파일 업로드 API 호출
-					const fileResponse = await axios.post(
-						`${urlConfig}/${formData.assetCode}/files`,
-						fileData,
-						{ headers: { 'Content-Type': 'multipart/form-data' } }
-					);
+					// 파일 배열을 순회하며 파일이 있는 경우에만 추가
+					for (const fileObj of formData.files) {
+						// 실제 File 객체가 있는 경우에만 처리
+						if (fileObj.file) {
+							fileData.append('files', fileObj.file); // 파일 추가
+							fileData.append('fileType', fileObj.fileType); // 파일 타입 추가
 
-					console.log('File upload response:', fileResponse.data); // 추가된 로그
+							// 파일 업로드 API 호출
+							const fileResponse = await axios.post(
+								`${urlConfig}/${formData.assetCode}/files`,
+								fileData,
+								{ headers: { 'Content-Type': 'multipart/form-data' } }
+							);
 
-					if (fileResponse.status !== 200) {
-						// 에러 상세 정보 출력
-						console.error('File upload failed:', fileResponse.data);
-						alert(
-							'파일 업데이트 중 오류가 발생했습니다. 상태 코드: ' +
-								fileResponse.status
-						);
-					} else {
-						// 파일 업로드가 성공했을 때의 메시지
-						alert('파일이 성공적으로 업로드되었습니다.');
+							console.log(
+								`File upload response (${fileObj.fileType}):`,
+								fileResponse.data
+							);
+
+							if (fileResponse.status !== 200) {
+								console.error('File upload failed:', fileResponse.data);
+								alert(
+									`파일 업데이트 중 오류가 발생했습니다. 상태 코드: ${fileResponse.status}`
+								);
+								return; // 오류 발생 시 더 이상 진행하지 않음
+							}
+						} else {
+							console.warn('No file found for upload:', fileObj);
+						}
 					}
+
+					alert('모든 파일이 성공적으로 업로드되었습니다.');
 				}
 
 				setShowModal(false); // 모달 닫기
@@ -159,8 +171,10 @@ const RowDetails = ({ row, assetCode, onClose, formData: initialFormData }) => {
 		} catch (error) {
 			console.error('Error updating asset data:', error.response || error);
 			if (error.response) {
+				console.error('Response data:', error.response.data);
 				alert(`Error: ${error.response.data}`);
 			} else {
+				console.error('Error message:', error.message);
 				alert('자산 수정 요청 중 오류가 발생했습니다.');
 			}
 		}
@@ -347,20 +361,17 @@ const RowDetails = ({ row, assetCode, onClose, formData: initialFormData }) => {
 							marginRight: '40px',
 						}}
 					>
-						{/* 이미지 표시 로직 */}
-						{formData.files &&
-						formData.files.length > 0 &&
-						formData.files.some((file) => file.fileType === 'PHOTO') ? (
+						{formData.files.some((file) => file.fileType === 'PHOTO') ? (
 							<img
 								src={
 									selectedFile
-										? selectedFile.fileURL // 수정 모드에서 선택된 파일 미리보기
+										? selectedFile.fileURL
 										: formData.files.find((file) => file.fileType === 'PHOTO')
 												.fileURL
 								}
 								alt={
 									selectedFile
-										? selectedFile.oriFileName // 수정 모드에서 선택된 파일 이름
+										? selectedFile.oriFileName
 										: formData.files.find((file) => file.fileType === 'PHOTO')
 												.oriFileName
 								}
@@ -371,12 +382,12 @@ const RowDetails = ({ row, assetCode, onClose, formData: initialFormData }) => {
 								style={{
 									width: '300px',
 									height: 'auto',
-									backgroundColor: '#f0f0f0', // 배경색
-									border: '1px dashed #ccc', // 경계선
+									backgroundColor: '#f0f0f0',
+									border: '1px dashed #ccc',
 									display: 'flex',
 									justifyContent: 'center',
 									alignItems: 'center',
-									color: '#aaa', // 텍스트 색상
+									color: '#aaa',
 								}}
 							>
 								<span>이미지가 없습니다</span>
@@ -388,7 +399,7 @@ const RowDetails = ({ row, assetCode, onClose, formData: initialFormData }) => {
 							<input
 								type="file"
 								accept="image/*"
-								onChange={handleFileChange}
+								onChange={(e) => handleFileChange(e, 'PHOTO')} // 이미지 파일 처리
 								style={{ marginTop: '10px' }}
 							/>
 						)}
@@ -629,11 +640,87 @@ const RowDetails = ({ row, assetCode, onClose, formData: initialFormData }) => {
 												<h4 style={{ margin: '0 0 10px' }}>
 													보증세부사항 파일
 												</h4>
-												{formData.files &&
-												formData.files.length > 0 &&
-												formData.files.some(
-													(file) => file.fileType === 'WARRANTY_DETAILS'
-												) ? (
+
+												{isEditing ? (
+													// 수정 모드일 때 파일 업로드 입력 필드 표시
+													<div>
+														{formData.files &&
+														formData.files.some(
+															(file) =>
+																file.fileType === 'WARRANTY_DETAILS'
+														) ? (
+															<a
+																href={
+																	formData.files.find(
+																		(file) =>
+																			file.fileType ===
+																			'WARRANTY_DETAILS'
+																	).fileURL
+																}
+																download
+																style={{
+																	display: 'block',
+																	border: '1px solid #ccc',
+																	padding: '10px',
+																	backgroundColor: '#f9f9f9',
+																	textDecoration: 'none',
+																	color: '#000',
+																	cursor: 'pointer',
+																	borderRadius: '4px',
+																	width: '100%',
+																	textAlign: 'left',
+																}}
+															>
+																{
+																	formData.files.find(
+																		(file) =>
+																			file.fileType ===
+																			'WARRANTY_DETAILS'
+																	).oriFileName
+																}
+															</a>
+														) : (
+															<div
+																style={{
+																	display: 'block',
+																	border: '1px solid #ccc',
+																	padding: '10px',
+																	backgroundColor: '#f9f9f9',
+																	color: '#aaa',
+																	borderRadius: '4px',
+																	width: '100%',
+																	textAlign: 'left',
+																}}
+															>
+																파일 없음
+															</div>
+														)}
+
+														{/* 파일 업로드 입력 */}
+														<input
+															type="file"
+															onChange={(e) =>
+																handleFileChange(
+																	e,
+																	'WARRANTY_DETAILS'
+																)
+															} // 보증세부사항 파일 업로드 핸들러 연결
+															style={{
+																marginTop: '10px',
+																padding: '5px',
+																border: '1px solid #ccc',
+																borderRadius: '4px',
+																width: '100%',
+																cursor: 'pointer',
+															}}
+														/>
+													</div>
+												) : // 읽기 모드일 때 기존 파일 다운로드 또는 "파일 없음" 표시
+												formData.files &&
+												  formData.files.some(
+														(file) =>
+															file.fileType === 'WARRANTY_DETAILS'
+												  ) ? (
 													<a
 														href={
 															formData.files.find(
@@ -662,7 +749,7 @@ const RowDetails = ({ row, assetCode, onClose, formData: initialFormData }) => {
 																	file.fileType ===
 																	'WARRANTY_DETAILS'
 															).oriFileName
-														}{' '}
+														}
 													</a>
 												) : (
 													<div

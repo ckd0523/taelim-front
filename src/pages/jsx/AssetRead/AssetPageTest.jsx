@@ -74,9 +74,11 @@ const AssetPageTest = () => {
 
 	// 자산 테이블 List 불러옴
 	useEffect(() => {
-		const fetchData = async () => {
+		const fetchData = async (page = 1, pageSize = 10) => {
 			try {
-				const response = await axios.get(`${urlConfig}/assets/test`);
+				const response = await axios.get(`${urlConfig}/assets/test`, {
+					params: { page, pageSize },
+				});
 				setData(response.data);
 				setUpdateList(response.data); // 데이터를 가져온 후 UpdateList를 업데이트
 			} catch (error) {

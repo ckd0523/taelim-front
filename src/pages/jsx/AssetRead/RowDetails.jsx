@@ -16,7 +16,7 @@ import { BsCaretUpFill } from 'react-icons/bs';
 import { BsCaretDownFill } from 'react-icons/bs';
 import axios from 'axios';
 import MaintainRegister from '@/pages/jsx/Maintain';
-import './Style.css'; // 같은 폴더에서 CSS 파일 import
+import './style.css'; // 같은 폴더에서 CSS 파일 import
 import {
 	getClassificationColumns,
 	calculateImportanceScore,
@@ -85,7 +85,7 @@ const RowDetails = ({ row, assetCode, onClose, formData: initialFormData }) => {
 		setShowModal(true);
 	};
 
-	// formData를 변경하는 함수
+	// formData를 변경하는 함수11
 	const handleInputChange = (event, key) => {
 		const { value } = event.target; // 이벤트 객체에서 value 추출
 		setFormData((prevData) => ({

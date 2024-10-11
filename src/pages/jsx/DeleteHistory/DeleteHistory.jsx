@@ -68,7 +68,9 @@ const DeleteHistory = () => {
 
 	return (
 		<>
-			<PageBreadcrumb title="폐기 이력" subName="DeleteHistory" />
+			<div className="pt-3 px-2">
+				<h4 className="header-title">폐기이력</h4>
+			</div>
 			<div>
 				<Card></Card>
 				{/* 검색 폼 하위 컴포넌트 */}

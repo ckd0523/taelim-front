@@ -1,14 +1,13 @@
 import BasisAssetInfo from './BasisAssetInfo';
 import { useState, useEffect } from 'react';
 import FileUpload from './FileUpload';
-import { Button, Row, Col, Container, Alert, Modal } from 'react-bootstrap';
+import { Button, Row, Col, Container, Card } from 'react-bootstrap';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
-import classNames from 'classnames';
-import { extendedColorVariants } from '@/common';
 import Swal from 'sweetalert2';
 import AssetCategories from './AssetCategories';
 import PurchasingInfo from './PurchasingInfo';
+import { PageBreadcrumb } from '@/components';
 const urlConfig = import.meta.env.VITE_BASIC_URL;
 const ResponsivePadding = styled.div`
 	@media (max-width: 768px) {
@@ -27,9 +26,7 @@ const ResponsivePadding = styled.div`
 const AssetRegister = () => {
 	const navigate = useNavigate();
 	const [files, setFiles] = useState([]);
-	const [showAlert, setShowAlert] = useState(false);
-	const [alertMessage, setAlertMessage] = useState('');
-	const [alertVarient, setAlertVarient] = useState('success');
+
 	const [formData, setFormData] = useState({
 		assetClassification: '',
 		assetName: '',
@@ -138,9 +135,13 @@ const AssetRegister = () => {
 				// setShowAlert(true);
 				Swal.fire({
 					icon: 'success',
-					title: '자산 등록 성공',
-					text: '자산 등록 성공.',
+					title: '자산이 성공적으로 등록되었습니다.',
+					text: '자산조회화면으로 이동',
 				});
+				setTimeout(() => {
+					window.location.replace('/jsx/AssetPageTest');
+				}, 1000);
+
 				console.log(typeof assetNo);
 
 				if (files.length > 0) {
@@ -161,8 +162,8 @@ const AssetRegister = () => {
 						if (!fileResponse.ok) {
 							Swal.fire({
 								icon: 'error',
-								title: '파일 등록 실패',
-								text: '파일 등록 실패.',
+								title: '파일 등록에 실패하였습니다.',
+								text: '다시 업로드 시도해주세요',
 							});
 						}
 					}
@@ -170,15 +171,15 @@ const AssetRegister = () => {
 			} else {
 				Swal.fire({
 					icon: 'error',
-					title: '자산 등록 실패',
-					text: '자산 등록 실패.',
+					title: '자산 등록을 실패하였습니다.',
+					text: '항목을 다시 확인해주세요.',
 				});
 			}
 		} catch (error) {
 			console.error('에러발생 : ', error);
 			Swal.fire({
 				icon: 'error',
-				title: '에러 발생',
+				title: '에러가 발생하였습니다.',
 				text: error,
 			});
 		}
@@ -193,13 +194,6 @@ const AssetRegister = () => {
 		console.log('value: ', value);
 	};
 
-	const renderAlertIcon = () => {
-		if (alertVarient === 'danger') {
-			return <i className="ri-close-circle-line"></i>;
-		} else {
-			return <i className="ri-check-line"></i>;
-		}
-	};
 	useEffect(() => {
 		if (formData.contactInformation?.length === 10) {
 			setFormData((prevState) => ({
@@ -221,84 +215,62 @@ const AssetRegister = () => {
 		}
 	}, [formData.contactInformation]);
 	return (
-		<Container>
-			<Row>
-				<ResponsivePadding>
-					<Col xs={12} md={8} lg={12}>
-						<BasisAssetInfo formData={formData} handleChange={handleChange} />
-					</Col>
-					<Col xs={12} md={8} lg={12}>
-						<AssetCategories
-							formData={formData}
-							assetClassification={formData.assetClassification}
-							handleChange={handleChange}
-							files={files}
-							setFiles={setFiles}
-						/>
-						<PurchasingInfo formData={formData} handleChange={handleChange} />
-					</Col>
-					<Col xs={12} md={8} lg={12}>
-						<FileUpload
-							formData={formData}
-							handleChange={handleChange}
-							files={files}
-							setFiles={setFiles}
-						/>
-					</Col>
-				</ResponsivePadding>
-			</Row>
+		<>
+			<div className="pt-3 px-2">
+				<h4 className="header-title">자산 등록</h4>
+			</div>
+			<Container>
+				<Row>
+					<ResponsivePadding>
+						<Col xs={12} md={8} lg={12}>
+							<BasisAssetInfo formData={formData} handleChange={handleChange} />
+						</Col>
+						<Col xs={12} md={8} lg={12}>
+							<AssetCategories
+								formData={formData}
+								assetClassification={formData.assetClassification}
+								handleChange={handleChange}
+								files={files}
+								setFiles={setFiles}
+							/>
+							<PurchasingInfo formData={formData} handleChange={handleChange} />
+						</Col>
+						<Col xs={12} md={8} lg={12}>
+							<FileUpload
+								formData={formData}
+								handleChange={handleChange}
+								files={files}
+								setFiles={setFiles}
+							/>
+						</Col>
+					</ResponsivePadding>
+				</Row>
 
-			<div className="pt-2 d-flex justify-content-center">
-				<Button
-					style={{ fontSize: 18 }}
-					className="btn-rounded"
-					// size="lg"
-					variant="info"
-					type="submit"
-					onClick={handleSubmit}
-				>
-					저장
-				</Button>
-				<p className="px-2"></p>
-				<Button
-					// style={{ background: '#8ca4b6' }}
-					style={{ fontSize: 18 }}
-					className="btn-rounded"
-					variant="secondary"
-					type="button"
-					onClick={() => {
-						navigate('/jsx/AssetPage');
-					}}
-				>
-					취소
-				</Button>
-
-				{/* alert 모달창 */}
-				<Modal show={showAlert} onHide={() => setShowAlert(false)} centered>
-					<Modal.Header closeButton></Modal.Header>
-					<Alert variant={alertVarient}>
-						{renderAlertIcon()}
-						{alertMessage}
-					</Alert>
+				<div className="pt-2 d-flex justify-content-center">
 					<Button
-						className="justify-items-center"
+						style={{ fontSize: 18 }}
+						className="btn-rounded"
+						variant="info"
+						type="submit"
+						onClick={handleSubmit}
+					>
+						저장
+					</Button>
+					<p className="px-2"></p>
+					<Button
+						// style={{ background: '#8ca4b6' }}
+						className="btn-rounded"
 						variant="secondary"
+						type="button"
 						onClick={() => {
-							if (alertVarient === 'success') {
-								window.location.replace('/jsx/AssetPage');
-							} else {
-								setShowAlert(false);
-							}
+							navigate('/jsx/AssetPage');
 						}}
 					>
-						확인
+						취소
 					</Button>
-					<Modal.Footer
-						style={{ display: 'flex', justifyContent: 'center' }}
-					></Modal.Footer>
-				</Modal>
-			</div>
-		</Container>
+				</div>
+			</Container>
+		</>
 	);
 };
 

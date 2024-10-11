@@ -178,7 +178,9 @@ const AssetPageTest = () => {
 
 	return (
 		<>
-			<PageBreadcrumb title="자산조회" subName="자산조회" />
+			<div className="pt-3 px-2">
+				<h4 className="header-title">자산 조회</h4>
+			</div>
 
 			<div>
 				<Card></Card>

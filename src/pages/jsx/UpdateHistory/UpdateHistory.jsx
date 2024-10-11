@@ -84,7 +84,9 @@ const UpdateHistory = () => {
 
 	return (
 		<>
-			<PageBreadcrumb title="수정 이력" subName="UpdateHistory" />
+			<div className="pt-3 px-2">
+				<h4 className="header-title">수정 이력</h4>
+			</div>
 
 			<div>
 				<Card></Card>

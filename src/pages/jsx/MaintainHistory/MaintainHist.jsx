@@ -162,9 +162,13 @@ const MaintainHist = () => {
 	}, []);
 	return (
 		<>
+			<div className="pt-3 px-2">
+				<h4 className="header-title">유지보수 이력</h4>
+			</div>
 			<Row>
 				<Card></Card>
 			</Row>
+
 			<Row>
 				<Col>
 					<Card className="card">

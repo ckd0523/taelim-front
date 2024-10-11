@@ -110,7 +110,9 @@ const DemandHistory = () => {
 
 	return (
 		<>
-			<PageBreadcrumb title="Demand" subName="Demand" />
+			<div className="pt-3 px-2">
+				<h4 className="header-title">요청 내역</h4>
+			</div>
 
 			<Row>
 				<Card></Card>

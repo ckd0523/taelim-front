@@ -1,7 +1,8 @@
 import React, { useState, useRef } from 'react';
 import * as XLSX from 'xlsx';
-import { Button, Table, Row, Col, Form } from 'react-bootstrap';
+import { Button, Table, Row, Col, Form, Alert } from 'react-bootstrap';
 import Select from 'react-select';
+import Swal from 'sweetalert2';
 
 const urlConfig = import.meta.env.VITE_BASIC_URL;
 const ExcelRegister = () => {
@@ -10,6 +11,8 @@ const ExcelRegister = () => {
 	const [uploadFile, setUploadFile] = useState(null);
 	const [headers, setHeaders] = useState([]);
 	const [formData, setFormData] = useState([]); // 여러 행을 처리하기 위해 배열로 변경
+	const [showAlert, setShowAlert] = useState(false);
+	const [alertMessage, setAlertMessage] = useState('');
 
 	const fileInputRef = useRef(null);
 
@@ -27,7 +30,7 @@ const ExcelRegister = () => {
 
 	const handleSelectValue = (selectOption) => {
 		setSelectValue(selectOption);
-		console.log(selectOption);
+		setShowAlert(false);
 
 		if (fileInputRef.current) {
 			fileInputRef.current.value = '';
@@ -88,6 +91,7 @@ const ExcelRegister = () => {
 	const handleFileUpload = (e) => {
 		const file = e.target.files[0];
 		setUploadFile(file);
+		setShowAlert(false);
 		const reader = new FileReader();
 
 		reader.onload = (event) => {
@@ -162,6 +166,18 @@ const ExcelRegister = () => {
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
+		if (!uploadFile || !selectValue) {
+			setAlertMessage(
+				!selectValue && !uploadFile
+					? '자산분류와 파일을 선택해주세요.'
+					: !selectValue
+					  ? '자산분류를 선택해주세요.'
+					  : '파일을 선택해주세요.'
+			);
+			setShowAlert(true);
+			return;
+		}
+
 		try {
 			const excelResponse = await fetch(`${urlConfig}/asset/excelRegister`, {
 				method: 'POST',
@@ -172,28 +188,42 @@ const ExcelRegister = () => {
 			});
 
 			if (excelResponse.ok) {
-				alert('엑셀이 정상적으로 등록되었습니다.');
-				setSelectValue(null); // 선택한 셀렉트 값 초기화
-				setFormData([]); // 폼 데이터 초기화
-				setData({}); // 엑셀 데이터 초기화
-				setHeaders([]); // 헤더 초기화
-				setUploadFile(null); // 업로드된 파일 상태 초기화
+				Swal.fire({
+					icon: 'success',
+					title: '자산이 성공적으로 등록되었습니다.',
+					text: '자산조회화면으로 이동',
+				});
+				setTimeout(() => {
+					window.location.replace('/jsx/AssetPageTest');
+				}, 1000);
 
 				// 파일 입력 필드 초기화
 				if (fileInputRef.current) {
 					fileInputRef.current.value = ''; // 파일 입력 필드 초기화
 				}
 			} else {
-				alert('엑셀 등록 중 에러가 발생했습니다.');
+				Swal.fire({
+					icon: 'error',
+					title: '엑셀 등록을 실패하였습니다.',
+					text: '엑셀 파일을 확인해주세요.',
+				});
 			}
 		} catch (error) {
-			console.error('에러 발생:', error);
-			alert('엑셀 등록 중 에러가 발생했습니다.');
+			Swal.fire({
+				icon: 'error',
+				title: '엑셀 등록 중 에러가 발생하였습니다.',
+				text: error,
+			});
 		}
 	};
 
 	return (
 		<div>
+			<div className="pt-3 px-2">
+				<h4 className="header-title">엑셀 등록</h4>
+			</div>
+			<div>{showAlert && <Alert variant="danger">{alertMessage}</Alert>}</div>
+
 			<Row className="g-2">
 				<Col sm={6}>
 					<Form.Group style={{ padding: 50 }}>
@@ -204,7 +234,6 @@ const ExcelRegister = () => {
 								options={classification}
 								value={selectValue}
 							></Select>
-							{selectValue ? selectValue.label : null}
 						</div>
 					</Form.Group>
 				</Col>
@@ -266,7 +295,7 @@ const ExcelRegister = () => {
 				</Row>
 			</div>
 			<div className="d-flex justify-content-center">
-				<Button type="submit" onClick={handleSubmit}>
+				<Button variant="info" type="submit" onClick={handleSubmit}>
 					등록
 				</Button>
 			</div>

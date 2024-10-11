@@ -111,15 +111,15 @@ const RowDetails = ({ row, assetCode, onClose, formData: initialFormData }) => {
 		console.log('handleSubmit:', formData); // 상태 확인
 
 		try {
-			// 수정 요청 처리
-			const response = await axios.post(
-				`${urlConfig}/asset/update/${formData.assetCode}`,
-				formData
-			);
+			// 1. 수정 요청 처리 (기존 파일 정보 포함)
+			const response = await axios.post(`${urlConfig}/asset/update/${formData.assetCode}`, {
+				...formData,
+				existingFiles: formData.existingFiles, // 기존 파일 정보 추가
+			});
 
 			console.log('Update response:', response.data); // 응답 확인
 
-			// 백엔드에서 받은 메시지 처리
+			// 2. 백엔드에서 받은 메시지 처리
 			if (response.data.includes('이미 수정 요청이 들어간 자산입니다.')) {
 				alert(
 					`경고: 자산 수정 요청 처리부터 처리해주세요. 자산 코드: ${formData.assetCode}`
@@ -127,43 +127,39 @@ const RowDetails = ({ row, assetCode, onClose, formData: initialFormData }) => {
 			} else {
 				alert(response.data); // 성공 메시지
 
-				// 파일 업로드가 필요할 때만 실행
+				// 3. 새 파일 업로드가 필요할 때만 실행
 				if (formData.files && formData.files.length > 0) {
-					console.log('Files to upload:', formData.files); // 파일 확인
 					const fileData = new FormData();
 
-					// 파일 배열을 순회하며 파일이 있는 경우에만 추가
+					// 새 파일만 처리
 					for (const fileObj of formData.files) {
-						// 실제 File 객체가 있는 경우에만 처리
 						if (fileObj.file) {
-							fileData.append('files', fileObj.file); // 파일 추가
+							fileData.append('files', fileObj.file); // 새 파일 추가
 							fileData.append('fileType', fileObj.fileType); // 파일 타입 추가
-
-							// 파일 업로드 API 호출
-							const fileResponse = await axios.post(
-								`${urlConfig}/${formData.assetCode}/files`,
-								fileData,
-								{ headers: { 'Content-Type': 'multipart/form-data' } }
-							);
-
-							console.log(
-								`File upload response (${fileObj.fileType}):`,
-								fileResponse.data
-							);
-
-							if (fileResponse.status !== 200) {
-								console.error('File upload failed:', fileResponse.data);
-								alert(
-									`파일 업데이트 중 오류가 발생했습니다. 상태 코드: ${fileResponse.status}`
-								);
-								return; // 오류 발생 시 더 이상 진행하지 않음
-							}
-						} else {
-							console.warn('No file found for upload:', fileObj);
 						}
 					}
 
-					alert('모든 파일이 성공적으로 업로드되었습니다.');
+					// 파일 업로드 API 호출 (새 파일만 처리)
+					if (fileData.has('files')) {
+						// 파일이 존재하는 경우에만 전송
+						const fileResponse = await axios.post(
+							`${urlConfig}/${formData.assetCode}/files`,
+							fileData,
+							{ headers: { 'Content-Type': 'multipart/form-data' } }
+						);
+
+						console.log('File upload response:', fileResponse.data);
+
+						if (fileResponse.status !== 200) {
+							console.error('File upload failed:', fileResponse.data);
+							alert(
+								`파일 업데이트 중 오류가 발생했습니다. 상태 코드: ${fileResponse.status}`
+							);
+							return; // 오류 발생 시 더 이상 진행하지 않음
+						} else {
+							alert('모든 파일이 성공적으로 업로드되었습니다.');
+						}
+					}
 				}
 
 				setShowModal(false); // 모달 닫기
@@ -773,11 +769,82 @@ const RowDetails = ({ row, assetCode, onClose, formData: initialFormData }) => {
 												<h4 style={{ margin: '0 0 10px' }}>
 													사용자 메뉴얼 파일
 												</h4>
-												{formData.files &&
-												formData.files.length > 0 &&
-												formData.files.some(
-													(file) => file.fileType === 'USER_MANUAL'
-												) ? (
+												{isEditing ? (
+													// 수정 모드일 때 파일 업로드 입력 필드 표시
+													<div>
+														{formData.files &&
+														formData.files.some(
+															(file) =>
+																file.fileType === 'USER_MANUAL'
+														) ? (
+															<a
+																href={
+																	formData.files.find(
+																		(file) =>
+																			file.fileType ===
+																			'USER_MANUAL'
+																	).fileURL
+																}
+																download
+																style={{
+																	display: 'block',
+																	border: '1px solid #ccc',
+																	padding: '10px',
+																	backgroundColor: '#f9f9f9',
+																	textDecoration: 'none',
+																	color: '#000',
+																	cursor: 'pointer',
+																	borderRadius: '4px',
+																	width: '100%',
+																	textAlign: 'left',
+																}}
+															>
+																{
+																	formData.files.find(
+																		(file) =>
+																			file.fileType ===
+																			'USER_MANUAL'
+																	).oriFileName
+																}
+															</a>
+														) : (
+															<div
+																style={{
+																	display: 'block',
+																	border: '1px solid #ccc',
+																	padding: '10px',
+																	backgroundColor: '#f9f9f9',
+																	color: '#aaa',
+																	borderRadius: '4px',
+																	width: '100%',
+																	textAlign: 'left',
+																}}
+															>
+																파일 없음
+															</div>
+														)}
+
+														{/* 파일 업로드 입력 */}
+														<input
+															type="file"
+															onChange={(e) =>
+																handleFileChange(e, 'USER_MANUAL')
+															} // 보증세부사항 파일 업로드 핸들러 연결
+															style={{
+																marginTop: '10px',
+																padding: '5px',
+																border: '1px solid #ccc',
+																borderRadius: '4px',
+																width: '100%',
+																cursor: 'pointer',
+															}}
+														/>
+													</div>
+												) : // 읽기 모드일 때 기존 파일 다운로드 또는 "파일 없음" 표시
+												formData.files &&
+												  formData.files.some(
+														(file) => file.fileType === 'USER_MANUAL'
+												  ) ? (
 													<a
 														href={
 															formData.files.find(
@@ -804,7 +871,7 @@ const RowDetails = ({ row, assetCode, onClose, formData: initialFormData }) => {
 																(file) =>
 																	file.fileType === 'USER_MANUAL'
 															).oriFileName
-														}{' '}
+														}
 													</a>
 												) : (
 													<div

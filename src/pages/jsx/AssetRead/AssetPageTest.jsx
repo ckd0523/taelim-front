@@ -80,15 +80,16 @@ const AssetPageTest = () => {
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
+				// 페이지 처리 없이 모든 데이터 가져오기
 				const response = await axios.get(`${urlConfig}/assets/test`);
-				setData(response.data);
-				setUpdateList(response.data); // 데이터를 가져온 후 UpdateList를 업데이트
+				setData(response.data); // 가져온 데이터 설정
+				setUpdateList(response.data); // 업데이트 리스트 설정
 			} catch (error) {
-				console.error('데이터를 가져오는 중 오류 발생:', error);
+				console.error('데이터를 가져오는 중 오류 발생:', error); // 오류 처리
 			}
 		};
-		fetchData();
-	}, []);
+		fetchData(); // 데이터 가져오기 함수 호출
+	}, []); // 의존성 배열을 비워 모든 데이터 가져오도록 설정
 
 	// 검색필터 조건
 	const handleSearch = ({

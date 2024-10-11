@@ -1,9 +1,14 @@
 import BasisAssetInfo from './BasisAssetInfo';
 import { useState, useEffect } from 'react';
 import FileUpload from './FileUpload';
-import { Button, Row, Col, Container } from 'react-bootstrap';
+import { Button, Row, Col, Container, Alert, Modal } from 'react-bootstrap';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
+import classNames from 'classnames';
+import { extendedColorVariants } from '@/common';
+import Swal from 'sweetalert2';
+import AssetCategories from './AssetCategories';
+import PurchasingInfo from './PurchasingInfo';
 const urlConfig = import.meta.env.VITE_BASIC_URL;
 const ResponsivePadding = styled.div`
 	@media (max-width: 768px) {
@@ -22,6 +27,9 @@ const ResponsivePadding = styled.div`
 const AssetRegister = () => {
 	const navigate = useNavigate();
 	const [files, setFiles] = useState([]);
+	const [showAlert, setShowAlert] = useState(false);
+	const [alertMessage, setAlertMessage] = useState('');
+	const [alertVarient, setAlertVarient] = useState('success');
 	const [formData, setFormData] = useState({
 		assetClassification: '',
 		assetName: '',
@@ -125,7 +133,14 @@ const AssetRegister = () => {
 
 			if (assetResponse.ok) {
 				const assetNo = await assetResponse.text();
-				alert('자산이 성공적으로 등록');
+				// setAlertMessage('자산이 등록되었습니다.');
+				// setAlertVarient('success');
+				// setShowAlert(true);
+				Swal.fire({
+					icon: 'success',
+					title: '자산 등록 성공',
+					text: '자산 등록 성공.',
+				});
 				console.log(typeof assetNo);
 
 				if (files.length > 0) {
@@ -143,23 +158,31 @@ const AssetRegister = () => {
 							body: fileFormData,
 						});
 
-						if (fileResponse.ok) {
-							alert('파일이 성공적으로 업로드됨');
-						} else {
-							alert('파일 업로드 실패');
+						if (!fileResponse.ok) {
+							Swal.fire({
+								icon: 'error',
+								title: '파일 등록 실패',
+								text: '파일 등록 실패.',
+							});
 						}
 					}
 				}
-				window.location.replace('/jsx/AssetPage');
 			} else {
-				alert('자산 등록 실패');
+				Swal.fire({
+					icon: 'error',
+					title: '자산 등록 실패',
+					text: '자산 등록 실패.',
+				});
 			}
 		} catch (error) {
 			console.error('에러발생 : ', error);
-			alert('자산 등록 중 에러가 발생');
+			Swal.fire({
+				icon: 'error',
+				title: '에러 발생',
+				text: error,
+			});
 		}
 	};
-
 	const handleChange = (e) => {
 		const { name, value } = e.target;
 		setFormData((prevState) => ({
@@ -168,6 +191,14 @@ const AssetRegister = () => {
 		}));
 		console.log('name: ', name);
 		console.log('value: ', value);
+	};
+
+	const renderAlertIcon = () => {
+		if (alertVarient === 'danger') {
+			return <i className="ri-close-circle-line"></i>;
+		} else {
+			return <i className="ri-check-line"></i>;
+		}
 	};
 	useEffect(() => {
 		if (formData.contactInformation?.length === 10) {
@@ -197,6 +228,16 @@ const AssetRegister = () => {
 						<BasisAssetInfo formData={formData} handleChange={handleChange} />
 					</Col>
 					<Col xs={12} md={8} lg={12}>
+						<AssetCategories
+							formData={formData}
+							assetClassification={formData.assetClassification}
+							handleChange={handleChange}
+							files={files}
+							setFiles={setFiles}
+						/>
+						<PurchasingInfo formData={formData} handleChange={handleChange} />
+					</Col>
+					<Col xs={12} md={8} lg={12}>
 						<FileUpload
 							formData={formData}
 							handleChange={handleChange}
@@ -206,13 +247,23 @@ const AssetRegister = () => {
 					</Col>
 				</ResponsivePadding>
 			</Row>
+
 			<div className="pt-2 d-flex justify-content-center">
-				<Button size="lg" variant="primary" type="submit" onClick={handleSubmit}>
+				<Button
+					style={{ fontSize: 18 }}
+					className="btn-rounded"
+					// size="lg"
+					variant="info"
+					type="submit"
+					onClick={handleSubmit}
+				>
 					저장
 				</Button>
 				<p className="px-2"></p>
 				<Button
-					size="lg"
+					// style={{ background: '#8ca4b6' }}
+					style={{ fontSize: 18 }}
+					className="btn-rounded"
 					variant="secondary"
 					type="button"
 					onClick={() => {
@@ -221,6 +272,31 @@ const AssetRegister = () => {
 				>
 					취소
 				</Button>
+
+				{/* alert 모달창 */}
+				<Modal show={showAlert} onHide={() => setShowAlert(false)} centered>
+					<Modal.Header closeButton></Modal.Header>
+					<Alert variant={alertVarient}>
+						{renderAlertIcon()}
+						{alertMessage}
+					</Alert>
+					<Button
+						className="justify-items-center"
+						variant="secondary"
+						onClick={() => {
+							if (alertVarient === 'success') {
+								window.location.replace('/jsx/AssetPage');
+							} else {
+								setShowAlert(false);
+							}
+						}}
+					>
+						확인
+					</Button>
+					<Modal.Footer
+						style={{ display: 'flex', justifyContent: 'center' }}
+					></Modal.Footer>
+				</Modal>
 			</div>
 		</Container>
 	);

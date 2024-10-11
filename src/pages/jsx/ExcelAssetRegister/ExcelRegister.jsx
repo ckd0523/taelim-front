@@ -266,7 +266,7 @@ const ExcelRegister = () => {
 				</Row>
 			</div>
 			<div className="d-flex justify-content-center">
-				<Button type="submit" onClick={handleSubmit}>
+				<Button variant="info" type="submit" onClick={handleSubmit}>
 					등록
 				</Button>
 			</div>

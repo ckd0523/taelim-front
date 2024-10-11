@@ -165,17 +165,17 @@ const BasisAssetInfo = ({ formData, handleChange }) => {
 		setValue,
 	} = methods;
 
-	useEffect(() => {
-		if (errors.confidentiality) {
-			setValue('confidentiality', ''); // 기밀성 필드를 빈 값으로 리셋
-		}
-		if (errors.integrity) {
-			setValue('integrity', ''); // 무결성 필드를 빈 값으로 리셋
-		}
-		if (errors.availability) {
-			setValue('availability', ''); // 가용성 필드를 빈 값으로 리셋
-		}
-	}, [errors, setValue]);
+	// useEffect(() => {
+	// 	if (errors.confidentiality) {
+	// 		setValue('confidentiality', ''); // 기밀성 필드를 빈 값으로 리셋
+	// 	}
+	// 	if (errors.integrity) {
+	// 		setValue('integrity', ''); // 무결성 필드를 빈 값으로 리셋
+	// 	}
+	// 	if (errors.availability) {
+	// 		setValue('availability', ''); // 가용성 필드를 빈 값으로 리셋
+	// 	}
+	// }, [errors, setValue]);
 	return (
 		<div>
 			<Accordion defaultActiveKey="0">
@@ -205,15 +205,6 @@ const BasisAssetInfo = ({ formData, handleChange }) => {
 											}
 											options={assetClassification}
 										></Select>
-										<Form.Label>자산명</Form.Label>
-										<Form.Control
-											placeholder="자산명을 입력해주세요"
-											className="mb-2"
-											type="text"
-											value={formData.assetName}
-											onChange={handleChange}
-											name="assetName"
-										/>
 										<p className="mb-2 c fw-bold">자산기준</p>
 										<Select
 											className="mb-2"
@@ -232,6 +223,15 @@ const BasisAssetInfo = ({ formData, handleChange }) => {
 											}
 											options={assetBasis}
 										></Select>
+										<Form.Label>자산명</Form.Label>
+										<Form.Control
+											placeholder="자산명을 입력해주세요"
+											className="mb-2"
+											type="text"
+											value={formData.assetName}
+											onChange={handleChange}
+											name="assetName"
+										/>
 										<Form.Label>제조사</Form.Label>
 										<Form.Control
 											placeholder="제조사를 입력해주세요"
@@ -268,7 +268,7 @@ const BasisAssetInfo = ({ formData, handleChange }) => {
 											}
 											options={department}
 										></Select>
-										<p className="mb-2 c fw-bold">위치</p>
+										<p className="mb-2 c fw-bold">자산위치</p>
 										<Select
 											className="mb-2"
 											placeholder="위치를 선택해주세요"
@@ -314,10 +314,28 @@ const BasisAssetInfo = ({ formData, handleChange }) => {
 											name="assetSecurityManager"
 										/>
 									</Col>
+
 									<Col lg={1} className="d-flex align-items-stretch">
 										<div className="vertical-divider"></div>
 									</Col>
 									<Col lg={5}>
+										<Form.Label>렉번호</Form.Label>
+										<Form.Control
+											placeholder="렉번호를 입력해주세요"
+											className="mb-2"
+											type="text"
+											onChange={handleChange}
+											name="rackUnit"
+										/>
+										<Form.Label>렉위치</Form.Label>
+										<Form.Control
+											placeholder="렉위치를 입력해주세요"
+											className="mb-2"
+											type="text"
+											onChange={handleChange}
+											name="rackLocation"
+										/>
+
 										<Form.Label>수량</Form.Label>
 										<Form.Control
 											placeholder="수량을 입력해주세요"
@@ -409,7 +427,7 @@ const BasisAssetInfo = ({ formData, handleChange }) => {
 											onChange={handleChange}
 											name="confidentiality"
 										/> */}
-										<Form.Group controlId="confidentiality">
+										{/* <Form.Group controlId="confidentiality">
 											<Form.Label>기밀성</Form.Label>
 											<Form.Control
 												{...register('confidentiality', {
@@ -475,7 +493,15 @@ const BasisAssetInfo = ({ formData, handleChange }) => {
 													{errors.availability.message}
 												</p>
 											)}
-										</Form.Group>
+										</Form.Group> */}
+										<Form.Label>제품시리얼번호</Form.Label>
+										<Form.Control
+											placeholder="제품시리얼번호를 입력해주세요"
+											className="mb-2"
+											type="text"
+											onChange={handleChange}
+											name="manufacturingCompany"
+										/>
 										<Form.Label>비고</Form.Label>
 										<Form.Control
 											placeholder="비고를 입력해주세요"
@@ -493,14 +519,6 @@ const BasisAssetInfo = ({ formData, handleChange }) => {
 					</Accordion.Collapse>
 				</StyledCard>
 			</Accordion>
-			<Col xs={12} md={8} lg={12}>
-				<AssetCategories
-					formData={formData}
-					assetClassification={formData.assetClassification}
-					handleChange={handleChange}
-				/>
-				<PurchasingInfo formData={formData} handleChange={handleChange} />
-			</Col>
 		</div>
 	);
 };

@@ -13,7 +13,7 @@ const DemandHistory = lazy(() => import('./Demand'));
 const UpdateHistory = lazy(() => import('./UpdateHistory'));
 const DeleteHistory = lazy(() => import('./DeleteHistory'));
 //const Expand = lazy(() => import('./Expand'));
-//const AssetPage = lazy(() => import('./assetUpdate'));
+const AssetPage = lazy(() => import('./assetUpdate'));
 const AssetSurveyDetail = lazy(() => import('./AssetSurvey/AssetSurveyDetail'));
 const SystemSetting = lazy(() => import('./SystemSetting'));
 const AssetPageTest = lazy(() => import('./AssetRead'));
@@ -28,6 +28,7 @@ export default function jsx() {
 				<Route path="MaintainRegister" element={<MaintainRegister />} />
 				<Route path="MaintainHist" element={<MaintainHist />} />
 				<Route path=":assetCode" element={<ProductDetailsEcom />} />
+				<Route path="AssetPage" element={<AssetPage />} />
 				<Route path="BackupHistory" element={<BackupHistory />} />
 				<Route path="AssetSurveyHistory" element={<AssetSurveyHistory />} />
 				<Route path="DemandHistory" element={<DemandHistory />} />

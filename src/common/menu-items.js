@@ -82,6 +82,12 @@ const MENU_ITEMS = [
 				url: '/jsx/AssetPageTest',
 				parentKey: 'check',
 			},
+			{
+				key: 'ds-AssetPage',
+				label: '자산조회1',
+				url: '/jsx/AssetPage',
+				parentKey: 'check',
+			},
 		],
 	},
 	{

@@ -84,7 +84,7 @@ const MENU_ITEMS = [
 			},
 			{
 				key: 'ds-AssetPage',
-				label: '자산조회1',
+				label: '자산조회12',
 				url: '/jsx/AssetPage',
 				parentKey: 'check',
 			},

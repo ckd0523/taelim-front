@@ -47,6 +47,43 @@ const ExcelRegister = () => {
 		'2.8 문서',
 		'2.9 기타',
 	];
+	const excelDateToJSDate = (serial) => {
+		const excelEpoch = new Date(Date.UTC(1899, 11, 30));
+		const jsDate = new Date(excelEpoch.getTime() + serial * 24 * 60 * 60 * 1000);
+		return jsDate.toISOString().split('T')[0];
+	};
+	const commonFieldMapping = {
+		자산기준: 'assetBasis',
+		자산코드: 'assetCode',
+		자산명: 'assetName',
+		'목적/기능': 'purpose',
+		자산위치: 'assetLocation',
+		수량: 'quantity',
+		부서: 'department',
+		가동여부: 'operationStatus',
+		도입일자: (introducedDate) => excelDateToJSDate(introducedDate),
+		기밀성: 'confidentiality',
+		무결성: 'integrity',
+		가용성: 'availability',
+		사용자: 'assetUser',
+		소유자: 'assetOwner',
+		보안담당자: 'assetSecurityManager',
+		비고: 'note',
+		사용상태: 'usestate',
+		구매비용: 'purchaseCost',
+		구매날짜: 'purchaseDate',
+		내용연수: 'usefulLife',
+		구입처: 'purchaseSource',
+		구입연락처: 'contactInformation',
+		취득경로: 'acquisitionRoute',
+		유지기간: 'maintenancePeriod',
+	};
+	const sheetSpeciificMappings = {
+		'2.1 서버(시스템)': {},
+		'2.3 정보보호시스템': {
+			서비스범위: 'serviceScope',
+		},
+	};
 
 	const handleFileUpload = (e) => {
 		const file = e.target.files[0];
@@ -67,88 +104,32 @@ const ExcelRegister = () => {
 						setHeaders(headers);
 						const rows = sheetData.slice(8);
 
+						const fieldMapping = {
+							...commonFieldMapping,
+							...sheetSpeciificMappings[selectValue.value],
+						};
+
 						const allFormData = rows
 							.filter((row) => row.some((cell) => cell))
 							.map((excelRow) => {
 								const updatedFormData = {};
-
 								headers.forEach((header, index) => {
 									const cleanedHeader = header
-										.trim('')
-										.replace(/[^가-힣a-zA-Z0-9]/g, '');
+										.trim()
+										.replace(/[^가-힣a-zA-Z0-9/]/g, '');
+									const formKey = fieldMapping[cleanedHeader];
 
-									// 엑셀 헤더에 따라 formData에 맞게 값을 설정
-									switch (cleanedHeader) {
-										case '자산기준':
-											updatedFormData['assetBasis'] = excelRow[index];
-											break;
-										case '자산코드':
-											updatedFormData['assetCode'] = excelRow[index];
-											break;
-										case '자산명':
-											updatedFormData['assetName'] = excelRow[index];
-											break;
-										case '목적/기능':
-											updatedFormData['purpose'] = excelRow[index];
-											break;
-										case '수량':
-											updatedFormData['quantity'] = excelRow[index];
-											break;
-										case '자산위치':
-											updatedFormData['assetLocation'] = excelRow[index];
-											break;
-										case '렉번호':
-											updatedFormData['rackUnit'] = excelRow[index];
-											break;
-										case '위치':
-											updatedFormData['department'] = excelRow[index];
-											break;
-										case '사용자':
-											updatedFormData['assetUser'] = excelRow[index];
-											break;
-										case '소유자':
-											updatedFormData['assetOwner'] = excelRow[index];
-											break;
-										case '보안담당자':
-											updatedFormData['assetSecurityManager'] =
-												excelRow[index];
-											break;
-										case '가동여부':
-											updatedFormData['operationStatus'] = excelRow[index];
-											break;
-										case '도입일자':
-											updatedFormData['introducedDate'] = excelRow[index];
-											break;
-										case '기밀성':
-											updatedFormData['confidentiality'] = excelRow[index];
-											break;
-										case '무결성':
-											updatedFormData['integrity'] = excelRow[index];
-											break;
-										case '가용성':
-											updatedFormData['availability'] = excelRow[index];
-											break;
-										case '서비스 범위':
-											updatedFormData['serviceScope'] = excelRow[index];
-											break;
-										case '비고':
-											updatedFormData['note'] = excelRow[index];
-											break;
-										case 'IP':
-											updatedFormData['ip'] = excelRow[index];
-											break;
-										case 'ID':
-											updatedFormData['serverId'] = excelRow[index];
-											break;
-										case 'PW':
-											updatedFormData['serverPassword'] = excelRow[index];
-											break;
-
-										default:
-											break;
+									if (formKey) {
+										if (cleanedHeader === '도입일자') {
+											updatedFormData['introducedDate'] = fieldMapping[
+												cleanedHeader
+											](excelRow[index]);
+										}
+										updatedFormData['assetClassification'] =
+											sheetName.substring(4, 12);
+										updatedFormData[formKey] = excelRow[index];
 									}
 								});
-								console.log(updatedFormData);
 								return updatedFormData;
 							});
 

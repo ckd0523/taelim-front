@@ -61,6 +61,11 @@ const RowDetails = ({ row, assetCode, onClose, formData: initialFormData }) => {
 		setShowModal(true);
 	};
 
+	// 수정 취소 및 닫기 버튼 처리
+	const handleCloseClick = () => {
+		setIsEditing(false); // 수정 모드 해제
+	};
+
 	// 파일 선택 처리
 	const handleFileChange = (e, fileType) => {
 		const file = e.target.files[0];
@@ -111,7 +116,7 @@ const RowDetails = ({ row, assetCode, onClose, formData: initialFormData }) => {
 		console.log('handleSubmit:', formData); // 상태 확인
 
 		try {
-			// 1. 수정 요청 처리 (기존 파일 정보 포함)
+			// 1. 수정 처리 (기존 파일 정보 포함)
 			const response = await axios.post(`${urlConfig}/asset/update/${formData.assetCode}`, {
 				...formData,
 				existingFiles: formData.existingFiles, // 기존 파일 정보 추가
@@ -120,7 +125,7 @@ const RowDetails = ({ row, assetCode, onClose, formData: initialFormData }) => {
 			console.log('Update response:', response.data); // 응답 확인
 
 			// 2. 백엔드에서 받은 메시지 처리
-			if (response.data.includes('이미 수정 요청이 들어간 자산입니다.')) {
+			if (response.data.includes('이미 수정이 들어간 자산입니다.')) {
 				alert(
 					`경고: 자산 수정 요청 처리부터 처리해주세요. 자산 코드: ${formData.assetCode}`
 				);
@@ -176,22 +181,64 @@ const RowDetails = ({ row, assetCode, onClose, formData: initialFormData }) => {
 		}
 	};
 
+	// 수정 요청 api 받아서 처리
 	const handleSubmit1 = async () => {
 		console.log('handleSubmit1:', formData); // 상태 확인
 		try {
-			// 수정 요청 처리
+			// 1. 수정 요청 처리 (기존 파일 정보 포함)
 			const response = await axios.post(
 				`${urlConfig}/asset/updateDemand/${formData.assetCode}`,
-				formData
+				{
+					...formData,
+					existingFiles: formData.existingFiles, // 기존 파일 정보 추가
+				}
 			);
 
-			// 백엔드에서 받은 메시지 처리
+			console.log('UpdateDemand response:', response.data); // 응답 확인
+
+			// 2. 백엔드에서 받은 메시지 처리
 			if (response.data.includes('이미 수정 요청이 들어간 자산입니다.')) {
 				// 경고 메시지를 띄우기
 				alert(`경고: 이미 수정 요청이 들어간 자산입니다. 자산 코드: ${formData.assetCode}`);
 			} else {
 				// 성공 메시지 띄우기
 				alert(response.data); // 성공 메시지
+
+				// 3. 새 파일 업로드가 필요할 때만 실행
+				if (formData.files && formData.files.length > 0) {
+					const fileData = new FormData();
+
+					// 새 파일만 처리
+					for (const fileObj of formData.files) {
+						if (fileObj.file) {
+							fileData.append('files', fileObj.file); // 새 파일 추가
+							fileData.append('fileType', fileObj.fileType); // 파일 타입 추가
+						}
+					}
+
+					// 파일 업로드 API 호출 (새 파일만 처리)
+					if (fileData.has('files')) {
+						// 파일이 존재하는 경우에만 전송
+						const fileResponse = await axios.post(
+							`${urlConfig}/${formData.assetCode}/files`,
+							fileData,
+							{ headers: { 'Content-Type': 'multipart/form-data' } }
+						);
+
+						console.log('File upload response:', fileResponse.data);
+
+						if (fileResponse.status !== 200) {
+							console.error('File upload failed:', fileResponse.data);
+							alert(
+								`파일 업데이트 중 오류가 발생했습니다. 상태 코드: ${fileResponse.status}`
+							);
+							return; // 오류 발생 시 더 이상 진행하지 않음
+						} else {
+							alert('모든 파일이 성공적으로 업로드되었습니다.');
+						}
+					}
+				}
+
 				setShowModal(false); // 모달 닫기
 			}
 		} catch (error) {
@@ -926,6 +973,10 @@ const RowDetails = ({ row, assetCode, onClose, formData: initialFormData }) => {
 							<Button variant="primary" className="me-2" onClick={handleNextClick}>
 								다음
 							</Button>
+
+							<Button variant="danger" onClick={handleCloseClick}>
+								닫기1
+							</Button>
 						</>
 					) : (
 						<>
@@ -939,11 +990,11 @@ const RowDetails = ({ row, assetCode, onClose, formData: initialFormData }) => {
 								assetName={formData.assetName}
 								assetNo={formData.assetNo}
 							/>
+							<Button variant="danger" onClick={onClose}>
+								닫기
+							</Button>
 						</>
 					)}
-					<Button variant="danger" onClick={onClose}>
-						닫기
-					</Button>
 				</Col>
 			</Row>
 		</>

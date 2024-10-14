@@ -227,95 +227,13 @@ const InfoModal = ({ show, handleClose, modalData, assetNo }) => {
 								<p>수정일자: {modalData.updateDate}</p>
 							</div>
 
-							{/* assetInfo 관련 정보 */}
-							<div className="info-section">
-								<h2>변경 전 : {assetInfo.assetNo}</h2>
-								<h4>기본 자산 정보 및 관리 정보</h4>
-								<BootstrapTable striped bordered hover className="table-detail">
-									<thead>
-										<tr>
-											<th>자산코드</th>
-											<th>자산명</th>
-											<th>자산기준</th>
-											<th>제조사</th>
-											<th>목적</th>
-											<th>부서</th>
-											<th>위치</th>
-											<th>사용자</th>
-											<th>소유자</th>
-											<th>보안담당자</th>
-											<th>사용상태</th>
-											<th>가동여부</th>
-											<th>도입일자</th>
-											<th>기밀성</th>
-											<th>무결성</th>
-											<th>가용성</th>
-											<th>중요성점수</th>
-											<th>중요성등급</th>
-											<th>비고</th>
-										</tr>
-									</thead>
-									<tbody>
-										<tr>
-											<td>{assetInfo.assetCode || 'N/A'}</td>
-											<td>{assetInfo.assetName || 'N/A'}</td>
-											<td>{assetInfo.assetBasis || 'N/A'}</td>
-											<td>{assetInfo.manufacturingCompany || 'N/A'}</td>
-											<td>{assetInfo.purpose || 'N/A'}</td>
-											<td>{assetInfo.department || 'N/A'}</td>
-											<td>{assetInfo.assetLocation || 'N/A'}</td>
-											<td>{assetInfo.assetUser || 'N/A'}</td>
-											<td>{assetInfo.assetOwner || 'N/A'}</td>
-											<td>{assetInfo.assetSecurityManager || 'N/A'}</td>
-											<td>{assetInfo.useState || 'N/A'}</td>
-											<td>{assetInfo.operationStatus || 'N/A'}</td>
-											<td>{assetInfo.introducedDate || 'N/A'}</td>
-											<td>{assetInfo.confidentiality || 'N/A'}</td>
-											<td>{assetInfo.integrity || 'N/A'}</td>
-											<td>{assetInfo.availability || 'N/A'}</td>
-											<td>{importanceScore}</td>
-											<td>{importanceRating}</td>
-											<td>{assetInfo.note || 'N/A'}</td>
-										</tr>
-									</tbody>
-								</BootstrapTable>
+							<div className="info-section-container">
+								<div className="info-section">
+									<h2>변경 전 : {assetInfo.assetNo}</h2>
 
-								<h4>재무 및 구매 정보</h4>
-								<BootstrapTable striped bordered hover className="table-detail">
-									<thead>
-										<tr>
-											<th>구매비용</th>
-											<th>구매날짜</th>
-											<th>내용연수</th>
-											<th>감가상각방법</th>
-											<th>구입처</th>
-											<th>구입처 연락처</th>
-											<th>취득경로</th>
-											<th>유지기간</th>
-											<th>잔존가치</th>
-											<th>현재가치</th>
-										</tr>
-									</thead>
-									<tbody>
-										<tr>
-											<td>{assetInfo.purchaseCost}</td>
-											<td>{assetInfo.purchaseDate}</td>
-											<td>{assetInfo.usefulLife}</td>
-											<td>{assetInfo.depreciationMethod}</td>
-											<td>{assetInfo.purchaseSource}</td>
-											<td>{assetInfo.contactInformation}</td>
-											<td>{assetInfo.acquisitionRoute}</td>
-											<td>{assetInfo.maintenancePeriod}</td>
-											<td>{assetInfo.residualValue}</td>
-											<td>{assetInfo.currentValue}</td>
-										</tr>
-									</tbody>
-								</BootstrapTable>
-
-								{/* classification에 따른 동적 열 테이블 */}
-								{dynamicColumns.length > 0 && (
-									<>
-										<h4>{assetInfo?.assetClassification}에 따른 칼럼</h4>
+									{/* 기본 자산 정보 및 관리 정보 섹션 */}
+									<section className="asset-info">
+										<h4>기본 자산 정보 및 관리 정보</h4>
 										<BootstrapTable
 											striped
 											bordered
@@ -324,120 +242,30 @@ const InfoModal = ({ show, handleClose, modalData, assetNo }) => {
 										>
 											<thead>
 												<tr>
-													{dynamicColumns.map((col) => (
-														<th key={col.title}>{col.title}</th>
-													))}
+													<th>자산코드</th>
+													<th>자산명</th>
+													<th>자산기준</th>
+													<th>제조사</th>
+													<th>목적</th>
+													<th>부서</th>
+													<th>위치</th>
 												</tr>
 											</thead>
 											<tbody>
 												<tr>
-													{dynamicColumns.map((col) => (
-														<td key={col.title}>
-															{assetInfo[col.data] || 'N/A'}
-														</td>
-													))}
+													<td>{assetInfo.assetCode || 'N/A'}</td>
+													<td>{assetInfo.assetName || 'N/A'}</td>
+													<td>{assetInfo.assetBasis || 'N/A'}</td>
+													<td>
+														{assetInfo.manufacturingCompany || 'N/A'}
+													</td>
+													<td>{assetInfo.purpose || 'N/A'}</td>
+													<td>{assetInfo.department || 'N/A'}</td>
+													<td>{assetInfo.assetLocation || 'N/A'}</td>
 												</tr>
 											</tbody>
 										</BootstrapTable>
-									</>
-								)}
-							</div>
 
-							{/* assetInfo 관련 정보 */}
-							<div className="info-section">
-								<h2>변경 후 : {modifiedAssetInfo.assetNo}</h2>
-								<h4>기본 자산 정보 및 관리 정보</h4>
-								<BootstrapTable striped bordered hover className="table-detail">
-									<thead>
-										<tr>
-											<th>자산코드</th>
-											<th>자산명</th>
-											<th>자산기준</th>
-											<th>제조사</th>
-											<th>목적</th>
-											<th>부서</th>
-											<th>위치</th>
-											<th>사용자</th>
-											<th>소유자</th>
-											<th>보안담당자</th>
-											<th>사용상태</th>
-											<th>가동여부</th>
-											<th>도입일자</th>
-											<th>기밀성</th>
-											<th>무결성</th>
-											<th>가용성</th>
-											<th>중요성점수</th>
-											<th>중요성등급</th>
-											<th>비고</th>
-										</tr>
-									</thead>
-									<tbody>
-										<tr>
-											<td>{modifiedAssetInfo.assetCode || 'N/A'}</td>
-											<td>{modifiedAssetInfo.assetName || 'N/A'}</td>
-											<td>{modifiedAssetInfo.assetBasis || 'N/A'}</td>
-											<td>
-												{modifiedAssetInfo.manufacturingCompany || 'N/A'}
-											</td>
-											<td>{modifiedAssetInfo.purpose || 'N/A'}</td>
-											<td>{modifiedAssetInfo.department || 'N/A'}</td>
-											<td>{modifiedAssetInfo.assetLocation || 'N/A'}</td>
-											<td>{modifiedAssetInfo.assetUser || 'N/A'}</td>
-											<td>{modifiedAssetInfo.assetOwner || 'N/A'}</td>
-											<td>
-												{modifiedAssetInfo.assetSecurityManager || 'N/A'}
-											</td>
-											<td>{modifiedAssetInfo.useState || 'N/A'}</td>
-											<td>{modifiedAssetInfo.operationStatus || 'N/A'}</td>
-											<td>{modifiedAssetInfo.introducedDate || 'N/A'}</td>
-											<td>{modifiedAssetInfo.confidentiality || 'N/A'}</td>
-											<td>{modifiedAssetInfo.integrity || 'N/A'}</td>
-											<td>{modifiedAssetInfo.availability || 'N/A'}</td>
-											<td>{modifiedImportanceScore}</td>
-											<td>{modifiedImportanceRating}</td>
-											<td>{modifiedAssetInfo.note || 'N/A'}</td>
-										</tr>
-									</tbody>
-								</BootstrapTable>
-
-								<h4>재무 및 구매 정보</h4>
-								<BootstrapTable striped bordered hover className="table-detail">
-									<thead>
-										<tr>
-											<th>구매비용</th>
-											<th>구매날짜</th>
-											<th>내용연수</th>
-											<th>감가상각방법</th>
-											<th>구입처</th>
-											<th>구입처 연락처</th>
-											<th>취득경로</th>
-											<th>유지기간</th>
-											<th>잔존가치</th>
-											<th>현재가치</th>
-										</tr>
-									</thead>
-									<tbody>
-										<tr>
-											<td>{modifiedAssetInfo.purchaseCost}</td>
-											<td>{modifiedAssetInfo.purchaseDate}</td>
-											<td>{modifiedAssetInfo.usefulLife}</td>
-											<td>{modifiedAssetInfo.depreciationMethod}</td>
-											<td>{modifiedAssetInfo.purchaseSource}</td>
-											<td>{modifiedAssetInfo.contactInformation}</td>
-											<td>{modifiedAssetInfo.acquisitionRoute}</td>
-											<td>{modifiedAssetInfo.maintenancePeriod}</td>
-											<td>{modifiedAssetInfo.residualValue}</td>
-											<td>{modifiedAssetInfo.currentValue}</td>
-										</tr>
-									</tbody>
-								</BootstrapTable>
-
-								{/* classification에 따른 동적 열 테이블 */}
-								{dynamicColumns.length > 0 && (
-									<>
-										<h4>
-											{modifiedAssetInfo?.assetClassification}에 따른 칼럼
-										</h4>
 										<BootstrapTable
 											striped
 											bordered
@@ -446,23 +274,271 @@ const InfoModal = ({ show, handleClose, modalData, assetNo }) => {
 										>
 											<thead>
 												<tr>
-													{dynamicColumns.map((col) => (
-														<th key={col.title}>{col.title}</th>
-													))}
+													<th>사용자</th>
+													<th>소유자</th>
+													<th>보안담당자</th>
+													<th>사용상태</th>
+													<th>가동여부</th>
+													<th>도입일자</th>
 												</tr>
 											</thead>
 											<tbody>
 												<tr>
-													{dynamicColumns.map((col) => (
-														<td key={col.title}>
-															{modifiedAssetInfo[col.data] || 'N/A'}
-														</td>
-													))}
+													<td>{assetInfo.assetUser || 'N/A'}</td>
+													<td>{assetInfo.assetOwner || 'N/A'}</td>
+													<td>
+														{assetInfo.assetSecurityManager || 'N/A'}
+													</td>
+													<td>{assetInfo.useState || 'N/A'}</td>
+													<td>{assetInfo.operationStatus || 'N/A'}</td>
+													<td>{assetInfo.introducedDate || 'N/A'}</td>
 												</tr>
 											</tbody>
 										</BootstrapTable>
-									</>
-								)}
+
+										<BootstrapTable
+											striped
+											bordered
+											hover
+											className="table-detail"
+										>
+											<thead>
+												<tr>
+													<th>기밀성</th>
+													<th>무결성</th>
+													<th>가용성</th>
+													<th>중요성점수</th>
+													<th>중요성등급</th>
+													<th>비고</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr>
+													<td>{assetInfo.confidentiality || 'N/A'}</td>
+													<td>{assetInfo.integrity || 'N/A'}</td>
+													<td>{assetInfo.availability || 'N/A'}</td>
+													<td>{importanceScore}</td>
+													<td>{importanceRating}</td>
+													<td>{assetInfo.note || 'N/A'}</td>
+												</tr>
+											</tbody>
+										</BootstrapTable>
+									</section>
+
+									{/* 재무 및 구매 정보 섹션 */}
+									<section className="financial-info">
+										<h4>재무 및 구매 정보</h4>
+										<BootstrapTable
+											striped
+											bordered
+											hover
+											className="table-detail"
+										>
+											<thead>
+												<tr>
+													<th>구매비용</th>
+													<th>구매날짜</th>
+													<th>내용연수</th>
+													<th>감가상각방법</th>
+													<th>취득경로</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr>
+													<td>{assetInfo.purchaseCost || 'N/A'}</td>
+													<td>{assetInfo.purchaseDate || 'N/A'}</td>
+													<td>{assetInfo.usefulLife || 'N/A'}</td>
+													<td>{assetInfo.depreciationMethod || 'N/A'}</td>
+													<td>{assetInfo.acquisitionRoute || 'N/A'}</td>
+												</tr>
+											</tbody>
+										</BootstrapTable>
+
+										<BootstrapTable
+											striped
+											bordered
+											hover
+											className="table-detail"
+										>
+											<thead>
+												<tr>
+													<th>구입처</th>
+													<th>구입처 연락처</th>
+													<th>유지기간</th>
+													<th>잔존가치</th>
+													<th>현재가치</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr>
+													<td>{assetInfo.purchaseSource || 'N/A'}</td>
+													<td>{assetInfo.contactInformation || 'N/A'}</td>
+													<td>{assetInfo.maintenancePeriod || 'N/A'}</td>
+													<td>{assetInfo.residualValue || 'N/A'}</td>
+													<td>{assetInfo.currentValue || 'N/A'}</td>
+												</tr>
+											</tbody>
+										</BootstrapTable>
+									</section>
+
+									{/* 동적 열 테이블 섹션 */}
+									{dynamicColumns.length > 0 && (
+										<section className="dynamic-columns">
+											<h4>{assetInfo?.assetClassification}에 따른 칼럼</h4>
+											<BootstrapTable
+												striped
+												bordered
+												hover
+												className="table-detail"
+											>
+												<thead>
+													<tr>
+														{dynamicColumns.map((col) => (
+															<th key={col.title}>{col.title}</th>
+														))}
+													</tr>
+												</thead>
+												<tbody>
+													<tr>
+														{dynamicColumns.map((col) => (
+															<td key={col.title}>
+																{assetInfo[col.data] || 'N/A'}
+															</td>
+														))}
+													</tr>
+												</tbody>
+											</BootstrapTable>
+										</section>
+									)}
+								</div>
+
+								<div className="info-section">
+									<h2>변경 후 : {modifiedAssetInfo.assetNo}</h2>
+									<h4>기본 자산 정보 및 관리 정보</h4>
+									<BootstrapTable striped bordered hover className="table-detail">
+										<thead>
+											<tr>
+												<th>자산코드</th>
+												<th>자산명</th>
+												<th>자산기준</th>
+												<th>제조사</th>
+												<th>목적</th>
+												<th>부서</th>
+												<th>위치</th>
+												<th>사용자</th>
+												<th>소유자</th>
+												<th>보안담당자</th>
+												<th>사용상태</th>
+												<th>가동여부</th>
+												<th>도입일자</th>
+												<th>기밀성</th>
+												<th>무결성</th>
+												<th>가용성</th>
+												<th>중요성점수</th>
+												<th>중요성등급</th>
+												<th>비고</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr>
+												<td>{modifiedAssetInfo.assetCode || 'N/A'}</td>
+												<td>{modifiedAssetInfo.assetName || 'N/A'}</td>
+												<td>{modifiedAssetInfo.assetBasis || 'N/A'}</td>
+												<td>
+													{modifiedAssetInfo.manufacturingCompany ||
+														'N/A'}
+												</td>
+												<td>{modifiedAssetInfo.purpose || 'N/A'}</td>
+												<td>{modifiedAssetInfo.department || 'N/A'}</td>
+												<td>{modifiedAssetInfo.assetLocation || 'N/A'}</td>
+												<td>{modifiedAssetInfo.assetUser || 'N/A'}</td>
+												<td>{modifiedAssetInfo.assetOwner || 'N/A'}</td>
+												<td>
+													{modifiedAssetInfo.assetSecurityManager ||
+														'N/A'}
+												</td>
+												<td>{modifiedAssetInfo.useState || 'N/A'}</td>
+												<td>
+													{modifiedAssetInfo.operationStatus || 'N/A'}
+												</td>
+												<td>{modifiedAssetInfo.introducedDate || 'N/A'}</td>
+												<td>
+													{modifiedAssetInfo.confidentiality || 'N/A'}
+												</td>
+												<td>{modifiedAssetInfo.integrity || 'N/A'}</td>
+												<td>{modifiedAssetInfo.availability || 'N/A'}</td>
+												<td>{modifiedImportanceScore}</td>
+												<td>{modifiedImportanceRating}</td>
+												<td>{modifiedAssetInfo.note || 'N/A'}</td>
+											</tr>
+										</tbody>
+									</BootstrapTable>
+
+									<h4>재무 및 구매 정보</h4>
+									<BootstrapTable striped bordered hover className="table-detail">
+										<thead>
+											<tr>
+												<th>구매비용</th>
+												<th>구매날짜</th>
+												<th>내용연수</th>
+												<th>감가상각방법</th>
+												<th>구입처</th>
+												<th>구입처 연락처</th>
+												<th>취득경로</th>
+												<th>유지기간</th>
+												<th>잔존가치</th>
+												<th>현재가치</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr>
+												<td>{modifiedAssetInfo.purchaseCost}</td>
+												<td>{modifiedAssetInfo.purchaseDate}</td>
+												<td>{modifiedAssetInfo.usefulLife}</td>
+												<td>{modifiedAssetInfo.depreciationMethod}</td>
+												<td>{modifiedAssetInfo.purchaseSource}</td>
+												<td>{modifiedAssetInfo.contactInformation}</td>
+												<td>{modifiedAssetInfo.acquisitionRoute}</td>
+												<td>{modifiedAssetInfo.maintenancePeriod}</td>
+												<td>{modifiedAssetInfo.residualValue}</td>
+												<td>{modifiedAssetInfo.currentValue}</td>
+											</tr>
+										</tbody>
+									</BootstrapTable>
+
+									{/* classification에 따른 동적 열 테이블 */}
+									{dynamicColumns.length > 0 && (
+										<>
+											<h4>
+												{modifiedAssetInfo?.assetClassification}에 따른 칼럼
+											</h4>
+											<BootstrapTable
+												striped
+												bordered
+												hover
+												className="table-detail"
+											>
+												<thead>
+													<tr>
+														{dynamicColumns.map((col) => (
+															<th key={col.title}>{col.title}</th>
+														))}
+													</tr>
+												</thead>
+												<tbody>
+													<tr>
+														{dynamicColumns.map((col) => (
+															<td key={col.title}>
+																{modifiedAssetInfo[col.data] ||
+																	'N/A'}
+															</td>
+														))}
+													</tr>
+												</tbody>
+											</BootstrapTable>
+										</>
+									)}
+								</div>
 							</div>
 						</>
 					)

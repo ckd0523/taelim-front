@@ -56,3 +56,27 @@
 	max-height: 500px; /* div의 최대 높이 지정 */
 	overflow-y: auto; /* 세로 스크롤 추가 */
 }
+
+.info-section-container {
+	display: flex;
+	justify-content: space-between; /* 두 섹션 간의 공간을 동일하게 유지 */
+}
+
+.info-section {
+	width: 48%; /* 두 섹션의 너비를 설정 */
+}
+
+.table-detail {
+	margin-bottom: 20px; /* 테이블 간의 간격을 설정 */
+}
+.table-detail {
+	width: 100%; /* 전체 너비를 100%로 설정 */
+	table-layout: fixed; /* 고정 너비로 설정 */
+}
+
+.table-detail th,
+.table-detail td {
+	overflow: hidden; /* 내용이 넘칠 경우 숨김 처리 */
+	text-overflow: ellipsis; /* 넘치는 내용에 대해 점(...) 표시 */
+	white-space: nowrap; /* 줄바꿈 방지 */
+}

@@ -16,7 +16,7 @@
 	min-width: 10px; /* 각 셀의 최소 너비 설정 */
 }
 .info-section {
-	border: 2px solid #000; /*실선 처리, 두께 2px, 색상 검정*/
+	border: 1px solid #ccc; /*실선 처리, 두께 2px, 색상 검정*/
 	padding: 15px; /* 내부 여백 추가 */
 	margin-top: 20px; /* 위쪽에 여백 추가 */
 	/*border-radius: 5px; /* 모서리를 살짝 둥글게 */
@@ -39,5 +39,5 @@ table.react-table {
 }
 .expanded-content div {
 	display: block;
-	overflow-x: auto; /* 내용이 테이블의 너비를 넘을 경우 스크롤바 표시 */
+	/* overflow-x: auto; /* 내용이 테이블의 너비를 넘을 경우 스크롤바 표시 */
 }

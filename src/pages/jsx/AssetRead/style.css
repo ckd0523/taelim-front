@@ -15,16 +15,9 @@
 	white-space: nowrap; /* 텍스트가 한 줄로 유지되도록 설정 */
 	min-width: 10px; /* 각 셀의 최소 너비 설정 */
 }
-.info-section {
-	border: 1px solid #ccc; /*실선 처리, 두께 2px, 색상 검정*/
-	padding: 15px; /* 내부 여백 추가 */
-	margin-top: 20px; /* 위쪽에 여백 추가 */
-	/*border-radius: 5px; /* 모서리를 살짝 둥글게 */
-	/*max-height: 500px; /* div의 최대 높이 지정 */
-	overflow-y: auto; /* 세로 스크롤 추가 */
-}
+
 .table-detail {
-	font-size: 0.8rem; /* 글꼴 크기 조정 */
+	font-size: 1rem; /* 글꼴 크기 조정 */
 
 	overflow-x: auto; /*가로 스크롤 추가*/
 	/*width: calc(100% - 5rem); /* 테이블 너비를 여백을 제외하고 설정 */
@@ -37,7 +30,13 @@ table.react-table {
 	table-layout: fixed; /* 테이블 셀 크기를 고정 */
 	width: 100%;
 }
-.expanded-content div {
+.scrollable-div {
 	display: block;
-	/* overflow-x: auto; /* 내용이 테이블의 너비를 넘을 경우 스크롤바 표시 */
+	overflow-x: auto; /* 내용이 테이블의 너비를 넘을 경우 스크롤바 표시*/
+	border: 1px solid #ccc; /*실선 처리, 두께 2px, 색상 검정*/
+	padding: 15px; /* 내부 여백 추가 */
+	margin-top: 20px; /* 위쪽에 여백 추가 */
+	/*border-radius: 5px; /* 모서리를 살짝 둥글게 */
+	/*max-height: 500px; /* div의 최대 높이 지정 */
+	/*overflow-y: auto; /* 세로 스크롤 추가 */
 }

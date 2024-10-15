@@ -26,8 +26,12 @@ export default function useLogin() {
 		setLoading(true);
 		try {
 			const res = await authApi.login(values);
-			if (res.data.token) {
-				saveSession({ ...(res.data ?? {}), token: res.data.token });
+			if (res) {
+				console.log(res);
+				localStorage.setItem('accessToken', res.accessToken);
+				//console.log(res.user);
+				console.log(localStorage.getItem('accessToken'));
+				console.log(JSON.stringify(localStorage.getItem('accessToken')));
 				navigate(redirectUrl);
 			}
 		} catch (error) {

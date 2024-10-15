@@ -11,12 +11,12 @@ export function useAuthContext() {
   return context;
 }
 
-const authSessionKey = '_HYPER_AUTH';
+const authSessionKey = 'accessToken';
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(
     localStorage.getItem(authSessionKey)
-      ? JSON.parse(localStorage.getItem(authSessionKey) || '{}')
+      ? JSON.stringify(localStorage.getItem(authSessionKey) || '{}')
       : undefined
   );
 

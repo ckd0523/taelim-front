@@ -439,7 +439,7 @@ const ProcessModal = ({ show, handleClose }) => {
 
 		const nextIndex = currentIndex + 1;
 		if (demandList.length != nextIndex) {
-			alert(demandList.length + '중' + nextIndex + '개 처리');
+			alert(demandList.length + '중 ' + nextIndex + '개 처리');
 		} else {
 			alert('미확인 자산 처리가 완료 되었습니다.');
 		}

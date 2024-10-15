@@ -43,6 +43,38 @@ const DemandHistory = () => {
 		setDemandsList(demands);
 	}, [demands]);
 
+	useEffect(() => {
+		const fetchData = async () => {
+			try {
+				const response = await axios.get(`${urlConfig}/DemandHistory`);
+				setDemands(response.data);
+			} catch (error) {
+				console.error('데이터를 가져오는 중 오류 발생:', error);
+			}
+		};
+
+		// process가 false로 바뀔 때 데이터를 다시 불러옴
+		if (!process) {
+			fetchData();
+		}
+	}, [process]);
+
+	useEffect(() => {
+		const fetchData = async () => {
+			try {
+				const response = await axios.get(`${urlConfig}/DemandHistory`);
+				setDemands(response.data);
+			} catch (error) {
+				console.error('데이터를 가져오는 중 오류 발생:', error);
+			}
+		};
+
+		// process가 false로 바뀔 때 데이터를 다시 불러옴
+		if (!showActModal) {
+			fetchData();
+		}
+	}, [showActModal]);
+
 	const processOpenModal = () => {
 		const fetchRowData = async () => {
 			try {
@@ -254,13 +286,13 @@ const DemandHistory = () => {
 									columns={columns()}
 									data={demandsList}
 									pageSize={10}
-									isExpandable={true}
+									//isExpandable={true}
 									isSortable={true}
 									pagination={true}
 									isSelectable={true}
 									initialState={{ hiddenColumns: ['demandNo', 'assetNo'] }} // id 열을 숨김
-									theadClass="table-light"
-									tableClass="border-black"
+									theadClass="table-dark"
+									//tableClass="border-black"
 									searchBoxClass="mb-2"
 									setRowSelect={setRowSelect}
 									setModalData={setModalData}
@@ -273,7 +305,12 @@ const DemandHistory = () => {
 								handleClose={() => setShowModal(false)}
 								modalData={modalData}
 							/>
-							<ProcessModal show={process} handleClose={() => setProcess(false)} />
+							<ProcessModal
+								show={process}
+								handleClose={() => {
+									setProcess(false);
+								}}
+							/>
 							<ActionModal
 								show={showActModal}
 								handleClose={() => setShowActModal(false)}

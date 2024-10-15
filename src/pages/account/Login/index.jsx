@@ -26,7 +26,7 @@ export default function Login() {
         <Form
           onSubmit={login}
           schema={loginFormSchema}
-          defaultValues={{ email: 'taelim@taelim.com', password: 'taelim' }}
+          defaultValues={{ email: 'user1@example.com', password: '' }}
         >
           <Row>
             <Col>

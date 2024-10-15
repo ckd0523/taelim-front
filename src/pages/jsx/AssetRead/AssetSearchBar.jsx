@@ -7,13 +7,72 @@ const SearchForm = ({ onSearch }) => {
 	// 검색값 설정
 	const [assetCode, setAssetCode] = useState('');
 	const [assetName, setAssetName] = useState('');
-	const [department, setDepartment] = useState('');
+	//const [department, setDepartment] = useState('');
 	const [assetOwner, setAssetOwner] = useState('');
-	const [assetLocation, setAssetLocation] = useState('');
+	const [selectedAssetLocation, setSelectedAssetLocation] = useState(null); // assetLocation을 선택할 때 사용
+	const [selectedDepartment, setSelectedDepartment] = useState(null); // department을 선택 처리
+	//const [assetLocation, setAssetLocation] = useState('');
 	//const [introducedDate, setIntroduceDate] = useState('');
 	const [selectedStartDate, setSelectedStartDate] = useState(null); // 이건 아직 안됨
 	const [selectedEndDate, setSelectedEndDate] = useState(null); //  이건 아직 안됨
 
+	const assetLocationOptions = [
+		{ value: '', label: '전체' }, // 전체 옵션 추가
+		{
+			value: '본관 지하 문서고',
+			label: '본관 지하 문서고',
+		},
+		{ value: '본관 1층', label: '본관 1층' },
+		{
+			value: '본관 1층 접견실',
+			label: '본관 1층 접견실',
+		},
+		{ value: '본관 2층', label: '본관 2층' },
+		{
+			value: '본관 2층 사장실',
+			label: '본관 2층 사장실',
+		},
+		{
+			value: '본관 2층 기술연구소 사무실',
+			label: '본관 2층 기술연구소 사무실',
+		},
+		{
+			value: '본관 2층 대회의실',
+			label: '본관 2층 대회의실',
+		},
+		{
+			value: '본관 2층 대표이사실',
+			label: '본관 2층 대표이사실',
+		},
+		{
+			value: '본관 3층 창고',
+			label: '본관 3층 창고',
+		},
+		{
+			value: 'MDCG',
+			label: 'MDCG',
+		},
+		{
+			value: '공장동',
+			label: '공장동',
+		},
+	];
+	const department = [
+		{ value: '', label: '전체' }, // 전체 옵션 추가
+		{ value: 'IT부', label: 'IT부' },
+		{
+			value: '관리부',
+			label: '관리부',
+		},
+		{ value: '영업부', label: '영업부' },
+		{ value: '마케팅부', label: '마케팅부' },
+		{ value: '생산부', label: '생산부' },
+		{ value: '운영부', label: '운영부' },
+		{
+			value: '인사부',
+			label: '인사부',
+		},
+	];
 	// 폼 값 변경처리
 	const handleFormChange = (e) => {
 		const { name, value } = e.target;
@@ -24,18 +83,26 @@ const SearchForm = ({ onSearch }) => {
 			case 'assetName':
 				setAssetName(value);
 				break;
-			case 'department':
-				setDepartment(value);
-				break;
+			// case 'department':
+			// 	setDepartment(value);
+			// 	break;
 			case 'assetOwner':
 				setAssetOwner(value);
 				break;
-			case 'assetLocation':
-				setAssetLocation(value);
-				break;
+			// case 'assetLocation':
+			// 	setAssetLocation(value);
+			// 	break;
 			default:
 				break;
 		}
+	};
+	// assetLocation 선택 처리
+	const handleAssetLocationChange = (selectedOption) => {
+		setSelectedAssetLocation(selectedOption);
+	};
+	// department 선택 처리
+	const handleDepartmentChange = (selectedOption1) => {
+		setSelectedDepartment(selectedOption1);
 	};
 
 	// 검색 버튼 클릭시 부모로 검색 조건 전달
@@ -43,12 +110,20 @@ const SearchForm = ({ onSearch }) => {
 		onSearch({
 			assetCode,
 			assetName,
-			department,
+			department: selectedDepartment?.value || '', // 선택되지 않으면 전체
 			assetOwner,
-			assetLocation,
+			assetLocation: selectedAssetLocation?.value || '', // 선택되지 않으면 전체
 			selectedStartDate,
 			selectedEndDate,
 		});
+	};
+
+	// react-select의 스타일 커스터마이징
+	const customSelectStyles = {
+		container: (provided) => ({
+			...provided,
+			width: '100%', // 원하는 너비 설정
+		}),
 	};
 	return (
 		<div

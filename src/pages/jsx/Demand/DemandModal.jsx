@@ -436,7 +436,13 @@ const ProcessModal = ({ show, handleClose }) => {
 	// 다음 데이터로 이동
 	const handleNext = (actionType) => {
 		SaveDemandList(actionType);
+
 		const nextIndex = currentIndex + 1;
+		if (demandList.length != nextIndex) {
+			alert(demandList.length + '중' + nextIndex + '개 처리');
+		} else {
+			alert('미확인 자산 처리가 완료 되었습니다.');
+		}
 
 		if (nextIndex < demandList.length) {
 			setCurrentIndex(nextIndex);
@@ -793,7 +799,7 @@ const ProcessModal = ({ show, handleClose }) => {
 				)}
 			</Modal.Body>
 			<Modal.Footer>
-				<Col lg={8}>
+				<Col lg={12}>
 					<Form>
 						<Form.Group>
 							<Form.Control
@@ -867,7 +873,6 @@ const ActionModal = ({ show, handleClose, actionData, actionType, handleSubmit }
 		}
 		handleSubmit(reason); // 사유를 넘겨주면서 처리
 		handleClose(); // 모달 닫기
-		window.location.reload();
 	};
 
 	return (

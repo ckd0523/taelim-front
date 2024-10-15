@@ -1,13 +1,12 @@
 import BasisAssetInfo from './BasisAssetInfo';
 import { useState, useEffect } from 'react';
 import FileUpload from './FileUpload';
-import { Button, Row, Col, Container, Card } from 'react-bootstrap';
+import { Button, Row, Col, Container } from 'react-bootstrap';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import AssetCategories from './AssetCategories';
 import PurchasingInfo from './PurchasingInfo';
-import { PageBreadcrumb } from '@/components';
 const urlConfig = import.meta.env.VITE_BASIC_URL;
 const ResponsivePadding = styled.div`
 	@media (max-width: 768px) {
@@ -22,6 +21,7 @@ const ResponsivePadding = styled.div`
 		padding: 50px;
 	}
 `;
+
 //자산등록
 const AssetRegister = () => {
 	const navigate = useNavigate();
@@ -233,6 +233,8 @@ const AssetRegister = () => {
 								files={files}
 								setFiles={setFiles}
 							/>
+						</Col>
+						<Col xs={12} md={8} lg={12}>
 							<PurchasingInfo formData={formData} handleChange={handleChange} />
 						</Col>
 						<Col xs={12} md={8} lg={12}>
@@ -248,9 +250,9 @@ const AssetRegister = () => {
 
 				<div className="pt-2 d-flex justify-content-center">
 					<Button
-						style={{ fontSize: 18 }}
+						style={{ fontSize: 17 }}
 						className="btn-rounded"
-						variant="info"
+						variant="dark"
 						type="submit"
 						onClick={handleSubmit}
 					>
@@ -258,7 +260,7 @@ const AssetRegister = () => {
 					</Button>
 					<p className="px-2"></p>
 					<Button
-						// style={{ background: '#8ca4b6' }}
+						style={{ fontSize: 17, background: '#acb6bd' }}
 						className="btn-rounded"
 						variant="secondary"
 						type="button"

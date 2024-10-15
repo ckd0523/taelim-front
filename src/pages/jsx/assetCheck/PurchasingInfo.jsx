@@ -10,7 +10,6 @@ import Select from 'react-select';
 import { useState } from 'react';
 import './ButtonStyle.css';
 import styled from 'styled-components';
-import { useEffect } from 'react';
 const StyledCard = styled.div`
 	display: flex;
 	flex-direction: column;
@@ -49,7 +48,7 @@ function CustomToggle({ children, eventKey }) {
 		<button
 			className="custom-button px-3 pt-2 fw-bold"
 			type="button"
-			style={{ backgroundColor: '#dcefdc', textAlign: 'left' }}
+			style={{ backgroundColor: '#727CF540', textAlign: 'left' }}
 			onClick={decoratedOnClick}
 		>
 			{isOpen ? (
@@ -65,7 +64,7 @@ const PurchasingInfo = ({ formData, handleChange }) => {
 	const methods = useForm();
 
 	return (
-		<div style={{ paddingTop: '20px' }}>
+		<div>
 			<Accordion defaultActiveKey="1">
 				<StyledCard className="card">
 					<CustomToggle eventKey="1">재무 및 구매정보</CustomToggle>

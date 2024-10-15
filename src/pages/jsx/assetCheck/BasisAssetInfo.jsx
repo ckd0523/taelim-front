@@ -1,8 +1,6 @@
 //기본 자산 정보
-import AssetCategories from './AssetCategories';
-import { useAccordionButton, Form } from 'react-bootstrap';
 
-import PurchasingInfo from './PurchasingInfo';
+import { useAccordionButton, Form } from 'react-bootstrap';
 import './ButtonStyle.css';
 
 import { Row, Col, Accordion } from 'react-bootstrap';
@@ -11,9 +9,10 @@ import { BsCaretDownFill } from 'react-icons/bs';
 
 import { useForm, FormProvider } from 'react-hook-form';
 import { CustomDatePicker } from '@/components/Form';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Select from 'react-select';
 import styled from 'styled-components';
+
 const StyledCard = styled.div`
 	display: flex;
 	flex-direction: column;
@@ -40,6 +39,7 @@ const StyledCardBody = styled.div`
 	flex-direction: column;
 	justify-content: space-between;
 `;
+
 function CustomToggle({ children, eventKey }) {
 	const [isOpen, setIsOpen] = useState(false);
 	const decoratedOnClick = useAccordionButton(eventKey, () => setIsOpen((prevOpen) => !prevOpen));
@@ -47,7 +47,7 @@ function CustomToggle({ children, eventKey }) {
 		<button
 			className="custom-button px-3 pt-2 fw-bold"
 			type="button"
-			style={{ width: '100%', backgroundColor: '#dcefdc', textAlign: 'left' }}
+			style={{ width: '100%', backgroundColor: '#727CF540', textAlign: 'left' }}
 			onClick={decoratedOnClick}
 		>
 			{isOpen ? (

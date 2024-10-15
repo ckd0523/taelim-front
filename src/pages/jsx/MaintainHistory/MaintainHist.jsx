@@ -1,11 +1,11 @@
 import { Row, Col, Form, Button, Card, CardBody } from 'react-bootstrap';
+import { TextInput, TextAreaInput, FileInput } from '@/components/Form';
 import { CustomDatePicker } from '@/components';
 import { Table3 } from '@/components/table/Table3';
 import { MaintainDetail } from '@/pages/jsx/MaintainHistory/MaintainDetail';
 import { useState } from 'react';
-import styled from 'styled-components';
+import { useToggle } from '@/hooks';
 import { useEffect } from 'react';
-
 // const StyledCard = styled.div`
 // 	display: flex;
 // 	flex-direction: column;
@@ -109,6 +109,7 @@ const MaintainHist = () => {
 	const [searchMaintainBy, setSearchMaintainBy] = useState();
 	const [searchStartDate, setSearchStartDate] = useState();
 	const [searchEndDate, setSearchEndDate] = useState();
+	const [isOpen, toggleDropdown] = useToggle();
 
 	const handleSearch = (e) => {
 		const filteredData = data.filter((item) => {
@@ -273,6 +274,7 @@ const MaintainHist = () => {
 									</Col>
 									<Col className="px-2 pt-3">
 										<Button
+											variant="dark"
 											type="button"
 											onClick={() => {
 												handleSearch();
@@ -287,7 +289,42 @@ const MaintainHist = () => {
 					</Card>
 				</Col>
 			</Row>
-			<Row className="align-items-center">
+			<Row>
+				<Col>
+					{/* <Dropdown show={isOpen} onToggle={toggleDropdown}>
+						<Dropdown.Toggle
+							variant="link"
+							id="dropdown-apps"
+							as={Link}
+							to=""
+							onClick={toggleDropdown}
+							className="nav-link dropdown-toggle arrow-none"
+						>
+							<i className="ri-search-line font-22"></i>
+						</Dropdown.Toggle>
+						<Dropdown.Menu className="dropdown-menu-animated dropdown-lg p-0">
+							<form className="p-3">
+								<input type="text" className="form-control" placeholder="Search" />
+							</form>
+						</Dropdown.Menu>
+					</Dropdown> */}
+					<i className="ri-search-line font-22 d-flex justify-items-center">
+						<Form.Control className="px-2" type="text" placeholder="search" />
+					</i>
+				</Col>
+				<Col className="">
+					<Button
+						variant="dark"
+						type="button"
+						onClick={() => {
+							handleSearch();
+						}}
+					>
+						검색
+					</Button>
+				</Col>
+			</Row>
+			<Row className="pt-3 align-items-center">
 				<Col>
 					<Card className="card">
 						<CardBody className="card-body">

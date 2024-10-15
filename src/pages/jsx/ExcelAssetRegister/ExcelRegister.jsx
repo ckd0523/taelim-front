@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import * as XLSX from 'xlsx';
-import { Button, Table, Row, Col, Form, Alert } from 'react-bootstrap';
+import { Button, Table, Row, Col, Form, Alert, Card } from 'react-bootstrap';
 import Select from 'react-select';
 import Swal from 'sweetalert2';
 
@@ -32,6 +32,10 @@ const ExcelRegister = () => {
 		setSelectValue(selectOption);
 		setShowAlert(false);
 
+		setData({});
+		setFormData([]);
+		setHeaders([]);
+
 		if (fileInputRef.current) {
 			fileInputRef.current.value = '';
 		}
@@ -57,7 +61,6 @@ const ExcelRegister = () => {
 	};
 	const commonFieldMapping = {
 		자산기준: 'assetBasis',
-		자산코드: 'assetCode',
 		자산명: 'assetName',
 		'목적/기능': 'purpose',
 		자산위치: 'assetLocation',
@@ -85,6 +88,10 @@ const ExcelRegister = () => {
 		'2.1 서버(시스템)': {},
 		'2.3 정보보호시스템': {
 			서비스범위: 'serviceScope',
+		},
+		'2.8 문서': {
+			대외비: 'documentGrade',
+			문서형태: 'documentType',
 		},
 	};
 
@@ -222,82 +229,98 @@ const ExcelRegister = () => {
 			<div className="pt-3 px-2">
 				<h4 className="header-title">엑셀 등록</h4>
 			</div>
-			<div>{showAlert && <Alert variant="danger">{alertMessage}</Alert>}</div>
+			<div className="pt-3">
+				{showAlert && <Alert variant="danger">{alertMessage}</Alert>}
+			</div>
 
-			<Row className="g-2">
-				<Col sm={6}>
-					<Form.Group style={{ padding: 50 }}>
-						<div>
-							<Select
-								placeholder="자산분류를 선택해주세요"
-								onChange={handleSelectValue}
-								options={classification}
-								value={selectValue}
-							></Select>
-						</div>
-					</Form.Group>
-				</Col>
-				<Col sm={6}>
-					<Form.Group style={{ padding: 50 }}>
-						<Form.Control type="file" onChange={handleFileUpload} ref={fileInputRef} />
-					</Form.Group>
-				</Col>
-			</Row>
-			<div style={{ padding: 50 }}>
-				<Row>
-					<Col>
-						{Object.keys(data).length > 0 && (
+			<Card>
+				<Row className="g-2">
+					<Col sm={6}>
+						<Form.Group style={{ padding: 50 }}>
 							<div>
-								{Object.keys(data).map((sheetName) => (
-									<div key={sheetName}>
-										<h3>Sheet: {sheetName.substring(4, 12)}</h3>
-										<Table bordered>
-											<thead className="table-light">
-												<tr>
-													{/* {headers.map((header, index) => (
-														<th key={index}>{header}</th>
-													))} */}
-													<th>자산기준</th>
-													<th>자산코드</th>
-													<th>자산명</th>
-													<th>자산분류</th>
-													<th>목적/기능</th>
-													<th>자산위치</th>
-													<th>부서</th>
-													<th>사용자</th>
-													<th>소유자</th>
-												</tr>
-											</thead>
-											<tbody>
-												{data[sheetName].map((row, rowIndex) => (
-													<tr key={rowIndex}>
-														{/* {headers.map((header, colIndex) => (
-															<td key={colIndex}>{row[header]}</td>
-														))} */}
-														<td>{row['자산기준']}</td>
-														<td>{row['자산코드']}</td>
-														<td>{row['자산명']}</td>
-														<td>{sheetName.substring(4, 12)}</td>
-														<td>{row['목적/기능']}</td>
-														<td>{row['자산위치']}</td>
-														<td>{row['부서']}</td>
-														<td>{row['사용자']}</td>
-														<td>{row['소유자']}</td>
-													</tr>
-												))}
-											</tbody>
-										</Table>
-									</div>
-								))}
+								<Select
+									placeholder="자산분류를 선택해주세요"
+									onChange={handleSelectValue}
+									options={classification}
+									value={selectValue}
+								></Select>
 							</div>
-						)}
+						</Form.Group>
+					</Col>
+					<Col sm={6}>
+						<Form.Group style={{ padding: 50 }}>
+							<Form.Control
+								type="file"
+								onChange={handleFileUpload}
+								ref={fileInputRef}
+							/>
+						</Form.Group>
 					</Col>
 				</Row>
-			</div>
-			<div className="d-flex justify-content-center">
-				<Button variant="info" type="submit" onClick={handleSubmit}>
-					등록
-				</Button>
+			</Card>
+			<div>
+				<Card className="pt-2 px-3">
+					<div>
+						<Row>
+							<Col>
+								{Object.keys(data).map((sheetName) => (
+									<h3>Sheet: {sheetName.substring(4, 12)}</h3>
+								))}
+
+								<Table bordered>
+									<thead className="table-light">
+										<tr>
+											{/* {headers.map((header, index) => (
+														<th key={index}>{header}</th>
+													))} */}
+											<th>자산기준</th>
+											<th>자산명</th>
+											<th>자산분류</th>
+											<th>목적/기능</th>
+											<th>자산위치</th>
+											<th>부서</th>
+											<th>사용자</th>
+											<th>소유자</th>
+										</tr>
+									</thead>
+									{Object.keys(data).length > 0 && (
+										<tbody>
+											{Object.keys(data).map((sheetName) => (
+												<React.Fragment key={sheetName}>
+													{data[sheetName].map((row, rowIndex) => (
+														<tr key={rowIndex}>
+															{/* {headers.map((header, colIndex) => (
+															<td key={colIndex}>{row[header]}</td>
+														))} */}
+															<td>{row['자산기준']}</td>
+															<td>{row['자산명']}</td>
+															<td>{sheetName.substring(4, 12)}</td>
+															<td>{row['목적/기능']}</td>
+															<td>{row['자산위치']}</td>
+															<td>{row['부서']}</td>
+															<td>{row['사용자']}</td>
+															<td>{row['소유자']}</td>
+														</tr>
+													))}
+												</React.Fragment>
+											))}
+										</tbody>
+									)}
+								</Table>
+							</Col>
+						</Row>
+					</div>
+
+					{Object.keys(data).length > 0 && (
+						<div className="d-flex justify-content-center">
+							<Button variant="dark" type="submit" onClick={handleSubmit}>
+								등록
+							</Button>
+						</div>
+					)}
+
+					<Card></Card>
+				</Card>
 			</div>
 		</div>
 	);

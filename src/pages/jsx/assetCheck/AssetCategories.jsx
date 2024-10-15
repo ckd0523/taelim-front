@@ -7,7 +7,7 @@ import { useForm, FormProvider } from 'react-hook-form';
 import { CustomDatePicker } from '@/components/Form';
 import { BsCaretUpFill } from 'react-icons/bs';
 import { BsCaretDownFill } from 'react-icons/bs';
-
+// import './../../../app.css';
 import Select from 'react-select';
 import { useState } from 'react';
 import styled from 'styled-components';
@@ -47,7 +47,7 @@ function CustomToggle({ children, eventKey }) {
 		<button
 			className="custom-button px-3 pt-2 fw-bold"
 			type="button"
-			style={{ backgroundColor: '#dcefdc', textAlign: 'left' }}
+			style={{ backgroundColor: '#727CF540', textAlign: 'left' }}
 			onClick={decoratedOnClick}
 		>
 			{isOpen ? (
@@ -167,7 +167,7 @@ const AssetCategories = ({ files = [], setFiles, assetClassification, formData, 
 		switch (assetClassification) {
 			case 'INFORMATION_PROTECTION_SYSTEM':
 				return (
-					<div>
+					<div style={{ paddingBottom: '20px' }}>
 						<Accordion defaultActiveKey="0">
 							<StyledCard className="card">
 								<CustomToggle eventKey="0">자산별 컬럼</CustomToggle>
@@ -197,7 +197,7 @@ const AssetCategories = ({ files = [], setFiles, assetClassification, formData, 
 
 			case 'APPLICATION_PROGRAM':
 				return (
-					<div>
+					<div style={{ paddingBottom: '20px' }}>
 						<Accordion defaultActiveKey="0">
 							<StyledCard className="card">
 								<CustomToggle eventKey="0">자산별 컬럼</CustomToggle>
@@ -267,7 +267,7 @@ const AssetCategories = ({ files = [], setFiles, assetClassification, formData, 
 				);
 			case 'SOFTWARE':
 				return (
-					<div>
+					<div style={{ paddingBottom: '20px' }}>
 						<Accordion defaultActiveKey="0">
 							<StyledCard className="card">
 								<CustomToggle eventKey="0">자산별 컬럼</CustomToggle>
@@ -337,7 +337,7 @@ const AssetCategories = ({ files = [], setFiles, assetClassification, formData, 
 				);
 			case 'ELECTRONIC_INFORMATION':
 				return (
-					<div>
+					<div style={{ paddingBottom: '20px' }}>
 						<Accordion defaultActiveKey="0">
 							<StyledCard className="card">
 								<CustomToggle eventKey="0">자산별 컬럼</CustomToggle>
@@ -389,7 +389,7 @@ const AssetCategories = ({ files = [], setFiles, assetClassification, formData, 
 				);
 			case 'DOCUMENT':
 				return (
-					<div>
+					<div style={{ paddingBottom: '20px' }}>
 						<Accordion defaultActiveKey="0">
 							<StyledCard className="card">
 								<CustomToggle eventKey="0">자산별 컬럼</CustomToggle>
@@ -463,7 +463,7 @@ const AssetCategories = ({ files = [], setFiles, assetClassification, formData, 
 				);
 			case 'PATENTS_AND_TRADEMARKS':
 				return (
-					<div>
+					<div style={{ paddingBottom: '20px' }}>
 						<Accordion defaultActiveKey="0">
 							<StyledCard className="card">
 								<CustomToggle eventKey="0">자산별 컬럼</CustomToggle>
@@ -676,7 +676,7 @@ const AssetCategories = ({ files = [], setFiles, assetClassification, formData, 
 				);
 			case 'ITSYSTEM_EQUIPMENT':
 				return (
-					<div>
+					<div style={{ paddingBottom: '20px' }}>
 						<Accordion defaultActiveKey="0">
 							<StyledCard className="card">
 								<CustomToggle eventKey="0">자산별 컬럼</CustomToggle>
@@ -831,7 +831,7 @@ const AssetCategories = ({ files = [], setFiles, assetClassification, formData, 
 				);
 			case 'ITNETWORK_EQUIPMENT':
 				return (
-					<div>
+					<div style={{ paddingBottom: '20px' }}>
 						<Accordion defaultActiveKey="0">
 							<StyledCard className="card">
 								<CustomToggle eventKey="0">자산별 컬럼</CustomToggle>
@@ -919,7 +919,7 @@ const AssetCategories = ({ files = [], setFiles, assetClassification, formData, 
 				);
 			case 'TERMINAL':
 				return (
-					<div>
+					<div style={{ paddingBottom: '20px' }}>
 						<Accordion defaultActiveKey="0">
 							<StyledCard className="card">
 								<CustomToggle eventKey="0">자산별 컬럼</CustomToggle>
@@ -1054,7 +1054,7 @@ const AssetCategories = ({ files = [], setFiles, assetClassification, formData, 
 				);
 			case 'FURNITURE':
 				return (
-					<div>
+					<div style={{ paddingBottom: '20px' }}>
 						<Accordion defaultActiveKey="0">
 							<StyledCard className="card">
 								<CustomToggle eventKey="0">자산별 컬럼</CustomToggle>
@@ -1083,7 +1083,7 @@ const AssetCategories = ({ files = [], setFiles, assetClassification, formData, 
 				);
 			case 'DEVICES':
 				return (
-					<div>
+					<div style={{ paddingBottom: '20px' }}>
 						<Accordion defaultActiveKey="0">
 							<StyledCard className="card">
 								<CustomToggle eventKey="0">자산별 컬럼</CustomToggle>
@@ -1144,7 +1144,7 @@ const AssetCategories = ({ files = [], setFiles, assetClassification, formData, 
 				);
 			case 'CAR':
 				return (
-					<div>
+					<div style={{ paddingBottom: '20px' }}>
 						<Accordion defaultActiveKey="0">
 							<StyledCard className="card">
 								<CustomToggle eventKey="0">자산별 컬럼</CustomToggle>
@@ -1252,7 +1252,7 @@ const AssetCategories = ({ files = [], setFiles, assetClassification, formData, 
 				);
 			case 'OTHERASSETS':
 				return (
-					<div>
+					<div style={{ paddingBottom: '20px' }}>
 						<Accordion defaultActiveKey="0">
 							<StyledCard className="card">
 								<CustomToggle eventKey="0">자산별 컬럼</CustomToggle>

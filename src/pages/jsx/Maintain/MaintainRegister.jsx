@@ -72,7 +72,6 @@ const MaintainRegister = ({ assetCode, assetNo }) => {
 
 				setFormData((prevState) => ({
 					...prevState,
-					// repairFiles: [...prevState.fileName, ...uploadedFileNames], // Properly set the file name state
 					repairFiles: uploadedFileNames,
 				}));
 

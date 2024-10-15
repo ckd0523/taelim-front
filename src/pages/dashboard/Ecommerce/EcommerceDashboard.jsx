@@ -7,8 +7,6 @@ import PerformanceChart from './PerformanceChart';
 import RevenueChart from './RevenueChart';
 import RevenueByLocationChart from './RevenueByLocationChart';
 import SalesChart from './SalesChart';
-import Activity from './Activity';
-import Products from './Products';
 
 const EcommerceDashboard = () => {
 	const [selectedDate, setSelectedDate] = useState(new Date());

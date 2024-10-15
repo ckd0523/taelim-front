@@ -166,7 +166,7 @@ const AssetPageTest = () => {
 				...column,
 				Cell: ({ row }) => (
 					<button
-						className="btn btn-danger"
+						className="btn btn-dark"
 						onClick={() => handleShow(row.original.assetCode)} // 모달을 열도록 handleShow 사용 , assetCode 담아서
 					>
 						<i className="mdi mdi-trash-can-outline" style={{ fontSize: '1.2rem' }}></i>

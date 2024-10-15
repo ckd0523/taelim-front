@@ -1,5 +1,6 @@
 import { Row, Col, Card, Button, Modal } from 'react-bootstrap';
-import { Table, PageBreadcrumb, CustomDatePicker, TextInput, Form as RHForm } from '@/components';
+import { PageBreadcrumb, CustomDatePicker, TextInput, Form as RHForm } from '@/components';
+import { Table } from './Table';
 import { columns } from './ColumnsSet';
 import { useState, useEffect } from 'react';
 //import { assetDeletes } from './data';
@@ -76,7 +77,7 @@ const DeleteHistory = () => {
 					<Card>
 						<Card.Body>
 							<Table
-								columns={columns(setModalData, setShowModal)}
+								columns={columns()}
 								data={DeleteList}
 								pageSize={10}
 								//isExpandable={true}
@@ -86,6 +87,8 @@ const DeleteHistory = () => {
 								theadClass="table-dark"
 								searchBoxClass="mb-2"
 								onRowClick={() => {}} // onRowClick 이벤트를 빈 함수로 설정하여 무시
+								setModalData={setModalData}
+								setShowModal={setShowModal}
 							/>
 						</Card.Body>
 					</Card>

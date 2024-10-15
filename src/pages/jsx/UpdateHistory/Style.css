@@ -68,9 +68,9 @@
 
 .update-modal .modal-body .table-update th {
 	text-align: center;
-	background-color: #e3f2fd !important; /* 파란색 배경 */
+	background-color: #313a46 !important; /* 파란색 배경 */
 	font-weight: bold;
-	background-color: #f8f9fa; /* 헤더 배경 색상 */
+	color: #f8f9fa; /* 헤더 배경 색상 */
 }
 
 /* 모든 td의 너비를 일정하게 설정 */
@@ -81,4 +81,11 @@
 }
 .text-danger {
 	color: red; /* 변경된 데이터는 빨간색으로 표시 */
+}
+button1 {
+	background: #5986a0;
+	cursor: pointer;
+	border-radius: 0 5px 5px 0;
+	-webkit-transition-duration: 0.3s;
+	transition-duration: 0.3s;
 }

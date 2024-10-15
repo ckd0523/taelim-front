@@ -268,7 +268,7 @@ const ExcelRegister = () => {
 								))}
 
 								<Table bordered>
-									<thead className="table-light">
+									<thead className="table-dark">
 										<tr>
 											{/* {headers.map((header, index) => (
 														<th key={index}>{header}</th>

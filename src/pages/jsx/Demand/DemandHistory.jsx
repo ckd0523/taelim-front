@@ -189,7 +189,7 @@ const DemandHistory = () => {
 								}}
 								onClick={() => handleSearch()}
 							>
-								<i class="ri-search-line font-22"></i>
+								<i className="ri-search-line font-22"></i>
 							</button>
 						</fieldset>
 					</form>

@@ -1,5 +1,6 @@
 import { Row, Col, Card, Button, Modal } from 'react-bootstrap';
-import { Table, PageBreadcrumb, CustomDatePicker, TextInput, Form as RHForm } from '@/components';
+import { PageBreadcrumb, CustomDatePicker, TextInput, Form as RHForm } from '@/components';
+import { Table } from './Table';
 import { columns } from './ColumnsSet';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
@@ -102,6 +103,10 @@ const UpdateHistory = () => {
 								theadClass="table-dark"
 								searchBoxClass="mb-2"
 								//onRowClick={handleRowClick} // onRowClick 이벤트를 빈 함수로 설정하여 무시
+								onRowClick={() => {}}
+								setModalData={setModalData}
+								setSelectedAssetNo={setSelectedAssetNo}
+								setShowModal={setShowModal}
 							/>
 						</Card.Body>
 					</Card>

@@ -53,6 +53,14 @@ const getStatusText = (status) => {
 // get all columns
 const columns = () => [
 	{
+		Header: '번호',
+		accessor: 'UpdateNo',
+		defaultCanSort: true,
+		Cell: ({ row }) => {
+			return <span>{row.index + 1}</span>;
+		},
+	},
+	{
 		Header: '요청번호',
 		accessor: 'demandNo',
 	},

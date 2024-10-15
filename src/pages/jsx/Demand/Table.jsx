@@ -88,7 +88,7 @@ const Table = (props) => {
 		const cellIndex = cells.indexOf(clickedCell);
 
 		// 첫 번째 컬럼(0번 index)이 아닌 경우에만 handleRowClick 호출
-		if (cellIndex !== 0 && cellIndex !== 1) {
+		if (cellIndex !== 0) {
 			handleRowClick(row);
 		}
 	};

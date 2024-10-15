@@ -155,7 +155,6 @@ const MaintainDetail = ({ show, selectData, handleClose }) => {
 
 			if (response.ok) {
 				alert('수정 성공');
-				window.location.reload();
 			}
 		} catch (error) {
 			endDateSaveSuccess = false;

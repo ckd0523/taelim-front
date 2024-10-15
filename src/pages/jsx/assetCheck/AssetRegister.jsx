@@ -225,7 +225,7 @@ const AssetRegister = () => {
 						<Col xs={12} md={8} lg={12}>
 							<BasisAssetInfo formData={formData} handleChange={handleChange} />
 						</Col>
-						<Col xs={12} md={8} lg={12}>
+						<Col className="pt-1" xs={12} md={8} lg={12}>
 							<AssetCategories
 								formData={formData}
 								assetClassification={formData.assetClassification}
@@ -265,7 +265,7 @@ const AssetRegister = () => {
 						variant="secondary"
 						type="button"
 						onClick={() => {
-							navigate('/jsx/AssetPage');
+							navigate('/jsx/AssetPageTest');
 						}}
 					>
 						취소

@@ -8,7 +8,6 @@ const urlConfig = import.meta.env.VITE_BASIC_URL;
 
 import { InfoModal } from './DeleteHistoryModal';
 import { SearchForm } from './DeleteSearchBar';
-import { DeleteButton } from './DeleteButton';
 // import Select from 'react-select';
 
 const DeleteHistory = () => {
@@ -68,19 +67,12 @@ const DeleteHistory = () => {
 
 	return (
 		<>
-			<div className="pt-3 px-2">
-				<h4 className="header-title">폐기이력</h4>
-			</div>
 			<div>
 				<Card></Card>
 				{/* 검색 폼 하위 컴포넌트 */}
 				<SearchForm onSearch={handleSearch} />
 
-				{/* 엑셀 출력 버튼 */}
-				<DeleteButton />
-
-				<Card></Card>
-				<RHForm>
+				<RHForm className="pt-3">
 					<Card>
 						<Card.Body>
 							<Table
@@ -91,7 +83,7 @@ const DeleteHistory = () => {
 								isSortable={true}
 								pagination={true}
 								//isSelectable={true}
-								theadClass="table-light"
+								theadClass="table-dark"
 								searchBoxClass="mb-2"
 								onRowClick={() => {}} // onRowClick 이벤트를 빈 함수로 설정하여 무시
 							/>

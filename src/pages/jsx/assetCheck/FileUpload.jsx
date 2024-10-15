@@ -80,7 +80,7 @@ const FileUpload = ({ files = [], setFiles, formData, handleChange }) => {
 	}, [files]);
 
 	return (
-		<Accordion defaultActiveKey="3">
+		<Accordion defaultActiveKey="">
 			<StyledCard className="card">
 				<CustomToggle eventKey="3">첨부파일 등록</CustomToggle>
 				<Accordion.Collapse eventKey="3">

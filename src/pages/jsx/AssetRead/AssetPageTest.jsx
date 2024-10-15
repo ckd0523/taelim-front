@@ -208,7 +208,7 @@ const AssetPageTest = () => {
 								isSortable={true}
 								isSelectable={true}
 								pagination={true}
-								theadClass="table-light"
+								theadClass="table-dark"
 								searchBoxClass="mb-2"
 								isExpandable={true} // 확장 가능
 								setRowSelect={setRowSelect}

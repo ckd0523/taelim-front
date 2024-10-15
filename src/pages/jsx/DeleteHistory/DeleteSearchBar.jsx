@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { Row, Col, Button, Card } from 'react-bootstrap';
+import { Row, Col, Button, Card, CardBody } from 'react-bootstrap';
 import { TextInput, CustomDatePicker, Form as RHForm } from '@/components';
-import Select from 'react-select';
+import '../MaintainHistory/Searchbar.css';
 
 const SearchForm = ({ onSearch }) => {
 	// 검색을 위한 column 들 설정
@@ -11,6 +11,7 @@ const SearchForm = ({ onSearch }) => {
 	const [deleteBy, setDeleteBy] = useState('');
 	const [deleteMethod, setDeleteMethod] = useState('');
 	const [deleteLocation, setDeleteLocation] = useState('');
+	const [showSearchForm, setShowSearchForm] = useState(false);
 	// 날짜는 아직 못함
 	const [selectedStartDate, setSelectedStartDate] = useState(null);
 	const [selectedEndDate, setSelectedEndDate] = useState(null);
@@ -56,125 +57,150 @@ const SearchForm = ({ onSearch }) => {
 	};
 
 	return (
-		<RHForm onChange={handleChange}>
-			<Card>
-				<Card.Body className="pb-0">
-					<Row>
-						{/* 하단 (padding-bottom)만 0으로 설정 - pb-0 제거 */}
-
-						<Col lg={3}>
-							<label className="form-label">자산명</label> <br />
-							<TextInput
-								type="text"
-								name="assetName"
-								containerClass={'mb-3'}
-								value={assetName}
-								key="text"
-								onChange={handleChange}
-							/>
-						</Col>
-						<Col lg={3}>
-							<label className="form-label">자산코드</label> <br />
-							<TextInput
-								type="text"
-								name="assetCode"
-								containerClass={'mb-3'}
-								value={assetCode}
-								key="text"
-								onChange={handleChange}
-							/>
-						</Col>
-						<Col lg={3}>
-							<label className="form-label">폐기사유</label> <br />
-							<TextInput
-								type="text"
-								name="deleteReason"
-								containerClass={'mb-3'}
-								value={deleteReason}
-								key="text"
-								onChange={handleChange}
-							/>
-						</Col>
-						<Col lg={3}>
-							<label className="form-label">폐기방법</label> <br />
-							<TextInput
-								type="text"
-								name="deleteMethod"
-								containerClass={'mb-3'}
-								value={deleteMethod}
-								key="text"
-								onChange={handleChange}
-							/>
-						</Col>
-					</Row>
-					<Row>
-						<Col lg={4}>
-							<div className="text-lg mt-xl-0 mt-2">
-								<label className="form-label">폐기일자</label> <br />
-								<Row>
-									<Col>
-										<CustomDatePicker
-											hideAddon={true}
-											dateFormat="yyyy-MM-dd"
-											value={selectedStartDate}
-											onChange={(date) => {
-												setSelectedStartDate(date);
-											}}
-										/>
-									</Col>
-									~
-									<Col>
-										<CustomDatePicker
-											hideAddon={true}
-											dateFormat="yyyy-MM-dd"
-											value={selectedEndDate}
-											onChange={(date) => {
-												setSelectedEndDate(date);
-											}}
-										/>
-									</Col>
-								</Row>
-							</div>
-						</Col>
-
-						<Col lg={3}>
-							<label className="form-label">폐기위치</label> <br />
-							<TextInput
-								type="text"
-								name="selectedRequester"
-								containerClass={'mb-3'}
-								value={deleteLocation}
-								key="text"
-								onChange={handleChange}
-							/>
-						</Col>
-						<Col lg={3}>
-							<label className="form-label">폐기자</label> <br />
-							<TextInput
-								type="text"
-								name="DeleteBy"
-								containerClass={'mb-3'}
-								value={deleteBy}
-								key="text"
-								onChange={handleChange}
-							/>
-						</Col>
-
-						<Col lg={2} className="d-flex align-items-center justify-content-end">
-							<Button
-								variant="primary"
-								type="button"
-								onClick={() => {
-									handleSearch();
+		<>
+			<Row>
+				<Col>
+					<div>
+						<h4 className="px-2 header-title">폐기이력</h4>
+					</div>
+				</Col>
+				<Col xs="auto" style={{ paddingRight: '0' }}>
+					<Button
+						className="d-flex align-items-center"
+						style={{
+							height: '40px',
+							background: '#fff',
+							border: '#ffff',
+							boxShadow: 'none',
+							color: '#000000ce',
+						}}
+						onClick={() => setShowSearchForm((prev) => !prev)}
+					>
+						{showSearchForm ? (
+							<i className="uil-plus font-24 "></i>
+						) : (
+							<i className="uil-plus font-24 "></i>
+						)}
+					</Button>
+				</Col>
+				<Col xs="auto" style={{ paddingLeft: '0' }}>
+					<form>
+						<fieldset style={{ display: 'flex', alignItems: 'center' }}>
+							<input
+								type="search"
+								style={{
+									width: '200px',
+									height: '40px',
+									float: 'left',
+									border: 'none',
 								}}
+							/>
+							<button
+								type="submit"
+								style={{
+									height: '40px',
+									width: '50px',
+									float: 'left',
+									border: 'none',
+								}}
+								onClick={() => handleSearch()}
 							>
-								검색
-							</Button>
-						</Col>
-					</Row>
-				</Card.Body>
-			</Card>
-		</RHForm>
+								<i class="ri-search-line font-22"></i>
+							</button>
+						</fieldset>
+					</form>
+				</Col>
+			</Row>
+			{showSearchForm && (
+				<Row className="pt-3">
+					<Col>
+						<Card>
+							<CardBody>
+								<RHForm onChange={handleChange}>
+									<Row>
+										{/* 하단 (padding-bottom)만 0으로 설정 - pb-0 제거 */}
+
+										<Col lg={2}>
+											<label className="form-label">자산명</label>
+											<TextInput
+												type="text"
+												name="assetName"
+												value={assetName}
+												key="text"
+												onChange={handleChange}
+											/>
+										</Col>
+										<Col lg={2}>
+											<label className="form-label">폐기자</label>
+											<TextInput
+												type="text"
+												name="DeleteBy"
+												value={deleteBy}
+												key="text"
+												onChange={handleChange}
+											/>
+										</Col>
+										<Col lg={2}>
+											<label className="form-label">폐기사유</label>
+											<TextInput
+												type="text"
+												name="deleteReason"
+												value={deleteReason}
+												key="text"
+												onChange={handleChange}
+											/>
+										</Col>
+										<Col lg={4}>
+											<div className="text-lg mt-xl-0 mt-2">
+												<label className="form-label">폐기일자</label>
+												<Row>
+													<Col>
+														<CustomDatePicker
+															hideAddon={true}
+															dateFormat="yyyy-MM-dd"
+															value={selectedStartDate}
+															onChange={(date) => {
+																setSelectedStartDate(date);
+															}}
+														/>
+													</Col>
+													~
+													<Col>
+														<CustomDatePicker
+															hideAddon={true}
+															dateFormat="yyyy-MM-dd"
+															value={selectedEndDate}
+															onChange={(date) => {
+																setSelectedEndDate(date);
+															}}
+														/>
+													</Col>
+												</Row>
+											</div>
+										</Col>
+
+										<Col
+											lg={2}
+											className="pt-3 d-flex align-items-center justify-content-end"
+										>
+											<Button
+												variant="dark"
+												type="button"
+												onClick={() => {
+													handleSearch();
+												}}
+											>
+												검색
+											</Button>
+										</Col>
+									</Row>
+								</RHForm>
+							</CardBody>
+						</Card>
+					</Col>
+				</Row>
+			)}
+		</>
 	);
 };
 export { SearchForm };

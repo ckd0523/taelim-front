@@ -65,13 +65,13 @@ const PurchasingInfo = ({ formData, handleChange }) => {
 
 	return (
 		<div>
-			<Accordion defaultActiveKey="1">
+			<Accordion defaultActiveKey="">
 				<StyledCard className="card">
 					<CustomToggle eventKey="1">재무 및 구매정보</CustomToggle>
 					<Accordion.Collapse eventKey="1">
 						<FormProvider {...methods}>
 							<StyledCardBody className="card-body">
-								<Row>
+								<Row className="justify-content-md-center">
 									<Col lg={5}>
 										<Form.Label>구매비용</Form.Label>
 										<Form.Control

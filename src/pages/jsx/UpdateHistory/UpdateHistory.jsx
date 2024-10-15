@@ -3,10 +3,10 @@ import { Table, PageBreadcrumb, CustomDatePicker, TextInput, Form as RHForm } fr
 import { columns } from './ColumnsSet';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import '.././MaintainHistory/Searchbar.css';
 
 import { InfoModal } from './UpdateHistoryModal';
 import { SearchForm } from './UpdateSearchBar';
-import { UpdateButton } from './UpdateButton';
 
 //import Select from 'react-select';
 
@@ -84,18 +84,11 @@ const UpdateHistory = () => {
 
 	return (
 		<>
-			<div className="pt-3 px-2">
-				<h4 className="header-title">수정 이력</h4>
-			</div>
-
 			<div>
-				<Card></Card>
 				{/* 검색 폼 하위 컴포넌트 */}
 				<SearchForm onSearch={handleSearch} />
 				{/* 엑셀 출력 버튼 */}
-				<UpdateButton />
-				<Card></Card>
-				<RHForm>
+				<RHForm className="pt-3">
 					<Card>
 						<Card.Body>
 							<Table
@@ -106,7 +99,7 @@ const UpdateHistory = () => {
 								isSortable={true}
 								pagination={true}
 								//isSelectable={true}
-								theadClass="table-light"
+								theadClass="table-dark"
 								searchBoxClass="mb-2"
 								//onRowClick={handleRowClick} // onRowClick 이벤트를 빈 함수로 설정하여 무시
 							/>

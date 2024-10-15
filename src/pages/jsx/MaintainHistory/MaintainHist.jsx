@@ -1,39 +1,11 @@
 import { Row, Col, Form, Button, Card, CardBody } from 'react-bootstrap';
-import { TextInput, TextAreaInput, FileInput } from '@/components/Form';
 import { CustomDatePicker } from '@/components';
 import { Table3 } from '@/components/table/Table3';
 import { MaintainDetail } from '@/pages/jsx/MaintainHistory/MaintainDetail';
 import { useState } from 'react';
-import { useToggle } from '@/hooks';
 import { useEffect } from 'react';
-// const StyledCard = styled.div`
-// 	display: flex;
-// 	flex-direction: column;
+import './Searchbar.css';
 
-// 	@media (max-width: 767px) {
-// 		width: 100%;
-// 		margin: 0 auto;
-// 		display: flex;
-// 		font-size: 80%;
-// 	}
-
-// 	@media (min-width: 768px) and (max-width: 1023px) {
-// 		width: 100%;
-// 		margin: 0 auto;
-// 		display: flex;
-// 	}
-
-// 	@media (min-width: 1024px) {
-// 		width: 100%;
-// 		margin: 0 auto;
-// 		display: flex;
-// 	}
-// `;
-// const StyledCardBody = styled.div`
-// 	flex-grow: 1;
-// 	flex-direction: column;
-// 	justify-content: space-between;
-// `;
 const columns = [
 	{
 		Header: '번호',
@@ -100,6 +72,7 @@ const sizePerPageList = [
 ];
 const urlConfig = import.meta.env.VITE_BASIC_URL;
 const MaintainHist = () => {
+	const [showSearchForm, setShowSearchForm] = useState(false);
 	const [show, setShow] = useState(false);
 	const [selectData, setSelectData] = useState();
 	const [searchData, setSearchData] = useState([]); // 필터할 테이블 데이터
@@ -109,7 +82,6 @@ const MaintainHist = () => {
 	const [searchMaintainBy, setSearchMaintainBy] = useState();
 	const [searchStartDate, setSearchStartDate] = useState();
 	const [searchEndDate, setSearchEndDate] = useState();
-	const [isOpen, toggleDropdown] = useToggle();
 
 	const handleSearch = (e) => {
 		const filteredData = data.filter((item) => {
@@ -161,175 +133,217 @@ const MaintainHist = () => {
 			})
 			.catch((error) => console.log('error', error));
 	}, []);
+
+	useEffect(() => {
+		const requestOptions = {
+			method: 'GET',
+			// redirect: 'follow',
+		};
+		fetch(`${urlConfig}/maintain/get`, requestOptions)
+			.then((response) => response.json())
+			.then((result) => {
+				if (Array.isArray(result)) {
+					console.log(result);
+					setData(result);
+					setSearchData(result);
+				} else {
+					console.error('error');
+					setData([]);
+					setSearchData([]);
+				}
+			})
+			.catch((error) => console.log('error', error));
+	}, [show]);
 	return (
 		<>
-			<div className="pt-3 px-2">
-				<h4 className="header-title">유지보수 이력</h4>
-			</div>
-			<Row>
-				<Card></Card>
-			</Row>
-
-			<Row>
+			<Row className="pt-3 align-items-center">
 				<Col>
-					<Card className="card">
-						<CardBody className="card-body">
-							<Form>
-								<Row className="align-items-center">
-									<Col xs={12} md={4} lg={2}>
-										<Form.Group as={Row}>
-											<Form.Label htmlFor="assetName" xs={12} md={12} lg={10}>
-												자산명
-											</Form.Label>
-											<Col xs={12} md={12} lg={10}>
-												<Form.Control
-													type="text"
-													name="자산명"
-													id="assetName"
-													value={searchAssetName || ''}
-													onChange={(e) =>
-														setSearchAssetName(e.target.value)
-													}
-												/>
-											</Col>
-										</Form.Group>
-									</Col>
-
-									<Col xs={12} md={6} lg={3}>
-										<Form.Group as={Row}>
-											<Form.Label htmlFor="assetCode" xs={12} md={12} lg={2}>
-												자산코드
-											</Form.Label>
-											<Col xs={12} md={12} lg={8}>
-												<Form.Control
-													type="text"
-													name="자산코드"
-													id="assetCode"
-													value={searchAssetCode || ''}
-													onChange={(e) =>
-														setSearchAssetCode(e.target.value)
-													}
-												/>
-											</Col>
-										</Form.Group>
-									</Col>
-
-									<Col xs={12} md={6} lg={3}>
-										<Form.Group as={Row}>
-											<Form.Label htmlFor="maintainBy" xs={12} md={7} lg={3}>
-												유지보수자
-											</Form.Label>
-											<Col xs={12} md={7} lg={6}>
-												<Form.Control
-													type="text"
-													name="유지보수자"
-													id="maintainBy"
-													value={searchMaintainBy || ''}
-													onChange={(e) =>
-														setSearchMaintainBy(e.target.value)
-													}
-												/>
-											</Col>
-										</Form.Group>
-									</Col>
-
-									<Col xs={12} md={6} lg={3}>
-										<Form.Group as={Row}>
-											<Form.Label xs={12} md={11} lg={5}>
-												유지보수 일자
-											</Form.Label>
-											<Col xs={5} md={5} lg={5.5}>
-												<CustomDatePicker
-													type="date"
-													dateFormat="yyyy-MM-dd"
-													name="startDate"
-													hideAddon={true}
-													value={searchStartDate || ''}
-													onChange={(s) => {
-														setSearchStartDate(s || '');
-													}}
-												/>
-											</Col>
-											<Col
-												xs={1}
-												md={1}
-												lg={1}
-												className="justify-content-center pt-1 text-center fw-bold"
-											>
-												~
-											</Col>
-											<Col xs={5} md={5} lg={5.5}>
-												<CustomDatePicker
-													type="date"
-													dateFormat="yyyy-MM-dd"
-													name="endDate"
-													hideAddon={true}
-													value={searchEndDate || ''}
-													onChange={(s) => {
-														setSearchEndDate(s || '');
-													}}
-												/>
-											</Col>
-										</Form.Group>
-									</Col>
-									<Col className="px-2 pt-3">
-										<Button
-											variant="dark"
-											type="button"
-											onClick={() => {
-												handleSearch();
-											}}
-										>
-											검색
-										</Button>
-									</Col>
-								</Row>
-							</Form>
-						</CardBody>
-					</Card>
+					<div>
+						<h4 className="d-flex justify-content-start">유지보수 이력</h4>
+					</div>
 				</Col>
-			</Row>
-			<Row>
-				<Col>
-					{/* <Dropdown show={isOpen} onToggle={toggleDropdown}>
-						<Dropdown.Toggle
-							variant="link"
-							id="dropdown-apps"
-							as={Link}
-							to=""
-							onClick={toggleDropdown}
-							className="nav-link dropdown-toggle arrow-none"
-						>
-							<i className="ri-search-line font-22"></i>
-						</Dropdown.Toggle>
-						<Dropdown.Menu className="dropdown-menu-animated dropdown-lg p-0">
-							<form className="p-3">
-								<input type="text" className="form-control" placeholder="Search" />
-							</form>
-						</Dropdown.Menu>
-					</Dropdown> */}
-					<i className="ri-search-line font-22 d-flex justify-items-center">
-						<Form.Control className="px-2" type="text" placeholder="search" />
-					</i>
-				</Col>
-				<Col className="">
+				<Col xs="auto" style={{ paddingRight: '0' }}>
 					<Button
-						variant="dark"
-						type="button"
-						onClick={() => {
-							handleSearch();
+						className="d-flex align-items-center"
+						style={{
+							height: '40px',
+							background: '#fff',
+							border: '#ffff',
+							boxShadow: 'none',
+							color: '#000000ce',
 						}}
+						onClick={() => setShowSearchForm((prev) => !prev)}
 					>
-						검색
+						{showSearchForm ? (
+							<i className="uil-plus font-24 "></i>
+						) : (
+							<i className="uil-plus font-24 "></i>
+						)}
 					</Button>
 				</Col>
+				<Col xs="auto" style={{ paddingLeft: '0' }}>
+					<form>
+						<fieldset style={{ display: 'flex', alignItems: 'center' }}>
+							<input
+								type="search"
+								style={{
+									width: '200px',
+									height: '40px',
+									float: 'left',
+									border: 'none',
+								}}
+							/>
+							<button
+								type="submit"
+								style={{
+									height: '40px',
+									width: '50px',
+									float: 'left',
+									border: 'none',
+								}}
+								onClick={() => handleSearch()}
+							>
+								<i class="ri-search-line font-22"></i>
+							</button>
+						</fieldset>
+					</form>
+				</Col>
 			</Row>
+
+			{showSearchForm && (
+				<Row className="pt-3">
+					<Col>
+						<Card>
+							<CardBody>
+								<Form>
+									<Row className="align-items-center">
+										<Col xs={12} md={4} lg={2}>
+											<Form.Group as={Row}>
+												<Form.Label
+													htmlFor="assetName"
+													xs={12}
+													md={12}
+													lg={10}
+												>
+													자산명
+												</Form.Label>
+												<Col xs={12} md={12} lg={10}>
+													<Form.Control
+														type="text"
+														id="assetName"
+														value={searchAssetName}
+														onChange={(e) =>
+															setSearchAssetName(e.target.value)
+														}
+													/>
+												</Col>
+											</Form.Group>
+										</Col>
+										<Col xs={12} md={6} lg={3}>
+											<Form.Group as={Row}>
+												<Form.Label
+													htmlFor="assetCode"
+													xs={12}
+													md={12}
+													lg={2}
+												>
+													자산코드
+												</Form.Label>
+												<Col xs={12} md={12} lg={8}>
+													<Form.Control
+														type="text"
+														id="assetCode"
+														value={searchAssetCode}
+														onChange={(e) =>
+															setSearchAssetCode(e.target.value)
+														}
+													/>
+												</Col>
+											</Form.Group>
+										</Col>
+										<Col xs={12} md={6} lg={3}>
+											<Form.Group as={Row}>
+												<Form.Label
+													htmlFor="maintainBy"
+													xs={12}
+													md={7}
+													lg={3}
+												>
+													유지보수자
+												</Form.Label>
+												<Col xs={12} md={7} lg={6}>
+													<Form.Control
+														type="text"
+														id="maintainBy"
+														value={searchMaintainBy}
+														onChange={(e) =>
+															setSearchMaintainBy(e.target.value)
+														}
+													/>
+												</Col>
+											</Form.Group>
+										</Col>
+
+										<Col xs={12} md={6} lg={3}>
+											<Form.Group as={Row}>
+												<Form.Label xs={12} md={11} lg={5}>
+													유지보수 일자
+												</Form.Label>
+												<Col xs={5} md={5} lg={5.5}>
+													<CustomDatePicker
+														type="date"
+														dateFormat="yyyy-MM-dd"
+														name="startDate"
+														hideAddon={true}
+														value={searchStartDate}
+														onChange={(s) =>
+															setSearchStartDate(s || '')
+														}
+													/>
+												</Col>
+												<Col
+													xs={1}
+													md={1}
+													lg={1}
+													className="justify-content-center pt-1 text-center fw-bold"
+												>
+													~
+												</Col>
+												<Col xs={5} md={5} lg={5.5}>
+													<CustomDatePicker
+														type="date"
+														dateFormat="yyyy-MM-dd"
+														name="endDate"
+														hideAddon={true}
+														value={searchEndDate}
+														onChange={(s) => setSearchEndDate(s || '')}
+													/>
+												</Col>
+											</Form.Group>
+										</Col>
+										<Col className="px-2 pt-3">
+											<Button
+												variant="dark"
+												type="button"
+												onClick={handleSearch}
+											>
+												검색
+											</Button>
+										</Col>
+									</Row>
+								</Form>
+							</CardBody>
+						</Card>
+					</Col>
+				</Row>
+			)}
+
 			<Row className="pt-3 align-items-center">
 				<Col>
 					<Card className="card">
 						<CardBody className="card-body">
 							<Table3
-								theadClass="table-light"
+								theadClass="table-dark"
 								sizePerPageList={sizePerPageList}
 								columns={columns}
 								data={searchData}

@@ -5,12 +5,14 @@ import { columns } from './ColumnsSet';
 import { useState, useEffect } from 'react';
 import { InfoModal, ActionModal, ProcessModal } from './DemandModal';
 import axios from 'axios';
+import '../MaintainHistory/Searchbar.css';
 
 const urlConfig = import.meta.env.VITE_BASIC_URL;
 
 import Select from 'react-select';
 
 const DemandHistory = () => {
+	const [showSearchForm, setShowSearchForm] = useState(false);
 	const [demands, setDemands] = useState([]);
 	const [demandsList, setDemandsList] = useState([]);
 	const [selectedOrderType, setSelectedOrderType] = useState('');
@@ -110,128 +112,182 @@ const DemandHistory = () => {
 
 	return (
 		<>
-			<div className="pt-3 px-2">
-				<h4 className="header-title">요청 내역</h4>
-			</div>
-
-			<Row>
-				<Card></Card>
+			<Row className="pt-3 align-items-center">
+				<Col>
+					<h4 className="d-flex justify-content-start">요청 내역</h4>
+				</Col>
+				<Col xs="auto" style={{ paddingRight: '0' }}>
+					<Button
+						className="d-flex align-items-center"
+						style={{
+							height: '40px',
+							background: '#fff',
+							border: '#ffff',
+							boxShadow: 'none',
+							color: '#000000ce',
+						}}
+						onClick={() => setShowSearchForm((prev) => !prev)}
+					>
+						{showSearchForm ? (
+							<i className="uil-plus font-24 "></i>
+						) : (
+							<i className="uil-plus font-24 "></i>
+						)}
+					</Button>
+				</Col>
+				<Col xs="auto" style={{ paddingLeft: '0' }}>
+					<form>
+						<fieldset style={{ display: 'flex', alignItems: 'center' }}>
+							<input
+								type="search"
+								style={{
+									width: '200px',
+									height: '40px',
+									float: 'left',
+									border: 'none',
+								}}
+							/>
+							<button
+								type="submit"
+								style={{
+									height: '40px',
+									width: '50px',
+									float: 'left',
+									border: 'none',
+								}}
+								onClick={() => handleSearch()}
+							>
+								<i class="ri-search-line font-22"></i>
+							</button>
+						</fieldset>
+					</form>
+				</Col>
 			</Row>
-			<Row>
-				<Col xs={12}>
-					<Card>
-						<Card.Body>
-							<RHForm onChange={handleChange}>
-								<Row className="mb-2">
-									<Col xl={2}>
-										<label className="form-label">요청구분</label> <br />
-										<Select
-											className="react-select"
-											classNamePrefix="react-select"
-											options={[
-												{ value: '', label: '전체' },
-												{ value: 'update', label: '수정' },
-												{ value: 'delete', label: '폐기' },
-												{ value: 'AllUpdate', label: '일괄수정' },
-												{ value: 'AllDelete', label: '일괄폐기' },
-											]}
-											onChange={(selected) =>
-												setSelectedOrderType(selected?.value || '')
-											}
-										></Select>
-									</Col>
-									<Col xl={2}>
-										<label className="form-label">요청자</label> <br />
-										<TextInput
-											type="text"
-											name="selectedRequester"
-											containerClass={'mb-3'}
-											value={selectedRequester}
-											key="text"
-											onChange={handleChange}
-										/>
-									</Col>
-									<Col xl={2}>
-										<label className="form-label">처리여부</label> <br />
-										<Select
-											className="react-select"
-											classNamePrefix="react-select"
-											options={[
-												{ value: '', label: '전체' },
-												{ value: 'UNCONFIRMED', label: '미확인' },
-												{ value: 'Processing', label: '처리중' },
-												{ value: 'APPROVE', label: '승인' },
-												{ value: 'REFUSAL', label: '거절' },
-											]}
-											onChange={(selected) =>
-												setSelectedStatus(selected?.value || '')
-											}
-										></Select>
-									</Col>
+			{showSearchForm && (
+				<Row className="pt-3">
+					<Col>
+						<Card>
+							<Card.Body>
+								<RHForm onChange={handleChange}>
+									<Row className="mb-2">
+										<Col xl={2}>
+											<label className="form-label">요청구분</label> <br />
+											<Select
+												className="react-select"
+												classNamePrefix="react-select"
+												options={[
+													{ value: '', label: '전체' },
+													{ value: 'update', label: '수정' },
+													{ value: 'delete', label: '폐기' },
+													{ value: 'AllUpdate', label: '일괄수정' },
+													{ value: 'AllDelete', label: '일괄폐기' },
+												]}
+												onChange={(selected) =>
+													setSelectedOrderType(selected?.value || '')
+												}
+											></Select>
+										</Col>
+										<Col xl={2}>
+											<label className="form-label">요청자</label> <br />
+											<TextInput
+												type="text"
+												name="selectedRequester"
+												containerClass={'mb-3'}
+												value={selectedRequester}
+												key="text"
+												onChange={handleChange}
+											/>
+										</Col>
+										<Col xl={2}>
+											<label className="form-label">처리여부</label> <br />
+											<Select
+												className="react-select"
+												classNamePrefix="react-select"
+												options={[
+													{ value: '', label: '전체' },
+													{ value: 'UNCONFIRMED', label: '미확인' },
+													{ value: 'Processing', label: '처리중' },
+													{ value: 'APPROVE', label: '승인' },
+													{ value: 'REFUSAL', label: '거절' },
+												]}
+												onChange={(selected) =>
+													setSelectedStatus(selected?.value || '')
+												}
+											></Select>
+										</Col>
 
-									<Col xl={4}>
-										<div className="text-lg mt-xl-0 mt-2">
-											<label className="form-label">요청일자</label> <br />
-											<Row>
-												<Col>
-													<CustomDatePicker
-														hideAddon={true}
-														dateFormat="yyyy-MM-dd"
-														value={selectedStartDate}
-														onChange={(date) => {
-															setSelectedStartDate(date);
-														}}
-													/>
-												</Col>
-												<Col
-													lg={1}
-													className="d-flex justify-content-center pt-1 text-center fw-bold"
+										<Col xl={4}>
+											<div className="text-lg mt-xl-0 mt-2">
+												<label className="form-label">요청일자</label>{' '}
+												<br />
+												<Row>
+													<Col>
+														<CustomDatePicker
+															hideAddon={true}
+															dateFormat="yyyy-MM-dd"
+															value={selectedStartDate}
+															onChange={(date) => {
+																setSelectedStartDate(date);
+															}}
+														/>
+													</Col>
+													<Col
+														lg={1}
+														className="d-flex justify-content-center pt-1 text-center fw-bold"
+													>
+														~
+													</Col>
+													<Col>
+														<CustomDatePicker
+															hideAddon={true}
+															dateFormat="yyyy-MM-dd"
+															value={selectedEndDate}
+															onChange={(date) => {
+																setSelectedEndDate(date);
+															}}
+														/>
+													</Col>
+												</Row>
+											</div>
+										</Col>
+										<Col
+											lg={2}
+											className="d-flex align-items-center justify-content-end"
+										>
+											<div className="text-lg mt-xl-0 mt-2">
+												<Button
+													variant="dark"
+													type="button"
+													onClick={() => {
+														handleSearch();
+													}}
 												>
-													~
-												</Col>
-												<Col>
-													<CustomDatePicker
-														hideAddon={true}
-														dateFormat="yyyy-MM-dd"
-														value={selectedEndDate}
-														onChange={(date) => {
-															setSelectedEndDate(date);
-														}}
-													/>
-												</Col>
-											</Row>
-										</div>
-									</Col>
-									<Col
-										lg={2}
-										className="d-flex align-items-center justify-content-end"
-									>
-										<div className="text-lg mt-xl-0 mt-2">
-											<Button
-												variant="primary"
-												type="button"
-												onClick={() => {
-													handleSearch();
-												}}
-											>
-												검색
-											</Button>
-										</div>
-									</Col>
-								</Row>
-							</RHForm>
-						</Card.Body>
-					</Card>
-
+													검색
+												</Button>
+											</div>
+										</Col>
+									</Row>
+								</RHForm>
+							</Card.Body>
+						</Card>
+					</Col>
+				</Row>
+			)}
+			<Row className="pt-3">
+				<Col xs={12}>
 					<Row className="row-cols-auto justify-content-end">
 						<Col>
-							<Button variant="success" onClick={() => processOpenModal()}>
+							<Button
+								style={{ background: '#73af82' }}
+								variant="success"
+								onClick={() => processOpenModal()}
+							>
 								미처리 자산 처리
 							</Button>
 						</Col>
 						<Col>
 							<Button
-								variant="secondary"
+								style={{ background: '#5e83bb' }}
 								onClick={() => handleOpenModal('approve', rowSelect)}
 							>
 								승인
@@ -239,6 +295,7 @@ const DemandHistory = () => {
 						</Col>
 						<Col>
 							<Button
+								style={{ background: '#c66464' }}
 								variant="danger"
 								onClick={() => handleOpenModal('reject', rowSelect)}
 							>
@@ -259,7 +316,7 @@ const DemandHistory = () => {
 									pagination={true}
 									isSelectable={true}
 									initialState={{ hiddenColumns: ['demandNo', 'assetNo'] }} // id 열을 숨김
-									theadClass="table-light"
+									theadClass="table-dark"
 									tableClass="border-black"
 									searchBoxClass="mb-2"
 									setRowSelect={setRowSelect}

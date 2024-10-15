@@ -184,7 +184,7 @@ const BasisAssetInfo = ({ formData, handleChange }) => {
 					<Accordion.Collapse eventKey="0">
 						<FormProvider {...methods}>
 							<StyledCardBody className="card-body">
-								<Row>
+								<Row className="justify-content-md-center">
 									<Col lg={5}>
 										<p className="mb-2 c fw-bold">자산분류</p>
 										<Select

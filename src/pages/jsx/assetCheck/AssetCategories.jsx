@@ -2,12 +2,11 @@
 import { Accordion, Card, Row, Col, Form } from 'react-bootstrap';
 import { useAccordionButton } from 'react-bootstrap';
 import './ButtonStyle.css';
-import { TextInput, TextAreaInput, FileInput } from '@/components/Form';
+import { TextInput } from '@/components/Form';
 import { useForm, FormProvider } from 'react-hook-form';
 import { CustomDatePicker } from '@/components/Form';
 import { BsCaretUpFill } from 'react-icons/bs';
 import { BsCaretDownFill } from 'react-icons/bs';
-// import './../../../app.css';
 import Select from 'react-select';
 import { useState } from 'react';
 import styled from 'styled-components';
@@ -174,7 +173,7 @@ const AssetCategories = ({ files = [], setFiles, assetClassification, formData, 
 								<Accordion.Collapse eventKey="0">
 									<FormProvider {...methods}>
 										<StyledCardBody className="card-body">
-											<Row>
+											<Row className="px-4">
 												<Col lg={5}>
 													<Form.Label>서비스범위</Form.Label>
 													<Form.Control
@@ -204,7 +203,7 @@ const AssetCategories = ({ files = [], setFiles, assetClassification, formData, 
 								<Accordion.Collapse eventKey="0">
 									<FormProvider {...methods}>
 										<StyledCardBody className="card-body">
-											<Row>
+											<Row className="justify-content-md-center">
 												<Col lg={5}>
 													<Form.Label>서비스범위</Form.Label>
 													<Form.Control
@@ -274,7 +273,7 @@ const AssetCategories = ({ files = [], setFiles, assetClassification, formData, 
 								<Accordion.Collapse eventKey="0">
 									<FormProvider {...methods}>
 										<StyledCardBody className="card-body">
-											<Row>
+											<Row className="justify-content-md-center">
 												<Col lg={5}>
 													<Form.Label>IP</Form.Label>
 													<Form.Control
@@ -344,7 +343,7 @@ const AssetCategories = ({ files = [], setFiles, assetClassification, formData, 
 								<Accordion.Collapse eventKey="0">
 									<FormProvider {...methods}>
 										<StyledCardBody className="card-body">
-											<Row>
+											<Row className="justify-content-md-center">
 												<Col lg={5}>
 													<Form.Label>OS</Form.Label>
 													<Form.Control
@@ -396,7 +395,7 @@ const AssetCategories = ({ files = [], setFiles, assetClassification, formData, 
 								<Accordion.Collapse eventKey="0">
 									<FormProvider {...methods}>
 										<StyledCardBody className="card-body">
-											<Row>
+											<Row className="justify-content-md-center">
 												<Col lg={5}>
 													<p className="mb-2 c fw-bold">문서등급</p>
 													<Select
@@ -470,7 +469,7 @@ const AssetCategories = ({ files = [], setFiles, assetClassification, formData, 
 								<Accordion.Collapse eventKey="0">
 									<FormProvider {...methods}>
 										<StyledCardBody className="card-body">
-											<Row>
+											<Row className="justify-content-md-center">
 												<Col lg={5}>
 													<div className="form-group mb-2">
 														<label className="form-label">
@@ -683,7 +682,7 @@ const AssetCategories = ({ files = [], setFiles, assetClassification, formData, 
 								<Accordion.Collapse eventKey="0">
 									<FormProvider {...methods}>
 										<StyledCardBody className="card-body">
-											<Row>
+											<Row className="justify-content-md-center">
 												<Col lg={5}>
 													<Form.Label>장비유형</Form.Label>
 													<Form.Control
@@ -838,7 +837,7 @@ const AssetCategories = ({ files = [], setFiles, assetClassification, formData, 
 								<Accordion.Collapse eventKey="0">
 									<FormProvider {...methods}>
 										<StyledCardBody className="card-body">
-											<Row>
+											<Row className="justify-content-md-center">
 												<Col lg={5}>
 													<Form.Label>장비유형</Form.Label>
 													<Form.Control
@@ -926,7 +925,7 @@ const AssetCategories = ({ files = [], setFiles, assetClassification, formData, 
 								<Accordion.Collapse eventKey="0">
 									<FormProvider {...methods}>
 										<StyledCardBody className="card-body">
-											<Row>
+											<Row className="justify-content-md-center">
 												<Col lg={5}>
 													<Form.Label>IP</Form.Label>
 													<Form.Control
@@ -1061,7 +1060,7 @@ const AssetCategories = ({ files = [], setFiles, assetClassification, formData, 
 								<Accordion.Collapse eventKey="0">
 									<FormProvider {...methods}>
 										<StyledCardBody className="card-body">
-											<Row>
+											<Row className="justify-content-md-center">
 												<Col lg={5}>
 													<Form.Label>크기</Form.Label>
 													<Form.Control
@@ -1090,7 +1089,7 @@ const AssetCategories = ({ files = [], setFiles, assetClassification, formData, 
 								<Accordion.Collapse eventKey="0">
 									<FormProvider {...methods}>
 										<StyledCardBody className="card-body">
-											<Row>
+											<Row className="justify-content-md-center">
 												<Col lg={5}>
 													<Form.Label>기기유형</Form.Label>
 													<Form.Control
@@ -1151,7 +1150,7 @@ const AssetCategories = ({ files = [], setFiles, assetClassification, formData, 
 								<Accordion.Collapse eventKey="0">
 									<FormProvider {...methods}>
 										<StyledCardBody className="card-body">
-											<Row>
+											<Row className="justify-content-md-center">
 												<Col lg={5}>
 													<Form.Label>배기량</Form.Label>
 													<Form.Control
@@ -1259,7 +1258,7 @@ const AssetCategories = ({ files = [], setFiles, assetClassification, formData, 
 								<Accordion.Collapse eventKey="0">
 									<FormProvider {...methods}>
 										<StyledCardBody className="card-body">
-											<Row>
+											<Row className="justify-content-md-center">
 												<Col lg={5}>
 													<Form.Label>기타 세부 설명</Form.Label>
 													<Form.Control

@@ -157,8 +157,8 @@ const SearchForm = ({ onSearch }) => {
 											name="assetLocation"
 											type="text"
 											placeholder="자산위치를 입력하세요"
-											value={assetLocation}
-											onChange={handleFormChange}
+											// value={assetLocationOptions}
+											// onChange={handleFormChange}
 										/>
 									</Col>
 									<Col lg={2}>
@@ -166,7 +166,7 @@ const SearchForm = ({ onSearch }) => {
 										<Form.Control
 											name="assetOwner"
 											type="text"
-											placeholder="사용자를 입력하세요..."
+											placeholder="사용자를 입력하세요"
 											value={assetOwner}
 											onChange={handleFormChange}
 										/>
@@ -176,9 +176,9 @@ const SearchForm = ({ onSearch }) => {
 										<Form.Control
 											name="department"
 											type="text"
-											placeholder="부서를 입력하세요..."
-											value={department}
-											onChange={handleFormChange}
+											placeholder="부서를 입력하세요"
+											// value={department}
+											// onChange={handleFormChange}
 										/>
 									</Col>
 									<Col>

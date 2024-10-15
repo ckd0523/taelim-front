@@ -72,8 +72,7 @@ const SurveyTable = ({ tableChange, setSelectedRows, data, setData, setOriginalD
 	}, [tableChange]);
 
 	return (
-		<Row>
-			<Card></Card>
+		<Row className="pt-3">
 			<Col>
 				<Card>
 					<Card.Body>
@@ -83,7 +82,7 @@ const SurveyTable = ({ tableChange, setSelectedRows, data, setData, setOriginalD
 							data={data}
 							pagesize={5}
 							//sizePerPageList={sizePerPageList}
-							theadClass="table-light"
+							theadClass="table-dark"
 							isSortable={true}
 							pagination={true}
 							isSelectable={true}

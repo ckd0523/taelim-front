@@ -101,13 +101,17 @@ const DisposeModal = ({
 				</Form>
 			</Modal.Body>
 			<Modal.Footer>
-				<Button variant="danger" onClick={handleRequest}>
+				<Button style={{ background: '#c66464' }} variant="danger" onClick={handleRequest}>
 					폐기요청
 				</Button>
-				<Button variant="danger" onClick={() => handleDispose(selectedAssetCode)}>
+				<Button
+					style={{ background: '#c66464' }}
+					variant="danger"
+					onClick={() => handleDispose(selectedAssetCode)}
+				>
 					폐기
 				</Button>
-				<Button variant="secondary" onClick={handleClose}>
+				<Button style={{ background: '#5e83bb' }} variant="secondary" onClick={handleClose}>
 					취소
 				</Button>
 			</Modal.Footer>

@@ -72,7 +72,6 @@ const MaintainRegister = ({ assetCode, assetNo }) => {
 
 				setFormData((prevState) => ({
 					...prevState,
-					// repairFiles: [...prevState.fileName, ...uploadedFileNames], // Properly set the file name state
 					repairFiles: uploadedFileNames,
 				}));
 
@@ -117,7 +116,12 @@ const MaintainRegister = ({ assetCode, assetNo }) => {
 	};
 	return (
 		<>
-			<Button variant="secondary" onClick={handleShow} className="me-2">
+			<Button
+				style={{ background: '#73af82', border: 'none' }}
+				variant="success"
+				onClick={handleShow}
+				className="me-2"
+			>
 				유지보수등록
 			</Button>
 
@@ -177,10 +181,13 @@ const MaintainRegister = ({ assetCode, assetNo }) => {
 					</Form>
 				</Modal.Body>
 				<Modal.Footer>
-					<Button variant="secondary" onClick={handleSubmit}>
+					<Button
+						style={{ background: '#5e83bb', border: 'none' }}
+						onClick={handleSubmit}
+					>
 						등록
 					</Button>
-					<Button variant="primary" onClick={handleClose}>
+					<Button variant="secondary" onClick={handleClose}>
 						취소
 					</Button>
 				</Modal.Footer>

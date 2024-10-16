@@ -3,22 +3,13 @@ import classNames from 'classnames';
 import { useCallback } from 'react';
 
 // get all columns
-const columns = (setModalData, setShowModal) => [
+const columns = () => [
 	{
 		Header: '번호',
 		accessor: 'DeleteNo',
 		defaultCanSort: true,
 		Cell: ({ row }) => {
-			const handleRowClick = useCallback(() => {
-				setModalData(row.original);
-				setShowModal(true);
-			}, [row.original]);
-
-			return (
-				<span onClick={handleRowClick} style={{ cursor: 'pointer', color: 'blue' }}>
-					{row.index + 1}
-				</span>
-			);
+			return <span>{row.index + 1}</span>;
 		},
 	},
 	{

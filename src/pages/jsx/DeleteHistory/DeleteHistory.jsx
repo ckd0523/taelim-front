@@ -1,5 +1,6 @@
 import { Row, Col, Card, Button, Modal } from 'react-bootstrap';
-import { Table, PageBreadcrumb, CustomDatePicker, TextInput, Form as RHForm } from '@/components';
+import { PageBreadcrumb, CustomDatePicker, TextInput, Form as RHForm } from '@/components';
+import { Table } from './Table';
 import { columns } from './ColumnsSet';
 import { useState, useEffect } from 'react';
 //import { assetDeletes } from './data';
@@ -8,7 +9,6 @@ const urlConfig = import.meta.env.VITE_BASIC_URL;
 
 import { InfoModal } from './DeleteHistoryModal';
 import { SearchForm } from './DeleteSearchBar';
-import { DeleteButton } from './DeleteButton';
 // import Select from 'react-select';
 
 const DeleteHistory = () => {
@@ -68,30 +68,28 @@ const DeleteHistory = () => {
 
 	return (
 		<>
-			<PageBreadcrumb title="폐기 이력" subName="DeleteHistory" />
 			<div>
 				<Card></Card>
 				{/* 검색 폼 하위 컴포넌트 */}
 				<SearchForm onSearch={handleSearch} />
 
-				{/* 엑셀 출력 버튼 */}
-				<DeleteButton />
-
-				<Card></Card>
-				<RHForm>
+				<RHForm className="pt-3">
 					<Card>
 						<Card.Body>
 							<Table
-								columns={columns(setModalData, setShowModal)}
+								columns={columns()}
 								data={DeleteList}
 								pageSize={10}
 								//isExpandable={true}
 								isSortable={true}
 								pagination={true}
 								//isSelectable={true}
-								theadClass="table-light"
+								theadClass="table-dark"
+								tableClass="border-black"
 								searchBoxClass="mb-2"
 								onRowClick={() => {}} // onRowClick 이벤트를 빈 함수로 설정하여 무시
+								setModalData={setModalData}
+								setShowModal={setShowModal}
 							/>
 						</Card.Body>
 					</Card>

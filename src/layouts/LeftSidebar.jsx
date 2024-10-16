@@ -4,13 +4,6 @@ import SimpleBar from 'simplebar-react';
 import AppMenu from './Menu';
 
 // assets
-import profileImg from '@/assets/images/users/avatar-1.jpg';
-import logo from '@/assets/images/logo.png';
-import logoDark from '@/assets/images/logo-dark.png';
-import logoSm from '@/assets/images/logo-sm.png';
-import logoDarkSm from '@/assets/images/logo-dark-sm.png';
-import taelimlogo from '@/assets/images/Taelimlogo.png';
-import taelimlogo_sm from '@/assets/images/Taelimlogo-sm.png';
 import file from '@/assets/images/file.png';
 import file_sm from '@/assets/images/file_sm.png';
 import { getMenuItems } from './utils/menu';
@@ -174,7 +167,10 @@ const SideBarContent = () => {
 										</Row>
 										<br></br>
 										<Modal.Footer>
-											<Button onClick={ChangeModify}>
+											<Button
+												style={{ background: '#5e83bb', border: 'none' }}
+												onClick={ChangeModify}
+											>
 												{modify ? '수정' : '저장'}
 											</Button>
 											<Button variant="secondary" onClick={toggleSignUp}>

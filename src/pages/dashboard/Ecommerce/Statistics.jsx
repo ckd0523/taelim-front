@@ -9,7 +9,7 @@ const Statistics = () => {
 					<StatisticsWidget
 						icon="mdi mdi-account-multiple"
 						description="Number of Customers"
-						title="Customers"
+						title="직원 수"
 						stats="36,254"
 						trend={{
 							textClass: 'text-success',
@@ -24,7 +24,7 @@ const Statistics = () => {
 					<StatisticsWidget
 						icon="mdi mdi-cart-plus"
 						description="Number of Orders"
-						title="Orders"
+						title=""
 						stats="5,543"
 						trend={{
 							textClass: 'text-danger',
@@ -41,7 +41,7 @@ const Statistics = () => {
 					<StatisticsWidget
 						icon="mdi mdi-currency-usd"
 						description="Revenue"
-						title="Revenue"
+						title="총 자산의 개수"
 						stats="$6,254"
 						trend={{
 							textClass: 'text-danger',

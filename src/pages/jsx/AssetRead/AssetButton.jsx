@@ -5,7 +5,7 @@ const AssetButtons = ({ handleButtonClick, handleQrClick, handleExcelClick, rowS
 		<Row className="row-cols-auto justify-content-end">
 			<Col>
 				<Button
-					className="btn btn-secondary"
+					style={{ background: '#5e83bb', border: 'none' }}
 					onClick={() => handleButtonClick('AllUpdate', rowSelect)}
 				>
 					일괄수정
@@ -13,7 +13,7 @@ const AssetButtons = ({ handleButtonClick, handleQrClick, handleExcelClick, rowS
 			</Col>
 			<Col>
 				<Button
-					className="btn btn-danger"
+					style={{ background: '#c66464', border: 'none' }}
 					onClick={() => handleButtonClick('AllDispose', rowSelect)}
 				>
 					일괄 폐기
@@ -21,27 +21,30 @@ const AssetButtons = ({ handleButtonClick, handleQrClick, handleExcelClick, rowS
 			</Col>
 			<Col>
 				<Button
-					className="btn btn-secondary"
+					style={{ background: '#5e83bb', border: 'none' }}
 					onClick={() => handleButtonClick('AllUpdateDemand', rowSelect)}
 				>
-					일괄수정요청
+					일괄 수정요청
 				</Button>
 			</Col>
 			<Col>
 				<Button
-					className="btn btn-danger"
+					style={{ background: '#c66464', border: 'none' }}
 					onClick={() => handleButtonClick('AllDisposeDemand', rowSelect)}
 				>
 					일괄 폐기요청
 				</Button>
 			</Col>
 			<Col>
-				<Button className="btn btn-info" onClick={() => handleQrClick(rowSelect)}>
+				<Button variant="dark" onClick={() => handleQrClick(rowSelect)}>
 					QR출력
 				</Button>
 			</Col>
 			<Col>
-				<Button className="btn btn-success" onClick={handleExcelClick}>
+				<Button
+					style={{ background: '#73af82', border: 'none' }}
+					onClick={handleExcelClick}
+				>
 					엑셀 출력
 				</Button>
 			</Col>

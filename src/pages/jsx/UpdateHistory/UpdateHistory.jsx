@@ -1,12 +1,13 @@
 import { Row, Col, Card, Button, Modal } from 'react-bootstrap';
-import { Table, PageBreadcrumb, CustomDatePicker, TextInput, Form as RHForm } from '@/components';
+import { PageBreadcrumb, CustomDatePicker, TextInput, Form as RHForm } from '@/components';
+import { Table } from './Table';
 import { columns } from './ColumnsSet';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import '.././MaintainHistory/Searchbar.css';
 
 import { InfoModal } from './UpdateHistoryModal';
 import { SearchForm } from './UpdateSearchBar';
-import { UpdateButton } from './UpdateButton';
 
 //import Select from 'react-select';
 
@@ -84,16 +85,11 @@ const UpdateHistory = () => {
 
 	return (
 		<>
-			<PageBreadcrumb title="수정 이력" subName="UpdateHistory" />
-
 			<div>
-				<Card></Card>
 				{/* 검색 폼 하위 컴포넌트 */}
 				<SearchForm onSearch={handleSearch} />
 				{/* 엑셀 출력 버튼 */}
-				<UpdateButton />
-				<Card></Card>
-				<RHForm>
+				<RHForm className="pt-3">
 					<Card>
 						<Card.Body>
 							<Table
@@ -104,9 +100,14 @@ const UpdateHistory = () => {
 								isSortable={true}
 								pagination={true}
 								//isSelectable={true}
-								theadClass="table-light"
+								theadClass="table-dark"
+								tableClass="border-black"
 								searchBoxClass="mb-2"
 								//onRowClick={handleRowClick} // onRowClick 이벤트를 빈 함수로 설정하여 무시
+								onRowClick={() => {}}
+								setModalData={setModalData}
+								setSelectedAssetNo={setSelectedAssetNo}
+								setShowModal={setShowModal}
 							/>
 						</Card.Body>
 					</Card>

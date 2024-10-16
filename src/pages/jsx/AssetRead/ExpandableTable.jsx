@@ -225,6 +225,7 @@ const Table = (props) => {
 														// assetCode={row.original.assetCode}
 														assetCode={row.original.assetCode} // assetCode 전달
 														formData={row.original} // 전체 데이터를 formData로 전달
+														onClose={() => row.toggleRowExpanded(false)} // onClose에 행 확장 상태 닫기 핸들러 추가
 													/>
 												</div>
 											</td>

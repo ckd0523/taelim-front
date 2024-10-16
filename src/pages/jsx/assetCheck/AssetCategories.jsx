@@ -2,12 +2,11 @@
 import { Accordion, Card, Row, Col, Form } from 'react-bootstrap';
 import { useAccordionButton } from 'react-bootstrap';
 import './ButtonStyle.css';
-import { TextInput, TextAreaInput } from '@/components/Form';
+import { TextInput } from '@/components/Form';
 import { useForm, FormProvider } from 'react-hook-form';
 import { CustomDatePicker } from '@/components/Form';
 import { BsCaretUpFill } from 'react-icons/bs';
 import { BsCaretDownFill } from 'react-icons/bs';
-
 import Select from 'react-select';
 import { useState } from 'react';
 import styled from 'styled-components';
@@ -47,7 +46,7 @@ function CustomToggle({ children, eventKey }) {
 		<button
 			className="custom-button px-3 pt-2 fw-bold"
 			type="button"
-			style={{ backgroundColor: '#dcefdc', textAlign: 'left' }}
+			style={{ backgroundColor: '#6081ab4e', textAlign: 'left' }}
 			onClick={decoratedOnClick}
 		>
 			{isOpen ? (
@@ -150,20 +149,31 @@ const carType = [
 	{ value: 'TRUCK', label: '트럭' },
 	{ value: 'VAN', label: '밴' },
 ];
-const AssetCategories = ({ assetClassification, formData, handleChange }) => {
+
+const AssetCategories = ({ files = [], setFiles, assetClassification, formData, handleChange }) => {
+	const handleFileUpload = (e, fileType) => {
+		const uploadFile = e.target.files[0];
+		const updateFiles = [
+			...files.filter((f) => f.fileType !== fileType),
+			{ file: uploadFile, fileType },
+		];
+		setFiles(updateFiles);
+		console.log(updateFiles);
+	};
+
 	const methods = useForm();
 	const renderAdditionalFields = () => {
 		switch (assetClassification) {
 			case 'INFORMATION_PROTECTION_SYSTEM':
 				return (
-					<div>
+					<div style={{ paddingBottom: '20px' }}>
 						<Accordion defaultActiveKey="0">
 							<StyledCard className="card">
 								<CustomToggle eventKey="0">자산별 컬럼</CustomToggle>
 								<Accordion.Collapse eventKey="0">
 									<FormProvider {...methods}>
 										<StyledCardBody className="card-body">
-											<Row>
+											<Row className="px-4">
 												<Col lg={5}>
 													<Form.Label>서비스범위</Form.Label>
 													<Form.Control
@@ -186,14 +196,14 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
 
 			case 'APPLICATION_PROGRAM':
 				return (
-					<div>
+					<div style={{ paddingBottom: '20px' }}>
 						<Accordion defaultActiveKey="0">
 							<StyledCard className="card">
 								<CustomToggle eventKey="0">자산별 컬럼</CustomToggle>
 								<Accordion.Collapse eventKey="0">
 									<FormProvider {...methods}>
 										<StyledCardBody className="card-body">
-											<Row>
+											<Row className="justify-content-md-center">
 												<Col lg={5}>
 													<Form.Label>서비스범위</Form.Label>
 													<Form.Control
@@ -204,7 +214,7 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
 														onChange={handleChange}
 														name="serviceScope"
 													/>
-													<Form.Label>OS</Form.Label>
+													<Form.Label>사용 OS</Form.Label>
 													<Form.Control
 														placeholder="OS를 입력해주세요"
 														className="mb-2"
@@ -256,14 +266,14 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
 				);
 			case 'SOFTWARE':
 				return (
-					<div>
+					<div style={{ paddingBottom: '20px' }}>
 						<Accordion defaultActiveKey="0">
 							<StyledCard className="card">
 								<CustomToggle eventKey="0">자산별 컬럼</CustomToggle>
 								<Accordion.Collapse eventKey="0">
 									<FormProvider {...methods}>
 										<StyledCardBody className="card-body">
-											<Row>
+											<Row className="justify-content-md-center">
 												<Col lg={5}>
 													<Form.Label>IP</Form.Label>
 													<Form.Control
@@ -326,14 +336,14 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
 				);
 			case 'ELECTRONIC_INFORMATION':
 				return (
-					<div>
+					<div style={{ paddingBottom: '20px' }}>
 						<Accordion defaultActiveKey="0">
 							<StyledCard className="card">
 								<CustomToggle eventKey="0">자산별 컬럼</CustomToggle>
 								<Accordion.Collapse eventKey="0">
 									<FormProvider {...methods}>
 										<StyledCardBody className="card-body">
-											<Row>
+											<Row className="justify-content-md-center">
 												<Col lg={5}>
 													<Form.Label>OS</Form.Label>
 													<Form.Control
@@ -378,14 +388,14 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
 				);
 			case 'DOCUMENT':
 				return (
-					<div>
+					<div style={{ paddingBottom: '20px' }}>
 						<Accordion defaultActiveKey="0">
 							<StyledCard className="card">
 								<CustomToggle eventKey="0">자산별 컬럼</CustomToggle>
 								<Accordion.Collapse eventKey="0">
 									<FormProvider {...methods}>
 										<StyledCardBody className="card-body">
-											<Row>
+											<Row className="justify-content-md-center">
 												<Col lg={5}>
 													<p className="mb-2 c fw-bold">문서등급</p>
 													<Select
@@ -452,14 +462,14 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
 				);
 			case 'PATENTS_AND_TRADEMARKS':
 				return (
-					<div>
+					<div style={{ paddingBottom: '20px' }}>
 						<Accordion defaultActiveKey="0">
 							<StyledCard className="card">
 								<CustomToggle eventKey="0">자산별 컬럼</CustomToggle>
 								<Accordion.Collapse eventKey="0">
 									<FormProvider {...methods}>
 										<StyledCardBody className="card-body">
-											<Row>
+											<Row className="justify-content-md-center">
 												<Col lg={5}>
 													<div className="form-group mb-2">
 														<label className="form-label">
@@ -635,7 +645,7 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
 														onChange={handleChange}
 														name="assignee"
 													/>
-													<Form.Label>관련문서</Form.Label>
+													{/* <Form.Label>관련문서</Form.Label>
 													<Form.Control
 														placeholder="관련문서를 입력해주세요"
 														className="mb-2"
@@ -643,6 +653,16 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
 														value={formData.relatedDocuments}
 														onChange={handleChange}
 														name="relatedDocuments"
+													/> */}
+													<Form.Label>관련문서</Form.Label>
+													<Form.Control
+														type="file"
+														onChange={(file) =>
+															handleFileUpload(
+																file,
+																'PATENT_DOCUMENTS'
+															)
+														}
 													/>
 												</Col>
 											</Row>
@@ -655,14 +675,14 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
 				);
 			case 'ITSYSTEM_EQUIPMENT':
 				return (
-					<div>
+					<div style={{ paddingBottom: '20px' }}>
 						<Accordion defaultActiveKey="0">
 							<StyledCard className="card">
 								<CustomToggle eventKey="0">자산별 컬럼</CustomToggle>
 								<Accordion.Collapse eventKey="0">
 									<FormProvider {...methods}>
 										<StyledCardBody className="card-body">
-											<Row>
+											<Row className="justify-content-md-center">
 												<Col lg={5}>
 													<Form.Label>장비유형</Form.Label>
 													<Form.Control
@@ -810,14 +830,14 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
 				);
 			case 'ITNETWORK_EQUIPMENT':
 				return (
-					<div>
+					<div style={{ paddingBottom: '20px' }}>
 						<Accordion defaultActiveKey="0">
 							<StyledCard className="card">
 								<CustomToggle eventKey="0">자산별 컬럼</CustomToggle>
 								<Accordion.Collapse eventKey="0">
 									<FormProvider {...methods}>
 										<StyledCardBody className="card-body">
-											<Row>
+											<Row className="justify-content-md-center">
 												<Col lg={5}>
 													<Form.Label>장비유형</Form.Label>
 													<Form.Control
@@ -898,14 +918,14 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
 				);
 			case 'TERMINAL':
 				return (
-					<div>
+					<div style={{ paddingBottom: '20px' }}>
 						<Accordion defaultActiveKey="0">
 							<StyledCard className="card">
 								<CustomToggle eventKey="0">자산별 컬럼</CustomToggle>
 								<Accordion.Collapse eventKey="0">
 									<FormProvider {...methods}>
 										<StyledCardBody className="card-body">
-											<Row>
+											<Row className="justify-content-md-center">
 												<Col lg={5}>
 													<Form.Label>IP</Form.Label>
 													<Form.Control
@@ -915,15 +935,6 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
 														value={formData.ip}
 														onChange={handleChange}
 														name="ip"
-													/>
-													<Form.Label>제품 시리얼 번호</Form.Label>
-													<Form.Control
-														placeholder="제품 시리얼 번호를 입력해주세요"
-														className="mb-2"
-														type="text"
-														value={formData.productSerialNumber}
-														onChange={handleChange}
-														name="productSerialNumber"
 													/>
 													<Form.Label>OS</Form.Label>
 													<Form.Control
@@ -954,11 +965,6 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
 														}
 														options={securityControl}
 													></Select>
-												</Col>
-												<Col lg={1} className="d-flex align-items-stretch">
-													<div className="vertical-divider"></div>
-												</Col>
-												<Col lg={5}>
 													<Form.Label>내부정보 유출 방지</Form.Label>
 													<Form.Control
 														placeholder="내부정보 유출 방지를 입력해주세요"
@@ -968,6 +974,11 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
 														onChange={handleChange}
 														name="kaitsKeeper"
 													/>
+												</Col>
+												<Col lg={1} className="d-flex align-items-stretch">
+													<div className="vertical-divider"></div>
+												</Col>
+												<Col lg={5}>
 													<div className="form-group mb-2">
 														<label className="form-label">
 															악성코드,랜섬웨어 탐지
@@ -1042,14 +1053,14 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
 				);
 			case 'FURNITURE':
 				return (
-					<div>
+					<div style={{ paddingBottom: '20px' }}>
 						<Accordion defaultActiveKey="0">
 							<StyledCard className="card">
 								<CustomToggle eventKey="0">자산별 컬럼</CustomToggle>
 								<Accordion.Collapse eventKey="0">
 									<FormProvider {...methods}>
 										<StyledCardBody className="card-body">
-											<Row>
+											<Row className="justify-content-md-center">
 												<Col lg={5}>
 													<Form.Label>크기</Form.Label>
 													<Form.Control
@@ -1071,14 +1082,14 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
 				);
 			case 'DEVICES':
 				return (
-					<div>
+					<div style={{ paddingBottom: '20px' }}>
 						<Accordion defaultActiveKey="0">
 							<StyledCard className="card">
 								<CustomToggle eventKey="0">자산별 컬럼</CustomToggle>
 								<Accordion.Collapse eventKey="0">
 									<FormProvider {...methods}>
 										<StyledCardBody className="card-body">
-											<Row>
+											<Row className="justify-content-md-center">
 												<Col lg={5}>
 													<Form.Label>기기유형</Form.Label>
 													<Form.Control
@@ -1132,14 +1143,14 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
 				);
 			case 'CAR':
 				return (
-					<div>
+					<div style={{ paddingBottom: '20px' }}>
 						<Accordion defaultActiveKey="0">
 							<StyledCard className="card">
 								<CustomToggle eventKey="0">자산별 컬럼</CustomToggle>
 								<Accordion.Collapse eventKey="0">
 									<FormProvider {...methods}>
 										<StyledCardBody className="card-body">
-											<Row>
+											<Row className="justify-content-md-center">
 												<Col lg={5}>
 													<Form.Label>배기량</Form.Label>
 													<Form.Control
@@ -1240,14 +1251,14 @@ const AssetCategories = ({ assetClassification, formData, handleChange }) => {
 				);
 			case 'OTHERASSETS':
 				return (
-					<div>
+					<div style={{ paddingBottom: '20px' }}>
 						<Accordion defaultActiveKey="0">
 							<StyledCard className="card">
 								<CustomToggle eventKey="0">자산별 컬럼</CustomToggle>
 								<Accordion.Collapse eventKey="0">
 									<FormProvider {...methods}>
 										<StyledCardBody className="card-body">
-											<Row>
+											<Row className="justify-content-md-center">
 												<Col lg={5}>
 													<Form.Label>기타 세부 설명</Form.Label>
 													<Form.Control

@@ -3,6 +3,7 @@ import { Table, PageBreadcrumb, CustomDatePicker, TextInput, Form as RHForm } fr
 import { columns } from './ColumnsSet';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import api from '@/common/api/authAxios';
 
 import { InfoModal } from './UpdateHistoryModal';
 import { SearchForm } from './UpdateSearchBar';
@@ -106,7 +107,7 @@ const UpdateHistory = () => {
 								//isSelectable={true}
 								theadClass="table-light"
 								searchBoxClass="mb-2"
-								//onRowClick={handleRowClick} // onRowClick 이벤트를 빈 함수로 설정하여 무시
+							//onRowClick={handleRowClick} // onRowClick 이벤트를 빈 함수로 설정하여 무시
 							/>
 						</Card.Body>
 					</Card>

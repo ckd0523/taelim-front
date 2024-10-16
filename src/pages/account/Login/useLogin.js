@@ -22,6 +22,10 @@ export default function useLogin() {
 		[location.state]
 	);
 
+	console.log(location.state);
+	console.log(location.state && location.state.from);
+
+
 	const login = async (values) => {
 		setLoading(true);
 		try {
@@ -29,9 +33,11 @@ export default function useLogin() {
 			if (res) {
 				console.log(res);
 				localStorage.setItem('accessToken', res.accessToken);
+				// 세션에 사용자 정보를 저장
+				saveSession({ email: "dfd" }); // 필요한 정보로 조정 가능
 				//console.log(res.user);
 				console.log(localStorage.getItem('accessToken'));
-				console.log(JSON.stringify(localStorage.getItem('accessToken')));
+				//console.log(JSON.stringify(localStorage.getItem('accessToken')));
 				navigate(redirectUrl);
 			}
 		} catch (error) {

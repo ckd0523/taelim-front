@@ -1,5 +1,4 @@
 import { createContext, useContext, useState, useCallback } from 'react';
-import axios from 'axios';
 
 const AuthContext = createContext({});
 
@@ -22,7 +21,7 @@ export function AuthProvider({ children }) {
 
   const saveSession = useCallback(
     (user) => {
-      localStorage.setItem(authSessionKey, JSON.stringify(user.token));
+      //localStorage.setItem(authSessionKey, JSON.stringify(user.token));
       setUser(user);
     },
     [setUser]

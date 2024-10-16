@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import api from '@/common/api/authAxios';
 import { Row, Col, Card } from 'react-bootstrap';
 import { Table2 } from '../../../components/table/Table2';
 import assetSurveyLocation from './assetSurveyLocation';
@@ -58,7 +59,7 @@ const SurveyTable = ({ tableChange, setSelectedRows, data, setData, setOriginalD
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`${URL}/assetSurveyHistory`);
+        const response = await api.get(`${URL}/assetSurveyHistory`);
         //검색을 위해서 불변 데이터를 하나 더 만들어줌
         setData(response.data); // API로부터 받은 데이터 설정
         setOriginalData(response.data);

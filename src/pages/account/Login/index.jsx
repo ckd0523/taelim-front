@@ -12,7 +12,7 @@ export default function Login() {
 
   return (
     <>
-      {isAuthenticated && <Navigate to={redirectUrl} replace />}
+      {isAuthenticated && <Navigate to={"/"} replace />}
 
       <PageBreadcrumb title="Login" />
       <AccountWrapper>
@@ -26,7 +26,7 @@ export default function Login() {
         <Form
           onSubmit={login}
           schema={loginFormSchema}
-          defaultValues={{ email: 'user1@example.com', password: '' }}
+          defaultValues={{ email: 'taelim@taelim.com', password: 'taelim' }}
         >
           <Row>
             <Col>

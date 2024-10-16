@@ -83,6 +83,7 @@ const SurveyTable = ({ tableChange, setSelectedRows, data, setData, setOriginalD
 							pagesize={5}
 							//sizePerPageList={sizePerPageList}
 							theadClass="table-dark"
+							tableClass="border-black"
 							isSortable={true}
 							pagination={true}
 							isSelectable={true}
@@ -103,6 +104,7 @@ const DetailTable = ({ detailColumn, detailData }) => {
 			data={detailData}
 			pagesize={5}
 			sizePerPageList={20}
+			tableClass="border-black"
 			isSortable={true}
 			pagination={true}
 			isSelectable={false}

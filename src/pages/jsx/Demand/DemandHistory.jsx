@@ -1,11 +1,12 @@
-import { Row, Col, Card, Button, Modal } from 'react-bootstrap';
-import { PageBreadcrumb, CustomDatePicker, TextInput, Form as RHForm } from '@/components';
+import { Row, Col, Card, Button } from 'react-bootstrap';
+import { CustomDatePicker, TextInput, Form as RHForm } from '@/components';
 import { Table } from './Table';
 import { columns } from './ColumnsSet';
 import { useState, useEffect } from 'react';
 import { InfoModal, ActionModal, ProcessModal } from './DemandModal';
 import axios from 'axios';
 import '../MaintainHistory/Searchbar.css';
+import Swal from 'sweetalert2';
 
 const urlConfig = import.meta.env.VITE_BASIC_URL;
 
@@ -87,7 +88,11 @@ const DemandHistory = () => {
 				if (responseData.length > 0) {
 					setProcess(true);
 				} else {
-					alert('미처리된 자산이 없습니다.');
+					Swal.fire({
+						icon: 'error',
+						title: '미처리된 자산이 없습니다.',
+						text: '요청이 있는지 다시 확인해주세요.',
+					});
 				}
 				console.log('미확인 요청 자산 리스트: ', responseData);
 			} catch (error) {
@@ -100,7 +105,11 @@ const DemandHistory = () => {
 	const handleOpenModal = (type, rowSelect) => {
 		console.log(rowSelect);
 		if (rowSelect.length === 0) {
-			alert('데이터를 선택을 해주세요');
+			Swal.fire({
+				icon: 'error',
+				title: '데이터를 선택을 해주세요',
+				text: '데이터가 선택되지 않았습니다.',
+			});
 		} else {
 			setActionType(type);
 			setActionData(rowSelect); // rowData 또는 선택한 데이터를 설정

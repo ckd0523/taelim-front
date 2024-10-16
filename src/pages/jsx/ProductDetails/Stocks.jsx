@@ -2,8 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Table } from '@/components/table';
 import Tabs1 from './Tab';
 import QuickAccess from '@/pages/apps/FileManager/QuickAccess';
-import { quickAccessFiles } from './data';
-import { Row, Col, Card } from 'react-bootstrap';
+import { Row, Col } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
 const urlConfig = import.meta.env.VITE_BASIC_URL;
 

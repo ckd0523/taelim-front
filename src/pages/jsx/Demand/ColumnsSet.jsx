@@ -1,6 +1,4 @@
-import { Link } from 'react-router-dom';
 import classNames from 'classnames';
-import { useCallback } from 'react';
 
 /* status column render */
 const StatusColumn = ({ row }) => {

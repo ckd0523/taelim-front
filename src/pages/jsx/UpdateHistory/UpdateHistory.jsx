@@ -101,6 +101,7 @@ const UpdateHistory = () => {
 								pagination={true}
 								//isSelectable={true}
 								theadClass="table-dark"
+								tableClass="border-black"
 								searchBoxClass="mb-2"
 								//onRowClick={handleRowClick} // onRowClick 이벤트를 빈 함수로 설정하여 무시
 								onRowClick={() => {}}

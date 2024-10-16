@@ -79,7 +79,7 @@ const InfoModal = ({ show, handleClose, modalData }) => {
 				className="custom-modal" // 모달 전체에 스타일 적용
 			>
 				<Modal.Header closeButton>
-					<Modal.Title>요청 상세 정보</Modal.Title>
+					<Modal.Title>수정 요청 상세 정보</Modal.Title>
 				</Modal.Header>
 				<Modal.Body>
 					{isLoading ? (
@@ -105,10 +105,10 @@ const InfoModal = ({ show, handleClose, modalData }) => {
 													/>
 												</Col>
 												<Col lg={6}>
-													<Form.Label>요청구분</Form.Label>
+													<Form.Label>요청일자</Form.Label>
 													<Form.Control
 														type="text"
-														value={modalData.demandType}
+														value={modalData.demandDate}
 														readOnly
 													/>
 												</Col>
@@ -127,19 +127,17 @@ const InfoModal = ({ show, handleClose, modalData }) => {
 													<Form.Label className="pt-2">상태</Form.Label>
 													<Form.Control
 														type="text"
-														value={modalData.demandStatus}
-														readOnly
-													/>
-												</Col>
-											</Row>
-											<Row>
-												<Col lg={6}>
-													<Form.Label className="pt-2">
-														요청일자
-													</Form.Label>
-													<Form.Control
-														type="text"
-														value={modalData.demandDate}
+														value={
+															modalData.demandStatus === 'UNCONFIRMED'
+																? '미처리'
+																: modalData.demandStatus ===
+																    'APPROVE'
+																  ? '승인'
+																  : modalData.demandStatus ===
+																      'REFUSAL'
+																    ? '거절'
+																    : modalData.demandStatus // 다른 상태일 경우 원래 값 유지
+														}
 														readOnly
 													/>
 												</Col>
@@ -407,17 +405,94 @@ const InfoModal = ({ show, handleClose, modalData }) => {
 		return (
 			<Modal show={show} onHide={handleClose} backdrop="static" keyboard={false}>
 				<Modal.Header closeButton>
-					<Modal.Title>요청 상세 정보</Modal.Title>
+					<Modal.Title>폐기 요청 상세 정보</Modal.Title>
 				</Modal.Header>
 				<Modal.Body>
 					{modalData && (
-						<div>
-							<p>요청구분: {modalData.demandNo}</p>
-							<p>요청구분: {modalData.demandType}</p>
-							<p>요청일자: {modalData.demandDate}</p>
-							<p>요청자: {modalData.demandBy}</p>
-							<p>상태: {modalData.demandStatus}</p>
-						</div>
+						<>
+							<Form.Group className="mb-3 pt-2" controlId="exampleForm.ControlInput1">
+								<Col lg={12}>
+									<Form.Label>자산코드</Form.Label>
+									<Form.Control
+										type="text"
+										value={modalData.assetCode}
+										readOnly
+									/>
+								</Col>
+								<Col lg={12}>
+									<Form.Label className="pt-2">자산명</Form.Label>
+									<Form.Control
+										type="text"
+										value={modalData.assetName}
+										readOnly
+									/>
+								</Col>
+								<Col lg={12}>
+									<Form.Label className="pt-2">상태</Form.Label>
+									<Form.Control
+										type="text"
+										value={
+											modalData.demandStatus === 'UNCONFIRMED'
+												? '미처리'
+												: modalData.demandStatus === 'APPROVE'
+												  ? '승인'
+												  : modalData.demandStatus === 'REFUSAL'
+												    ? '거절'
+												    : modalData.demandStatus // 다른 상태일 경우 원래 값 유지
+										}
+										readOnly
+									/>
+								</Col>
+
+								<Col lg={12}>
+									<Form.Label className="pt-2">폐기일자</Form.Label>
+									<Form.Control
+										type="text"
+										value={modalData.demandDate}
+										readOnly
+									/>
+								</Col>
+
+								<Col lg={12}>
+									<Form.Label className="pt-2">폐기사유</Form.Label>
+									<Form.Control
+										type="text"
+										value={modalData.demandReason}
+										readOnly
+									/>
+								</Col>
+
+								<Col lg={12}>
+									<Form.Label className="pt-2">폐기내용</Form.Label>
+									<Form.Control
+										type="text"
+										value={modalData.demandDetail}
+										readOnly
+									/>
+								</Col>
+								<Col lg={12}>
+									<Form.Label className="pt-2">폐기방법</Form.Label>
+									<Form.Control
+										type="text"
+										value={modalData.disposeMethod}
+										readOnly
+									/>
+								</Col>
+
+								<Col lg={12}>
+									<Form.Label className="pt-2">폐기위치</Form.Label>
+									<Form.Control
+										type="text"
+										value={modalData.disposeLocation}
+										readOnly
+									/>
+								</Col>
+								<Col lg={12}>
+									<Form.Label className="pt-2">폐기자</Form.Label>
+									<Form.Control type="text" value={modalData.demandBy} readOnly />
+								</Col>
+							</Form.Group>
+						</>
 					)}
 				</Modal.Body>
 				<Modal.Footer>
@@ -504,10 +579,9 @@ const ProcessModal = ({ show, handleClose }) => {
 				text: '계속 진행해주세요.',
 			});
 		} else {
-			alert('미확인 자산 처리가 완료 되었습니다.');
 			Swal.fire({
 				icon: 'success',
-				title: '미확인 자산 처리가 완료 되었습니다.',
+				title: '미확인 자산 처리 완료.',
 				text: '요청 내역 페이지로 이동합니다.',
 			});
 		}
@@ -621,9 +695,54 @@ const ProcessModal = ({ show, handleClose }) => {
 				{modalType === 'updateModal' && assetInfo && (
 					<div>
 						<h2>수정 요청</h2>
-						<p>요청번호: {demandHistoryDto.demandNo}</p>
-						<p>요청구분: {demandHistoryDto.demandType}</p>
-						<p>자산코드: {demandHistoryDto.assetCode}</p>
+						<Form.Group className="mb-3 pt-2" controlId="exampleForm.ControlInput1">
+							<Row>
+								<Col lg={6}>
+									<Form.Label>요청번호</Form.Label>
+									<Form.Control
+										type="text"
+										value={demandHistoryDto.demandNo}
+										readOnly
+									/>
+								</Col>
+								<Col lg={6}>
+									<Form.Label>요청일자</Form.Label>
+									<Form.Control
+										type="text"
+										value={demandHistoryDto.demandDate}
+										readOnly
+									/>
+								</Col>
+							</Row>
+							<Row>
+								<Col lg={6}>
+									<Form.Label className="pt-2">요청자</Form.Label>
+									<Form.Control
+										type="text"
+										value={demandHistoryDto.demandBy}
+										readOnly
+									/>
+								</Col>
+
+								<Col lg={6}>
+									<Form.Label className="pt-2">상태</Form.Label>
+									<Form.Control
+										type="text"
+										value={
+											demandHistoryDto.demandStatus === 'UNCONFIRMED'
+												? '미처리'
+												: demandHistoryDto.demandStatus === 'APPROVE'
+												  ? '승인'
+												  : demandHistoryDto.demandStatus === 'REFUSAL'
+												    ? '거절'
+												    : demandHistoryDto.demandStatus // 다른 상태일 경우 원래 값 유지
+										}
+										readOnly
+									/>
+								</Col>
+							</Row>
+						</Form.Group>
+
 						{/* assetInfo 관련 정보 */}
 
 						<div className="info-section">
@@ -852,9 +971,102 @@ const ProcessModal = ({ show, handleClose }) => {
 				{modalType === 'deleteModal' && (
 					<div>
 						<h2>삭제 요청</h2>
-						<p>요청번호: {demandHistoryDto.demandNo}</p>
-						<p>요청구분: {demandHistoryDto.demandType}</p>
-						<p>자산코드: {demandHistoryDto.assetCode}</p>
+
+						<Form.Group className="mb-3 pt-2" controlId="exampleForm.ControlInput1">
+							<Row>
+								<Col lg={6}>
+									<Form.Label>자산코드</Form.Label>
+									<Form.Control
+										type="text"
+										value={demandHistoryDto.assetCode}
+										readOnly
+									/>
+								</Col>
+								<Col lg={6}>
+									<Form.Label>자산명</Form.Label>
+									<Form.Control
+										type="text"
+										value={demandHistoryDto.assetName}
+										readOnly
+									/>
+								</Col>
+							</Row>
+							<Row>
+								<Col lg={6}>
+									<Form.Label className="pt-2">상태</Form.Label>
+									<Form.Control
+										type="text"
+										value={
+											demandHistoryDto.demandStatus === 'UNCONFIRMED'
+												? '미처리'
+												: demandHistoryDto.demandStatus === 'APPROVE'
+												  ? '승인'
+												  : demandHistoryDto.demandStatus === 'REFUSAL'
+												    ? '거절'
+												    : demandHistoryDto.demandStatus // 다른 상태일 경우 원래 값 유지
+										}
+										readOnly
+									/>
+								</Col>
+
+								<Col lg={6}>
+									<Form.Label className="pt-2">폐기일자</Form.Label>
+									<Form.Control
+										type="text"
+										value={demandHistoryDto.demandDate}
+										readOnly
+									/>
+								</Col>
+							</Row>
+							<Row>
+								<Col lg={6}>
+									<Form.Label className="pt-2">폐기사유</Form.Label>
+									<Form.Control
+										type="text"
+										value={demandHistoryDto.demandReason}
+										readOnly
+									/>
+								</Col>
+
+								<Col lg={6}>
+									<Form.Label className="pt-2">폐기내용</Form.Label>
+									<Form.Control
+										type="text"
+										value={demandHistoryDto.demandDetail}
+										readOnly
+									/>
+								</Col>
+							</Row>
+							<Row>
+								<Col lg={6}>
+									<Form.Label className="pt-2">폐기방법</Form.Label>
+									<Form.Control
+										type="text"
+										value={demandHistoryDto.disposeMethod}
+										readOnly
+									/>
+								</Col>
+
+								<Col lg={6}>
+									<Form.Label className="pt-2">폐기위치</Form.Label>
+									<Form.Control
+										type="text"
+										value={demandHistoryDto.disposeLocation}
+										readOnly
+									/>
+								</Col>
+							</Row>
+							<Row>
+								<Col lg={6}>
+									<Form.Label className="pt-2">폐기자</Form.Label>
+									<Form.Control
+										type="text"
+										value={demandHistoryDto.demandBy}
+										readOnly
+									/>
+								</Col>
+							</Row>
+						</Form.Group>
 					</div>
 				)}
 				{modalType === 'defaultModal' && (

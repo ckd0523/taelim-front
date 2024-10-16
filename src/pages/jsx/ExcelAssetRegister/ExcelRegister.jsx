@@ -267,7 +267,7 @@ const ExcelRegister = () => {
 									<h3>Sheet: {sheetName.substring(4, 12)}</h3>
 								))}
 
-								<Table bordered tableClass="border-black">
+								<Table className="border-black">
 									<thead className="table-dark">
 										<tr>
 											{/* {headers.map((header, index) => (

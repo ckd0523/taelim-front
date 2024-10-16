@@ -101,7 +101,11 @@ const RegisterButton = ({ onClickRegister }) => {
 
 	return (
 		<>
-			<Button style={{ background: '#5e83bb' }} className="me-1" onClick={toggleSignUp}>
+			<Button
+				style={{ background: '#5e83bb', border: 'none' }}
+				className="me-1"
+				onClick={toggleSignUp}
+			>
 				자산 조사 등록
 			</Button>
 
@@ -160,14 +164,14 @@ const RegisterButton = ({ onClickRegister }) => {
 				</Modal.Body>
 
 				<Modal.Footer>
-					<Button variant="dark" onClick={handleRegistRequest} disabled={isSubmitting}>
+					<Button
+						style={{ background: '#5e83bb', border: 'none' }}
+						onClick={handleRegistRequest}
+						disabled={isSubmitting}
+					>
 						{isSubmitting ? '처리 중...' : '확인'}
 					</Button>
-					<Button
-						style={{ background: '#acb6bd' }}
-						variant="secondary"
-						onClick={toggleSignUp}
-					>
+					<Button variant="secondary" onClick={toggleSignUp}>
 						취소
 					</Button>
 				</Modal.Footer>

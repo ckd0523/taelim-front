@@ -180,6 +180,7 @@ const DemandHistory = () => {
 								}}
 							/>
 							<button
+								className="button"
 								type="submit"
 								style={{
 									height: '40px',
@@ -310,7 +311,7 @@ const DemandHistory = () => {
 					<Row className="row-cols-auto justify-content-end">
 						<Col>
 							<Button
-								style={{ background: '#73af82' }}
+								style={{ background: '#73af82', border: 'none' }}
 								variant="success"
 								onClick={() => processOpenModal()}
 							>
@@ -319,7 +320,7 @@ const DemandHistory = () => {
 						</Col>
 						<Col>
 							<Button
-								style={{ background: '#5e83bb' }}
+								style={{ background: '#5e83bb', border: 'none' }}
 								onClick={() => handleOpenModal('approve', rowSelect)}
 							>
 								승인
@@ -327,8 +328,7 @@ const DemandHistory = () => {
 						</Col>
 						<Col>
 							<Button
-								style={{ background: '#c66464' }}
-								variant="danger"
+								style={{ background: '#c66464', border: 'none' }}
 								onClick={() => handleOpenModal('reject', rowSelect)}
 							>
 								거절

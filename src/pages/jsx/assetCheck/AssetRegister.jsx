@@ -250,7 +250,7 @@ const AssetRegister = () => {
 
 				<div className="pt-2 d-flex justify-content-center">
 					<Button
-						style={{ fontSize: 17 }}
+						style={{ background: '#5e83bb', border: 'none', fontSize: 17 }}
 						className="btn-rounded"
 						variant="dark"
 						type="submit"
@@ -260,7 +260,7 @@ const AssetRegister = () => {
 					</Button>
 					<p className="px-2"></p>
 					<Button
-						style={{ fontSize: 17, background: '#acb6bd' }}
+						style={{ fontSize: 17 }}
 						className="btn-rounded"
 						variant="secondary"
 						type="button"

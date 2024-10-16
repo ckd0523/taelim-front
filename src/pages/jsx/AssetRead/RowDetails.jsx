@@ -936,20 +936,22 @@ const RowDetails = ({ row, assetCode, onClose, formData: initialFormData }) => {
 						{isEditing ? (
 							<>
 								<Button
-									variant="primary"
+									style={{ background: '#73af82', border: 'none' }}
+									variant="success"
 									className="me-2"
 									onClick={handleNextClick}
 								>
 									다음
 								</Button>
 
-								<Button variant="danger" onClick={handleCloseClick}>
-									닫기1
+								<Button variant="secondary" onClick={handleCloseClick}>
+									닫기
 								</Button>
 							</>
 						) : (
 							<>
 								<Button
+									style={{ background: '#5e83bb', border: 'none' }}
 									variant="primary"
 									className="me-2"
 									onClick={handleEditClick}
@@ -963,7 +965,7 @@ const RowDetails = ({ row, assetCode, onClose, formData: initialFormData }) => {
 									assetName={formData.assetName}
 									assetNo={formData.assetNo}
 								/>
-								<Button variant="danger" onClick={onClose}>
+								<Button variant="secondary" onClick={onClose}>
 									닫기
 								</Button>
 							</>

@@ -1,9 +1,6 @@
-button {
+.button {
 	float: left;
 	border: none;
-}
-
-button {
 	background: #5986a0;
 	cursor: pointer;
 	border-radius: 0 5px 5px 0;

@@ -84,6 +84,7 @@ const SearchBar = ({ setData, originalData }) => {
 								}}
 							/>
 							<button
+								className="button"
 								type="submit"
 								style={{
 									height: '40px',

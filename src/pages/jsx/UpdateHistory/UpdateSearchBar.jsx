@@ -83,6 +83,7 @@ const SearchForm = ({ onSearch }) => {
 								}}
 							/>
 							<button
+								className="button"
 								type="submit"
 								style={{
 									height: '40px',

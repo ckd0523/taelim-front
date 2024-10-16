@@ -167,7 +167,10 @@ const SideBarContent = () => {
 										</Row>
 										<br></br>
 										<Modal.Footer>
-											<Button onClick={ChangeModify}>
+											<Button
+												style={{ background: '#5e83bb', border: 'none' }}
+												onClick={ChangeModify}
+											>
 												{modify ? '수정' : '저장'}
 											</Button>
 											<Button variant="secondary" onClick={toggleSignUp}>

@@ -9,7 +9,7 @@ import {
 	useExpanded,
 } from 'react-table';
 import classNames from 'classnames';
-import { Pagination } from '@/components';
+//import { Pagination } from '@/components';
 import RowDetails from './RowDetails';
 
 const GlobalFilter = ({ preGlobalFilteredRows, globalFilter, setGlobalFilter, searchBoxClass }) => {
@@ -238,7 +238,7 @@ const Table = (props) => {
 				</table>
 			</div>
 
-			{pagination && <Pagination tableProps={dataTable} sizePerPageList={sizePerPageList} />}
+			{/* {pagination && <Pagination tableProps={dataTable} sizePerPageList={sizePerPageList} />} */}
 		</>
 	);
 };

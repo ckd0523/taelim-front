@@ -35,24 +35,6 @@ const Pagination = ({ pageIndex, pageCount, gotoPage, pageSize, setPageSize, siz
 
 	return (
 		<div className="d-lg-flex align-items-center text-center pb-1">
-			{/* 페이지당 항목 수 선택 */}
-			{sizePerPageList.length > 0 && (
-				<div className="d-inline-block me-3">
-					<label className="me-1">Display:</label>
-					<select
-						value={pageSize}
-						onChange={(e) => setPageSize(Number(e.target.value))}
-						className="form-select d-inline-block w-auto"
-					>
-						{sizePerPageList.map((pageSize, index) => (
-							<option key={index.toString()} value={pageSize.value}>
-								{pageSize.text}
-							</option>
-						))}
-					</select>
-				</div>
-			)}
-
 			{/* 현재 페이지 및 총 페이지 수 표시 */}
 			<span className="me-3">
 				Page{' '}
@@ -61,14 +43,35 @@ const Pagination = ({ pageIndex, pageCount, gotoPage, pageSize, setPageSize, siz
 				</strong>
 			</span>
 
+			{/* 페이지당 항목 수 선택 */}
+			<span className="d-inline-block align-items-center text-sm-start text-center my-sm-0 my-2">
+				<label>Go to page : </label>
+				<input
+					type="number"
+					value={pageIndex + 1}
+					min="1"
+					max={pageCount} // 최대 페이지 수를 설정
+					onChange={(e) => {
+						const page = e.target.value ? Number(e.target.value) - 1 : 0; // 입력된 값이 있을 때 페이지 번호를 계산
+						if (page >= 0 && page < pageCount) {
+							// 유효한 페이지인지 확인
+							gotoPage(page); // 페이지 이동
+						}
+					}}
+					className="form-control w-25 ms-1 d-inline-block"
+				/>
+			</span>
+
 			{/* 페이지 이동 */}
 			<ul className="pagination pagination-rounded d-inline-flex ms-auto align-items-center mb-0">
 				<li
 					key="prevpage"
 					className={classNames('page-item', 'paginate_button', 'previous', {
-						disabled: pageIndex === 0,
+						disabled: pageIndex === 0, // 첫 페이지일 경우 disabled
 					})}
-					onClick={() => changePage(pageIndex)}
+					onClick={() => {
+						if (pageIndex > 0) changePage(pageIndex); // 현재 페이지가 첫 페이지가 아닐 때만 페이지 감소
+					}}
 				>
 					<Link to="" className="page-link">
 						<i className="mdi mdi-chevron-left"></i>
@@ -112,9 +115,13 @@ const Pagination = ({ pageIndex, pageCount, gotoPage, pageSize, setPageSize, siz
 				<li
 					key="nextpage"
 					className={classNames('page-item', 'paginate_button', 'next', {
-						disabled: pageIndex + 1 === pageCount,
+						disabled: pageIndex + 1 === pageCount, // 최대 페이지에 도달했을 때 disabled
 					})}
-					onClick={() => changePage(pageIndex + 2)}
+					onClick={() => {
+						if (pageIndex + 1 < pageCount) {
+							changePage(pageIndex + 2); // 현재 페이지가 마지막 페이지가 아닐 때만 페이지 이동
+						}
+					}}
 				>
 					<Link to="" className="page-link">
 						<i className="mdi mdi-chevron-right"></i>

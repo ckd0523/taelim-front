@@ -48,7 +48,7 @@ function CustomToggle({ children, eventKey }) {
 		<button
 			className="custom-button px-3 pt-2 fw-bold"
 			type="button"
-			style={{ backgroundColor: '#727CF540', textAlign: 'left' }}
+			style={{ backgroundColor: '#6081ab4e', textAlign: 'left' }}
 			onClick={decoratedOnClick}
 		>
 			{isOpen ? (

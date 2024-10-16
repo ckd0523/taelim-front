@@ -812,10 +812,16 @@ const ProcessModal = ({ show, handleClose }) => {
 						</Form.Group>
 					</Form>
 				</Col>
-				<Button variant="primary" onClick={() => handleNext('approve')}>
+				<Button
+					style={{ background: '#5e83bb', border: 'none' }}
+					onClick={() => handleNext('approve')}
+				>
 					승인
 				</Button>
-				<Button variant="danger" onClick={() => handleNext('reject')}>
+				<Button
+					style={{ background: '#c66464', border: 'none' }}
+					onClick={() => handleNext('reject')}
+				>
 					거절
 				</Button>
 				<Button variant="secondary" onClick={() => handleNext('hold')}>
@@ -901,12 +907,22 @@ const ActionModal = ({ show, handleClose, actionData, actionType, handleSubmit }
 				</Form>
 			</Modal.Body>
 			<Modal.Footer>
-				<Button
-					variant={actionType === 'approve' ? 'primary' : 'danger'}
-					onClick={handleFormSubmit}
-				>
-					처리
-				</Button>
+				{actionType === 'approve' ? (
+					<Button
+						style={{ background: '#5e83bb', border: 'none' }}
+						onClick={handleFormSubmit}
+					>
+						승인
+					</Button>
+				) : (
+					<Button
+						style={{ background: '#c66464', border: 'none' }}
+						onClick={handleFormSubmit}
+					>
+						거절
+					</Button>
+				)}
+
 				<Button variant="secondary" onClick={handleClose}>
 					닫기
 				</Button>

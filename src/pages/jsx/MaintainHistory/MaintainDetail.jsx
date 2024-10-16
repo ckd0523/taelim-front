@@ -296,15 +296,24 @@ const MaintainDetail = ({ show, selectData, handleClose }) => {
 				<ModalFooter>
 					{isEditing ? (
 						<>
-							<Button variant="primary" onClick={saveImages}>
+							<Button
+								style={{ background: '#5e83bb', border: 'none' }}
+								onClick={saveImages}
+							>
 								저장
 							</Button>
-							<Button variant="secondary" onClick={handleEditToggle}>
+							<Button
+								style={{ background: '#c66464', border: 'none' }}
+								onClick={handleEditToggle}
+							>
 								취소
 							</Button>
 						</>
 					) : (
-						<Button variant="secondary" onClick={handleEditToggle}>
+						<Button
+							style={{ background: '#5e83bb', border: 'none' }}
+							onClick={handleEditToggle}
+						>
 							수정
 						</Button>
 					)}

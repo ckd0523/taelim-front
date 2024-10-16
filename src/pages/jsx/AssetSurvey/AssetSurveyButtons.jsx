@@ -19,7 +19,11 @@ const Buttons = ({ onClickRegister, onDelete }) => {
 				<RegisterButton onClickRegister={onClickRegister} />
 			</Col>
 			<Col>
-				<Button style={{ background: '#c66464' }} variant="danger" onClick={onDelete}>
+				<Button
+					style={{ background: '#c66464', border: 'none' }}
+					variant="danger"
+					onClick={onDelete}
+				>
 					자산 조사 삭제
 				</Button>
 			</Col>
@@ -32,7 +36,7 @@ const SurveyCompleteButton = ({ onClickCompleteSurvey }) => {
 	//console.log("sdfdsfs");
 	return (
 		<>
-			<Button style={{ background: '#5e83bb' }} onClick={toggleSignUp}>
+			<Button style={{ background: '#5e83bb', border: 'none' }} onClick={toggleSignUp}>
 				완료
 			</Button>
 
@@ -41,7 +45,7 @@ const SurveyCompleteButton = ({ onClickCompleteSurvey }) => {
 				<Modal.Body className="text-center">정말 자산 조사를 완료하시겠습니까?</Modal.Body>
 				<Modal.Footer className="justify-content-center">
 					<Button
-						variant="primary"
+						style={{ background: '#5e83bb', border: 'none' }}
 						onClick={() => {
 							//onClick에 함수 2개 넣는 법, 두 함수의 위치를 바꿔도 차이는 없음
 							toggleSignUp();
@@ -51,7 +55,7 @@ const SurveyCompleteButton = ({ onClickCompleteSurvey }) => {
 						완료
 					</Button>
 					<Button
-						style={{ background: '#c66464' }}
+						style={{ background: '#c66464', border: 'none' }}
 						variant="danger"
 						onClick={toggleSignUp}
 					>
@@ -67,7 +71,7 @@ const SruveyCancelButton = () => {
 	const [signUpModal, toggleSignUp] = useToggle();
 	return (
 		<>
-			<Button style={{ background: '#c66464' }} variant="danger" onClick={toggleSignUp}>
+			<Button variant="secondary" onClick={toggleSignUp}>
 				취소
 			</Button>
 
@@ -78,11 +82,10 @@ const SruveyCancelButton = () => {
 				</Modal.Body>
 				<Modal.Footer className="justify-content-center">
 					<Link to={'/jsx/AssetSurveyHistory'}>
-						<Button style={{ background: '#5e83bb' }}>예</Button>
+						<Button style={{ background: '#5e83bb', border: 'none' }}>예</Button>
 					</Link>
 					<Button
-						style={{ background: '#c66464' }}
-						variant="danger"
+						style={{ background: '#c66464', border: 'none' }}
 						onClick={toggleSignUp}
 					>
 						아니오

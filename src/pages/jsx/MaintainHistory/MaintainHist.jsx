@@ -194,6 +194,7 @@ const MaintainHist = () => {
 								}}
 							/>
 							<button
+								className="button"
 								type="submit"
 								style={{
 									height: '40px',

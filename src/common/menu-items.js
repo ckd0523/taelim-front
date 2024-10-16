@@ -78,14 +78,14 @@ const MENU_ITEMS = [
 		children: [
 			{
 				key: 'ds-AssetPageTest',
-				label: '자산조회',
+				label: '자산조회테스트',
 				url: '/jsx/AssetPageTest',
 				parentKey: 'check',
 			},
 			{
-				key: 'ds-AssetPage',
-				label: '자산조회12',
-				url: '/jsx/AssetPage',
+				key: 'ds-Expand',
+				label: '자산조회',
+				url: '/jsx/Expand',
 				parentKey: 'check',
 			},
 		],

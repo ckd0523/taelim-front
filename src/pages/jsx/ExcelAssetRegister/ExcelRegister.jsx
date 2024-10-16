@@ -267,7 +267,7 @@ const ExcelRegister = () => {
 									<h3>Sheet: {sheetName.substring(4, 12)}</h3>
 								))}
 
-								<Table bordered>
+								<Table bordered tableClass="border-black">
 									<thead className="table-dark">
 										<tr>
 											{/* {headers.map((header, index) => (
@@ -283,7 +283,7 @@ const ExcelRegister = () => {
 											<th>소유자</th>
 										</tr>
 									</thead>
-									{Object.keys(data).length > 0 && (
+									{Object.keys(data).length > 0 ? (
 										<tbody>
 											{Object.keys(data).map((sheetName) => (
 												<React.Fragment key={sheetName}>
@@ -304,6 +304,21 @@ const ExcelRegister = () => {
 													))}
 												</React.Fragment>
 											))}
+										</tbody>
+									) : (
+										<tbody>
+											<tr>
+												<td colSpan="8" className="text-center">
+													<div
+														className="alert alert-warning"
+														role="alert"
+													>
+														<strong>데이터가 없습니다!</strong>
+														<br />
+														자산분류와 파일을 선택해주세요.
+													</div>
+												</td>
+											</tr>
 										</tbody>
 									)}
 								</Table>

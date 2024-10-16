@@ -46,14 +46,14 @@
 	border-radius: 5px;
 	overflow-y: auto;
 	width: 48%;
-
 	overflow-x: auto; /* 테이블이 넘칠 때 가로 스크롤 추가 */
 }
 
 .update-modal .modal-body .table-update {
 	display: block; /* 셀 안에 데이터 맞춰서 글자를 보여줌 */
-	width: 100%; /* 전체 너비를 100%로 설정 */
 	table-layout: fixed; /* 고정 테이블 레이아웃 */
+	/* width: 100%; 전체 너비를 100%로 설정 */
+
 	margin-bottom: 15px; /* 테이블 간의 간격을 설정 */
 }
 
@@ -85,7 +85,8 @@
 .update-button {
 	background: #5986a0;
 	cursor: pointer;
-	border-radius: 0 5px 5px 0;
+	border-radius: 0 0 0 0;
 	-webkit-transition-duration: 0.3s;
 	transition-duration: 0.3s;
+	text-align: left;
 }

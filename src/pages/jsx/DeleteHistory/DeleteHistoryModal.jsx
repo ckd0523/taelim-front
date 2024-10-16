@@ -1,4 +1,4 @@
-import { Row, Col, Card, Button, Modal, Form } from 'react-bootstrap';
+import { Row, Col, Card, Button, Modal, Form, FormGroup } from 'react-bootstrap';
 import { useState } from 'react';
 
 const InfoModal = ({ show, handleClose, modalData }) => {
@@ -9,16 +9,50 @@ const InfoModal = ({ show, handleClose, modalData }) => {
 			</Modal.Header>
 			<Modal.Body>
 				{modalData && (
-					<div>
-						<p>자산코드: {modalData.assetCode}</p>
-						<p>자산명: {modalData.assetName}</p>
-						<p>폐기일자: {modalData.deleteDate}</p>
-						<p>폐기사유: {modalData.deleteReason}</p>
-						<p>폐기내용: {modalData.deleteDetail}</p>
-						<p>폐기방법: {modalData.deleteMethod}</p>
-						<p>폐기위치: {modalData.deleteLocation}</p>
-						<p>폐기자: {modalData.deleteBy}</p>
-					</div>
+					<>
+						<Form.Group className="mb-3 pt-2" controlId="exampleForm.ControlInput1">
+							<Col lg={12}>
+								<Form.Label>자산코드</Form.Label>
+								<Form.Control type="text" value={modalData.assetCode} readOnly />
+							</Col>
+							<Col lg={12}>
+								<Form.Label className="pt-2">자산명</Form.Label>
+								<Form.Control type="text" value={modalData.assetName} readOnly />
+							</Col>
+
+							<Col lg={12}>
+								<Form.Label className="pt-2">폐기일자</Form.Label>
+								<Form.Control type="text" value={modalData.deleteDate} readOnly />
+							</Col>
+
+							<Col lg={12}>
+								<Form.Label className="pt-2">폐기사유</Form.Label>
+								<Form.Control type="text" value={modalData.deleteReason} readOnly />
+							</Col>
+
+							<Col lg={12}>
+								<Form.Label className="pt-2">폐기내용</Form.Label>
+								<Form.Control type="text" value={modalData.deleteDetail} readOnly />
+							</Col>
+							<Col lg={12}>
+								<Form.Label className="pt-2">폐기방법</Form.Label>
+								<Form.Control type="text" value={modalData.deleteMethod} readOnly />
+							</Col>
+
+							<Col lg={12}>
+								<Form.Label className="pt-2">폐기위치</Form.Label>
+								<Form.Control
+									type="text"
+									value={modalData.deleteLocation}
+									readOnly
+								/>
+							</Col>
+							<Col lg={12}>
+								<Form.Label className="pt-2">폐기자</Form.Label>
+								<Form.Control type="text" value={modalData.deleteBy} readOnly />
+							</Col>
+						</Form.Group>
+					</>
 				)}
 			</Modal.Body>
 			<Modal.Footer>

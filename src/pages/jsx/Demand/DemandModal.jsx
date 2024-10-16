@@ -1,7 +1,17 @@
-import { Row, Col, Card, Button, Modal, Form, Table as BootstrapTable } from 'react-bootstrap';
+import {
+	Row,
+	Col,
+	Card,
+	Button,
+	Modal,
+	Form,
+	FormGroup,
+	Table as BootstrapTable,
+} from 'react-bootstrap';
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import './Style.css'; // 같은 폴더에서 CSS 파일 import
+import Swal from 'sweetalert2';
 
 const API_URL = import.meta.env.VITE_BASIC_URL;
 const urlConfig = import.meta.env.VITE_BASIC_URL;
@@ -80,13 +90,62 @@ const InfoModal = ({ show, handleClose, modalData }) => {
 							<>
 								{/* modalData 관련 정보 */}
 								{modalData && (
-									<div>
-										<p>요청구분: {modalData.demandNo}</p>
-										<p>요청구분: {modalData.demandType}</p>
-										<p>요청일자: {modalData.demandDate}</p>
-										<p>요청자: {modalData.demandBy}</p>
-										<p>상태: {modalData.demandStatus}</p>
-									</div>
+									<>
+										<Form.Group
+											className="mb-3 pt-2"
+											controlId="exampleForm.ControlInput1"
+										>
+											<Row>
+												<Col lg={6}>
+													<Form.Label>요청번호</Form.Label>
+													<Form.Control
+														type="text"
+														value={modalData.demandNo}
+														readOnly
+													/>
+												</Col>
+												<Col lg={6}>
+													<Form.Label>요청구분</Form.Label>
+													<Form.Control
+														type="text"
+														value={modalData.demandType}
+														readOnly
+													/>
+												</Col>
+											</Row>
+											<Row>
+												<Col lg={6}>
+													<Form.Label className="pt-2">요청자</Form.Label>
+													<Form.Control
+														type="text"
+														value={modalData.demandBy}
+														readOnly
+													/>
+												</Col>
+
+												<Col lg={6}>
+													<Form.Label className="pt-2">상태</Form.Label>
+													<Form.Control
+														type="text"
+														value={modalData.demandStatus}
+														readOnly
+													/>
+												</Col>
+											</Row>
+											<Row>
+												<Col lg={6}>
+													<Form.Label className="pt-2">
+														요청일자
+													</Form.Label>
+													<Form.Control
+														type="text"
+														value={modalData.demandDate}
+														readOnly
+													/>
+												</Col>
+											</Row>
+										</Form.Group>
+									</>
 								)}
 
 								{/* assetInfo 관련 정보 */}
@@ -439,9 +498,18 @@ const ProcessModal = ({ show, handleClose }) => {
 
 		const nextIndex = currentIndex + 1;
 		if (demandList.length != nextIndex) {
-			alert(demandList.length + '중 ' + nextIndex + '개 처리');
+			Swal.fire({
+				icon: 'success',
+				title: demandList.length + '중 ' + nextIndex + '개 처리',
+				text: '계속 진행해주세요.',
+			});
 		} else {
 			alert('미확인 자산 처리가 완료 되었습니다.');
+			Swal.fire({
+				icon: 'success',
+				title: '미확인 자산 처리가 완료 되었습니다.',
+				text: '요청 내역 페이지로 이동합니다.',
+			});
 		}
 
 		if (nextIndex < demandList.length) {

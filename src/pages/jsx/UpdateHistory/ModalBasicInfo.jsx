@@ -24,7 +24,7 @@ const ModalBasicInfo = ({
 			setIsOpen((prevOpen) => !prevOpen)
 		);
 		return (
-			<button1
+			<button
 				className="update-button px-3  fw-bold"
 				type="button"
 				onClick={decoratedOnClick}
@@ -36,7 +36,7 @@ const ModalBasicInfo = ({
 					<BsCaretDownFill style={{ paddingRight: '5' }} size="30" />
 				)}
 				{children}
-			</button1>
+			</button>
 		);
 	}
 

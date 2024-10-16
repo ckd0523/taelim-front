@@ -82,7 +82,7 @@
 .text-danger {
 	color: red; /* 변경된 데이터는 빨간색으로 표시 */
 }
-button1 {
+.update-button {
 	background: #5986a0;
 	cursor: pointer;
 	border-radius: 0 5px 5px 0;

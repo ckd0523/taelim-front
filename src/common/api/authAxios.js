@@ -11,7 +11,7 @@ const api = axios.create({
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('accessToken');
-    if (token) {
+    if (token && config.url !== '/logout') {
       config.headers.Authorization = `Bearer ${token}`; // Authorization 헤더에 토큰 추가
     }
     return config;
@@ -26,11 +26,11 @@ api.interceptors.response.use((response) => {
   return response;
 }, async (error) => {
   const originalRequest = error.config;
-  console.log(originalRequest);
+  console.log("authAxios1 : " + originalRequest);
   console.log("에러 : " + error.response.status);
   console.log("에러2 : " + JSON.stringify(error.config));
   console.log("에러3 : " + JSON.stringify(error.response));
-  console.log(originalRequest._retry);
+  console.log("authAxios2 : " + originalRequest._retry);
   //originalRequest._retry = false;
 
   if (error.response && error.response.status === 401 && !originalRequest._retry) {
@@ -38,7 +38,7 @@ api.interceptors.response.use((response) => {
     originalRequest._retry = true;
 
     const errorMessage = error.response.data; // 응답 메시지 가져오기
-    console.log(errorMessage);
+    console.log("authAxios3 : " + errorMessage);
 
     // 리프레시 토큰으로 새로운 액세스 토큰 요청
     if (errorMessage === "Access token is invalid") {
@@ -48,15 +48,17 @@ api.interceptors.response.use((response) => {
         console.log("여기 안와??2");
 
         const response = await axios.post(`${URL}/refresh`, {}, { withCredentials: true })
-          .then(response => {
-            console.log("리프레시 토큰 전송 성공", response.data);
-          })
-          .catch(error => {
-            console.log("리프레시 토큰 전송 실패", error)
-          });
+        // .then(response => {
+        //   console.log("리프레시 토큰 전송 성공", response.data);
+        // })
+        // .catch(error => {
+        //   console.log("리프레시 토큰 전송 실패", error)
+        // });
         console.log("여기 안와??3");
+        console.log("액세스 토큰 : " + response);
 
         if (response.status === 200) {
+
           const newAccessToken = response.data.accessToken;
 
           // 새로운 액세스 토큰을 로컬 스토리지에 저장
@@ -73,7 +75,7 @@ api.interceptors.response.use((response) => {
         // 리프레시 토큰도 만료된 경우
         if (refreshError.response && refreshError.response.data === "Refresh token is invalid") {
           console.error('Refresh token expired1, redirecting to login.');
-          alert("tlqkf");
+          //alert("tlqkf");
           //window.location.href = '/account/login';  // 로그인 페이지로 리다이렉트
           localStorage.clear();
         } else {
@@ -84,7 +86,8 @@ api.interceptors.response.use((response) => {
     } else if (errorMessage === "Refresh token is invalid") {
       // 리프레시 토큰 만료 오류 처리
       console.error('Refresh token is expired2, redirecting to login.');
-      window.location.href = '/account/login';  // 로그인 페이지로 리다이렉트
+      localStorage.clear();
+      //window.location.href = '/account/login';  // 로그인 페이지로 리다이렉트
     }
   }
 

@@ -3,15 +3,21 @@ import RegisterButton from './AssetSurveyRegisterButton';
 import { useState } from 'react';
 import { useToggle } from '@/hooks';
 import { Link } from 'react-router-dom';
-import { useAuthContext } from '@/common';
+import { authApi, useAuthContext } from '@/common';
 
 
 
 const Buttons = ({ onClickRegister, onDelete }) => {
   const { removeSession } = useAuthContext();
 
-  const logout = () => {
+  const logout = async () => {
     removeSession();
+    try {
+      await authApi.logout();
+    } catch (error) {
+      console.log(error);
+    }
+
   }
 
   return (

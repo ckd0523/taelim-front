@@ -5,6 +5,7 @@ import { Row, Col, Card } from 'react-bootstrap';
 import { Table2 } from '../../../components/table/Table2';
 import assetSurveyLocation from './assetSurveyLocation';
 import { Table } from '@/components';
+import { useAuthContext } from '@/common';
 //import StatusColumn from './TableColumnSet';
 
 const URL = import.meta.env.VITE_BASIC_URL;
@@ -55,6 +56,7 @@ const SurveyTable = ({ tableChange, setSelectedRows, data, setData, setOriginalD
 
   const [isDataExist, setIsDataExist] = useState(false); //fetch로 데이터를 못불러 왔는지
   //const [loading, setLoading] = useState(true); // fetch로 데이터 불러오는 중인지
+  const { removeSession } = useAuthContext();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -68,6 +70,7 @@ const SurveyTable = ({ tableChange, setSelectedRows, data, setData, setOriginalD
 
         setIsDataExist(true);
         console.error('Error fetching data:', error);
+        removeSession();
       }
     };
 

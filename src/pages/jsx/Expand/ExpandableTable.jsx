@@ -62,6 +62,9 @@ const Table = (props) => {
 	const sizePerPageList = props['sizePerPageList'] || [];
 	// 선택된 Row SetState 해주는 곳
 	const setRowSelect = props['setRowSelect'] || [];
+	const fetchData = props['fetchData']; // 데이터를 새로 고치는 함수
+	const setPageIndex = props['setPageIndex'];
+	const pageSize = props['pageSize'];
 
 	let otherProps = {};
 
@@ -226,6 +229,9 @@ const Table = (props) => {
 														assetCode={row.original.assetCode} // assetCode 전달
 														formData={row.original} // 전체 데이터를 formData로 전달
 														onClose={() => row.toggleRowExpanded(false)} // onClose에 행 확장 상태 닫기 핸들러 추가
+														fetchData={fetchData} // 데이터를 새로 고치는 함수
+														setPageIndex={setPageIndex} // 페이지 인덱스 업데이트 함수 전달
+														pageSize={pageSize}
 													/>
 												</div>
 											</td>

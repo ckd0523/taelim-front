@@ -10,10 +10,11 @@ const HistoryTableMaintenance = ({ repairHistory }) => {
 						<th>번호</th>
 						<th>자산코드</th>
 						<th>자산명</th>
-						<th>수정일자</th>
 						<th>수정요청자</th>
+						<th>수정시작일자</th>
+						<th>수정완료일자</th>
 						<th>수정사유</th>
-						<th>수정내용</th>
+						<th>보수상태</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -23,10 +24,11 @@ const HistoryTableMaintenance = ({ repairHistory }) => {
 							<tr key={index}>
 								<td>{repair.repairNo || index + 1}</td>
 								<td>{repair.assetCode}</td>
+								<td>{repair.assetName}</td>
 								<td>{repair.repairBy}</td>
-								<td>{repair.repairResult}</td>
 								<td>{repair.repairStartDate}</td>
 								<td>{repair.repairEnDate}</td>
+								<td>{repair.repairResult}</td>
 								<td>{repair.status}</td>
 							</tr>
 						))

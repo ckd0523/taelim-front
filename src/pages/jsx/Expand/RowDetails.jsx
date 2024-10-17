@@ -25,10 +25,19 @@ import {
 import { HistoryTableUpdate } from './HistoryTableUpdate';
 import { HistoryTableMaintenance } from './HistoryTableMaintenance';
 import { HistoryTableInvestigation } from './HistoryTableInvestigation';
+import Swal from 'sweetalert2';
 
 const urlConfig = import.meta.env.VITE_BASIC_URL;
 
-const RowDetails = ({ row, assetCode, onClose, formData: initialFormData }) => {
+const RowDetails = ({
+	row,
+	assetCode,
+	onClose,
+	formData: initialFormData,
+	fetchData,
+	setPageIndex,
+	pageSize,
+}) => {
 	const [isEditing, setIsEditing] = useState(false);
 	const [formData, setFormData] = useState(initialFormData || {}); // 상위 컴포넌트에서 받은 formData를 상태로 설정
 	const [showModal, setShowModal] = useState(false); // 모달 열기/닫기 상태
@@ -130,7 +139,7 @@ const RowDetails = ({ row, assetCode, onClose, formData: initialFormData }) => {
 					`경고: 자산 수정 요청 처리부터 처리해주세요. 자산 코드: ${formData.assetCode}`
 				);
 			} else {
-				alert(response.data); // 성공 메시지
+				//alert(response.data); // 성공 메시지
 
 				// 3. 새 파일 업로드가 필요할 때만 실행
 				if (formData.files && formData.files.length > 0) {
@@ -167,7 +176,18 @@ const RowDetails = ({ row, assetCode, onClose, formData: initialFormData }) => {
 					}
 				}
 
+				// 성공 메시지 후 모달 닫기
 				setShowModal(false); // 모달 닫기
+				setTimeout(() => {
+					Swal.fire({
+						icon: 'success',
+						title: `${formData.assetCode} : 자산이 성공적으로 수정되었습니다`,
+					});
+
+					// 수정이 완료되면 해당 페이지로 이동
+					setPageIndex(0); // 원하는 페이지 번호로 설정 (예: 0은 첫 페이지)
+					fetchData(0, pageSize); // 해당 페이지의 데이터를 다시 가져옴
+				}, 500);
 			}
 		} catch (error) {
 			console.error('Error updating asset data:', error.response || error);
@@ -202,7 +222,16 @@ const RowDetails = ({ row, assetCode, onClose, formData: initialFormData }) => {
 				alert(`경고: 이미 수정 요청이 들어간 자산입니다. 자산 코드: ${formData.assetCode}`);
 			} else {
 				// 성공 메시지 띄우기
-				alert(response.data); // 성공 메시지
+				//alert(response.data); // 성공 메시지
+				Swal.fire({
+					icon: 'success',
+					title: `${formData.assetCode} : 자산이 성공적으로 수정요청되었습니다`,
+				});
+				setTimeout(() => {
+					// 수정이 완료되면 해당 페이지로 이동
+					setPageIndex(0); // 원하는 페이지 번호로 설정 (예: 0은 첫 페이지)
+					fetchData(0, pageSize); // 해당 페이지의 데이터를 다시 가져옴
+				}, 1500);
 
 				// 3. 새 파일 업로드가 필요할 때만 실행
 				if (formData.files && formData.files.length > 0) {

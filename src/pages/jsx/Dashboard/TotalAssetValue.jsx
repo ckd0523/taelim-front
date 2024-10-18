@@ -41,7 +41,7 @@ const TotalAssetValue = () => {
 			show: true,
 			position: 'bottom',
 			horizontalAlign: 'center',
-			// verticalAlign: "middle",
+			verticalAlign: 'middle',
 			floating: false,
 			fontSize: '14px',
 			offsetX: 0,

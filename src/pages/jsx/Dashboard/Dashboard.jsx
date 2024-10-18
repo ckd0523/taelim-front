@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Row, Col } from 'react-bootstrap';
+import { Row, Col, Table } from 'react-bootstrap';
 import TotalAssetValue from './TotalAssetValue';
 import RealTimeStatus from './RealTimeStatus';
 
@@ -28,7 +28,23 @@ const Dashboard = () => {
 			<Row>
 				<Col lg={6}>
 					<Row>
-						<p>중요알림 및 경고</p>
+						<h4 className="header-title">중요알림 및 경고</h4>
+						<Table className="border-black">
+							<thead className="table-dark">
+								<tr>
+									<th>유지보수</th>
+									<th>계약만료</th>
+									<th>이상지출</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>3건</td>
+									<td>1건</td>
+									<td>-</td>
+								</tr>
+							</tbody>
+						</Table>
 					</Row>
 					<Row>
 						<p>자산 가치 변화 분석</p>

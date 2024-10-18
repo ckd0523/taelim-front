@@ -69,6 +69,14 @@ const ExcelRegister = () => {
 			const excelEpoch = new Date(Date.UTC(1899, 11, 30));
 			const jsDate = new Date(excelEpoch.getTime() + serial * 24 * 60 * 60 * 1000);
 			return jsDate.toISOString().split('T')[0];
+
+			// } else {
+			// 	const datePattern = /^(\d{4})년\s*(\d{2})월$/;
+			// 	const match = serial.match(datePattern);
+			// 	if (match) {
+			// 		const [_, year, month] = match;
+			// 		return `${year}-${month}-01`;
+			// 	}
 		}
 
 		if (typeof serial === 'string') {
@@ -76,11 +84,11 @@ const ExcelRegister = () => {
 			const match = serial.match(datePattern);
 			if (match) {
 				const [_, year, month] = match;
+				console(match);
 				return `${year}-${month}-01`;
 			}
 		}
-
-		return 'Invalid date';
+		return;
 	};
 	const commonFieldMapping = {
 		자산기준: 'assetBasis',

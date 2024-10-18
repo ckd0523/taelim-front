@@ -362,7 +362,7 @@ const RowDetails = ({
 				);
 			}
 			// useState select 설정
-			if (key === 'useState') {
+			if (key === 'usestate') {
 				return (
 					<Form.Select
 						value={formData[key] || ''}
@@ -483,8 +483,8 @@ const RowDetails = ({
 						>
 							<thead>
 								<tr>
-									<th>자산코드</th>
-									<th>자산명</th>
+									{/* <th>자산코드</th>
+									<th>자산명</th> */}
 									<th>자산기준</th>
 									<th>제조사</th>
 									<th>목적</th>
@@ -493,21 +493,12 @@ const RowDetails = ({
 									<th>사용자</th>
 									<th>소유자</th>
 									<th>보안담당자</th>
-									<th>사용상태</th>
-									<th>가동여부</th>
-									<th>도입일자</th>
-									<th>기밀성</th>
-									<th>무결성</th>
-									<th>가용성</th>
-									<th>중요성점수</th>
-									<th>중요성등급</th>
-									<th>비고</th>
 								</tr>
 							</thead>
 							<tbody>
 								<tr>
-									<td>{formData.assetCode || 'N/A'}</td>
-									<td>{formData.assetName || 'N/A'}</td>
+									{/* <td>{formData.assetCode || 'N/A'}</td>
+									<td>{formData.assetName || 'N/A'}</td> */}
 									<td>{formData.assetBasis || 'N/A'}</td>
 									<td>{formData.manufacturingCompany || 'N/A'}</td>
 									<td>{formData.purpose || 'N/A'}</td>
@@ -516,14 +507,45 @@ const RowDetails = ({
 									<td>{renderCellContent('assetUser')}</td>
 									<td>{renderCellContent('assetOwner')}</td>
 									<td>{renderCellContent('assetSecurityManager')}</td>
-									<td>{renderCellContent('useState')}</td>
+								</tr>
+							</tbody>
+						</BootstrapTable>
+						<BootstrapTable
+							striped
+							bordered
+							hover
+							className="table-detail"
+							style={{ width: '100%' }}
+						>
+							<thead>
+								<tr>
+									<th>사용상태</th>
+									<th>가동여부</th>
+									<th>도입일자</th>
+									<th style={{ width: '80px' }}>기밀성</th>
+									<th style={{ width: '80px' }}>무결성</th>
+									<th style={{ width: '80px' }}>가용성</th>
+									<th style={{ width: '80px' }}>중요성점수</th>
+									<th style={{ width: '80px' }}>중요성등급</th>
+									<th>비고</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>{renderCellContent('usestate')}</td>
 									<td>{renderCellContent('operationStatus')}</td>
 									<td>{renderCellContent('introducedDate')}</td>
-									<td>{renderCellContent('confidentiality')}</td>
-									<td>{renderCellContent('integrity')}</td>
-									<td>{renderCellContent('availability')}</td>
-									<td>{importanceScore}</td>
-									<td>{importanceRating}</td>
+									<td style={{ width: '80px' }}>
+										{renderCellContent('confidentiality')}
+									</td>
+									<td style={{ width: '80px' }}>
+										{renderCellContent('integrity')}
+									</td>
+									<td style={{ width: '80px' }}>
+										{renderCellContent('availability')}
+									</td>
+									<td style={{ width: '80px' }}>{importanceScore}</td>
+									<td style={{ width: '80px' }}>{importanceRating}</td>
 									<td>{renderCellContent('note')}</td>
 								</tr>
 							</tbody>

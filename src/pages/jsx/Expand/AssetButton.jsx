@@ -3,7 +3,7 @@ import { Row, Button, Col } from 'react-bootstrap';
 const AssetButtons = ({ handleButtonClick, handleQrClick, handleExcelClick, rowSelect }) => {
 	return (
 		<Row className="row-cols-auto justify-content-end">
-			{/* <Col>
+			<Col>
 				<Button
 					style={{ background: '#5e83bb' }}
 					onClick={() => handleButtonClick('AllUpdate', rowSelect)}
@@ -19,7 +19,7 @@ const AssetButtons = ({ handleButtonClick, handleQrClick, handleExcelClick, rowS
 				>
 					일괄 폐기
 				</Button>
-			</Col> */}
+			</Col>
 			<Col>
 				<Button
 					style={{ background: '#5e83bb' }}

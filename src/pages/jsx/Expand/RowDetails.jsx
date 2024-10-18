@@ -315,6 +315,7 @@ const RowDetails = ({
 					<Form.Select
 						value={formData[key] || ''}
 						onChange={(e) => handleInputChange(e, key)}
+						style={{ textAlign: 'center' }}
 					>
 						<option value="IT부">IT부</option>
 						<option value="관리부">관리부</option>
@@ -332,6 +333,7 @@ const RowDetails = ({
 					<Form.Select
 						value={formData[key] || ''}
 						onChange={(e) => handleInputChange(e, key)}
+						style={{ textAlign: 'center' }}
 					>
 						<option value="본관 지하 문서고">본관 지하 문서고</option>
 						<option value="본관 1층">본관 1층</option>
@@ -355,6 +357,7 @@ const RowDetails = ({
 					<Form.Select
 						value={formData[key] || ''}
 						onChange={(e) => handleInputChange(e, key)}
+						style={{ textAlign: 'center' }}
 					>
 						<option value="소유">소유</option>
 						<option value="임대">임대</option>
@@ -367,6 +370,7 @@ const RowDetails = ({
 					<Form.Select
 						value={formData[key] || ''}
 						onChange={(e) => handleInputChange(e, key)}
+						style={{ textAlign: 'center' }}
 					>
 						<option value="신규">신규</option>
 						<option value="사용중">사용중</option>
@@ -382,6 +386,7 @@ const RowDetails = ({
 					<Form.Select
 						value={formData[key] || ''}
 						onChange={(e) => handleInputChange(e, key)}
+						style={{ textAlign: 'center' }}
 					>
 						<option value="가동중">가동중</option>
 						<option value="미가동">미가동</option>
@@ -389,23 +394,192 @@ const RowDetails = ({
 					</Form.Select>
 				);
 			}
+			// operationStatus select 설정
+			if (key === 'depreciationMethod') {
+				return (
+					<Form.Select
+						value={formData[key] || ''}
+						onChange={(e) => handleInputChange(e, key)}
+						style={{ textAlign: 'center' }}
+					>
+						<option value="정률법">정률법</option>
+						<option value="정액법">정액법</option>
+					</Form.Select>
+				);
+			}
 			// introduceDate 날짜로 설정
-			if (key === 'introducedDate') {
+			if (
+				[
+					'introducedDate',
+					'maintenancePeriod',
+					'purchaseDate',
+					'applicationDate',
+					'registrationDate',
+					'expirationDate',
+					'kaitsKeeper',
+					'v3OfficeSecurity',
+					'appCheckPro',
+					'tgate',
+				].includes(key)
+			) {
 				return (
 					<Form.Control
 						type="date" // 날짜 입력을 위한 date 타입 사용
 						value={formData[key] || ''}
 						onChange={(e) => handleInputChange(e, key)} // onChange 핸들러로 날짜 값 처리
+						style={{ textAlign: 'center' }}
 					/>
 				);
 			}
 
+			if (['confidentiality', 'integrity', 'availability'].includes(key)) {
+				return (
+					<input
+						type="number"
+						min="1"
+						max="3"
+						defaultValue={formData[key] || ''} // formData에서 값을 가져옵니다.
+						onChange={(e) => handleInputChange(e, key)}
+						style={{ textAlign: 'center' }}
+					/>
+				);
+			}
+
+			if (key === 'screenNumber') {
+				return (
+					<input
+						type="number"
+						defaultValue={formData[key] || ''} // formData에서 값을 가져옵니다.
+						onChange={(e) => handleInputChange(e, key)}
+						style={{ textAlign: 'center' }}
+					/>
+				);
+			}
+			// patentTrademarkStatus select 설정
+			if (key === 'documentGrade') {
+				return (
+					<Form.Select
+						value={formData[key] || ''}
+						onChange={(e) => handleInputChange(e, key)}
+						style={{ textAlign: 'center' }}
+					>
+						<option value="대외비">대외비</option>
+						<option value="내부용">내부용</option>
+						<option value="일반">일반</option>
+					</Form.Select>
+				);
+			}
+			// patentTrademarkStatus select 설정
+			if (key === 'documentType') {
+				return (
+					<Form.Select
+						value={formData[key] || ''}
+						onChange={(e) => handleInputChange(e, key)}
+						style={{ textAlign: 'center' }}
+					>
+						<option value="일반문서">일반문서</option>
+						<option value="계약 및 법적문서">계약 및 법적문서</option>
+						<option value="보고서 및 프레젠테이션">보고서 및 프레젠테이션</option>
+						<option value="양식 및 서식">양식 및 서식</option>
+					</Form.Select>
+				);
+			}
+			// 특허 칼럼 설정해주기
+			// patentTrademarkStatus select 설정
+			if (key === 'patentTrademarkStatus') {
+				return (
+					<Form.Select
+						value={formData[key] || ''}
+						onChange={(e) => handleInputChange(e, key)}
+						style={{ textAlign: 'center' }}
+					>
+						<option value="PCT_APPLICATION">PCT 출원</option>
+						<option value="APPLICATION">출원</option>
+						<option value="REGISTERED">등록</option>
+						<option value="EXPIRED">만료</option>
+					</Form.Select>
+				);
+			}
+			// patentTrademarkStatus select 설정
+			if (key === 'countryApplication') {
+				return (
+					<Form.Select
+						value={formData[key] || ''}
+						onChange={(e) => handleInputChange(e, key)}
+						style={{ textAlign: 'center' }}
+					>
+						<option value="한국">한국</option>
+						<option value="미국">미국</option>
+						<option value="일본">일본</option>
+						<option value="중국">중국</option>
+
+						<option value="독일">독일</option>
+					</Form.Select>
+				);
+			}
+			// patentTrademarkStatus select 설정
+			if (key === 'patentClassification') {
+				return (
+					<Form.Select
+						value={formData[key] || ''}
+						onChange={(e) => handleInputChange(e, key)}
+						style={{ textAlign: 'center' }}
+					>
+						<option value="NEW_MATERIALS">신소재</option>
+						<option value="INCUBATION">인큐베이션</option>
+					</Form.Select>
+				);
+			}
+			// patentTrademarkStatus select 설정
+			if (key === 'patentItem') {
+				return (
+					<Form.Select
+						value={formData[key] || ''}
+						onChange={(e) => handleInputChange(e, key)}
+						style={{ textAlign: 'center' }}
+					>
+						<option value="COMPOSITE_MATERIALS">복합재</option>
+						<option value="CORPORATE_VENTURE">사내벤처</option>
+					</Form.Select>
+				);
+			}
+			// terminal select 설정
+			if (key === 'engineType') {
+				return (
+					<Form.Select
+						value={formData[key] || ''}
+						onChange={(e) => handleInputChange(e, key)}
+						style={{ textAlign: 'center' }}
+					>
+						<option value="가솔린">가솔린</option>
+						<option value="디젤">디젤</option>
+						<option value="하이브리드">하이브리드</option>
+						<option value="전기">전기</option>
+					</Form.Select>
+				);
+			}
+			// car select 설정
+			if (key === 'carType') {
+				return (
+					<Form.Select
+						value={formData[key] || ''}
+						onChange={(e) => handleInputChange(e, key)}
+						style={{ textAlign: 'center' }}
+					>
+						<option value="승용차">승용차</option>
+						<option value="SUV">SUV</option>
+						<option value="트럭">트럭</option>
+						<option value="밴">밴</option>
+					</Form.Select>
+				);
+			}
 			// select 외는 text input 설정
 			return (
 				<Form.Control
 					type="text"
 					value={formData[key] || ''}
 					onChange={(e) => handleInputChange(e, key)}
+					style={{ textAlign: 'center' }}
 				/>
 			);
 		}
@@ -603,28 +777,265 @@ const RowDetails = ({
 								>
 									<thead>
 										<tr>
-											{dynamicColumns.map((col) => (
-												<th key={col.title}>{col.title}</th>
-											))}
+											{formData?.assetClassification === '정보보호시스템' && (
+												<>
+													<th>서비스범위</th>
+												</>
+											)}
+											{formData?.assetClassification === '응용프로그램' && (
+												<>
+													<th>서비스범위</th>
+													<th>OS</th>
+													<th>관련DB</th>
+													<th>IP</th>
+													<th>화면수</th>
+												</>
+											)}
+											{formData?.assetClassification === '소프트웨어' && (
+												<>
+													<th>IP</th>
+													<th>ID</th>
+													<th>PW</th>
+													<th>담당업체</th>
+													<th>OS</th>
+												</>
+											)}
+											{formData?.assetClassification === '전자정보' && (
+												<>
+													<th>OS</th>
+													<th>시스템</th>
+													<th>DB종류</th>
+												</>
+											)}
+											{formData?.assetClassification === '문서' && (
+												<>
+													<th>문서등급</th>
+													<th>문서형태</th>
+													<th>문서링크</th>
+												</>
+											)}
+											{formData.assetClassification === '특허 및 상표' && (
+												<>
+													<th>출원일자</th>
+													<th>등록일자</th>
+													<th>만료일자</th>
+													<th>특허/상표 상태</th>
+													<th>출원국가</th>
+													<th>특허분류</th>
+													<th>특허세목</th>
+													<th>출원번호</th>
+													<th>발명자</th>
+													<th>권리권자</th>
+													<th>관련문서</th>
+												</>
+											)}
+											{formData.assetClassification ===
+												'IT 장비 - 시스템' && (
+												<>
+													<th>장비유형</th>
+													<th>랙유닛</th>
+													<th>전원공급장치</th>
+													<th>쿨링시스템</th>
+													<th>인터페이스 포트</th>
+													<th>폼팩터</th>
+													<th>확장슬롯수</th>
+													<th>그래픽카드</th>
+													<th>포트 구성</th>
+													<th>모니터 포함여부</th>
+												</>
+											)}
+											{formData.assetClassification ===
+												'IT 장비 – 네트워크' && (
+												<>
+													<th>장비유형</th>
+													<th>포트수</th>
+													<th>지원프로토콜</th>
+													<th>펌웨어 버전</th>
+													<th>네트워크 속도</th>
+													<th>서비스범위</th>
+												</>
+											)}
+											{formData.assetClassification === '단말기' && (
+												<>
+													<th>IP</th>
+													<th>제품 시리얼 번호</th>
+													<th>OS</th>
+													<th>보안관제</th>
+													<th>내부정보 유출 방지</th>
+													<th>악성코드,랜섬웨어 탐지</th>
+													<th>안티랜섬웨어</th>
+													<th>NAC agent</th>
+												</>
+											)}
+											{formData.assetClassification === '가구' && (
+												<>
+													<th>크기</th>
+												</>
+											)}
+											{formData.assetClassification === '기기' && (
+												<>
+													<th>기기유형</th>
+													<th>모델번호</th>
+													<th>연결방식</th>
+													<th>전원사양</th>
+												</>
+											)}
+											{formData.assetClassification === '차량' && (
+												<>
+													<th>배기량</th>
+													<th>차량의 문 수</th>
+													<th>엔진 형식</th>
+													<th>차량 종류</th>
+													<th>차량 식별번호</th>
+													<th>차량 색상</th>
+													<th>연식</th>
+												</>
+											)}
+											{formData.assetClassification === '기타' && (
+												<>
+													<th>기타 세부 설명</th>
+													<th>사용 빈도</th>
+												</>
+											)}
 										</tr>
 									</thead>
 									<tbody>
 										<tr>
-											{dynamicColumns.map((col) => (
-												<td key={col.title}>
-													{isEditing ? (
-														<Form.Control
-															type="text"
-															value={formData[col.data] || ''}
-															onChange={(e) =>
-																handleInputChange(e, col.data)
-															}
-														/>
-													) : (
-														formData[col.data] || 'N/A'
-													)}
-												</td>
-											))}
+											{formData?.assetClassification === '정보보호시스템' && (
+												<>
+													<td>{renderCellContent('serviceScope')}</td>
+												</>
+											)}
+											{formData?.assetClassification === '응용프로그램' && (
+												<>
+													<td>{renderCellContent('serviceScope')}</td>
+													<td>{renderCellContent('os')}</td>
+													<td>{renderCellContent('relatedDB')}</td>
+													<td>{renderCellContent('ip')}</td>
+													<td>{renderCellContent('screenNumber')}</td>
+												</>
+											)}
+											{formData?.assetClassification === '소프트웨어' && (
+												<>
+													<td>{renderCellContent('ip')}</td>
+													<td>{renderCellContent('serverId')}</td>
+													<td>{renderCellContent('serverPassword')}</td>
+													<td>{renderCellContent('companyManager')}</td>
+													<td>{renderCellContent('os')}</td>
+												</>
+											)}
+											{formData?.assetClassification === '전자정보' && (
+												<>
+													<td>{renderCellContent('os')}</td>
+													<td>{renderCellContent('system')}</td>
+													<td>{renderCellContent('dbtype')}</td>
+												</>
+											)}
+											{formData?.assetClassification === '문서' && (
+												<>
+													<td>{renderCellContent('documentGrade')}</td>
+													<td>{renderCellContent('documentType')}</td>
+													<td>{renderCellContent('documentLink')}</td>
+												</>
+											)}
+											{formData?.assetClassification === '특허 및 상표' && (
+												<>
+													<td>{renderCellContent('applicationDate')}</td>
+													<td>{renderCellContent('registrationDate')}</td>
+													<td>{renderCellContent('expirationDate')}</td>
+													<td>
+														{renderCellContent('patentTrademarkStatus')}
+													</td>
+													<td>
+														{renderCellContent('countryApplication')}
+													</td>
+													<td>
+														{renderCellContent('patentClassification')}
+													</td>
+													<td>{renderCellContent('patentItem')}</td>
+													<td>{renderCellContent('applicationNo')}</td>
+													<td>{renderCellContent('inventor')}</td>
+													<td>{renderCellContent('assignee')}</td>
+													<td>{renderCellContent('relatedDocuments')}</td>
+												</>
+											)}
+
+											{formData?.assetClassification ===
+												'IT 장비 - 시스템' && (
+												<>
+													<td>{renderCellContent('equipmentType')}</td>
+													<td>{renderCellContent('rackUnit')}</td>
+													<td>{renderCellContent('powerSupply')}</td>
+													<td>{renderCellContent('coolingSystem')}</td>
+													<td>{renderCellContent('interfacePorts')}</td>
+													<td>{renderCellContent('formFactor')}</td>
+													<td>{renderCellContent('expansionSlots')}</td>
+													<td>{renderCellContent('graphicsCard')}</td>
+													<td>
+														{renderCellContent('portConfiguration')}
+													</td>
+													<td>{renderCellContent('monitorIncluded')}</td>
+												</>
+											)}
+											{formData?.assetClassification ===
+												'IT 장비 – 네트워크' && (
+												<>
+													<td>{renderCellContent('equipmentType')}</td>
+													<td>{renderCellContent('numberOfPorts')}</td>
+													<td>
+														{renderCellContent('supportedProtocols')}
+													</td>
+													<td>{renderCellContent('firmwareVersion')}</td>
+													<td>{renderCellContent('networkSpeed')}</td>
+													<td>{renderCellContent('serviceScope')}</td>
+												</>
+											)}
+											{formData?.assetClassification === '단말기' && (
+												<>
+													<td>{renderCellContent('ip')}</td>
+													<td>
+														{renderCellContent('productSerialNumber')}
+													</td>
+													<td>{renderCellContent('os')}</td>
+													<td>{renderCellContent('securityControl')}</td>
+													<td>{renderCellContent('kaitsKeeper')}</td>
+													<td>{renderCellContent('v3OfficeSecurity')}</td>
+													<td>{renderCellContent('appCheckPro')}</td>
+													<td>{renderCellContent('tgate')}</td>
+												</>
+											)}
+											{formData?.assetClassification === '가구' && (
+												<>
+													<td>{renderCellContent('furnitureSize')}</td>
+												</>
+											)}
+											{formData?.assetClassification === '기기' && (
+												<>
+													<td>{renderCellContent('deviceType')}</td>
+													<td>{renderCellContent('modelNumber')}</td>
+													<td>{renderCellContent('connectionType')}</td>
+													<td>
+														{renderCellContent('powerSpecifications')}
+													</td>
+												</>
+											)}
+											{formData?.assetClassification === '차량' && (
+												<>
+													<td>{renderCellContent('displacement')}</td>
+													<td>{renderCellContent('doorsCount')}</td>
+													<td>{renderCellContent('engineType')}</td>
+													<td>{renderCellContent('carType')}</td>
+													<td>{renderCellContent('identificationNo')}</td>
+													<td>{renderCellContent('carColor')}</td>
+													<td>{renderCellContent('modelYear')}</td>
+												</>
+											)}
+											{formData?.assetClassification === '기타' && (
+												<>
+													<td>{renderCellContent('otherDescription')}</td>
+													<td>{renderCellContent('usageFrequency')}</td>
+												</>
+											)}
 										</tr>
 									</tbody>
 								</BootstrapTable>

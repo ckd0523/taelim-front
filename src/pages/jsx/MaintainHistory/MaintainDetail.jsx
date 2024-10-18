@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
-import { Form, FormGroup, Modal, Button, ModalFooter } from 'react-bootstrap';
+import { Form, FormGroup, Modal, Button, ModalFooter, Alert } from 'react-bootstrap';
 import { BsImage } from 'react-icons/bs';
+import Swal from 'sweetalert2';
 const urlConfig = import.meta.env.VITE_BASIC_URL;
 const MaintainDetail = ({ show, selectData, handleClose }) => {
 	// const [change, setChange] = useState(selectData.repairEndDate || '');
@@ -14,6 +15,9 @@ const MaintainDetail = ({ show, selectData, handleClose }) => {
 		repairResult: selectData.repairResult,
 		repairFiles: selectData.repairFiles || [],
 	});
+	const [showAlert, setShowAlert] = useState(false);
+	const [alertMessage, setAlertMessage] = useState('');
+
 	const imgRef = useRef();
 	const afterImgRef = useRef();
 
@@ -40,13 +44,14 @@ const MaintainDetail = ({ show, selectData, handleClose }) => {
 			...prevState,
 			[name]: value,
 		}));
-
+		setShowAlert(false);
 		if (name === 'repairEndDate') {
 			const startDate = new Date(selectData.repairStartDate);
 			const endDate = new Date(value);
 
 			if (endDate < startDate) {
-				alert('완료일은 시작일보다 이전일 수 없습니다.');
+				setAlertMessage('완료일이 시작일 이전일 수는 없습니다.');
+				setShowAlert(true);
 				setFormData((prevState) => ({
 					...prevState,
 					repairEndDate: '',
@@ -79,20 +84,6 @@ const MaintainDetail = ({ show, selectData, handleClose }) => {
 		};
 		reader.readAsDataURL(file);
 	};
-	// const handleImageChange = (e, type) => {
-	// 	const file = e.target.files[0];
-	// 	if (!file) return;
-
-	// 	const reader = new FileReader();
-	// 	reader.onloadend = () => {
-	// 		if (type === '보수전') {
-	// 			setImgPath(reader.result);
-	// 		} else {
-	// 			setafterPath(reader.result);
-	// 		}
-	// 	};
-	// 	reader.readAsDataURL(file);
-	// };
 
 	useEffect(
 		() => () => {
@@ -102,26 +93,16 @@ const MaintainDetail = ({ show, selectData, handleClose }) => {
 	);
 	const saveImages = async () => {
 		const updateFileNames = [];
-		// for(let {file, repairType} of files) {
-
-		// }
 
 		let imageUploadSuccess = true;
 		let endDateSaveSuccess = true;
 		for (let { file, repairType } of files) {
-			// if (imgRef.current?.files) {
 			const uploadData = new FormData();
 			uploadData.append('file', file);
 			uploadData.append('repairNo', selectData.repairNo);
 			uploadData.append('repairType', repairType);
 			uploadData.append('deleteExisting', 'true');
-			// }
-			// if (afterImgRef.current?.files) {
-			// 	uploadData.append('file', file);
-			// 	uploadData.append('repairNo', selectData.repairNo);
-			// 	uploadData.append('repairType', repairType);
-			// 	uploadData.append('deleteExisting', 'true');
-			// }
+
 			try {
 				if (uploadData.has('file')) {
 					const response = await fetch(
@@ -135,7 +116,12 @@ const MaintainDetail = ({ show, selectData, handleClose }) => {
 						const fileName = await response.text();
 						updateFileNames.push(fileName);
 						console.log(fileName);
-						alert('이미지 업로드 성공');
+					} else {
+						Swal.fire({
+							icon: 'error',
+							title: '파일 수정을 실패하였습니다.',
+							text: '파일을 다시 확인해주세요',
+						});
 					}
 				}
 			} catch (error) {
@@ -154,18 +140,17 @@ const MaintainDetail = ({ show, selectData, handleClose }) => {
 			});
 
 			if (response.ok) {
-				alert('수정 성공');
+				Swal.fire({
+					icon: 'success',
+					title: '유지보수가 성공적으로 수정되었습니다.',
+					text: '유지보수 이력 화면으로 이동',
+				});
 			}
 		} catch (error) {
 			endDateSaveSuccess = false;
 			console.error(error);
 		}
-
-		if (imageUploadSuccess || endDateSaveSuccess) {
-			alert('저장성공');
-
-			handleClose();
-		}
+		handleClose();
 	};
 
 	return (
@@ -175,6 +160,7 @@ const MaintainDetail = ({ show, selectData, handleClose }) => {
 					<Modal.Title>유지보수 상세</Modal.Title>
 				</Modal.Header>
 				<Modal.Body>
+					{showAlert && <Alert variant="danger">{alertMessage}</Alert>}
 					<Form.Group className="mb-3 pt-2" controlId="exampleForm.ControlInput1">
 						<Form.Label>자산코드</Form.Label>
 						<Form.Control type="text" value={selectData.assetCode} readOnly />
@@ -244,7 +230,6 @@ const MaintainDetail = ({ show, selectData, handleClose }) => {
 									id="maintainBefore"
 									accept="image/*"
 									onChange={previewImage}
-									// onChange={(e) => handleImageChange(e, '보수전')}
 								></Form.Control>
 							</FormGroup>
 						)}
@@ -287,7 +272,6 @@ const MaintainDetail = ({ show, selectData, handleClose }) => {
 									id="maintainAfter"
 									accept="image/*"
 									onChange={AfterImage}
-									// onChange={(e) => handleImageChange(e, '보수후')}
 								></Form.Control>
 							</FormGroup>
 						)}

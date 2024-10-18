@@ -51,6 +51,12 @@ const MENU_ITEMS = [
 		isTitle: true,
 	},
 	{
+		key: 'ds-Dashboard',
+		label: '대시보드',
+		url: '/jsx/Dashboard',
+		icon: 'mdi mdi-monitor-dashboard',
+	},
+	{
 		key: 'regist',
 		label: '자산등록',
 		isTitle: false,

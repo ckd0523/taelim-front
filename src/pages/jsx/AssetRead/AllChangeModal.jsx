@@ -152,7 +152,7 @@ const ActionModal = ({ show, handleClose, actionData, actionType }) => {
 								<Form.Group className="mb-1">
 									<Form.Control
 										type="text"
-										value={department}
+										value={disposeLocation}
 										onChange={disposeLocationChange}
 										placeholder={'폐기위치'}
 									/>
@@ -161,7 +161,7 @@ const ActionModal = ({ show, handleClose, actionData, actionType }) => {
 								<Form.Group className="mb-1">
 									<Form.Control
 										type="text"
-										value={assetLocation}
+										value={disposeMethod}
 										onChange={disposeMethodChange}
 										placeholder={'폐기방법'}
 									/>

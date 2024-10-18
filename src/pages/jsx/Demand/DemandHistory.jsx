@@ -1,4 +1,4 @@
-import { Row, Col, Card, Button } from 'react-bootstrap';
+import { Row, Col, Card, Button, Alert } from 'react-bootstrap';
 import { CustomDatePicker, TextInput, Form as RHForm } from '@/components';
 import { Table } from './Table';
 import { columns } from './ColumnsSet';
@@ -29,6 +29,9 @@ const DemandHistory = () => {
 	const [rowSelect, setRowSelect] = useState([]);
 	//미확인 자산 처리 모달
 	const [process, setProcess] = useState(false);
+	//alert
+	const [showAlert, setShowAlert] = useState(false);
+	const [alertMessage, setAlertMessage] = useState('');
 
 	useEffect(() => {
 		const fetchData = async () => {
@@ -57,10 +60,10 @@ const DemandHistory = () => {
 		};
 
 		// process가 false로 바뀔 때 데이터를 다시 불러옴
-		if (!process) {
+		if (!process || !showActModal || !showModal) {
 			fetchData();
 		}
-	}, [process]);
+	}, [process, showActModal, showModal]);
 
 	useEffect(() => {
 		const fetchData = async () => {
@@ -88,11 +91,11 @@ const DemandHistory = () => {
 				if (responseData.length > 0) {
 					setProcess(true);
 				} else {
-					Swal.fire({
-						icon: 'error',
-						title: '미처리된 자산이 없습니다.',
-						text: '요청이 있는지 다시 확인해주세요.',
-					});
+					setAlertMessage('미처리된 자산이 없습니다.');
+					setShowAlert(true);
+					setTimeout(() => {
+						setShowAlert(false);
+					}, 3000);
 				}
 				console.log('미확인 요청 자산 리스트: ', responseData);
 			} catch (error) {
@@ -105,11 +108,11 @@ const DemandHistory = () => {
 	const handleOpenModal = (type, rowSelect) => {
 		console.log(rowSelect);
 		if (rowSelect.length === 0) {
-			Swal.fire({
-				icon: 'error',
-				title: '데이터를 선택을 해주세요',
-				text: '데이터가 선택되지 않았습니다.',
-			});
+			setAlertMessage('데이터를 선택을 해주세요.');
+			setShowAlert(true);
+			setTimeout(() => {
+				setShowAlert(false);
+			}, 3000);
 		} else {
 			setActionType(type);
 			setActionData(rowSelect); // rowData 또는 선택한 데이터를 설정
@@ -317,8 +320,20 @@ const DemandHistory = () => {
 			)}
 			<Row className="pt-3">
 				<Col xs={12}>
-					<Row className="row-cols-auto justify-content-end">
-						<Col>
+					<Row className="align-items-center justify-content-between">
+						<Col className="flex-grow-1">
+							{showAlert && (
+								<Alert
+									variant="danger"
+									className="mb-0 text-center d-flex align-items-center justify-content-center"
+									style={{ height: '100%' }}
+								>
+									{alertMessage}
+								</Alert>
+							)}
+						</Col>
+
+						<Col xs="auto">
 							<Button
 								style={{ background: '#73af82', border: 'none' }}
 								variant="success"
@@ -327,7 +342,8 @@ const DemandHistory = () => {
 								미처리 자산 처리
 							</Button>
 						</Col>
-						<Col>
+
+						<Col xs="auto">
 							<Button
 								style={{ background: '#5e83bb', border: 'none' }}
 								onClick={() => handleOpenModal('approve', rowSelect)}
@@ -335,7 +351,8 @@ const DemandHistory = () => {
 								승인
 							</Button>
 						</Col>
-						<Col>
+
+						<Col xs="auto">
 							<Button
 								style={{ background: '#c66464', border: 'none' }}
 								onClick={() => handleOpenModal('reject', rowSelect)}

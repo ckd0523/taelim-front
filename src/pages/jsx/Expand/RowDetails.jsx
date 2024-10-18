@@ -25,10 +25,19 @@ import {
 import { HistoryTableUpdate } from './HistoryTableUpdate';
 import { HistoryTableMaintenance } from './HistoryTableMaintenance';
 import { HistoryTableInvestigation } from './HistoryTableInvestigation';
+import Swal from 'sweetalert2';
 
 const urlConfig = import.meta.env.VITE_BASIC_URL;
 
-const RowDetails = ({ row, assetCode, onClose, formData: initialFormData }) => {
+const RowDetails = ({
+	row,
+	assetCode,
+	onClose,
+	formData: initialFormData,
+	fetchData,
+	setPageIndex,
+	pageSize,
+}) => {
 	const [isEditing, setIsEditing] = useState(false);
 	const [formData, setFormData] = useState(initialFormData || {}); // 상위 컴포넌트에서 받은 formData를 상태로 설정
 	const [showModal, setShowModal] = useState(false); // 모달 열기/닫기 상태
@@ -130,7 +139,7 @@ const RowDetails = ({ row, assetCode, onClose, formData: initialFormData }) => {
 					`경고: 자산 수정 요청 처리부터 처리해주세요. 자산 코드: ${formData.assetCode}`
 				);
 			} else {
-				alert(response.data); // 성공 메시지
+				//alert(response.data); // 성공 메시지
 
 				// 3. 새 파일 업로드가 필요할 때만 실행
 				if (formData.files && formData.files.length > 0) {
@@ -167,7 +176,18 @@ const RowDetails = ({ row, assetCode, onClose, formData: initialFormData }) => {
 					}
 				}
 
+				// 성공 메시지 후 모달 닫기
 				setShowModal(false); // 모달 닫기
+				setTimeout(() => {
+					Swal.fire({
+						icon: 'success',
+						title: `${formData.assetCode} : 자산이 성공적으로 수정되었습니다`,
+					});
+
+					// 수정이 완료되면 해당 페이지로 이동
+					setPageIndex(0); // 원하는 페이지 번호로 설정 (예: 0은 첫 페이지)
+					fetchData(0, pageSize); // 해당 페이지의 데이터를 다시 가져옴
+				}, 500);
 			}
 		} catch (error) {
 			console.error('Error updating asset data:', error.response || error);
@@ -202,7 +222,16 @@ const RowDetails = ({ row, assetCode, onClose, formData: initialFormData }) => {
 				alert(`경고: 이미 수정 요청이 들어간 자산입니다. 자산 코드: ${formData.assetCode}`);
 			} else {
 				// 성공 메시지 띄우기
-				alert(response.data); // 성공 메시지
+				//alert(response.data); // 성공 메시지
+				Swal.fire({
+					icon: 'success',
+					title: `${formData.assetCode} : 자산이 성공적으로 수정요청되었습니다`,
+				});
+				setTimeout(() => {
+					// 수정이 완료되면 해당 페이지로 이동
+					setPageIndex(0); // 원하는 페이지 번호로 설정 (예: 0은 첫 페이지)
+					fetchData(0, pageSize); // 해당 페이지의 데이터를 다시 가져옴
+				}, 1500);
 
 				// 3. 새 파일 업로드가 필요할 때만 실행
 				if (formData.files && formData.files.length > 0) {
@@ -333,7 +362,7 @@ const RowDetails = ({ row, assetCode, onClose, formData: initialFormData }) => {
 				);
 			}
 			// useState select 설정
-			if (key === 'useState') {
+			if (key === 'usestate') {
 				return (
 					<Form.Select
 						value={formData[key] || ''}
@@ -454,8 +483,8 @@ const RowDetails = ({ row, assetCode, onClose, formData: initialFormData }) => {
 						>
 							<thead>
 								<tr>
-									<th>자산코드</th>
-									<th>자산명</th>
+									{/* <th>자산코드</th>
+									<th>자산명</th> */}
 									<th>자산기준</th>
 									<th>제조사</th>
 									<th>목적</th>
@@ -464,21 +493,12 @@ const RowDetails = ({ row, assetCode, onClose, formData: initialFormData }) => {
 									<th>사용자</th>
 									<th>소유자</th>
 									<th>보안담당자</th>
-									<th>사용상태</th>
-									<th>가동여부</th>
-									<th>도입일자</th>
-									<th>기밀성</th>
-									<th>무결성</th>
-									<th>가용성</th>
-									<th>중요성점수</th>
-									<th>중요성등급</th>
-									<th>비고</th>
 								</tr>
 							</thead>
 							<tbody>
 								<tr>
-									<td>{formData.assetCode || 'N/A'}</td>
-									<td>{formData.assetName || 'N/A'}</td>
+									{/* <td>{formData.assetCode || 'N/A'}</td>
+									<td>{formData.assetName || 'N/A'}</td> */}
 									<td>{formData.assetBasis || 'N/A'}</td>
 									<td>{formData.manufacturingCompany || 'N/A'}</td>
 									<td>{formData.purpose || 'N/A'}</td>
@@ -487,14 +507,45 @@ const RowDetails = ({ row, assetCode, onClose, formData: initialFormData }) => {
 									<td>{renderCellContent('assetUser')}</td>
 									<td>{renderCellContent('assetOwner')}</td>
 									<td>{renderCellContent('assetSecurityManager')}</td>
-									<td>{renderCellContent('useState')}</td>
+								</tr>
+							</tbody>
+						</BootstrapTable>
+						<BootstrapTable
+							striped
+							bordered
+							hover
+							className="table-detail"
+							style={{ width: '100%' }}
+						>
+							<thead>
+								<tr>
+									<th>사용상태</th>
+									<th>가동여부</th>
+									<th>도입일자</th>
+									<th style={{ width: '80px' }}>기밀성</th>
+									<th style={{ width: '80px' }}>무결성</th>
+									<th style={{ width: '80px' }}>가용성</th>
+									<th style={{ width: '80px' }}>중요성점수</th>
+									<th style={{ width: '80px' }}>중요성등급</th>
+									<th>비고</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>{renderCellContent('usestate')}</td>
 									<td>{renderCellContent('operationStatus')}</td>
 									<td>{renderCellContent('introducedDate')}</td>
-									<td>{renderCellContent('confidentiality')}</td>
-									<td>{renderCellContent('integrity')}</td>
-									<td>{renderCellContent('availability')}</td>
-									<td>{importanceScore}</td>
-									<td>{importanceRating}</td>
+									<td style={{ width: '80px' }}>
+										{renderCellContent('confidentiality')}
+									</td>
+									<td style={{ width: '80px' }}>
+										{renderCellContent('integrity')}
+									</td>
+									<td style={{ width: '80px' }}>
+										{renderCellContent('availability')}
+									</td>
+									<td style={{ width: '80px' }}>{importanceScore}</td>
+									<td style={{ width: '80px' }}>{importanceRating}</td>
 									<td>{renderCellContent('note')}</td>
 								</tr>
 							</tbody>

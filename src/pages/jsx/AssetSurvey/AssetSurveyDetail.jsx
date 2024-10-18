@@ -7,7 +7,8 @@ import { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import { DetailTable } from './AssetSurveyHistoryTable';
 import { SurveyCompleteButton, SruveyCancelButton } from './AssetSurveyButtons';
 import React from 'react';
-import QRScanner from 'qr-scanner'; // qr-scanner 라이브러리 import00
+import QRScanner from 'qr-scanner'; // qr-scanner 라이브러리 import
+import Swal from 'sweetalert2';
 
 const URL = import.meta.env.VITE_BASIC_URL;
 
@@ -44,7 +45,11 @@ const AssetSurveyContentCell = React.memo(({ row, assetSurveyContent, onContentC
 			})
 			.catch((error) => {
 				console.error('오류 발생:', error);
-				alert('내용 업데이트 중 오류가 발생했습니다.');
+
+				Swal.fire({
+					icon: 'error',
+					title: '내용 업데이트 중 오류가 발생했습니다.',
+				});
 			});
 	};
 
@@ -138,15 +143,25 @@ const AssetSurveyDetail = () => {
 			});
 
 			if (!response.ok) {
-				alert('자산 조사 완료에 실패했습니다.');
+				Swal.fire({
+					icon: 'error',
+					title: '자산 조사 완료에 실패했습니다.',
+				});
 				return;
 			}
 
-			alert('자산 조사 완료');
+			Swal.fire({
+				icon: 'success',
+				title: '자산 조사 완료',
+			});
+
 			window.location.href = '/jsx/AssetSurveyHistory';
 		} catch (error) {
 			console.error('자산 조사 완료 중 오류:', error);
-			alert('오류가 발생했습니다. 다시 시도해주세요.');
+			Swal.fire({
+				icon: 'error',
+				title: '오류가 발생했습니다. 다시 시도해주세요.',
+			});
 		}
 	};
 
@@ -255,7 +270,10 @@ const AssetSurveyDetail = () => {
 				setExactLocationStates((prevState) => {
 					const currentState = prevState[infoNo];
 					if (currentState) {
-						alert('이미 조사된 자산입니다.');
+						Swal.fire({
+							icon: 'error',
+							title: '이미 조사된 자산입니다.',
+						});
 						return prevState; // 상태를 변경하지 않음
 					}
 
@@ -297,8 +315,11 @@ const AssetSurveyDetail = () => {
 					console.log('성공'); // 성공 시 서버 응답 출력
 				})
 				.catch((error) => {
-					alert('네트워크 응답이 올바르지 않습니다.');
 					console.error('오류 발생:', error); // 오류 발생 시 오류 메시지 출력
+					Swal.fire({
+						icon: 'error',
+						title: '네트워크 응답이 올바르지 않습니다.',
+					});
 				});
 		},
 		[exactLocationStates]
@@ -334,7 +355,10 @@ const AssetSurveyDetail = () => {
 				console.log('성공'); // 성공 시 서버 응답 출력
 			})
 			.catch((error) => {
-				alert('네트워크 응답이 올바르지 않습니다.');
+				Swal.fire({
+					icon: 'error',
+					title: '네트워크 응답이 올바르지 않습니다.',
+				});
 				console.error('오류 발생:', error); // 오류 발생 시 오류 메시지 출력
 			});
 	};
@@ -388,7 +412,10 @@ const AssetSurveyDetail = () => {
 								console.log('일치하는 행 : ' + JSON.stringify(matchedRow));
 								setShowToast(true);
 							} else {
-								alert('해당하는 자산을 찾을 수 없습니다.');
+								Swal.fire({
+									icon: 'error',
+									title: '해당하는 자산을 찾을 수 없습니다.',
+								});
 							}
 						})
 						.catch((err) => {
@@ -402,7 +429,12 @@ const AssetSurveyDetail = () => {
 		} catch (err) {
 			console.error('카메라 접근 오류:', err);
 			setIsScanning(false);
-			alert('카메라에 접근할 수 없습니다. 카메라 권한을 확인해주세요.');
+
+			Swal.fire({
+				icon: 'error',
+				title: '카메라에 접근오류',
+				text: '카메라 권한을 확인해주세요.',
+			});
 		}
 		//callBack 함수의 의존성 배열에 data 추가 안하면 data 못 씀.
 		//startScanning 함수가 정의될 때 data 값을 참조하는데 초기 빈 배열을 계속 사용해서 그런듯

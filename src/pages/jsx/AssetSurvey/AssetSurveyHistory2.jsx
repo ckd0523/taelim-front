@@ -3,6 +3,7 @@ import { SurveyTable } from './AssetSurveyHistoryTable';
 import { Buttons } from './AssetSurveyButtons';
 import { useState, useEffect } from 'react';
 import { Card } from 'react-bootstrap';
+import Swal from 'sweetalert2';
 const URL = import.meta.env.VITE_BASIC_URL;
 
 const AssetSurveyHistory2 = () => {
@@ -27,7 +28,10 @@ const AssetSurveyHistory2 = () => {
 	// 행 삭제 함수
 	const handleDelete = async () => {
 		if (selectedRows.length === 0) {
-			alert('한 개 이상의 자산 조사를 선택하세요.');
+			Swal.fire({
+				icon: 'error',
+				text: '한 개 이상의 자산 조사를 선택하세요.',
+			});
 			return;
 		}
 
@@ -44,14 +48,23 @@ const AssetSurveyHistory2 = () => {
 				throw new Error('자산 조사 삭제에 실패했습니다.');
 			}
 
-			alert('자산 조사 삭제가 완료되었습니다.');
+			Swal.fire({
+				icon: 'success',
+				title: '자산 조사 삭제가 완료되었습니다.',
+				text: '자산조사 페이지로 이동합니다.',
+			});
+
 			//삭제 성공 후 선택된 행 초기화
 			setSelectedRows([]);
 			//삭제 성공 후 테이블 리렌더링
 			onClickRegister();
 		} catch (error) {
 			console.error('자산 조사 삭제 중 오류:', error);
-			alert('오류가 발생했습니다. 다시 시도해주세요.');
+
+			Swal.fire({
+				icon: 'error',
+				title: '오류가 발생했습니다. 다시 시도해주세요.',
+			});
 		}
 
 		//console.log("삭제요~");

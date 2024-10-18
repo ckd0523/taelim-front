@@ -4,6 +4,7 @@ import assetSurveyLocation from './assetSurveyLocation';
 import Select from 'react-select';
 import { CustomDatePicker2 } from '@/components';
 import { useState, useEffect } from 'react';
+import Swal from 'sweetalert2';
 
 const URL = import.meta.env.VITE_BASIC_URL;
 
@@ -32,7 +33,10 @@ const RegisterButton = ({ onClickRegister }) => {
 				});
 
 				if (!checkResponse.ok) {
-					alert('현재 위치에 대한 자산조사가 이미있습니다.');
+					Swal.fire({
+						icon: 'error',
+						title: '현재 위치에 대한 자산조사가 이미있습니다.',
+					});
 					setLocation('');
 					//alert(checkResponse.body);
 				} else {
@@ -41,7 +45,10 @@ const RegisterButton = ({ onClickRegister }) => {
 					setRound(data); // 서버 응답에서 회차 정보 설정
 				}
 			} catch (error) {
-				alert('네트워크 오류 발생');
+				Swal.fire({
+					icon: 'error',
+					title: '네트워크 오류 발생',
+				});
 				console.error('에러 발생:', error);
 			}
 		};
@@ -57,7 +64,10 @@ const RegisterButton = ({ onClickRegister }) => {
 	// 자산 조사 등록 요청 보내는 함수
 	const handleRegistRequest = async () => {
 		if (selectedLocation == '') {
-			alert('위치를 선택하세요.');
+			Swal.fire({
+				icon: 'error',
+				title: '위치를 선택하세요.',
+			});
 			return; // 선택된 위치가 없으면 실행하지 않음
 		}
 
@@ -86,7 +96,10 @@ const RegisterButton = ({ onClickRegister }) => {
 				throw new Error('자산 조사 등록에 실패했습니다.');
 			}
 
-			alert('자산 조사 등록이 완료되었습니다.');
+			Swal.fire({
+				icon: 'success',
+				title: '자산 조사 등록이 완료되었습니다.',
+			});
 			setLocation('');
 			toggleSignUp(); // 모달 닫기
 			setIsSubmitting(false); // 요청 완료 후 확인 버튼 활성화
@@ -94,7 +107,11 @@ const RegisterButton = ({ onClickRegister }) => {
 			onClickRegister();
 		} catch (error) {
 			console.error('자산 조사 등록 중 오류:', error);
-			alert('오류가 발생했습니다. 다시 시도해주세요.');
+			Swal.fire({
+				icon: 'error',
+				title: '오류가 발생했습니다. 다시 시도해주세요.',
+			});
+
 			setIsSubmitting(false); // 요청 완료 후 확인 버튼 활성화
 		}
 	};

@@ -1,4 +1,13 @@
-import { Row, Col, Card, Table as BootstrapTable, Button, Modal, Form } from 'react-bootstrap';
+import {
+	Row,
+	Col,
+	Card,
+	Table as BootstrapTable,
+	Button,
+	Modal,
+	Form,
+	FormGroup,
+} from 'react-bootstrap';
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import {
@@ -83,14 +92,55 @@ const InfoModal = ({ show, handleClose, modalData, assetNo }) => {
 					modalData && (
 						<>
 							{/* modalData 관련 정보 */}
-							<div className="modal-data-info">
-								<p>자산코드: {modalData.assetCode}</p>
-								<p>자산명: {modalData.assetName}</p>
-								<p>수정요청자: {modalData.updateBy}</p>
-								<p>수정사유: {modalData.updateReason}</p>
-								<p>수정일자: {modalData.updateDate}</p>
-							</div>
+							<Form.Group className="mb-3 pt-2" controlId="exampleForm.ControlInput1">
+								<Row>
+									<Col lg={6}>
+										<Form.Label>자산코드</Form.Label>
+										<Form.Control
+											type="text"
+											value={modalData.assetCode}
+											readOnly
+										/>
+									</Col>
+									<Col lg={6}>
+										<Form.Label>자산명</Form.Label>
+										<Form.Control
+											type="text"
+											value={modalData.assetName}
+											readOnly
+										/>
+									</Col>
+								</Row>
+								<Row>
+									<Col lg={6}>
+										<Form.Label className="pt-2">수정요청자</Form.Label>
+										<Form.Control
+											type="text"
+											value={modalData.updateBy}
+											readOnly
+										/>
+									</Col>
 
+									<Col lg={6}>
+										<Form.Label className="pt-2">수정사유</Form.Label>
+										<Form.Control
+											type="text"
+											value={modalData.updateReason}
+											readOnly
+										/>
+									</Col>
+								</Row>
+								<Row>
+									<Col lg={6}>
+										<Form.Label className="pt-2">수정일자</Form.Label>
+										<Form.Control
+											type="text"
+											value={modalData.updateDate}
+											readOnly
+										/>
+									</Col>
+								</Row>
+							</Form.Group>
 							<div className="info-update-container">
 								<ModalBasicInfo
 									assetInfo={assetInfo}

@@ -345,6 +345,7 @@ const MaintainHist = () => {
 						<CardBody className="card-body">
 							<Table3
 								theadClass="table-dark"
+								tableClass="border-black"
 								sizePerPageList={sizePerPageList}
 								columns={columns}
 								data={searchData}

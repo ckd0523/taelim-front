@@ -1,1 +1,1 @@
-export { Expand as default } from './Expand';
+export { AssetPageTest as default } from './AssetPageExpand';

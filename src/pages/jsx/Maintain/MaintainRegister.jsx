@@ -1,5 +1,6 @@
-import { Button, Form, Modal } from 'react-bootstrap';
+import { Button, Form, Modal, Alert } from 'react-bootstrap';
 import { useState } from 'react';
+import Swal from 'sweetalert2';
 import RepairFileUpload from '@/pages/jsx/Maintain/RepairFileUpload';
 
 const urlConfig = import.meta.env.VITE_BASIC_URL;
@@ -16,6 +17,8 @@ const MaintainRegister = ({ assetCode, assetNo }) => {
 		repairStatus: '',
 		repairFiles: [],
 	});
+	const [showAlert, setShowAlert] = useState(false);
+	const [alertMessage, setAlertMessage] = useState('');
 
 	const handleClose = () => setShow(false);
 	const handleShow = () => setShow(true);
@@ -42,7 +45,11 @@ const MaintainRegister = ({ assetCode, assetNo }) => {
 				uploadFileNames.push(fileName);
 				console.log(fileName);
 			} else {
-				alert('파일 업로드 실패');
+				Swal.fire({
+					icon: 'error',
+					title: '파일 등록에 실패하였습니다.',
+					text: '다시 업로드 시도해주세요',
+				});
 			}
 		}
 
@@ -79,15 +86,29 @@ const MaintainRegister = ({ assetCode, assetNo }) => {
 
 				// }
 
-				alert('유지보수가 성공적으로 등록되었습니다.');
+				Swal.fire({
+					icon: 'success',
+					title: '유지보수가 성공적으로 등록되었습니다.',
+					text: '유지보수이력 화면으로 이동',
+				});
 				handleClose();
-				window.location.replace('/jsx/MaintainHist');
+				setTimeout(() => {
+					window.location.replace('/jsx/MaintainHist');
+				}, 1000);
 			} else {
-				alert('유지보수 등록 실패하였습니다.');
+				Swal.fire({
+					icon: 'error',
+					title: '유지보수 등록을 실패하였습니다.',
+					text: '항목을 다시 확인해주세요.',
+				});
 			}
 		} catch (error) {
 			console.error('에러발생 : ', error);
-			alert('유지보수 등록 중 에러가 발생하였습니다.');
+			Swal.fire({
+				icon: 'error',
+				title: '에러가 발생하였습니다.',
+				text: error,
+			});
 		}
 	};
 
@@ -100,13 +121,14 @@ const MaintainRegister = ({ assetCode, assetNo }) => {
 
 		console.log('name: ', name);
 		console.log('value: ', value);
-
+		setShowAlert(false);
 		if (name === 'repairEndDate') {
 			const startDate = new Date(formData.repairStartDate);
 			const endDate = new Date(value);
 
 			if (endDate < startDate) {
-				alert('완료일은 시작일보다 이전일 수 없습니다.');
+				setAlertMessage('완료일이 시작일 이전일 수는 없습니다.');
+				setShowAlert(true);
 				setFormData((prevState) => ({
 					...prevState,
 					repairEndDate: '',
@@ -130,6 +152,7 @@ const MaintainRegister = ({ assetCode, assetNo }) => {
 					<Modal.Title>유지보수 등록</Modal.Title>
 				</Modal.Header>
 				<Modal.Body>
+					{showAlert && <Alert variant="danger">{alertMessage}</Alert>}
 					<Form>
 						<Form.Group controlId="exampleForm.ControlInput1">
 							<Form.Label>자산코드</Form.Label>

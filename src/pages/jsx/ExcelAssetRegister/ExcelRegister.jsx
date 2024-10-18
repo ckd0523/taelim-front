@@ -17,15 +17,19 @@ const ExcelRegister = () => {
 	const fileInputRef = useRef(null);
 
 	const classification = [
-		{ value: '2.1 서버(시스템)', label: 'IT장비-시스템' },
-		{ value: '2.3 정보보호시스템', label: '정보보호시스템' },
-		{ value: '2.4 응용프로그램', label: '응용프로그램' },
-		{ value: '2.5 소프트웨어', label: '소프트웨어' },
-		{ value: '2.6 전자정보', label: '전자정보' },
-		{ value: '2.8 문서', label: '문서' },
-		{ value: '2.7.1 단말기_PC', label: '단말기' },
-		{ value: '2.7.2 단말기_전화기', label: '기기' },
-		{ value: '2.9 기타', label: '기타' },
+		{ value: '2.1 정보보호시스템', label: '정보보호시스템' },
+		{ value: '2.2 응용프로그램', label: '응용프로그램' },
+		{ value: '2.3 소프트웨어', label: '소프트웨어' },
+		{ value: '2.4 전자정보', label: '전자정보' },
+		{ value: '2.5 문서', label: '문서' },
+		{ value: '2.6 특허 및 상표', label: '특허 및 상표' },
+		{ value: '2.7 IT장비-시스템', label: 'IT장비-시스템' },
+		{ value: '2.8 IT장비-네트워크', label: 'IT장비-네트워크' },
+		{ value: '2.9 단말기', label: '단말기' },
+		{ value: '2.10 가구', label: '가구' },
+		{ value: '2.11 기기', label: '기기' },
+		{ value: '2.12 차량', label: '차량' },
+		{ value: '2.13 기타', label: '기타' },
 	];
 
 	const handleSelectValue = (selectOption) => {
@@ -42,22 +46,41 @@ const ExcelRegister = () => {
 	};
 
 	const sheetNames = [
-		'2.1 서버(시스템)',
-		'2.2 네트워크',
-		'2.3 정보보호시스템',
-		'2.4 응용프로그램',
-		'2.5 소프트웨어',
-		'2.6 전자정보',
-		'2.7.1 단말기_PC',
-		'2.7.2 단말기_전화기',
-		'2.7.3 단말기_복합기',
-		'2.8 문서',
-		'2.9 기타',
+		'2.1 정보보호시스템',
+		'2.2 응용프로그램',
+		'2.3 소프트웨어',
+		'2.4 전자정보',
+		'2.5 문서',
+		'2.6 특허 및 상표',
+		'2.7 IT장비-시스템',
+		'2.8 IT장비-네트워크',
+		'2.9 단말기',
+		'2.10 가구',
+		'2.11 기기',
+		'2.12 차량',
+		'2.13 기타',
 	];
 	const excelDateToJSDate = (serial) => {
-		const excelEpoch = new Date(Date.UTC(1899, 11, 30));
-		const jsDate = new Date(excelEpoch.getTime() + serial * 24 * 60 * 60 * 1000);
-		return jsDate.toISOString().split('T')[0];
+		// if (!serial || isNaN(serial)) {
+		// 	console.log('Invalid serial date : ', serial);
+		// 	return '';
+		// }
+		if (typeof serial === 'number') {
+			const excelEpoch = new Date(Date.UTC(1899, 11, 30));
+			const jsDate = new Date(excelEpoch.getTime() + serial * 24 * 60 * 60 * 1000);
+			return jsDate.toISOString().split('T')[0];
+		}
+
+		if (typeof serial === 'string') {
+			const datePattern = /^(\d{4})년\s*(\d{2})월$/;
+			const match = serial.match(datePattern);
+			if (match) {
+				const [_, year, month] = match;
+				return `${year}-${month}-01`;
+			}
+		}
+
+		return 'Invalid date';
 	};
 	const commonFieldMapping = {
 		자산기준: 'assetBasis',
@@ -85,13 +108,96 @@ const ExcelRegister = () => {
 		유지기간: 'maintenancePeriod',
 	};
 	const sheetSpeciificMappings = {
-		'2.1 서버(시스템)': {},
-		'2.3 정보보호시스템': {
+		'2.1 정보보호시스템': {
 			서비스범위: 'serviceScope',
 		},
-		'2.8 문서': {
-			대외비: 'documentGrade',
+		'2.2 응용프로그램': {
+			서비스범위: 'serviceScope',
+			사용OS: 'os',
+			관련DB: 'relatedDB',
+			IP: 'ip',
+			화면수: 'screenNumber',
+		},
+		'2.3 소프트웨어': {
+			IP: 'ip',
+			ID: 'id',
+			PW: 'pw',
+			담당업체: 'companyManager',
+			사용OS: 'os',
+		},
+		'2.4 전자정보': {
+			사용OS: 'os',
+			시스템: 'system',
+			DB종류: 'DBType',
+		},
+		'2.5 문서': {
+			문서등급: 'documentGrade',
 			문서형태: 'documentType',
+			문서링크: 'documentLink',
+		},
+
+		'2.6 특허 및 상표': {
+			출원일자: 'applicationDate',
+			등록일자: 'registrationDate',
+			만료일자: 'expirationDate',
+			'특허/상표상태': 'patentTrademarkStatus',
+			출원국가: 'countryApplication',
+			특허분류: 'patentClassification',
+			특허세목: 'patentItem',
+			출원번호: 'applicationNo',
+			발명자: 'inventor',
+			권리권자: 'assignee',
+		},
+		'2.7 IT장비-시스템': {
+			장비유형: 'equipmentType',
+			랙유닛: 'rackUnit',
+			전원공급장치: 'powerSupply',
+			쿨링시스템: 'coolingSystem',
+			인터페이스포트: 'interfacePorts',
+			폼팩터: 'formFactor',
+			확장슬롯수: 'expansionSlots',
+			그래픽카드: 'graphicsCard',
+			포트구성: 'portConfiguration',
+			모니터포함여부: 'monitorIncluded',
+		},
+		'2.8 IT장비-네트워크': {
+			장비유형: 'equipmentType',
+			포트수: 'numberOfPorts',
+			지원프로토콜: 'supportedProtocols',
+			펌웨어버전: 'firmwareVersion',
+			네트워크속도: 'networkSpeed',
+			서비스범위: 'serviceScope',
+		},
+		'2.9 단말기': {
+			IP: 'ip',
+			OS: 'os',
+			보안관제: 'securityControl',
+			내부정보유출방지: 'kaitsKeeper',
+			'악성코드,랜섬웨어탐지': 'V3OfficeSecurity',
+			안티랜섬웨어: 'appCheckPro',
+			NACagent: 'tgate',
+		},
+		'2.10 가구': {
+			크기: 'furnitureSize',
+		},
+		'2.11 기기': {
+			기기유형: 'deviceType',
+			모델번호: 'modelNumber',
+			연결방식: 'connectionType',
+			전원사양: 'powerSpecifications',
+		},
+		'2.12 차량': {
+			배기량: 'displacement',
+			차량의문수: 'doorsCount',
+			엔진형식: 'engineType',
+			차량종류: 'carType',
+			차량식별번호: 'identificationNo',
+			차량색상: 'carColor',
+			연식: 'modelYear',
+		},
+		'2.13 기타': {
+			기타세부설명: 'otherDescription',
+			사용빈도: 'usageFrequency',
 		},
 	};
 
@@ -263,8 +369,8 @@ const ExcelRegister = () => {
 					<div>
 						<Row>
 							<Col>
-								{Object.keys(data).map((sheetName) => (
-									<h3>Sheet: {sheetName.substring(4, 12)}</h3>
+								{Object.keys(data).map((sheetName, index) => (
+									<h3 key={index}>Sheet: {sheetName.substring(4, 12)}</h3>
 								))}
 
 								<Table bordered>

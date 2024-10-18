@@ -3,12 +3,19 @@ import classNames from 'classnames';
 import { useCallback } from 'react';
 
 // get all columns 여긴 완료
-const columns = [
+const baseColumns = (pageIndex, pageSize) => [
 	{
 		Header: '번호',
 		accessor: 'assetNo',
 		defaultCanSort: true,
+		Cell: ({ row }) => {
+			// 현재 페이지의 첫 번째 인덱스는 pageIndex * pageSize 이므로,
+			// 여기에 1을 더하여 1부터 시작하는 번호를 표시합니다.
+			const rowIndex = row.index + 1 + pageIndex * pageSize;
+			return <span>{rowIndex}</span>;
+		},
 	},
+
 	{
 		Header: '자산기준',
 		accessor: 'assetBasis',
@@ -60,4 +67,4 @@ const columns = [
 	},
 ];
 
-export { columns };
+export { baseColumns };

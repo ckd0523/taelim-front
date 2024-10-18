@@ -60,10 +60,10 @@ const DemandHistory = () => {
 		};
 
 		// process가 false로 바뀔 때 데이터를 다시 불러옴
-		if (!process || !showActModal) {
+		if (!process || !showActModal || !showModal) {
 			fetchData();
 		}
-	}, [process, showActModal]);
+	}, [process, showActModal, showModal]);
 
 	useEffect(() => {
 		const fetchData = async () => {

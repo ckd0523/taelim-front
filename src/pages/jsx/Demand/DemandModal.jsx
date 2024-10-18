@@ -24,57 +24,93 @@ const API_URL = import.meta.env.VITE_BASIC_URL;
 const urlConfig = import.meta.env.VITE_BASIC_URL;
 
 const InfoModal = ({ show, handleClose, modalData }) => {
-	if (modalData && modalData.demandType === 'update') {
-		const [assetInfo, setAssetInfo] = useState(null); // 변경 전 정보
-		const [modifiedAssetInfo, setModifiedAssetInfo] = useState(null); // 변경 후 정보
+	const [reason, setReason] = useState('');
+	const [assetInfo, setAssetInfo] = useState(null); // 변경 전 정보
+	const [modifiedAssetInfo, setModifiedAssetInfo] = useState(null); // 변경 후 정보
+	const [isLoading, setIsLoading] = useState(true);
 
-		// 변경 전 , 변경 후 테이블 색깔 비교
-		const getCellClassName = (originalValue, newValue) => {
-			return originalValue !== newValue ? 'text-danger' : '';
-		};
+	const handleReasonChange = (e) => setReason(e.target.value);
 
-		const [isLoading, setIsLoading] = useState(true);
+	// 변경 전 , 변경 후 테이블 색깔 비교
+	const getCellClassName = (originalValue, newValue) => {
+		return originalValue !== newValue ? 'text-danger' : '';
+	};
 
-		const importanceScore = calculateImportanceScore(assetInfo);
-		const importanceRating = calculateImportanceRating(importanceScore);
+	const importanceScore = calculateImportanceScore(assetInfo);
+	const importanceRating = calculateImportanceRating(importanceScore);
 
-		const modifiedImportanceScore = calculateImportanceScore(modifiedAssetInfo);
-		const modifiedImportanceRating = calculateImportanceRating(modifiedImportanceScore);
+	const modifiedImportanceScore = calculateImportanceScore(modifiedAssetInfo);
+	const modifiedImportanceRating = calculateImportanceRating(modifiedImportanceScore);
 
-		const classification = assetInfo?.assetClassification;
-		const dynamicColumns = React.useMemo(
-			() => getClassificationColumns(classification),
-			[classification]
-		);
-		useEffect(() => {
-			// assetNo  유효할 때만 fetchRowData 호출
+	const classification = assetInfo?.assetClassification;
+	const dynamicColumns = React.useMemo(
+		() => getClassificationColumns(classification),
+		[classification]
+	);
+
+	// 데이터 불러오기 (update 시)
+	useEffect(() => {
+		if (modalData && modalData.demandType === 'update') {
 			const fetchRowData = async () => {
-				setIsLoading(true); // 데이터 요청 시작부분
+				setIsLoading(true);
 
 				try {
 					const response = await axios.get(
 						`${urlConfig}/updateDetail/${modalData.assetNo}`
 					);
-					console.log(`불러온 데이터 : `, response.data);
-
 					const [lowestAsset, modifiedAsset] = response.data;
-
-					// 두 개의 자산 정보를 각각 "변경 전"과 "변경 후"로 설정
 					setAssetInfo(lowestAsset); // 변경 전 데이터 설정
 					setModifiedAssetInfo(modifiedAsset); // 변경 후 데이터 설정
-
-					console.log('변경 전 자산 정보: ', lowestAsset);
-					console.log('변경 후 자산 정보: ', modifiedAsset);
 				} catch (error) {
-					console.error(`Error 데이터 : `, error);
+					console.error('Error fetching data:', error);
 				} finally {
-					setIsLoading(false); // 데이터 요청완료
+					setIsLoading(false);
 				}
 			};
 
-			fetchRowData(); // assetNo  유효할 때만 fetchRowData 호출
-		}, [modalData.assetNo]); // assetNo  변경될 때만 호출
+			fetchRowData();
+		}
+	}, [modalData]);
 
+	const handleFormSubmit = (actionType) => {
+		const dataToSend = {
+			demandAction: modalData,
+			reason,
+			actionType,
+		};
+		axios
+			.post(`${API_URL}/updateAction`, dataToSend)
+			.then((response) => {
+				console.log('Update successful:', response.data);
+			})
+			.catch((error) => {
+				console.error('Error:', error.message);
+			});
+		setReason('');
+		handleClose();
+	};
+
+	const handleFormSubmit2 = (actionType) => {
+		const dataToSend = {
+			demandAction: modalData,
+			reason,
+			actionType,
+		};
+		axios
+			.post(`${API_URL}/deleteAction`, dataToSend)
+			.then((response) => {
+				console.log('Update successful:', response.data);
+			})
+			.catch((error) => {
+				console.error('Error:', error.message);
+			});
+		setReason('');
+		handleClose();
+	};
+
+	const isUnconfirmed = modalData?.demandStatus === 'UNCONFIRMED';
+
+	if (modalData && modalData.demandType === 'update') {
 		return (
 			<Modal
 				show={show}
@@ -178,6 +214,33 @@ const InfoModal = ({ show, handleClose, modalData }) => {
 					)}
 				</Modal.Body>
 				<Modal.Footer>
+					{isUnconfirmed && (
+						<>
+							<Form>
+								<Form.Group>
+									<Form.Control
+										type="text"
+										value={reason}
+										onChange={handleReasonChange}
+										placeholder={'사유'}
+										size="lg"
+									/>
+								</Form.Group>
+							</Form>
+							<Button
+								style={{ background: '#5e83bb', border: 'none' }}
+								onClick={() => handleFormSubmit('approve')}
+							>
+								승인
+							</Button>
+							<Button
+								style={{ background: '#c66464', border: 'none' }}
+								onClick={() => handleFormSubmit('reject')}
+							>
+								거절
+							</Button>
+						</>
+					)}
 					<Button variant="secondary" onClick={handleClose}>
 						닫기
 					</Button>
@@ -186,7 +249,7 @@ const InfoModal = ({ show, handleClose, modalData }) => {
 		);
 	} else {
 		return (
-			<Modal show={show} onHide={handleClose} backdrop="static" keyboard={false}>
+			<Modal show={show} onHide={handleClose} size="lg" backdrop="static" keyboard={false}>
 				<Modal.Header closeButton>
 					<Modal.Title>폐기 요청 상세 정보</Modal.Title>
 				</Modal.Header>
@@ -279,6 +342,35 @@ const InfoModal = ({ show, handleClose, modalData }) => {
 					)}
 				</Modal.Body>
 				<Modal.Footer>
+					{isUnconfirmed && (
+						<>
+							<Col lg={8}>
+								<Form>
+									<Form.Group>
+										<Form.Control
+											type="text"
+											value={reason}
+											onChange={handleReasonChange}
+											placeholder={'사유'}
+											size="lg"
+										/>
+									</Form.Group>
+								</Form>
+							</Col>
+							<Button
+								style={{ background: '#5e83bb', border: 'none' }}
+								onClick={() => handleFormSubmit2('approve')}
+							>
+								승인
+							</Button>
+							<Button
+								style={{ background: '#c66464', border: 'none' }}
+								onClick={() => handleFormSubmit2('reject')}
+							>
+								거절
+							</Button>
+						</>
+					)}
 					<Button variant="secondary" onClick={handleClose}>
 						닫기
 					</Button>

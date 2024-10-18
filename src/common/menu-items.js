@@ -82,12 +82,12 @@ const MENU_ITEMS = [
 		isTitle: false,
 		icon: ' uil-list-ul',
 		children: [
-			{
-				key: 'ds-AssetPageTest',
-				label: '자산조회테스트',
-				url: '/jsx/AssetPageTest',
-				parentKey: 'check',
-			},
+			// {
+			// 	key: 'ds-AssetPageTest',
+			// 	label: '자산조회테스트',
+			// 	url: '/jsx/AssetPageTest',
+			// 	parentKey: 'check',
+			// },
 			{
 				key: 'ds-Expand',
 				label: '자산조회',

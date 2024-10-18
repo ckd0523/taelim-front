@@ -11,9 +11,13 @@ const Buttons = ({ onClickRegister, onDelete }) => {
   const { removeSession } = useAuthContext();
 
   const logout = async () => {
-    removeSession();
+
     try {
-      await authApi.logout();
+      const response = await authApi.logout();
+      console.log(response);
+      if (response.status === 200) {
+        removeSession();
+      }
     } catch (error) {
       console.log(error);
     }

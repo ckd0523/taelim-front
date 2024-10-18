@@ -23,8 +23,9 @@ function AuthService() {
     logout: async () => {
       try {
         console.log("여기로 오잖아 임마 : " + URL);
-        await axios.post(`${URL}/logout`);
+        const response = await axios(`${URL}/logout`, { method: "GET", withCredentials: true });
         console.log('로그아웃 성공');
+        return response;
       } catch (error) {
         console.log("로그아웃 실패 : " + error);
       }

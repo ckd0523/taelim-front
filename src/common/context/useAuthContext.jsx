@@ -20,9 +20,16 @@ export function AuthProvider({ children }) {
   );
 
   const saveSession = useCallback(
-    (user) => {
-      //localStorage.setItem(authSessionKey, JSON.stringify(user.token));
-      setUser(user);
+    (userData) => {
+      const { email, name, role } = userData; // 필요한 정보 추출
+      const subRole = role.slice(1, -1);
+      const userSession = { email, name, subRole }; // 이메일, 이름, 권한만 저장할 객체
+
+      //console.log("유저 정보0 : " + JSON.stringify(user));
+      //console.log("유저 정보1 : " + email);
+      //console.log("유저 정보2 : " + name);
+      //console.log("유저 정보3 : " + subRole);
+      setUser(userSession); // setUser로 상태 업데이트
     },
     [setUser]
   );

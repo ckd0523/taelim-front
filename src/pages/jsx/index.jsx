@@ -17,6 +17,7 @@ const Expand = lazy(() => import('./Expand'));
 const AssetSurveyDetail = lazy(() => import('./AssetSurvey/AssetSurveyDetail'));
 const SystemSetting = lazy(() => import('./SystemSetting'));
 const AssetPageTest = lazy(() => import('./AssetRead'));
+const Dashboard = lazy(() => import('./Dashboard'));
 export default function jsx() {
 	return (
 		<Routes>
@@ -37,6 +38,7 @@ export default function jsx() {
 				{/* <Route path="AssetPage" element={<AssetPage />} /> */}
 				<Route path="AssetPageTest" element={<AssetPageTest />} />
 				<Route path="AssetSurveyDetail" element={<AssetSurveyDetail />} />
+				<Route path="Dashboard" element={<Dashboard />} />
 
 				{/* <Route path="SystemSetting" element={<SystemSetting />} /> */}
 			</Route>

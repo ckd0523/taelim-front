@@ -34,6 +34,7 @@ export default function jsx() {
 				<Route path="UpdateHistory" element={<UpdateHistory />} />
 				<Route path="DeleteHistory" element={<DeleteHistory />} />
 				<Route path="Expand" element={<Expand />} />
+				<Route path="Expand/:classification" element={<Expand />} />
 				{/* <Route path="AssetPage" element={<AssetPage />} /> */}
 				<Route path="AssetPageTest" element={<AssetPageTest />} />
 				<Route path="AssetSurveyDetail" element={<AssetSurveyDetail />} />

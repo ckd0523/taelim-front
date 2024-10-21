@@ -115,6 +115,7 @@ const AssetPageTest = (props) => {
 	useEffect(() => {
 		// 분류가 변경될 때 페이지 인덱스를 0으로 리셋
 		setPageIndex(0);
+		setSearchParams({});
 	}, [classification]); // classification이 변경될 때마다 실행
 
 	// useEffect를 통해 pageIndex와 pageSize가 변경될 때 데이터를 다시 요청

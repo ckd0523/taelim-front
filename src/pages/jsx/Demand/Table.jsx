@@ -138,7 +138,7 @@ const Table = (props) => {
 						// to render a checkbox
 						Header: ({ getToggleAllPageRowsSelectedProps }) => (
 							<div>
-								<IndeterminateCheckbox {...getToggleAllPageRowsSelectedProps()} />
+								{/* <IndeterminateCheckbox {...getToggleAllPageRowsSelectedProps()} /> */}
 							</div>
 						),
 						// The cell can use the individual row's getToggleRowSelectedProps method

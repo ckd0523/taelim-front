@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useCallback, useMemo } from 'react';
+import { useParams } from 'react-router-dom';
 import { useTable, usePagination } from 'react-table';
 import { Row, Col, Card, Button, Form, Modal } from 'react-bootstrap';
 import { PageBreadcrumb, Form as RHForm } from '@/components';
@@ -14,6 +15,8 @@ import { ActionModal } from './AllChangeModal';
 const urlConfig = import.meta.env.VITE_BASIC_URL;
 
 const AssetPageTest = (props) => {
+	const { classification } = useParams(); // URL에서 classification 파라미터를 가져옴
+
 	const [data, setData] = useState([]); // 서버에서 받아온 데이터
 
 	// 선택된 Row 배열,
@@ -33,6 +36,10 @@ const AssetPageTest = (props) => {
 		departmentEnum: '',
 		introducedDate: '',
 	}); // 검색 필터 상태 관리
+
+	// 정렬 상태 관리
+	const [sortBy, setSortBy] = useState('assetBasis'); // 기본 정렬 기준
+	const [sortDirection, setSortDirection] = useState('ASC'); // 기본 정렬 방향
 
 	//const memoizedColumns = useMemo(() => columns(pageIndex, pageSize), [pageIndex, pageSize]);
 
@@ -78,8 +85,11 @@ const AssetPageTest = (props) => {
 						departmentString: searchParams.departmentString || null,
 						departmentEnum: searchParams.departmentEnum || null,
 						introducedDate: searchParams.introducedDate || null,
+						assetClassification: classification || null, // classification 전달
 						page: pageIndex,
 						size: pageSize,
+						sortBy: sortBy, // 정렬 기준 추가
+						sortDirection: sortDirection, // 정렬 방향 추가
 					},
 				});
 
@@ -99,8 +109,14 @@ const AssetPageTest = (props) => {
 				console.error('데이터 요청 실패', error); // 에러 출력
 			}
 		},
-		[searchParams]
+		[searchParams, classification, sortBy, sortDirection]
 	); // searchParams가 변경될 때마다 호출
+
+	useEffect(() => {
+		// 분류가 변경될 때 페이지 인덱스를 0으로 리셋
+		setPageIndex(0);
+		setSearchParams({});
+	}, [classification]); // classification이 변경될 때마다 실행
 
 	// useEffect를 통해 pageIndex와 pageSize가 변경될 때 데이터를 다시 요청
 	useEffect(() => {

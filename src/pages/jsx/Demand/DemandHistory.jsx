@@ -13,19 +13,22 @@ const urlConfig = import.meta.env.VITE_BASIC_URL;
 import Select from 'react-select';
 
 const DemandHistory = () => {
-	const [showSearchForm, setShowSearchForm] = useState(false);
 	const [demands, setDemands] = useState([]);
 	const [demandsList, setDemandsList] = useState([]);
+	const [showSearchForm, setShowSearchForm] = useState(false);
 	const [selectedOrderType, setSelectedOrderType] = useState('');
 	const [selectedRequester, setSelectedRequester] = useState('');
 	const [selectedStatus, setSelectedStatus] = useState('');
 	const [selectedStartDate, setSelectedStartDate] = useState(null);
 	const [selectedEndDate, setSelectedEndDate] = useState(null);
+
 	const [showModal, setShowModal] = useState(false);
 	const [modalData, setModalData] = useState(null);
+
 	const [showActModal, setShowActModal] = useState(false);
-	const [actionData, setActionData] = useState([]); // ActionModal로 보낼 데이터
+	const [actionData, setActionData] = useState([]);
 	const [actionType, setActionType] = useState(null);
+
 	const [rowSelect, setRowSelect] = useState([]);
 	//미확인 자산 처리 모달
 	const [process, setProcess] = useState(false);
@@ -33,6 +36,7 @@ const DemandHistory = () => {
 	const [showAlert, setShowAlert] = useState(false);
 	const [alertMessage, setAlertMessage] = useState('');
 
+	//요청 리스트 가져오는 axios
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
@@ -45,10 +49,7 @@ const DemandHistory = () => {
 		fetchData();
 	}, []);
 
-	useEffect(() => {
-		setDemandsList(demands);
-	}, [demands]);
-
+	//리랜더링
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
@@ -66,21 +67,10 @@ const DemandHistory = () => {
 	}, [process, showActModal, showModal]);
 
 	useEffect(() => {
-		const fetchData = async () => {
-			try {
-				const response = await axios.get(`${urlConfig}/DemandHistory`);
-				setDemands(response.data);
-			} catch (error) {
-				console.error('데이터를 가져오는 중 오류 발생:', error);
-			}
-		};
+		setDemandsList(demands);
+	}, [demands]);
 
-		// process가 false로 바뀔 때 데이터를 다시 불러옴
-		if (!showActModal) {
-			fetchData();
-		}
-	}, [showActModal]);
-
+	// 미처리 자산 여는 모달
 	const processOpenModal = () => {
 		const fetchRowData = async () => {
 			try {
@@ -105,6 +95,7 @@ const DemandHistory = () => {
 		fetchRowData();
 	};
 
+	// 승인 거절 모달 여는 함수
 	const handleOpenModal = (type, rowSelect) => {
 		console.log(rowSelect);
 		if (rowSelect.length === 0) {
@@ -120,26 +111,12 @@ const DemandHistory = () => {
 		}
 	};
 
-	const handleModalSubmit = (reason) => {
-		if (actionType === 'approve') {
-			// 승인 처리 로직
-			console.log('승인 사유:', reason);
-		} else if (actionType === 'reject') {
-			// 거절 처리 로직
-			console.log('거절 사유:', reason);
-		}
-		setShowActModal(false);
-	};
-
+	// 셀렉트 박스 변경 리스너
 	const handleChange = (e) => {
 		setSelectedRequester(e.target.value);
 	};
 
-	const handleRowClick = (rowSelect) => {
-		setModalData(rowSelect);
-		setShowModal(true);
-	};
-
+	//검색 함수
 	const handleSearch = () => {
 		const filteredData = demands.filter((demands) => {
 			return (
@@ -369,7 +346,6 @@ const DemandHistory = () => {
 									columns={columns()}
 									data={demandsList}
 									pageSize={10}
-									//isExpandable={true}
 									isSortable={true}
 									pagination={true}
 									isSelectable={true}
@@ -399,7 +375,6 @@ const DemandHistory = () => {
 								handleClose={() => setShowActModal(false)}
 								actionType={actionType}
 								actionData={actionData} // ActionModal로 데이터 전달
-								handleSubmit={handleModalSubmit}
 							/>
 						</Card.Body>
 					</Card>

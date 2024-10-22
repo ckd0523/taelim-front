@@ -328,7 +328,10 @@ const AssetRegister = () => {
 	};
 	const handleOnSubmit = async (e) => {
 		e.preventDefault(); // 페이지 새로고침 방지
-		handleSubmit(e);
+		if (isValidated === false) {
+			handleSubmit(e);
+		}
+
 		// const form = e.target.closest('form');
 
 		// if (!validateInput || form.checkValidity() === false) {
@@ -341,7 +344,7 @@ const AssetRegister = () => {
 				title: '필수 항목을 채워주세요.',
 				text: '모든 필수 항목을 채워야 합니다',
 			});
-			return;
+			return false;
 		}
 		try {
 			const assetResponse = await fetch(`${urlConfig}/asset/register`, {

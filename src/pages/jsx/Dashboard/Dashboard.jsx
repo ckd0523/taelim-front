@@ -17,14 +17,12 @@ const DistributedColumnOps = {
 		},
 	},
 	colors: [
-		'#727cf5',
-		'#6c757d',
-		'#0acf97',
-		'#fa5c7c',
-		'#ffbc00',
-		'#39afd1',
-		'#e3eaef',
-		'#313a46',
+		'#4E79A7', // 책상 (차분한 블루)
+		'#F28E2B', // 의자 (따뜻한 오렌지)
+		'#76B7B2', // 노트북 (시원한 청록)
+		'#E15759', // 컴퓨터 (부드러운 레드)
+		'#59A14F', // 복합기 (프레시 그린)
+		'#acaba6', // 기타 (밝은 옐로우)
 	],
 	plotOptions: {
 		bar: {
@@ -45,17 +43,20 @@ const DistributedColumnOps = {
 		labels: {
 			style: {
 				colors: [
-					'#3e60d5',
-					'#6c757d',
-					'#47ad77',
-					'#fa5c7c',
-					'#ffbc00',
-					// '#39afd1',
-					// '#e3eaef',
-					'#313a46',
+					'#4E79A7', // 책상 (차분한 블루)
+					'#F28E2B', // 의자 (따뜻한 오렌지)
+					'#76B7B2', // 노트북 (시원한 청록)
+					'#E15759', // 컴퓨터 (부드러운 레드)
+					'#59A14F', // 복합기 (프레시 그린)
+					'#acaba6', // 기타 (밝은 옐로우),
 				],
 				fontSize: '14px',
 			},
+		},
+	},
+	yaxis: {
+		title: {
+			text: '개수',
 		},
 	},
 	legend: {
@@ -90,6 +91,7 @@ const ColumnWithRotatedlabelsOps = {
 	chart: {
 		height: 380,
 		type: 'bar',
+		stacked: 'true',
 		toolbar: {
 			show: false,
 		},
@@ -100,16 +102,44 @@ const ColumnWithRotatedlabelsOps = {
 			// endingShape: 'rounded'
 		},
 	},
+
 	dataLabels: {
 		enabled: false,
 	},
 	stroke: {
 		width: 2,
 	},
-	colors: ['#fa5c7c'],
+	colors: [
+		'#4E79A7', // 책상 (차분한 블루)
+		'#F28E2B', // 의자 (따뜻한 오렌지)
+		'#76B7B2', // 노트북 (시원한 청록)
+		'#E15759', // 컴퓨터 (부드러운 레드)
+		'#59A14F', // 복합기 (프레시 그린)
+		'#acaba6', // 기타 (밝은 옐로우),
+	],
 	series: [
 		{
-			name: 'Servings',
+			name: '책상',
+			data: [44, 55, 41, 67, 22, 43, 21, 33, 45, 31, 87],
+		},
+		{
+			name: '의자',
+			data: [44, 55, 41, 67, 22, 43, 21, 33, 45, 31, 87],
+		},
+		{
+			name: '노트북',
+			data: [44, 55, 41, 67, 22, 43, 21, 33, 45, 31, 87],
+		},
+		{
+			name: '컴퓨터',
+			data: [44, 55, 41, 67, 22, 43, 21, 33, 45, 31, 87],
+		},
+		{
+			name: '복합기',
+			data: [44, 55, 41, 67, 22, 43, 21, 33, 45, 31, 87],
+		},
+		{
+			name: '기타',
 			data: [44, 55, 41, 67, 22, 43, 21, 33, 45, 31, 87],
 		},
 	],
@@ -142,7 +172,7 @@ const ColumnWithRotatedlabelsOps = {
 	},
 	yaxis: {
 		title: {
-			text: 'Servings',
+			text: '개수',
 		},
 	},
 	fill: {
@@ -163,7 +193,7 @@ const Dashboard = () => {
 	return (
 		<>
 			<Row className="p-3">
-				<Col lg={6}>
+				<Col lg={4}>
 					<TotalAssetValue />
 				</Col>
 				<Col lg={6}>
@@ -202,7 +232,6 @@ const Dashboard = () => {
 							</div>
 						</Card.Body>
 					</Card>
-					<p>위치 현황</p>
 				</Col>
 				<Col lg={4}>
 					<p>부서별 현황</p>

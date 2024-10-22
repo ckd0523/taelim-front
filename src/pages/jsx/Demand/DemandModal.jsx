@@ -53,11 +53,9 @@ const InfoModal = ({ show, handleClose, modalData }) => {
 		if (modalData && modalData.demandType === 'update') {
 			const fetchRowData = async () => {
 				setIsLoading(true);
-
+				console.log('dddd', modalData);
 				try {
-					const response = await axios.get(
-						`${urlConfig}/updateDetail/${modalData.assetNo}`
-					);
+					const response = await axios.get(`${urlConfig}/list1/${modalData.assetNo}`);
 					const [lowestAsset, modifiedAsset] = response.data;
 					setAssetInfo(lowestAsset); // 변경 전 데이터 설정
 					setModifiedAssetInfo(modifiedAsset); // 변경 후 데이터 설정
@@ -183,6 +181,18 @@ const InfoModal = ({ show, handleClose, modalData }) => {
 														readOnly
 													/>
 												</Col>
+												{!isUnconfirmed && (
+													<Col lg={6}>
+														<Form.Label className="pt-2">
+															처리사유
+														</Form.Label>
+														<Form.Control
+															type="text"
+															value={modalData.comment}
+															readOnly
+														/>
+													</Col>
+												)}
 											</Row>
 										</Form.Group>
 										<div className="info-update-container">
@@ -289,6 +299,16 @@ const InfoModal = ({ show, handleClose, modalData }) => {
 										readOnly
 									/>
 								</Col>
+								{!isUnconfirmed && (
+									<Col lg={12}>
+										<Form.Label className="pt-2">처리사유</Form.Label>
+										<Form.Control
+											type="text"
+											value={modalData.comment}
+											readOnly
+										/>
+									</Col>
+								)}
 
 								<Col lg={12}>
 									<Form.Label className="pt-2">폐기일자</Form.Label>

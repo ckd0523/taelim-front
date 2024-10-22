@@ -56,7 +56,7 @@ const SurveyTable = ({ tableChange, setSelectedRows, data, setData, setOriginalD
 
   const [isDataExist, setIsDataExist] = useState(false); //fetch로 데이터를 못불러 왔는지
   //const [loading, setLoading] = useState(true); // fetch로 데이터 불러오는 중인지
-  const { removeSession } = useAuthContext();
+  //const { removeSession } = useAuthContext();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -70,7 +70,7 @@ const SurveyTable = ({ tableChange, setSelectedRows, data, setData, setOriginalD
 
         setIsDataExist(true);
         console.error('Error fetching data:', error);
-        removeSession();
+        //removeSession();
       }
     };
 

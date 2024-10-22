@@ -89,8 +89,7 @@ const TotalAssetValue = () => {
 						options={totalAssetValueOpts}
 						series={totalAssetValueData}
 						type="donut"
-						height={390}
-						width={600}
+						width={500}
 						className="apex-charts mb-2 mt-2"
 					/>
 				</div>

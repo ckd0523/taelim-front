@@ -194,10 +194,10 @@ const Dashboard = () => {
 	return (
 		<>
 			<Row className="p-3">
-				<Col lg={4}>
+				<Col lg={5}>
 					<TotalAssetValue />
 				</Col>
-				<Col lg={6}>
+				<Col lg={5}>
 					<RealTimeStatus />
 				</Col>
 			</Row>

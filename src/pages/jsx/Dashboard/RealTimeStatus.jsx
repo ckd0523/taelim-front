@@ -4,28 +4,28 @@ import { Row, Col, Card, Table } from 'react-bootstrap';
 const RealTimeStatus = () => {
 	const StatusPieOpt = {
 		chart: {
-			height: 320,
+			height: 300,
 			type: 'donut',
 		},
-		series: [25, 75],
+		series: [75, 25],
 		legend: {
 			show: true,
 			position: 'bottom',
 			horizontalAlign: 'center',
-			// verticalAlign: 'middle',
+			verticalAlign: 'middle',
 			floating: false,
 			fontSize: '14px',
 			offsetX: 0,
 			offsetY: 7,
 		},
-		labels: ['비가동', '가동'],
-		colors: ['#ffff00', '#000000'],
+		labels: ['가동', '비가동'],
+		colors: ['#5a85dc', '#cc5f5f'],
 		responsive: [
 			{
 				breakpoint: 600,
 				options: {
 					chart: {
-						height: 240,
+						height: 300,
 					},
 					legend: {
 						show: false,
@@ -49,16 +49,16 @@ const RealTimeStatus = () => {
 			},
 		},
 		dataLabels: {
-			enabled: false,
+			enabled: true,
 		},
 		series: [
 			{
 				data: [75, 20, 5, 0],
 			},
 		],
-		colors: ['#39afd1'],
+		colors: ['#5a85dc'],
 		xaxis: {
-			categories: ['Available', 'Broken', 'Repair', 'Other'],
+			categories: ['사용중', '부서짐', '유지 보수 중', '기타'],
 		},
 		// states: {
 		//     // hover: {
@@ -89,46 +89,46 @@ const RealTimeStatus = () => {
 				<h4 className="header-title">실시간 현황판</h4>
 				<Row>
 					<Col>
-						<div dir="ltr">
+						<div className="d-flex justify-content-center">
 							<Chart
 								className="apex-charts"
 								options={StatusPieOpt}
-								height={320}
+								height={250}
+								width={300}
 								series={StatusPieOpt.series}
 								type="donut"
 							/>
-						</div>
-					</Col>
-					<Col>
-						<div dir="ltr">
 							<Chart
 								className="apex-charts"
 								options={StatusBarOpt}
-								height={320}
+								height={250}
+								width={300}
 								series={StatusBarOpt.series}
 								type="bar"
 							/>
 						</div>
 					</Col>
 				</Row>
-				<Row className="mg-10">
+				<Row>
 					<h4 className="header-title">자산총액</h4>
-					<Table className="border-black">
-						<thead className="table-dark">
-							<tr>
-								<th>태림</th>
-								<th>정부지원</th>
-								<th>기타</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr>
-								<td>122121</td>
-								<td>12113</td>
-								<td>1231321</td>
-							</tr>
-						</tbody>
-					</Table>
+					<div className="d-flex justify-content-center">
+						<Table className="border-black">
+							<thead className="table-dark">
+								<tr>
+									<th>태림</th>
+									<th>정부지원</th>
+									<th>기타</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>122121</td>
+									<td>12113</td>
+									<td>1231321</td>
+								</tr>
+							</tbody>
+						</Table>
+					</div>
 				</Row>
 			</Card.Body>
 		</Card>

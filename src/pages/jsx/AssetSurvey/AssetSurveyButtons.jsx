@@ -8,7 +8,7 @@ import { authApi, useAuthContext } from '@/common';
 
 
 const Buttons = ({ onClickRegister, onDelete }) => {
-  const { removeSession } = useAuthContext();
+  const { removeSession, user } = useAuthContext();
 
   const logout = async () => {
 

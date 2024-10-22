@@ -4,6 +4,7 @@ import assetSurveyLocation from './assetSurveyLocation';
 import Select from 'react-select';
 import { CustomDatePicker2 } from '@/components';
 import { useState, useEffect } from 'react';
+import api from '@/common/api/authAxios';
 
 const URL = import.meta.env.VITE_BASIC_URL;
 
@@ -26,17 +27,16 @@ const RegisterButton = ({ onClickRegister }) => {
     const checkLocation = async () => {
       try {
         //Get fetch에는 body를 넣을 수 없기 때문에 url에 데이터를 실어야함
-        const checkResponse = await fetch(`${URL}/checkLocation/${selectedLocation}`, {
-          method: 'GET',
-          //body: selectedLocation,
-        });
+        const checkResponse = await api.get(`${URL}/checkLocation/${selectedLocation}`);
 
-        if (!checkResponse.ok) {
+        console.log(checkResponse.status);
+
+        if (checkResponse.status !== 200) {
           alert('현재 위치에 대한 자산조사가 이미있습니다.');
           setLocation('');
           //alert(checkResponse.body);
         } else {
-          const data = await checkResponse.json(); // 서버의 응답을 JSON으로 변환
+          const data = checkResponse.data; // 서버의 응답을 JSON으로 변환
           console.log(data);
           setRound(data); // 서버 응답에서 회차 정보 설정
         }
@@ -76,15 +76,13 @@ const RegisterButton = ({ onClickRegister }) => {
 
       console.log(requestData.location);
 
-      const response = await fetch(`${URL}/register`, {
-        method: 'POST',
+      const response = await api.post(`${URL}/register`, requestData, {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(requestData), // 데이터를 JSON 형식으로 변환하여 보냄
       });
 
-      if (!response.ok) {
+      if (response.status !== 200) {
         setIsSubmitting(false); // 요청 완료 후 확인 버튼 활성화
         throw new Error('자산 조사 등록에 실패했습니다.');
       }

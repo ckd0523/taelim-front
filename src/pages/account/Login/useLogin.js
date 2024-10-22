@@ -31,12 +31,17 @@ export default function useLogin() {
 		try {
 			const res = await authApi.login(values);
 			if (res) {
-				console.log("useLogin3 : " + JSON.stringify(res));
+				console.log("useLogin1 : " + JSON.stringify(res));
 				localStorage.setItem('accessToken', res.accessToken);
 				// 세션에 사용자 정보를 저장
 				saveSession(res); // 필요한 정보로 조정 가능
-				//console.log(res.user);
-				console.log("useLogin4 : " + localStorage.getItem('accessToken'));
+				console.log("useLogin2 : " + res.email);
+				console.log("useLogin3 : " + res.name);
+				console.log("useLogin4 : " + res.role);
+				//localStorage.setItem('email', res.email);
+				//localStorage.setItem('name', res.name);
+				//localStorage.setItem('role', res.role.slice(1, -1));
+				//console.log("useLogin3 : " + localStorage.getItem('accessToken'));
 				//console.log(JSON.stringify(localStorage.getItem('accessToken')));
 				navigate(redirectUrl);
 			}

@@ -569,7 +569,7 @@ const ProcessModal = ({ show, handleClose }) => {
 		return <div>미처리 자산이 없습니다.</div>; // currentData가 없는 경우를 대비한 처리
 	}
 
-	const { demandHistoryDto, assetDto } = currentData;
+	const { demandHistoryDto } = currentData;
 
 	return (
 		<Modal

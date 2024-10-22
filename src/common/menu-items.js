@@ -83,21 +83,9 @@ const MENU_ITEMS = [
 		icon: ' uil-list-ul',
 		children: [
 			{
-				key: 'ds-AssetPage',
-				label: '자산조회',
-				url: '/jsx/AssetPage',
-				parentKey: 'check',
-			},
-			{
 				key: 'ds-Expand',
-				label: '확장',
+				label: '전체 조회',
 				url: '/jsx/Expand',
-				parentKey: 'check',
-			},
-			{
-				key: 'ds-AssetPageTest',
-				label: '자산조회테스트',
-				url: '/jsx/AssetPageTest',
 				parentKey: 'check',
 			},
 			{

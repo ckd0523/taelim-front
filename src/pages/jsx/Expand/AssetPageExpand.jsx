@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { useTable, usePagination } from 'react-table';
 import { Row, Col, Card, Button, Form, Modal } from 'react-bootstrap';
 import { PageBreadcrumb, Form as RHForm } from '@/components';
-import axios from 'axios';
+//import axios from 'axios';
 import { Pagination } from './PaginationNew';
 import { baseColumns } from './ColumnsSet'; // table의 column 설정
 import { Table } from './ExpandableTable';
@@ -11,13 +11,15 @@ import { SearchForm } from './AssetSearchBar';
 import { AssetButtons } from './AssetButton';
 import { DisposeModal } from './DisposeModal';
 import { ActionModal } from './AllChangeModal';
+import api from '@/common/api/authAxios';
+import { useAuthContext } from '@/common';
 
 const urlConfig = import.meta.env.VITE_BASIC_URL;
 
 const AssetPageTest = (props) => {
 	const { classification } = useParams(); // URL에서 classification 파라미터를 가져옴
-
 	const [data, setData] = useState([]); // 서버에서 받아온 데이터
+	const { user } = useAuthContext(); // 사용자 정보를 가져옴
 
 	// 선택된 Row 배열,
 	const [rowSelect, setRowSelect] = useState([]); // 선택된 row 배열
@@ -76,7 +78,7 @@ const AssetPageTest = (props) => {
 	const fetchData = useCallback(
 		async (pageIndex = 0, pageSize = 10) => {
 			try {
-				const response = await axios.get(`${urlConfig}/getAssetSearch`, {
+				const response = await api.get(`${urlConfig}/getAssetSearch`, {
 					params: {
 						assetName: searchParams.assetName || null,
 						assetLocationString: searchParams.assetLocationString || null,
@@ -131,7 +133,7 @@ const AssetPageTest = (props) => {
 	// 자산 폐기 처리 동작
 	const handleDisposeAsset = async (assetCode, disposeDto) => {
 		try {
-			const response = await axios.post(`${urlConfig}/disposeAsset/${assetCode}`, disposeDto);
+			const response = await api.post(`${urlConfig}/disposeAsset/${assetCode}`, disposeDto);
 
 			if (response.status === 200) {
 				console.log('자산 폐기 성공:', assetCode);
@@ -150,10 +152,7 @@ const AssetPageTest = (props) => {
 	// 자산 폐기 요청 동작
 	const handleDisposeDemand = async (assetCode, disposeDto) => {
 		try {
-			const response = await axios.post(
-				`${urlConfig}/disposeDemand/${assetCode}`,
-				disposeDto
-			);
+			const response = await api.post(`${urlConfig}/disposeDemand/${assetCode}`, disposeDto);
 
 			if (response.status === 200) {
 				console.log('자산 폐기 요청 성공:', assetCode);
@@ -172,25 +171,35 @@ const AssetPageTest = (props) => {
 		}
 	};
 	// columnsSet.jsx 파일에서 정의된 baseColumns를 함수로 변경
-	const columns = baseColumns(pageIndex, pageSize);
+	const columns = baseColumns(pageIndex, pageSize, user);
 
 	// 컬럼에 휴지통 아이콘 handleDisposeAsset 전달
-	const finalColumns = columns.map((column) => {
-		if (column.Header === 'Action') {
-			return {
-				...column,
-				Cell: ({ row }) => (
-					<button
-						className="btn btn-dark"
-						onClick={() => handleShow(row.original.assetCode)} // 모달을 열도록 handleShow 사용, assetCode 담아서
-					>
-						<i className="mdi mdi-trash-can-outline" style={{ fontSize: '1.2rem' }}></i>
-					</button>
-				),
-			};
-		}
-		return column;
-	});
+	const finalColumns = columns
+		.map((column) => {
+			if (column.Header === 'Action') {
+				// role에 따라 Action 열 숨기기
+				if (user.role === '[ADMIN]' || user.role === '[ASSET_MANAGER]') {
+					return {
+						...column,
+						Cell: ({ row }) => (
+							<button
+								className="btn btn-dark"
+								onClick={() => handleShow(row.original.assetCode)} // 모달을 열도록 handleShow 사용, assetCode 담아서
+							>
+								<i
+									className="mdi mdi-trash-can-outline"
+									style={{ fontSize: '1.2rem' }}
+								></i>
+							</button>
+						),
+					};
+				}
+
+				return null; // ADMIN이나 ASSET_MANAGER일 경우 Action 열을 null로 설정하여 제거
+			}
+			return column;
+		})
+		.filter(Boolean); // null 값을 제거하여 최종 컬럼 배열 생성
 
 	const QRPrint = (rowSelect) => {
 		const assetNoList = [];
@@ -202,8 +211,7 @@ const AssetPageTest = (props) => {
 
 		const fetchData = async () => {
 			try {
-				axios
-					.post(`${urlConfig}/generateQRCode`, assetNoList)
+				api.post(`${urlConfig}/generateQRCode`, assetNoList)
 					.then((response) => {
 						console.log('Update successful:', response.data);
 					})

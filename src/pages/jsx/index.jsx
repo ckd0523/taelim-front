@@ -15,7 +15,6 @@ const DeleteHistory = lazy(() => import('./DeleteHistory'));
 const Expand = lazy(() => import('./Expand'));
 
 const AssetSurveyDetail = lazy(() => import('./AssetSurvey/AssetSurveyDetail'));
-const SystemSetting = lazy(() => import('./SystemSetting'));
 
 const Dashboard = lazy(() => import('./Dashboard'));
 export default function jsx() {
@@ -38,8 +37,6 @@ export default function jsx() {
 				<Route path="Expand/:classification" element={<Expand />} />
 				<Route path="AssetSurveyDetail" element={<AssetSurveyDetail />} />
 				<Route path="Dashboard" element={<Dashboard />} />
-
-				{/* <Route path="SystemSetting" element={<SystemSetting />} /> */}
 			</Route>
 		</Routes>
 	);

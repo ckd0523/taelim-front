@@ -32,9 +32,9 @@ const HistoryTableInvestigation = ({ surveyHistory }) => {
 								<td>{survey.assetSurveyBy}</td>
 								<td>{survey.assetSurveyBy}</td>
 								{/* exactLocation 값이 true면 "정위치 유", false면 "정위치 무" */}
-								<td>{survey.exactLocation ? '위치' : ''}</td>
-								{/* assetStatus 값이 fales면 "정상", true면 "파손" */}
-								<td>{survey.assetStatus ? '파손' : '정상'}</td>
+								<td>{survey.exactLocation ? '정위치 유' : '정위치 무'}</td>
+								{/* assetStatus 값이 true면 "정상", false면 "파손" */}
+								<td>{survey.assetStatus ? '정상' : '파손'}</td>
 								<td>{survey.assetSurveyContent}</td>
 							</tr>
 						))

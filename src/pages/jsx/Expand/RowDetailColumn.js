@@ -82,7 +82,7 @@ export const getClassificationColumns = (classification) => {
 				{ title: 'OS', data: 'os' },
 				{ title: '보안관제', data: 'securityControl' },
 				{ title: '내부정보 유출 방지', data: 'kaitsKeeper' },
-				{ title: '악성코드,랜섬웨어 탐지', data: 'v3OfficeSecurity' },
+				{ title: '악성코드,랜섬웨어 탐지', data: 'V3OfficeSecurity' },
 				{ title: '안티랜섬웨어', data: 'appCheckPro' },
 				{ title: 'NAC agent', data: 'tgate' },
 			];

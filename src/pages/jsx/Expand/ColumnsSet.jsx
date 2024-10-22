@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import { useCallback } from 'react';
 
 // get all columns 여긴 완료
-const baseColumns = (pageIndex, pageSize, handleSort) => [
+const baseColumns = (pageIndex, pageSize) => [
 	{
 		Header: '번호',
 		accessor: 'assetNo',

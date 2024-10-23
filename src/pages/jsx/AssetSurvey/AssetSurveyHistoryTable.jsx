@@ -70,8 +70,10 @@ const SurveyTable = ({ tableChange, setSelectedRows, data, setData, setOriginalD
         console.error('Error fetching data:', error);
         //removeSession();
       }
-    }
-  });
+    };
+
+    fetchData();
+  }, [tableChange]);
 
   return (
     <Row className="pt-3">

@@ -8,7 +8,7 @@ const ActionModal = ({ show, handleClose, actionData, actionType }) => {
 	const [department, setDepartment] = useState('');
 	const [assetLocation, setAssetLocation] = useState('');
 	const [assetSecurityManager, setAssetSecurityManager] = useState('');
-	const [assetOwner, setAssetOwner] = useState('');
+
 	const [disposeMethod, setDisposeMethod] = useState('');
 	const [disposeLocation, setDisposeLocation] = useState('');
 	const [reason, setReason] = useState('');
@@ -17,11 +17,45 @@ const ActionModal = ({ show, handleClose, actionData, actionType }) => {
 	const departmentChange = (e) => setDepartment(e.target.value);
 	const assetLocationChange = (e) => setAssetLocation(e.target.value);
 	const assetSecurityManagerChange = (e) => setAssetSecurityManager(e.target.value);
-	const assetOwnerChange = (e) => setAssetOwner(e.target.value);
+
 	const disposeMethodChange = (e) => setDisposeMethod(e.target.value);
 	const disposeLocationChange = (e) => setDisposeLocation(e.target.value);
 	const reasonChange = (e) => setReason(e.target.value);
 	const detailChange = (e) => setDetail(e.target.value);
+
+	//소유자 검색어와 소유자 리스트 상태
+	const [owners, setOwners] = useState([]); // 소유자 리스트
+	const [assetOwnerID, setAssetOwnerID] = useState(''); //실제 들어갈 소유자 ID값
+	const [assetOwner, setAssetOwner] = useState(''); //보여지는 소유자 이름
+
+	// 소유자 입력 변경 핸들러
+	const assetOwnerChange = (e) => {
+		setAssetOwner(e.target.value);
+		// 소유자 검색어에 따라 소유자 검색
+		if (e.target.value) {
+			handleOwnerSearch(e.target.value); // 소유자 검색 호출
+		} else {
+			setOwners([]); // 입력이 비었으면 리스트 초기화
+		}
+	};
+
+	// 소유자 검색 함수
+	const handleOwnerSearch = async (searchTerm) => {
+		try {
+			const response = await api.get(`${API_URL}/user/search`, {
+				params: { name: searchTerm },
+			});
+			setOwners(response.data); // 소유자 리스트 업데이트
+		} catch (error) {
+			console.error('소유자 검색 중 오류 발생:', error);
+		}
+	};
+	// 소유자 선택 핸들러
+	const handleSelectOwner = (owner) => {
+		setAssetOwner(owner.fullname); // 선택된 소유자 이름 설정
+		setAssetOwnerID(owner.id);
+		setOwners([]); // 선택 후 리스트 초기화
+	};
 
 	const handleFormSubmit = () => {
 		const updateToSend = {
@@ -29,7 +63,7 @@ const ActionModal = ({ show, handleClose, actionData, actionType }) => {
 			department,
 			assetLocation,
 			assetSecurityManager,
-			assetOwner,
+			assetOwner: assetOwnerID,
 			reason,
 			detail,
 		};
@@ -132,13 +166,27 @@ const ActionModal = ({ show, handleClose, actionData, actionType }) => {
 									/>
 								</Form.Group>
 
+								{/* 추가된 부분: 소유자 입력 필드 */}
 								<Form.Group className="mb-1">
 									<Form.Label className="mb-0">소유자</Form.Label>
 									<Form.Control
 										type="text"
 										value={assetOwner}
-										onChange={assetOwnerChange}
+										onChange={assetOwnerChange} // 소유자 변경 핸들러
 									/>
+									{owners.length > 0 && ( // 소유자 리스트 표시
+										<ul className="owner-list">
+											{owners.map((owner) => (
+												<li
+													key={owner.id}
+													onClick={() => handleSelectOwner(owner)}
+												>
+													{owner.fullname} ({owner.department}){' '}
+													{/* 소유자 이름과 부서 */}
+												</li>
+											))}
+										</ul>
+									)}
 								</Form.Group>
 							</>
 						)}
@@ -167,30 +215,12 @@ const ActionModal = ({ show, handleClose, actionData, actionType }) => {
 
 						<Form.Group className="mb-1">
 							<Form.Label className="mb-0">사유</Form.Label>
-							<Form.Control
-								type="text"
-								value={reason}
-								onChange={reasonChange}
-								// placeholder={
-								// 	actionType === 'AllUpdate' || actionType === 'AllUpdateDemand'
-								// 		? '수정 사유'
-								// 		: '폐기 사유'
-								// }
-							/>
+							<Form.Control type="text" value={reason} onChange={reasonChange} />
 						</Form.Group>
 
 						<Form.Group className="mb-1">
 							<Form.Label className="mb-0">내용</Form.Label>
-							<Form.Control
-								type="text"
-								value={detail}
-								onChange={detailChange}
-								// placeholder={
-								// 	actionType === 'AllUpdate' || actionType === 'AllUpdateDemand'
-								// 		? '수정 내용'
-								// 		: '폐기 내용'
-								// }
-							/>
+							<Form.Control type="text" value={detail} onChange={detailChange} />
 						</Form.Group>
 					</Form.Group>
 				</Form>

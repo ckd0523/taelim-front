@@ -9,6 +9,7 @@ import file_sm from '@/assets/images/file_sm.png';
 import { getMenuItems } from './utils/menu';
 import { Button, Modal, Col, Nav, Tab, Row, Form, InputGroup, Card } from 'react-bootstrap';
 import { useToggle } from '@/hooks';
+import { authApi, useAuthContext } from '@/common';
 
 // const UserBox = () => {
 // 	return (
@@ -203,6 +204,19 @@ const SideBarContent = () => {
 
 const LeftSidebar = ({ isCondensed, leftbarDark }) => {
 	const menuNodeRef = useRef(null);
+	const { removeSession, user } = useAuthContext();
+
+	const logout = async () => {
+		try {
+			const response = await authApi.logout();
+			console.log(response);
+			if (response.status === 200) {
+				removeSession();
+			}
+		} catch (error) {
+			console.log(error);
+		}
+	};
 
 	/**
 	 * Handle the click anywhere in doc
@@ -238,12 +252,36 @@ const LeftSidebar = ({ isCondensed, leftbarDark }) => {
 				</span>
 			</Link>
 
+
+
 			{!isCondensed && (
-				<SimpleBar style={{ maxHeight: '100%' }} scrollbarMaxSize={320}>
-					<SideBarContent />
-				</SimpleBar>
+				<>
+					<div className='d-flex justify-content-center'>
+						<p style={{ color: 'white' }}>{user.name}님 접속되었습니다.</p>
+					</div>
+
+					<div className='d-flex justify-content-center'>
+						<Button className="btn btn-dark" onClick={logout}>로그아웃</Button>
+					</div>
+
+					<SimpleBar style={{ maxHeight: '100%' }} scrollbarMaxSize={320}>
+						<SideBarContent />
+					</SimpleBar>
+				</>
 			)}
-			{isCondensed && <SideBarContent />}
+			{isCondensed && (
+				<>
+					<ul className='side-nav' style={{ marginBottom: '0' }}>
+						<li className='side-nav-item'>
+							<a className='side-nav-link-ref side-nav-link' data-menu-key="" href='#' onClick={logout}>
+								<i className='ri-logout-box-line' />
+								<span>로그아웃</span>
+							</a>
+						</li>
+					</ul>
+					<SideBarContent />
+				</>
+			)}
 		</div>
 	);
 };

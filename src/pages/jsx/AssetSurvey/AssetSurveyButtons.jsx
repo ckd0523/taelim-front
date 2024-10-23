@@ -1,39 +1,11 @@
-import { Row, Col, Button, Modal, Card } from 'react-bootstrap';
+import { Row, Col, Button, Modal } from 'react-bootstrap';
 import RegisterButton from './AssetSurveyRegisterButton';
-import { useState } from 'react';
 import { useToggle } from '@/hooks';
 import { Link } from 'react-router-dom';
-import { authApi, useAuthContext } from '@/common';
 
 const Buttons = ({ onClickRegister, onDelete }) => {
-	const { removeSession, user } = useAuthContext();
-
-	const logout = async () => {
-		try {
-			const response = await authApi.logout();
-			console.log(response);
-			if (response.status === 200) {
-				removeSession();
-			}
-		} catch (error) {
-			console.log(error);
-		}
-	};
-
 	return (
 		<Row className="row-cols-auto justify-content-end">
-			<Col>
-				<p>
-					{user.email}
-					{user.name}
-					{user.role}
-				</p>
-			</Col>
-			<Col>
-				<Button className="btn btn-success" onClick={logout}>
-					로그아웃
-				</Button>
-			</Col>
 			<Col>
 				<Button className="btn btn-success">엑셀 출력</Button>
 			</Col>

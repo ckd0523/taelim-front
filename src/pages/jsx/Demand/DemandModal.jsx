@@ -845,8 +845,9 @@ const ActionModal = ({ show, handleClose, actionData, actionType, handleSubmit }
 					console.error('Unknown demand type:', item.demandType);
 			}
 		}
-		handleSubmit(reason); // 사유를 넘겨주면서 처리
+		//handleSubmit(reason); // 사유를 넘겨주면서 처리
 		handleClose(); // 모달 닫기
+		setReason('');
 	};
 
 	return (

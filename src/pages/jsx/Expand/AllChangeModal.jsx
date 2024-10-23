@@ -16,6 +16,23 @@ const ActionModal = ({ show, handleClose, actionData, actionType }) => {
 	const [reason, setReason] = useState('');
 	const [detail, setDetail] = useState('');
 
+	const reset = () => {
+		setDepartment('');
+		setDisposeMethod('');
+		setDisposeLocation('');
+		setReason('');
+		setDetail('');
+		setOwners([]);
+		setAssetOwnerID('');
+		setAssetOwner('');
+		setSecurityManagers([]);
+		setAssetSecurityManager('');
+		setAssetSecurityManagerID('');
+		setUsers([]);
+		setAssetUser('');
+		setAssetUserID('');
+	};
+
 	const departmentChange = (e) => setDepartment(e.target.value);
 	const assetLocationChange = (e) => setAssetLocation(e.target.value);
 
@@ -121,6 +138,11 @@ const ActionModal = ({ show, handleClose, actionData, actionType }) => {
 		setUsers([]); // 선택 후 리스트 초기화
 	};
 
+	const handleModalClose = () => {
+		reset(); // 상태 초기화
+		handleClose(); // 모달 닫기
+	};
+
 	const handleFormSubmit = () => {
 		const updateToSend = {
 			assetDtos: actionData,
@@ -146,7 +168,7 @@ const ActionModal = ({ show, handleClose, actionData, actionType }) => {
 		const handleSuccessResponse = (response) => {
 			console.log('Success:', response.data);
 			alert(response.data); // 성공 메시지 띄우기
-			//window.location.reload(); // 2초 뒤 새로고침
+			window.location.reload(); // 2초 뒤 새로고침
 		};
 
 		const handleErrorResponse = (error) => {
@@ -166,7 +188,6 @@ const ActionModal = ({ show, handleClose, actionData, actionType }) => {
 					.catch(handleErrorResponse);
 				break;
 			case 'AllUpdateDemand':
-				console.log('확인용', updateToSend);
 				api.post(`${API_URL}/allUpdateDemand`, updateToSend)
 					.then(handleSuccessResponse)
 					.catch(handleErrorResponse);
@@ -180,11 +201,12 @@ const ActionModal = ({ show, handleClose, actionData, actionType }) => {
 				console.log('Invalid action type');
 		}
 
+		reset();
 		handleClose(); // 모달 닫기
 	};
 
 	return (
-		<Modal show={show} onHide={handleClose}>
+		<Modal show={show} onHide={handleModalClose}>
 			<Modal.Header closeButton>
 				<Modal.Title>
 					{actionType === 'AllUpdate' && '일괄 수정'}
@@ -345,7 +367,7 @@ const ActionModal = ({ show, handleClose, actionData, actionType }) => {
 				>
 					처리
 				</Button>
-				<Button variant="secondary" onClick={handleClose}>
+				<Button variant="secondary" onClick={handleModalClose}>
 					닫기
 				</Button>
 			</Modal.Footer>

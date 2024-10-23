@@ -18,7 +18,7 @@ export default function useLogin() {
 	const { showNotification } = useNotificationContext();
 
 	const redirectUrl = useMemo(
-		() => (location.state && location.state.from ? location.state.from.pathname : '/'),
+		() => (location.state && location.state.from ? location.state.from.pathname : '/jsx/Dashboard'),
 		[location.state]
 	);
 

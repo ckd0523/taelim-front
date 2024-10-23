@@ -9,6 +9,7 @@ import { SurveyCompleteButton, SruveyCancelButton } from './AssetSurveyButtons';
 import React from 'react';
 import QRScanner from 'qr-scanner'; // qr-scanner 라이브러리 import
 import Swal from 'sweetalert2';
+import api from '@/common/api/authAxios';
 
 const URL = import.meta.env.VITE_BASIC_URL;
 
@@ -26,21 +27,11 @@ const AssetSurveyContentCell = React.memo(({ row, assetSurveyContent, onContentC
 	const handleBlur = () => {
 		onContentChange(row.original.infoNo, localContent);
 
-		// Fetch 요청 보내기
-		fetch(`${URL}/updateAssetSurveyDetail2`, {
-			method: 'PUT',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify({
-				infoNo: row.original.infoNo,
-				content: localContent.trim() || null,
-			}),
+		api.put(`${URL}/updateAssetSurveyDetail2`, {
+			infoNo: row.original.infoNo,
+			content: localContent.trim() || null,
 		})
-			.then((response) => {
-				if (!response.ok) {
-					throw new Error('네트워크 응답이 올바르지 않습니다.');
-				}
+			.then(() => {
 				console.log('내용 업데이트 성공');
 			})
 			.catch((error) => {
@@ -138,21 +129,12 @@ const AssetSurveyDetail = () => {
 
 	const onClickCompleteSurvey = async () => {
 		try {
-			const response = await fetch(`${URL}/completeSurvey/${locationState.assetSurveyNo}`, {
-				method: 'PUT',
-			});
-
-			if (!response.ok) {
-				Swal.fire({
-					icon: 'error',
-					title: '자산 조사 완료에 실패했습니다.',
-				});
-				return;
-			}
+			const response = await api.put(`${URL}/completeSurvey/${locationState.assetSurveyNo}`);
 
 			Swal.fire({
 				icon: 'success',
 				title: '자산 조사 완료',
+				text: '자산 조사 이력으로 이동',
 			});
 
 			window.location.href = '/jsx/AssetSurveyHistory';
@@ -170,9 +152,9 @@ const AssetSurveyDetail = () => {
 
 	useEffect(() => {
 		//console.log('test');
-		fetch(`${URL}/assetSurveyDetail/${locationState.assetSurveyNo}`)
-			.then((response) => response.json())
-			.then((data) => {
+		api.get(`${URL}/assetSurveyDetail/${locationState.assetSurveyNo}`)
+			.then((response) => {
+				const data = response.data;
 				//console.log('받은 데이터 : ' + data);
 				setData(data);
 
@@ -296,22 +278,12 @@ const AssetSurveyDetail = () => {
 			//console.log("이미 조사된 거 판별2 : " + exactLocationStates[row.original.infoNo]);
 			//console.log('exactLocation Row:', updatedRow);
 
-			fetch(`${URL}/updateAssetSurveyDetail`, {
-				method: 'PUT',
-				headers: {
-					'Content-Type': 'application/json', // JSON 형식으로 데이터 전송
-				},
-				body: JSON.stringify({
-					// 여기에서 JSON.stringify()를 사용하여 객체를 문자열로 변환
-					requestType: true,
-					infoNo: row.original.infoNo,
-					updateValue: isQRScan ? true : e?.target?.checked,
-				}),
+			api.put(`${URL}/updateAssetSurveyDetail`, {
+				requestType: true,
+				infoNo: row.original.infoNo,
+				updateValue: isQRScan ? true : e?.target?.checked,
 			})
-				.then((response) => {
-					if (!response.ok) {
-						throw new Error('네트워크 응답이 올바르지 않습니다.');
-					}
+				.then(() => {
 					console.log('성공'); // 성공 시 서버 응답 출력
 				})
 				.catch((error) => {
@@ -336,22 +308,12 @@ const AssetSurveyDetail = () => {
 
 		//console.log('assetStatus Row:', updatedRow);
 
-		fetch(`${URL}/updateAssetSurveyDetail`, {
-			method: 'PUT',
-			headers: {
-				'Content-Type': 'application/json', // JSON 형식으로 데이터 전송
-			},
-			body: JSON.stringify({
-				// 여기에서 JSON.stringify()를 사용하여 객체를 문자열로 변환
-				requestType: false,
-				infoNo: row.original.infoNo,
-				updateValue: e.target.checked,
-			}),
+		api.put(`${URL}/updateAssetSurveyDetail`, {
+			requestType: false,
+			infoNo: row.original.infoNo,
+			updateValue: e.target.checked,
 		})
-			.then((response) => {
-				if (!response.ok) {
-					throw new Error('네트워크 응답이 올바르지 않습니다.');
-				}
+			.then(() => {
 				console.log('성공'); // 성공 시 서버 응답 출력
 			})
 			.catch((error) => {
@@ -487,8 +449,8 @@ const AssetSurveyDetail = () => {
 			<Row className="justify-content-between">
 				<Col>
 					<Row>
+						{/* 
 						<Col>
-							{/* <p style={{ marginBottom: 8, marginTop: 4 }}><strong>미확인 자산</strong></p> */}
 							<Form.Check
 								type="checkbox"
 								id="btn-check"
@@ -507,12 +469,7 @@ const AssetSurveyDetail = () => {
 								<strong>미확인 자산 보기</strong>
 							</Button>
 						</Col>
-						<Col>
-							<label>
-								현재 http 환경이므로 IOS는 카메라 사용불가,
-								<br /> 다른 OS는 크롬 설정을 통해 가능
-							</label>
-						</Col>
+						*/}
 
 						<Col sm={2}>
 							{localStorage.getItem('surveyStatus') === 'true' ? (

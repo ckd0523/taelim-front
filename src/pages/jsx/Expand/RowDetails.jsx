@@ -28,7 +28,7 @@ import { HistoryTableInvestigation } from './HistoryTableInvestigation';
 import Swal from 'sweetalert2';
 import api from '@/common/api/authAxios';
 import { useAuthContext } from '@/common';
-
+const API_URL = import.meta.env.VITE_BASIC_URL;
 const urlConfig = import.meta.env.VITE_BASIC_URL;
 
 const RowDetails = ({
@@ -55,6 +55,43 @@ const RowDetails = ({
 	);
 
 	const { user } = useAuthContext();
+
+	// 사람이름들 리스트 가져오기
+	//소유자 검색어와 소유자 리스트 상태
+	const [owners, setOwners] = useState([]); // 소유자 리스트
+	const [assetOwnerID, setAssetOwnerID] = useState(''); //실제 들어갈 소유자 ID값
+	const [assetOwner, setAssetOwner] = useState(''); //보여지는 소유자 이름
+	const [showOwnerModal, setShowOwnerModal] = useState(false); // 소유자 선택 모달 상태
+	const [selectedOwner, setSelectedOwner] = useState(null); // 선택된 소유자
+	// 소유자 입력 변경 핸들러
+	const assetOwnerChange = (e) => {
+		setAssetOwner(e.target.value);
+		// 소유자 검색어에 따라 소유자 검색
+		if (e.target.value) {
+			handleOwnerSearch(e.target.value); // 소유자 검색 호출
+		} else {
+			setOwners([]); // 입력이 비었으면 리스트 초기화
+		}
+	};
+
+	// 소유자 검색 함수
+	const handleOwnerSearch = async (searchTerm) => {
+		try {
+			const response = await api.get(`${API_URL}/user/search`, {
+				params: { name: searchTerm },
+			});
+			setOwners(response.data); // 소유자 리스트 업데이트
+		} catch (error) {
+			console.error('소유자 검색 중 오류 발생:', error);
+		}
+	};
+	// 소유자 선택 핸들러
+	const handleSelectOwner = (owner) => {
+		setSelectedOwner(owner); // 선택된 소유자 저장
+		setAssetOwner(owner.fullname); // 소유자 이름 설정
+		setOwners([]); // 선택 후 리스트 초기화
+		setShowOwnerModal(false); // 모달 닫기
+	};
 
 	// assetCode와 initialFormData가 변경될 때마다 formData를 업데이트
 	useEffect(() => {
@@ -577,6 +614,26 @@ const RowDetails = ({
 					</Form.Select>
 				);
 			}
+
+			// 소유자 필드에 대해 수정모드인 경우 별도로 렌더링
+			if (key === 'assetOwner') {
+				return (
+					<Form.Group className="mb-1">
+						<Form.Control
+							type="text"
+							value={
+								selectedOwner ? selectedOwner.fullname : formData.assetOwner || ''
+							} // 선택된 소유자의 fullname 또는 기존 값 사용
+							disabled // 입력 필드 비활성화
+							style={{ textAlign: 'center' }} // 텍스트 가운데 정렬
+						/>
+						<Button variant="secondary" onClick={() => setShowOwnerModal(true)}>
+							소유자 선택
+						</Button>
+					</Form.Group>
+				);
+			}
+
 			// select 외는 text input 설정
 			return (
 				<Form.Control
@@ -1398,6 +1455,49 @@ const RowDetails = ({
 					</Tabs>
 				</div>
 			</div>
+
+			<Modal show={showOwnerModal} onHide={() => setShowOwnerModal(false)}>
+				<Modal.Header closeButton>
+					<Modal.Title>소유자 선택</Modal.Title>
+				</Modal.Header>
+				<Modal.Body>
+					<Form.Control
+						type="text"
+						placeholder="소유자 이름으로 검색..."
+						onChange={assetOwnerChange} // 소유자 검색 핸들러
+					/>
+					{owners.length > 0 && (
+						<div className="owner-list">
+							{owners.map((owner) => (
+								<Form.Check
+									key={owner.id}
+									type="radio" // 라디오 버튼으로 선택
+									id={`owner-${owner.id}`}
+									label={`${owner.fullname} (${owner.department})`}
+									name="assetOwner" // 같은 그룹으로 묶기
+									onChange={() => setSelectedOwner(owner)} // 선택 시 상태 업데이트
+								/>
+							))}
+						</div>
+					)}
+				</Modal.Body>
+				<Modal.Footer>
+					<Button
+						variant="primary"
+						onClick={() => {
+							if (selectedOwner) {
+								handleSelectOwner(selectedOwner); // 선택된 소유자를 적용
+							}
+							setShowOwnerModal(false); // 모달 닫기
+						}}
+					>
+						확인
+					</Button>
+					<Button variant="secondary" onClick={() => setShowOwnerModal(false)}>
+						닫기
+					</Button>
+				</Modal.Footer>
+			</Modal>
 
 			{/* 버튼 */}
 			<div>

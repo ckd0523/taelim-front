@@ -1,13 +1,14 @@
 import BasisAssetInfo from './BasisAssetInfo';
 import { useState, useEffect } from 'react';
 import FileUpload from './FileUpload';
-import { Button, Row, Col, Container, Form } from 'react-bootstrap';
+import { Button, Row, Col, Container } from 'react-bootstrap';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import AssetCategories from './AssetCategories';
 import PurchasingInfo from './PurchasingInfo';
 import { useFormValidation } from '@/pages/ui/forms/hooks';
+import api from '@/common/api/authAxios';
 const urlConfig = import.meta.env.VITE_BASIC_URL;
 const ResponsivePadding = styled.div`
 	@media (max-width: 768px) {
@@ -347,16 +348,10 @@ const AssetRegister = () => {
 			return false;
 		}
 		try {
-			const assetResponse = await fetch(`${urlConfig}/asset/register`, {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify(formData), // JSON으로 변환하여 전송
-			});
-
-			if (assetResponse.ok) {
-				const assetNo = await assetResponse.text();
+			const assetResponse = await api.post('/asset/register', formData);
+			console.log(assetResponse);
+			if (assetResponse.status == 200) {
+				const assetNo = assetResponse.data;
 
 				Swal.fire({
 					icon: 'success',
@@ -379,10 +374,7 @@ const AssetRegister = () => {
 						console.log('assetNo:', fileFormData.get('assetNo'));
 						console.log('fileType:', fileFormData.get('fileType'));
 
-						const fileResponse = await fetch(`${urlConfig}/asset/file/upload`, {
-							method: 'POST',
-							body: fileFormData,
-						});
+						const fileResponse = await api.post('/asset/file/upload', fileFormData);
 
 						if (!fileResponse.ok) {
 							Swal.fire({

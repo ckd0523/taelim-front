@@ -194,7 +194,6 @@ const AssetPageTest = (props) => {
 						),
 					};
 				}
-
 				return null; // ADMIN이나 ASSET_MANAGER일 경우 Action 열을 null로 설정하여 제거
 			}
 			return column;

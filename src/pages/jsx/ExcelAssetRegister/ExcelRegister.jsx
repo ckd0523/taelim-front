@@ -3,6 +3,7 @@ import * as XLSX from 'xlsx';
 import { Button, Table, Row, Col, Form, Alert, Card } from 'react-bootstrap';
 import Select from 'react-select';
 import Swal from 'sweetalert2';
+import api from '@/common/api/authAxios';
 
 const urlConfig = import.meta.env.VITE_BASIC_URL;
 const ExcelRegister = () => {
@@ -300,15 +301,8 @@ const ExcelRegister = () => {
 		}
 
 		try {
-			const excelResponse = await fetch(`${urlConfig}/asset/excelRegister`, {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify(formData),
-			});
-
-			if (excelResponse.ok) {
+			const excelResponse = await api.post('/asset/excelRegister', formData);
+			if (excelResponse.status == 200) {
 				Swal.fire({
 					icon: 'success',
 					title: '자산이 성공적으로 등록되었습니다.',

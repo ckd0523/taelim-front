@@ -18,7 +18,7 @@ export default function useLogin() {
 	const { showNotification } = useNotificationContext();
 
 	const redirectUrl = useMemo(
-		() => (location.state && location.state.from ? location.state.from.pathname : '/'),
+		() => (location.state && location.state.from ? location.state.from.pathname : '/jsx/Dashboard'),
 		[location.state]
 	);
 
@@ -38,6 +38,7 @@ export default function useLogin() {
 				console.log("useLogin2 : " + res.email);
 				console.log("useLogin3 : " + res.name);
 				console.log("useLogin4 : " + res.role);
+				console.log("useLogin5 : " + res.id);
 				//localStorage.setItem('email', res.email);
 				//localStorage.setItem('name', res.name);
 				//localStorage.setItem('role', res.role.slice(1, -1));

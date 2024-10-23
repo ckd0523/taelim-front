@@ -61,9 +61,18 @@ const SurveyTable = ({ tableChange, setSelectedRows, data, setData, setOriginalD
       try {
         const response = await api.get(`${URL}/assetSurveyHistory`);
         //검색을 위해서 불변 데이터를 하나 더 만들어줌
-        setData(response.data); // API로부터 받은 데이터 설정
-        setOriginalData(response.data);
+        //console.log("자산 조사 테이블 1");
+        //console.log(response.response.status);
+
+        if (response.response.status === 403) {
+          setData(tableData);
+        } else {
+          setData(response.data); // API로부터 받은 데이터 설정
+          setOriginalData(response.data);
+        }
+
       } catch (error) {
+        //console.log("자산 조사 테이블 2");
         setData(tableData);
 
         setIsDataExist(true);

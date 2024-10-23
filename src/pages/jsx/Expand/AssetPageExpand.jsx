@@ -224,6 +224,30 @@ const AssetPageTest = (props) => {
 		fetchData();
 	};
 
+	// 엑셀 동작 넣기
+	// Excel 버튼 클릭 핸들러
+	const handleExcelClick = async (classification) => {
+		try {
+			const classificationStr = classification ? classification.name : null; // 예를 들어, classification 객체의 name 속성을 사용
+			const response = await api.get('/assets/export', {
+				params: { assetClassification: classificationStr },
+				responseType: 'blob',
+			});
+
+			const blob = new Blob([response.data], { type: 'application/octet-stream' });
+			const url = window.URL.createObjectURL(blob);
+
+			const link = document.createElement('a');
+			link.href = url;
+			link.setAttribute('download', 'assets.xlsx');
+			document.body.appendChild(link);
+			link.click();
+			link.remove();
+		} catch (error) {
+			console.error('파일 다운로드 중 오류 발생:', error);
+		}
+	};
+
 	return (
 		<>
 			<div className="pt-3 px-2">
@@ -239,7 +263,7 @@ const AssetPageTest = (props) => {
 					rowSelect={rowSelect} // 선택된 row 데이터 전달
 					handleButtonClick={handleOpenModal} // 공통 핸들러 전달
 					handleQrClick={QRPrint}
-					handleExcelClick={() => console.log('엑셀 출력 클릭')}
+					handleExcelClick={handleExcelClick}
 				/>
 
 				<Card></Card>

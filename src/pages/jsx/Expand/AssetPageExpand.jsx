@@ -178,7 +178,7 @@ const AssetPageTest = (props) => {
 		.map((column) => {
 			if (column.Header === 'Action') {
 				// role에 따라 Action 열 숨기기
-				if (user.role === '[ADMIN]' || user.role === '[ASSET_MANAGER]') {
+				if (user.role === 'ADMIN' || user.role === 'ASSET_MANAGER') {
 					return {
 						...column,
 						Cell: ({ row }) => (

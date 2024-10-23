@@ -103,12 +103,12 @@ const DisposeModal = ({
 				</Form>
 			</Modal.Body>
 			<Modal.Footer>
-				{user.role === '[ASSET_MANAGER]' && (
+				{user.role === 'ASSET_MANAGER' && (
 					<Button variant="danger" onClick={handleRequest}>
 						폐기요청
 					</Button>
 				)}
-				{user.role === '[ADMIN]' && (
+				{user.role === 'ADMIN' && (
 					<Button variant="danger" onClick={() => handleDispose(selectedAssetCode)}>
 						폐기
 					</Button>

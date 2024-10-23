@@ -1142,12 +1142,12 @@ const RowDetails = ({
 							<Button variant="secondary" onClick={handleModalClose}>
 								취소
 							</Button>
-							{user.role === '[ASSET_MANAGER]' && (
+							{user.role === 'ASSET_MANAGER' && (
 								<Button variant="primary" onClick={handleSubmit1}>
 									수정 요청
 								</Button>
 							)}
-							{user.role === '[ADMIN]' && (
+							{user.role === 'ADMIN' && (
 								<Button variant="primary" onClick={handleSubmit}>
 									수정
 								</Button>
@@ -1519,7 +1519,7 @@ const RowDetails = ({
 							</>
 						) : (
 							<>
-								{(user.role === '[ADMIN]' || user.role === '[ASSET_MANAGER]') && (
+								{(user.role === 'ADMIN' || user.role === 'ASSET_MANAGER') && (
 									<>
 										<Button
 											variant="primary"

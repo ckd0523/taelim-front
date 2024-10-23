@@ -6,15 +6,15 @@ const getMenuItems = () => {
 
 	// 역할에 따른 메뉴 필터링
 	const filteredMenuItems = MENU_ITEMS.filter((item) => {
-		if (user.role === '[ADMIN]') {
+		if (user.role === 'ADMIN') {
 			// admin은 모든 메뉴를 볼 수 있음
 			return true;
-		} else if (user.role === '[ASSET_MANAGER]') {
+		} else if (user.role === 'ASSET_MANAGER') {
 			// manager는 '요청내역', '시스템 설정'을 제외한 모든 메뉴를 볼 수 있음
 			return !['ds-DemandHistory', 'ds-SystemSetting'].includes(item.key);
-		} else if (user.role === '[USER]') {
+		} else if (user.role === 'USER') {
 			// user는 '대시보드'와 '자산조회'만 볼 수 있음
-			return ['jsx', 'ds-Dashboard', 'check', 'ds-AssetSurveyHistory'].includes(item.key);
+			return ['jsx', 'ds-Dashboard', 'check'].includes(item.key);
 		}
 
 		return false;

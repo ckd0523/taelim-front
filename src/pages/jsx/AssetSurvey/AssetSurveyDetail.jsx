@@ -137,6 +137,10 @@ const AssetSurveyDetail = () => {
 				text: '자산 조사 이력으로 이동',
 			});
 
+			setTimeout(() => {
+				window.location.replace('/jsx/AssetSurveyHistory');
+			}, 1000);
+
 			window.location.href = '/jsx/AssetSurveyHistory';
 		} catch (error) {
 			console.error('자산 조사 완료 중 오류:', error);

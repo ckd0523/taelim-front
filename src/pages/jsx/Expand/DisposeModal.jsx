@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
+import { useAuthContext } from '@/common';
 
 const DisposeModal = ({
 	showModal,
@@ -14,6 +15,7 @@ const DisposeModal = ({
 	const [disposeDetail, setDisposeDetail] = useState('');
 	const [disposeLocation, setDisposeLocation] = useState('');
 	const [disposeMethod, setDisposeMethod] = useState('');
+	const { user } = useAuthContext();
 
 	// 폐기 modal 부분 폼관련 내용 초기화 설정
 	const resetForm = () => {
@@ -101,12 +103,16 @@ const DisposeModal = ({
 				</Form>
 			</Modal.Body>
 			<Modal.Footer>
-				<Button variant="danger" onClick={handleRequest}>
-					폐기요청
-				</Button>
-				<Button variant="danger" onClick={() => handleDispose(selectedAssetCode)}>
-					폐기
-				</Button>
+				{user.role === '[ASSET_MANAGER]' && (
+					<Button variant="danger" onClick={handleRequest}>
+						폐기요청
+					</Button>
+				)}
+				{user.role === '[ADMIN]' && (
+					<Button variant="danger" onClick={() => handleDispose(selectedAssetCode)}>
+						폐기
+					</Button>
+				)}
 				<Button variant="secondary" onClick={handleClose}>
 					취소
 				</Button>

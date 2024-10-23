@@ -6,7 +6,7 @@ import { useState, useEffect } from 'react';
 //import { assetDeletes } from './data';
 import axios from 'axios';
 const urlConfig = import.meta.env.VITE_BASIC_URL;
-
+import api from '@/common/api/authAxios';
 import { InfoModal } from './DeleteHistoryModal';
 import { SearchForm } from './DeleteSearchBar';
 // import Select from 'react-select';
@@ -24,7 +24,7 @@ const DeleteHistory = () => {
 	useEffect(() => {
 		const fetchDeleteHistory = async () => {
 			try {
-				const response = await axios.get(`${urlConfig}/deleteHistory`); // API 호출
+				const response = await api.get(`${urlConfig}/deleteHistory`); // API 호출
 				setDeleteList(response.data); // 가져온 데이터를 상태에 저장
 				setOriginalData(response.data); // 검색을 위한 원본 데이터도 저장
 			} catch (error) {

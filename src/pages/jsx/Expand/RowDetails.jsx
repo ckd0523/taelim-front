@@ -26,6 +26,8 @@ import { HistoryTableUpdate } from './HistoryTableUpdate';
 import { HistoryTableMaintenance } from './HistoryTableMaintenance';
 import { HistoryTableInvestigation } from './HistoryTableInvestigation';
 import Swal from 'sweetalert2';
+import api from '@/common/api/authAxios';
+import { useAuthContext } from '@/common';
 
 const urlConfig = import.meta.env.VITE_BASIC_URL;
 
@@ -51,6 +53,8 @@ const RowDetails = ({
 		() => getClassificationColumns(classification),
 		[classification]
 	);
+
+	const { user } = useAuthContext();
 
 	// assetCode와 initialFormData가 변경될 때마다 formData를 업데이트
 	useEffect(() => {
@@ -126,7 +130,7 @@ const RowDetails = ({
 
 		try {
 			// 1. 수정 처리 (기존 파일 정보 포함)
-			const response = await axios.post(`${urlConfig}/asset/update/${formData.assetCode}`, {
+			const response = await api.post(`${urlConfig}/asset/update/${formData.assetCode}`, {
 				...formData,
 				existingFiles: formData.existingFiles, // 기존 파일 정보 추가
 			});
@@ -156,7 +160,7 @@ const RowDetails = ({
 					// 파일 업로드 API 호출 (새 파일만 처리)
 					if (fileData.has('files')) {
 						// 파일이 존재하는 경우에만 전송
-						const fileResponse = await axios.post(
+						const fileResponse = await api.post(
 							`${urlConfig}/${formData.assetCode}/files`,
 							fileData,
 							{ headers: { 'Content-Type': 'multipart/form-data' } }
@@ -206,7 +210,7 @@ const RowDetails = ({
 		console.log('handleSubmit1:', formData); // 상태 확인
 		try {
 			// 1. 수정 요청 처리 (기존 파일 정보 포함)
-			const response = await axios.post(
+			const response = await api.post(
 				`${urlConfig}/asset/updateDemand/${formData.assetCode}`,
 				{
 					...formData,
@@ -248,7 +252,7 @@ const RowDetails = ({
 					// 파일 업로드 API 호출 (새 파일만 처리)
 					if (fileData.has('files')) {
 						// 파일이 존재하는 경우에만 전송
-						const fileResponse = await axios.post(
+						const fileResponse = await api.post(
 							`${urlConfig}/${formData.assetCode}/files`,
 							fileData,
 							{ headers: { 'Content-Type': 'multipart/form-data' } }
@@ -1047,7 +1051,7 @@ const RowDetails = ({
 					{/* 모달 */}
 					<Modal show={showModal} onHide={handleModalClose}>
 						<Modal.Header closeButton>
-							<Modal.Title>수정 요청</Modal.Title>
+							<Modal.Title>수정</Modal.Title>
 						</Modal.Header>
 						<Modal.Body>
 							<Form>
@@ -1081,12 +1085,16 @@ const RowDetails = ({
 							<Button variant="secondary" onClick={handleModalClose}>
 								취소
 							</Button>
-							<Button variant="primary" onClick={handleSubmit1}>
-								수정 요청
-							</Button>
-							<Button variant="primary" onClick={handleSubmit}>
-								수정
-							</Button>
+							{user.role === '[ASSET_MANAGER]' && (
+								<Button variant="primary" onClick={handleSubmit1}>
+									수정 요청
+								</Button>
+							)}
+							{user.role === '[ADMIN]' && (
+								<Button variant="primary" onClick={handleSubmit}>
+									수정
+								</Button>
+							)}
 						</Modal.Footer>
 					</Modal>
 				</div>
@@ -1411,20 +1419,24 @@ const RowDetails = ({
 							</>
 						) : (
 							<>
-								<Button
-									variant="primary"
-									className="me-2"
-									onClick={handleEditClick}
-								>
-									수정
-								</Button>
+								{(user.role === '[ADMIN]' || user.role === '[ASSET_MANAGER]') && (
+									<>
+										<Button
+											variant="primary"
+											className="me-2"
+											onClick={handleEditClick}
+										>
+											수정
+										</Button>
 
-								{/* 유지보수 */}
-								<MaintainRegister
-									assetCode={formData.assetCode}
-									assetName={formData.assetName}
-									assetNo={formData.assetNo}
-								/>
+										{/* 유지보수 */}
+										<MaintainRegister
+											assetCode={formData.assetCode}
+											assetName={formData.assetName}
+											assetNo={formData.assetNo}
+										/>
+									</>
+								)}
 								<Button variant="danger" onClick={onClose}>
 									닫기
 								</Button>

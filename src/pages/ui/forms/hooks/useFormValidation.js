@@ -1,7 +1,7 @@
 import { useToggle } from '@/hooks';
 
 export default function useFormValidation() {
-	const [isValidated, setValidated] = useToggle();
+	const [isValidated, setValidated] = useToggle(false);
 
 	/*
 	 * handle form submission
@@ -12,7 +12,6 @@ export default function useFormValidation() {
 			event.preventDefault();
 			event.stopPropagation();
 		}
-
 		setValidated();
 	};
 

@@ -17,6 +17,7 @@ import {
 } from './UpdateHistoryColumn';
 import { ModalBasicInfo } from './ModalBasicInfo';
 import { ModalModifiedInfo } from './ModalModifiedInfo';
+import api from '@/common/api/authAxios';
 import './Style.css'; // 같은 폴더에서 CSS 파일 import
 
 const urlConfig = import.meta.env.VITE_BASIC_URL;
@@ -50,7 +51,7 @@ const InfoModal = ({ show, handleClose, modalData, assetNo }) => {
 				setIsLoading(true); // 데이터 요청 시작부분
 
 				try {
-					const response = await axios.get(`${urlConfig}/list/${assetNo}`);
+					const response = await api.get(`${urlConfig}/list/${assetNo}`);
 					console.log(`불러온 데이터 : `, response.data);
 
 					const [lowestAsset, modifiedAsset] = response.data;

@@ -7,6 +7,7 @@ import { InfoModal, ActionModal, ProcessModal } from './DemandModal';
 import axios from 'axios';
 import '../MaintainHistory/Searchbar.css';
 import Swal from 'sweetalert2';
+import api from '@/common/api/authAxios';
 
 const urlConfig = import.meta.env.VITE_BASIC_URL;
 
@@ -40,7 +41,8 @@ const DemandHistory = () => {
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
-				const response = await axios.get(`${urlConfig}/DemandHistory`);
+				const response = await api.get(`${urlConfig}/DemandHistory`);
+				console.log(response.status);
 				setDemands(response.data);
 			} catch (error) {
 				console.error('데이터를 가져오는 중 오류 발생:', error);
@@ -53,7 +55,7 @@ const DemandHistory = () => {
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
-				const response = await axios.get(`${urlConfig}/DemandHistory`);
+				const response = await api.get(`${urlConfig}/DemandHistory`);
 				setDemands(response.data);
 			} catch (error) {
 				console.error('데이터를 가져오는 중 오류 발생:', error);
@@ -74,7 +76,7 @@ const DemandHistory = () => {
 	const processOpenModal = () => {
 		const fetchRowData = async () => {
 			try {
-				const response = await axios.get(`${urlConfig}/DemandList`);
+				const response = await api.get(`${urlConfig}/DemandList`);
 				const responseData = response.data;
 
 				// 데이터를 불러온 후 첫 번째 데이터를 기준으로 modalType 설정

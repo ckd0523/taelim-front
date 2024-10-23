@@ -1,7 +1,9 @@
+import api from '@/common/api/authAxios';
 import { useState, useRef, useEffect } from 'react';
 import { Form, FormGroup, Modal, Button, ModalFooter, Alert } from 'react-bootstrap';
 import { BsImage } from 'react-icons/bs';
 import Swal from 'sweetalert2';
+import { useAuthContext } from '@/common';
 const urlConfig = import.meta.env.VITE_BASIC_URL;
 const MaintainDetail = ({ show, selectData, handleClose }) => {
 	// const [change, setChange] = useState(selectData.repairEndDate || '');
@@ -20,7 +22,7 @@ const MaintainDetail = ({ show, selectData, handleClose }) => {
 
 	const imgRef = useRef();
 	const afterImgRef = useRef();
-
+	const { user } = useAuthContext();
 	const handleEditToggle = () => {
 		setIsEditing(!isEditing);
 
@@ -33,7 +35,7 @@ const MaintainDetail = ({ show, selectData, handleClose }) => {
 			);
 		}
 	};
-
+	console.log(user.role);
 	const handleFileUpload = (file, repairType) => {
 		const updateFiles = [...files, { file, repairType }];
 		setFiles(updateFiles);
@@ -131,13 +133,7 @@ const MaintainDetail = ({ show, selectData, handleClose }) => {
 		}
 
 		try {
-			const response = await fetch(`${urlConfig}/maintain/update/${selectData.repairNo}`, {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify(formData),
-			});
+			const response = await api.post('/maintain/update/${selectData.repairNo}', formData);
 
 			if (response.ok) {
 				Swal.fire({
@@ -294,12 +290,15 @@ const MaintainDetail = ({ show, selectData, handleClose }) => {
 							</Button>
 						</>
 					) : (
-						<Button
-							style={{ background: '#5e83bb', border: 'none' }}
-							onClick={handleEditToggle}
-						>
-							수정
-						</Button>
+						user.role === '[ADMIN]' ||
+						(user.role === '[ASSET_MANAGER]' && (
+							<Button
+								style={{ background: '#5e83bb', border: 'none' }}
+								onClick={handleEditToggle}
+							>
+								수정
+							</Button>
+						))
 					)}
 					<Button variant="secondary" onClick={handleClose}>
 						닫기

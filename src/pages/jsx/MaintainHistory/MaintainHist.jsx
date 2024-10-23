@@ -5,6 +5,7 @@ import { MaintainDetail } from '@/pages/jsx/MaintainHistory/MaintainDetail';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import './Searchbar.css';
+import api from '@/common/api/authAxios';
 
 const columns = [
 	{
@@ -114,45 +115,43 @@ const MaintainHist = () => {
 	};
 
 	useEffect(() => {
-		const requestOptions = {
-			method: 'GET',
-			// redirect: 'follow',
-		};
-		fetch(`${urlConfig}/maintain/get`, requestOptions)
-			.then((response) => response.json())
-			.then((result) => {
-				if (Array.isArray(result)) {
-					console.log(result);
-					setData(result);
-					setSearchData(result);
+		const requestOptions = async () => {
+			try {
+				const response = await api.get('/maintain/get');
+				if (Array.isArray(response.data)) {
+					console.log(response.data);
+					setData(response.data);
+					setSearchData(response.data);
 				} else {
 					console.error('error');
 					setData([]);
 					setSearchData([]);
 				}
-			})
-			.catch((error) => console.log('error', error));
+			} catch (error) {
+				console.log('error', error);
+			}
+		};
+		requestOptions();
 	}, []);
 
 	useEffect(() => {
-		const requestOptions = {
-			method: 'GET',
-			// redirect: 'follow',
-		};
-		fetch(`${urlConfig}/maintain/get`, requestOptions)
-			.then((response) => response.json())
-			.then((result) => {
-				if (Array.isArray(result)) {
-					console.log(result);
-					setData(result);
-					setSearchData(result);
+		const requestOptions = async () => {
+			try {
+				const response = await api.get('/maintain/get');
+				if (Array.isArray(response.data)) {
+					console.log(response.data);
+					setData(response.data);
+					setSearchData(response.data);
 				} else {
 					console.error('error');
 					setData([]);
 					setSearchData([]);
 				}
-			})
-			.catch((error) => console.log('error', error));
+			} catch (error) {
+				console.log('error', error);
+			}
+		};
+		requestOptions();
 	}, [show]);
 	return (
 		<>

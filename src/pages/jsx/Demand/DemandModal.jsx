@@ -19,6 +19,7 @@ import {
 	calculateImportanceScore,
 	calculateImportanceRating,
 } from './UpdateHistoryColumn';
+import api from '@/common/api/authAxios';
 
 const API_URL = import.meta.env.VITE_BASIC_URL;
 const urlConfig = import.meta.env.VITE_BASIC_URL;
@@ -55,7 +56,7 @@ const InfoModal = ({ show, handleClose, modalData }) => {
 				setIsLoading(true);
 				console.log('dddd', modalData);
 				try {
-					const response = await axios.get(`${urlConfig}/list1/${modalData.assetNo}`);
+					const response = await api.get(`${urlConfig}/list1/${modalData.assetNo}`);
 					const [lowestAsset, modifiedAsset] = response.data;
 					setAssetInfo(lowestAsset); // 변경 전 데이터 설정
 					setModifiedAssetInfo(modifiedAsset); // 변경 후 데이터 설정
@@ -76,8 +77,7 @@ const InfoModal = ({ show, handleClose, modalData }) => {
 			reason,
 			actionType,
 		};
-		axios
-			.post(`${API_URL}/updateAction`, dataToSend)
+		api.post(`${API_URL}/updateAction`, dataToSend)
 			.then((response) => {
 				console.log('Update successful:', response.data);
 			})
@@ -94,8 +94,7 @@ const InfoModal = ({ show, handleClose, modalData }) => {
 			reason,
 			actionType,
 		};
-		axios
-			.post(`${API_URL}/deleteAction`, dataToSend)
+		api.post(`${API_URL}/deleteAction`, dataToSend)
 			.then((response) => {
 				console.log('Update successful:', response.data);
 			})
@@ -434,7 +433,7 @@ const ProcessModal = ({ show, handleClose }) => {
 				setIsLoading(true); // 데이터 요청 시작
 
 				try {
-					const response = await axios.get(`${urlConfig}/DemandList`);
+					const response = await api.get(`${urlConfig}/DemandList`);
 					const responseData = response.data;
 					setDemandList(responseData);
 
@@ -528,8 +527,7 @@ const ProcessModal = ({ show, handleClose }) => {
 	};
 
 	const handleFormSubmit = () => {
-		axios
-			.post(`${API_URL}/demandAction`, demandList1)
+		api.post(`${API_URL}/demandAction`, demandList1)
 			.then((response) => {
 				console.log('Action successful:', response.data);
 			})
@@ -823,8 +821,7 @@ const ActionModal = ({ show, handleClose, actionData, actionType, handleSubmit }
 			switch (item.demandType) {
 				case 'update':
 				case 'allUpdateDemand':
-					axios
-						.post(`${API_URL}/updateAction`, dataToSend)
+					api.post(`${API_URL}/updateAction`, dataToSend)
 						.then((response) => {
 							console.log('Update successful:', response.data);
 						})
@@ -835,8 +832,7 @@ const ActionModal = ({ show, handleClose, actionData, actionType, handleSubmit }
 
 				case 'delete':
 				case 'allDisposeDemand':
-					axios
-						.post(`${API_URL}/deleteAction`, dataToSend)
+					api.post(`${API_URL}/deleteAction`, dataToSend)
 						.then((response) => {
 							console.log('Delete successful:', response.data);
 						})

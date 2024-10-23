@@ -240,7 +240,7 @@ const LeftSidebar = ({ isCondensed, leftbarDark }) => {
 	return (
 		<div className="leftside-menu" ref={menuNodeRef} style={{ background: '#003c75' }}>
 			<Link
-				to="/"
+				to="/jsx/Dashboard"
 				className={`logo ${leftbarDark ? 'logo-light' : 'logo-dark'}`}
 				style={{ background: '#003c75' }}
 			>

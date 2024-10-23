@@ -35,8 +35,8 @@ export function AuthProvider({ children }) {
     (userData) => {
 
       console.log("컨텍스트 1 : " + JSON.stringify(userData));
-      const { email, name, role, accessToken } = userData;  // 사용자 데이터에서 필요한 정보 추출
-      const userSession = { email, name, role };
+      const { email, name, role, accessToken, id } = userData;  // 사용자 데이터에서 필요한 정보 추출
+      const userSession = { email, name, role, id };
 
       console.log("컨텍스트 2 : " + email);
 

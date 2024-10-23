@@ -1,8 +1,26 @@
 import { HORIZONTAL_MENU_ITEMS, MENU_ITEMS } from '@/common/menu-items';
+import { useAuthContext } from '@/common';
 
 const getMenuItems = () => {
-	// NOTE - You can fetch from server and return here as well
-	return MENU_ITEMS;
+	const { user } = useAuthContext(); // 현재 사용자 정보 가져오기
+
+	// 역할에 따른 메뉴 필터링
+	const filteredMenuItems = MENU_ITEMS.filter((item) => {
+		if (user.role === '[ADMIN]') {
+			// admin은 모든 메뉴를 볼 수 있음
+			return true;
+		} else if (user.role === '[ASSET_MANAGER]') {
+			// manager는 '요청내역', '시스템 설정'을 제외한 모든 메뉴를 볼 수 있음
+			return !['ds-DemandHistory', 'ds-SystemSetting'].includes(item.key);
+		} else if (user.role === '[USER]') {
+			// user는 '대시보드'와 '자산조회'만 볼 수 있음
+			return ['jsx', 'ds-Dashboard', 'check', 'ds-AssetSurveyHistory'].includes(item.key);
+		}
+
+		return false;
+	});
+
+	return filteredMenuItems;
 };
 
 const getHorizontalMenuItems = () => {

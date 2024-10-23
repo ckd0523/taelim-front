@@ -1,7 +1,7 @@
 import { Row, Col, Card, Button, Modal, Form } from 'react-bootstrap';
 import { useState } from 'react';
 import axios from 'axios';
-
+import api from '@/common/api/authAxios';
 const API_URL = import.meta.env.VITE_BASIC_URL;
 
 const ActionModal = ({ show, handleClose, actionData, actionType }) => {
@@ -55,26 +55,22 @@ const ActionModal = ({ show, handleClose, actionData, actionType }) => {
 
 		switch (actionType) {
 			case 'AllUpdate':
-				axios
-					.post(`${API_URL}/allUpdate`, updateToSend)
+				api.post(`${API_URL}/allUpdate`, updateToSend)
 					.then(handleSuccessResponse)
 					.catch(handleErrorResponse);
 				break;
 			case 'AllDispose':
-				axios
-					.post(`${API_URL}/allDelete`, disposeToSend)
+				api.post(`${API_URL}/allDelete`, disposeToSend)
 					.then(handleSuccessResponse)
 					.catch(handleErrorResponse);
 				break;
 			case 'AllUpdateDemand':
-				axios
-					.post(`${API_URL}/allUpdateDemand`, updateToSend)
+				api.post(`${API_URL}/allUpdateDemand`, updateToSend)
 					.then(handleSuccessResponse)
 					.catch(handleErrorResponse);
 				break;
 			case 'AllDisposeDemand':
-				axios
-					.post(`${API_URL}/allDeleteDemand`, disposeToSend)
+				api.post(`${API_URL}/allDeleteDemand`, disposeToSend)
 					.then(handleSuccessResponse)
 					.catch(handleErrorResponse);
 				break;

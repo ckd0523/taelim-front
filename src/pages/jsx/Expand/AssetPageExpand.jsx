@@ -11,6 +11,7 @@ import { SearchForm } from './AssetSearchBar';
 import { AssetButtons } from './AssetButton';
 import { DisposeModal } from './DisposeModal';
 import { ActionModal } from './AllChangeModal';
+import api from '@/common/api/authAxios';
 
 const urlConfig = import.meta.env.VITE_BASIC_URL;
 
@@ -76,7 +77,7 @@ const AssetPageTest = (props) => {
 	const fetchData = useCallback(
 		async (pageIndex = 0, pageSize = 10) => {
 			try {
-				const response = await axios.get(`${urlConfig}/getAssetSearch`, {
+				const response = await api.get(`${urlConfig}/getAssetSearch`, {
 					params: {
 						assetName: searchParams.assetName || null,
 						assetLocationString: searchParams.assetLocationString || null,

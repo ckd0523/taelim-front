@@ -2,6 +2,7 @@ import { Button, Form, Modal, Alert } from 'react-bootstrap';
 import { useState } from 'react';
 import Swal from 'sweetalert2';
 import RepairFileUpload from '@/pages/jsx/Maintain/RepairFileUpload';
+import api from '@/common/api/authAxios';
 
 const urlConfig = import.meta.env.VITE_BASIC_URL;
 const MaintainRegister = ({ assetCode, assetNo }) => {
@@ -60,18 +61,12 @@ const MaintainRegister = ({ assetCode, assetNo }) => {
 
 		// };
 		try {
-			const maintainResponse = await fetch(`${urlConfig}/maintain/register`, {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify(formData),
-			});
+			const maintainResponse = await api.post('/maintain/register', formData);
 			console.log('assetNo : ', assetNo);
 			console.log('assetCode: ', assetCode);
 
-			if (maintainResponse.ok) {
-				const repairNo = await maintainResponse.text();
+			if (maintainResponse.status == 200) {
+				const repairNo = await maintainResponse.data;
 				console.log('repairNo : ', repairNo);
 
 				// if (files.length > 0) {

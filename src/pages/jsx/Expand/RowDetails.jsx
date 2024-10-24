@@ -317,6 +317,7 @@ const RowDetails = ({
 			const response = await api.post(`${urlConfig}/asset/update/${formData.assetCode}`, {
 				...formData,
 				existingFiles: formData.existingFiles, // 기존 파일 정보 추가
+				assetUserId: user.id, // or owner.id depending on the backend field requirement
 			});
 
 			console.log('Update response:', response.data); // 응답 확인

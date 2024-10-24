@@ -94,16 +94,19 @@ const RowDetails = ({
 	// 소유자 선택 핸들러
 	const handleSelectOwner = (owner) => {
 		setSelectedOwner(owner); // 선택된 소유자 저장
+		setAssetOwner(owner.fullname); // 선택된 소유자의 이름을 보여주기 위해 설정
+		setAssetOwnerID(owner.id); // 실제로 저장될 소유자 ID 설정
 		setFormData((prevData) => ({
 			...prevData,
-			assetOwner: owner.fullname, // or owner.id depending on the backend field requirement
+			assetOwnerId: owner.id, // 실제 데이터베이스에 저장될 ID
+			assetOwner: owner.fullname, // 조회 시 보여줄 이름
 		})); // 소유자 이름 설정se
 		setOwners([]); // 선택 후 리스트 초기화
 		setShowOwnerModal(false); // 모달 닫기
 	};
 
 	const [users, setUsers] = useState([]); // 소유자 리스트
-	const [assetUserID, setAseetUserID] = useState(''); //실제 들어갈 소유자 ID값
+	const [assetUserID, setAssetUserID] = useState(''); //실제 들어갈 소유자 ID값
 	const [assetUser, setAssetUser] = useState(''); //보여지는 소유자 이름
 	const [showUserModal, setShowUserModal] = useState(false); // 소유자 선택 모달 상태
 	const [selectedUser, setSelectedUser] = useState(null); // 선택된 소유자
@@ -132,9 +135,12 @@ const RowDetails = ({
 	// 소유자 선택 핸들러
 	const handleSelectUser = (user) => {
 		setSelectedUser(user); // 선택된 소유자 저장
+		setAssetUser(user.fullname);
+		setAssetUserID(user.id);
 		setFormData((prevData) => ({
 			...prevData,
-			assetUser: user.fullname, // or owner.id depending on the backend field requirement
+			assetUserId: user.id, // or owner.id depending on the backend field requirement
+			assetUser: user.fullname,
 		})); // 소유자 이름 설정se
 		setUsers([]); // 선택 후 리스트 초기화
 		setShowUserModal(false); // 모달 닫기
@@ -170,8 +176,11 @@ const RowDetails = ({
 
 	const handleSelectSecurityManager = (securityManager) => {
 		setSelectedSecurityManager(securityManager);
+		setAssetSecurityManager(securityManager.fullname);
+		setAssetSecurityManagerID(securityManager.id);
 		setFormData((prevData) => ({
 			...prevData,
+			assetSecurityManagerId: securityManager.id,
 			assetSecurityManager: securityManager.fullname,
 		}));
 		setSecurityManagers([]);
@@ -293,6 +302,7 @@ const RowDetails = ({
 		setFormData((prevData) => ({
 			...prevData,
 			[key]: value, // 해당 키의 값을 업데이트
+			updateBy: user.id, // 현재 접속자 ID를 updateBy에 저장
 		}));
 	};
 	// 모달 닫기 처리
@@ -1294,16 +1304,14 @@ const RowDetails = ({
 									<Form.Control type="text" value="수정" readOnly />
 								</Form.Group>
 								<Form.Group className="mb-3">
-									<Form.Label>수정사유</Form.Label>
-									<Form.Select
+									<Form.Label>수정 사유</Form.Label>
+									<Form.Control
+										type="text"
 										value={formData.updateReason}
 										onChange={(e) => handleInputChange(e, 'updateReason')}
-									>
-										<option value="사유 1">사유 1</option>
-										<option value="사유 2">사유 2</option>
-										<option value="사유 3">사유 3</option>
-									</Form.Select>
+									/>
 								</Form.Group>
+
 								<Form.Group className="mb-3">
 									<Form.Label>수정내용</Form.Label>
 									<Form.Control
@@ -1734,7 +1742,7 @@ const RowDetails = ({
 					/>
 					{securityManagers.length > 0 && (
 						<div className="securityManager-list">
-							{users.map((securityManager) => (
+							{securityManagers.map((securityManager) => (
 								<Form.Check
 									key={securityManager.id}
 									type="radio" // 라디오 버튼으로 선택

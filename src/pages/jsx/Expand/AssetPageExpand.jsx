@@ -11,6 +11,7 @@ import { SearchForm } from './AssetSearchBar';
 import { AssetButtons } from './AssetButton';
 import { DisposeModal } from './DisposeModal';
 import { ActionModal } from './AllChangeModal';
+import Swal from 'sweetalert2';
 import api from '@/common/api/authAxios';
 import { useAuthContext } from '@/common';
 
@@ -140,7 +141,17 @@ const AssetPageTest = (props) => {
 
 				// 폐기된 자산을 data 배열에서 제거
 				setData((prevData) => prevData.filter((item) => item.assetCode !== assetCode));
-				fetchData(pageIndex, pageSize); // 현재 페이지 인덱스와 페이지 크기로 데이터 요청
+
+				setTimeout(() => {
+					Swal.fire({
+						icon: 'success',
+						title: `${assetCode} : 자산이 성공적으로 폐기되었습니다.`,
+					});
+
+					// 폐기가 완료되면 해당 페이지로 이동
+					setPageIndex(pageIndex); // 원하는 페이지 번호로 설정 (예: 0은 첫 페이지)
+					fetchData(pageIndex, pageSize); // 현재 페이지 인덱스와 페이지 크기로 데이터 요청
+				}, 500);
 			} else {
 				console.error('자산 폐기 실패:', assetCode);
 			}
@@ -162,7 +173,17 @@ const AssetPageTest = (props) => {
 						item.assetCode === assetCode ? { ...item, isDisposed: true } : item
 					)
 				);
-				fetchData(pageIndex, pageSize); // 현재 페이지 인덱스와 페이지 크기로 데이터 요청
+
+				setTimeout(() => {
+					Swal.fire({
+						icon: 'success',
+						title: `${assetCode} : 자산이 성공적으로 폐기요청되었습니다.`,
+					});
+
+					// 폐기가 완료되면 해당 페이지로 이동
+					setPageIndex(pageIndex); // 원하는 페이지 번호로 설정 (예: 0은 첫 페이지)
+					fetchData(pageIndex, pageSize); // 현재 페이지 인덱스와 페이지 크기로 데이터 요청
+				}, 500);
 			} else {
 				console.error('자산 폐기 요청 실패:', assetCode);
 			}

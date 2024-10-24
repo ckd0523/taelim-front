@@ -3,6 +3,7 @@ import { useState } from 'react';
 import axios from 'axios';
 import api from '@/common/api/authAxios';
 import { useAuthContext } from '@/common';
+import Swal from 'sweetalert2';
 const API_URL = import.meta.env.VITE_BASIC_URL;
 
 const ActionModal = ({
@@ -176,7 +177,12 @@ const ActionModal = ({
 
 		const handleSuccessResponse = (response) => {
 			console.log('Success:', response.data);
-			alert(response.data); // 성공 메시지 띄우기
+
+			Swal.fire({
+				icon: 'success',
+				title: '성공',
+				text: '자산조회 페이지로 이동합니다.',
+			});
 			// 수정이 완료되면 해당 페이지로 이동
 			setPageIndex(0); // 원하는 페이지 번호로 설정 (예: 0은 첫 페이지)
 			fetchData(0, pageSize); // 해당 페이지의 데이터를 다시 가져옴
@@ -184,7 +190,11 @@ const ActionModal = ({
 
 		const handleErrorResponse = (error) => {
 			console.error('Error:', error);
-			alert(error.response.data); // 에러 메시지 띄우기
+			Swal.fire({
+				icon: 'error',
+				title: '실패',
+				text: error.response.data,
+			});
 		};
 
 		switch (actionType) {

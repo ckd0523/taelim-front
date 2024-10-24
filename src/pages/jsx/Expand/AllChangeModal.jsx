@@ -5,7 +5,15 @@ import api from '@/common/api/authAxios';
 import { useAuthContext } from '@/common';
 const API_URL = import.meta.env.VITE_BASIC_URL;
 
-const ActionModal = ({ show, handleClose, actionData, actionType }) => {
+const ActionModal = ({
+	show,
+	handleClose,
+	actionData,
+	actionType,
+	fetchData,
+	setPageIndex,
+	pageSize,
+}) => {
 	const { user } = useAuthContext();
 
 	const [department, setDepartment] = useState('');
@@ -169,7 +177,9 @@ const ActionModal = ({ show, handleClose, actionData, actionType }) => {
 		const handleSuccessResponse = (response) => {
 			console.log('Success:', response.data);
 			alert(response.data); // 성공 메시지 띄우기
-			window.location.reload(); // 2초 뒤 새로고침
+			// 수정이 완료되면 해당 페이지로 이동
+			setPageIndex(0); // 원하는 페이지 번호로 설정 (예: 0은 첫 페이지)
+			fetchData(0, pageSize); // 해당 페이지의 데이터를 다시 가져옴
 		};
 
 		const handleErrorResponse = (error) => {

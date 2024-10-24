@@ -335,6 +335,9 @@ const AssetPageTest = (props) => {
 				handleClose={() => setShowActModal(false)}
 				actionType={actionType}
 				actionData={rowSelect}
+				fetchData={fetchData} // 데이터를 새로 고치는 함수
+				setPageIndex={setPageIndex} // 페이지 인덱스 업데이트 함수 전달
+				pageSize={pageSize}
 			/>
 		</>
 	);

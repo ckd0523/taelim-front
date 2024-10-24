@@ -553,7 +553,7 @@ const RowDetails = ({
 				);
 			}
 			// useState select 설정
-			if (key === 'usestate') {
+			if (key === 'useStated') {
 				return (
 					<Form.Select
 						value={formData[key] || ''}
@@ -954,7 +954,7 @@ const RowDetails = ({
 							</thead>
 							<tbody>
 								<tr>
-									<td>{renderCellContent('usestate')}</td>
+									<td>{renderCellContent('useStated')}</td>
 									<td>{renderCellContent('operationStatus')}</td>
 									<td>{renderCellContent('introducedDate')}</td>
 									<td style={{ width: '80px' }}>

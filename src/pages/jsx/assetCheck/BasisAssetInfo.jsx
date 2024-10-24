@@ -7,10 +7,10 @@ import { BsCaretUpFill } from 'react-icons/bs';
 import { BsCaretDownFill } from 'react-icons/bs';
 
 import { useForm, FormProvider } from 'react-hook-form';
-import { CustomDatePicker } from '@/components/Form';
 import { useState } from 'react';
 import styled from 'styled-components';
-
+import api from '@/common/api/authAxios';
+const urlConfig = import.meta.env.VITE_BASIC_URL;
 const StyledCard = styled.div`
 	display: flex;
 	flex-direction: column;
@@ -162,6 +162,137 @@ const BasisAssetInfo = ({ isValidated, formData, handleChange, handleSubmit }) =
 		formState: { errors },
 		handleSubmit: reactHookHandleSubmit,
 	} = methods;
+
+	//소유자 검색어와 소유자 리스트 상태
+	const [owners, setOwners] = useState([]); // 소유자 리스트
+	const [assetOwnerID, setAssetOwnerID] = useState(''); //실제 들어갈 소유자 ID값
+	const [assetOwner, setAssetOwner] = useState(''); //보여지는 소유자 이름
+	const [users, setUsers] = useState([]);
+	const [assetUserID, setAssetUserID] = useState('');
+	const [assetUser, setAssetUser] = useState('');
+	const [securityManager, setSecurityManager] = useState([]);
+	const [assetSecurityManagerID, setAssetSecurityManagerID] = useState('');
+	const [assetSecurityManager, setAssetSecurityManager] = useState('');
+
+	//사용자
+	const assetUserChange = (e) => {
+		setAssetUser(e.target.value);
+		handleChange({
+			target: {
+				name: 'assetUser',
+				value: e.target.value,
+			},
+		});
+		if (e.target.value) {
+			handleUserSearch(e.target.value);
+		} else {
+			setUsers([]);
+		}
+	};
+
+	const handleUserSearch = async (searchTerm) => {
+		try {
+			const response = await api.get(`${urlConfig}/user/search`, {
+				params: { name: searchTerm },
+			});
+			setUsers(response.data); // 소유자 리스트 업데이트
+		} catch (error) {
+			console.error('소유자 검색 중 오류 발생:', error);
+		}
+	};
+	const handleSelectUser = (owner) => {
+		setAssetUser(owner.fullname);
+		setAssetUserID(owner.id);
+
+		handleChange({
+			target: {
+				name: 'assetUser',
+				value: owner.id,
+			},
+		});
+		setUsers([]); //
+	};
+
+	//보안담당자
+	const assetSecurityChange = (e) => {
+		setAssetSecurityManager(e.target.value);
+		handleChange({
+			target: {
+				name: 'assetSecurityManager',
+				value: e.target.value,
+			},
+		});
+		if (e.target.value) {
+			handleSecuritySearch(e.target.value);
+		} else {
+			setSecurityManager([]);
+		}
+	};
+
+	const handleSecuritySearch = async (searchTerm) => {
+		try {
+			const response = await api.get(`${urlConfig}/user/search`, {
+				params: { name: searchTerm },
+			});
+			setSecurityManager(response.data); // 소유자 리스트 업데이트
+		} catch (error) {
+			console.error('소유자 검색 중 오류 발생:', error);
+		}
+	};
+	const handleSelectSecurity = (owner) => {
+		setAssetSecurityManager(owner.fullname);
+		setAssetSecurityManagerID(owner.id);
+
+		handleChange({
+			target: {
+				name: 'assetSecurityManager',
+				value: owner.id,
+			},
+		});
+		setSecurityManager([]); //
+	};
+
+	// 소유자 입력 변경 핸들러
+	const assetOwnerChange = (e) => {
+		setAssetOwner(e.target.value);
+		// 소유자 검색어에 따라 소유자 검색
+		handleChange({
+			target: {
+				name: 'assetOwner',
+				value: e.target.value,
+			},
+		});
+		if (e.target.value) {
+			handleOwnerSearch(e.target.value); // 소유자 검색 호출
+		} else {
+			setOwners([]); // 입력이 비었으면 리스트 초기화
+		}
+	};
+
+	// 소유자 검색 함수
+	const handleOwnerSearch = async (searchTerm) => {
+		try {
+			const response = await api.get(`${urlConfig}/user/search`, {
+				params: { name: searchTerm },
+			});
+			setOwners(response.data); // 소유자 리스트 업데이트
+		} catch (error) {
+			console.error('소유자 검색 중 오류 발생:', error);
+		}
+	};
+	// 소유자 선택 핸들러
+	const handleSelectOwner = (owner) => {
+		setAssetOwner(owner.fullname); // 선택된 소유자 이름 설정
+		setAssetOwnerID(owner.id);
+
+		handleChange({
+			target: {
+				name: 'assetOwner',
+				value: owner.id,
+			},
+		});
+		setOwners([]); // 선택 후 리스트 초기화
+	};
 
 	const onSubmit = (data) => {
 		handleSubmit(data);
@@ -344,30 +475,70 @@ const BasisAssetInfo = ({ isValidated, formData, handleChange, handleSubmit }) =
 												placeholder="사용자를 입력해주세요"
 												className="mb-2"
 												type="text"
-												value={formData.assetUser}
-												onChange={handleChange}
+												value={assetUser}
+												onChange={assetUserChange}
 												name="assetUser"
 											/>
+											{users.length > 0 && ( // 소유자 리스트 표시
+												<ul className="owner-list">
+													{users.map((user) => (
+														<li
+															key={user.id}
+															onClick={() => handleSelectUser(user)}
+														>
+															{user.fullname} ({user.department}){' '}
+															{/* 소유자 이름과 부서 */}
+														</li>
+													))}
+												</ul>
+											)}
 											<Form.Label>소유자</Form.Label>
 											<Form.Control
 												placeholder="소유자를 입력해주세요"
 												className="mb-2"
 												type="text"
-												value={formData.assetOwner}
-												onChange={handleChange}
-												name="assetOwner"
+												value={assetOwner}
+												onChange={assetOwnerChange}
+												name="assetOwnerID"
 											/>
+											{owners.length > 0 && ( // 소유자 리스트 표시
+												<ul className="owner-list">
+													{owners.map((owner) => (
+														<li
+															key={owner.id}
+															onClick={() => handleSelectOwner(owner)}
+														>
+															{owner.fullname} ({owner.department}){' '}
+															{/* 소유자 이름과 부서 */}
+														</li>
+													))}
+												</ul>
+											)}
 											<Form.Label>보안담당자</Form.Label>
 											<Form.Control
 												placeholder="보안담당자를 입력해주세요"
 												className="mb-2"
 												type="text"
-												value={formData.assetSecurityManager}
-												onChange={handleChange}
+												value={assetSecurityManager}
+												onChange={assetSecurityChange}
 												name="assetSecurityManager"
 											/>
 										</Col>
-
+										{securityManager.length > 0 && ( // 소유자 리스트 표시
+											<ul className="owner-list">
+												{securityManager.map((security) => (
+													<li
+														key={security.id}
+														onClick={() =>
+															handleSelectSecurity(security)
+														}
+													>
+														{security.fullname} ({security.department}){' '}
+														{/* 소유자 이름과 부서 */}
+													</li>
+												))}
+											</ul>
+										)}
 										<Col lg={1} className="d-flex align-items-stretch">
 											<div className="vertical-divider"></div>
 										</Col>

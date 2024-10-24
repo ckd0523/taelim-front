@@ -174,10 +174,16 @@ const MENU_ITEMS = [
 		icon: 'uil-bell',
 	},
 	{
+		key: 'ds-Crawling',
+		label: 'Web-Search',
+		url: '/jsx/Crawling',
+		icon: ' ri-search-line',
+	},
+	{
 		key: 'ds-SystemSetting',
 		label: '시스템 설정',
 		url: '/jsx/SystemSetting',
-		icon: ' ri-settings-3-line',
+		icon: 'ri-settings-3-line',
 	},
 	// 여기까지
 ];

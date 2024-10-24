@@ -264,7 +264,7 @@ const MaintainHist = () => {
 										<Col xs={12} md={6} lg={3}>
 											<Form.Group as={Row}>
 												<Form.Label
-													htmlFor="maintainBy"
+													htmlFor="repairBy"
 													xs={12}
 													md={7}
 													lg={3}
@@ -274,7 +274,7 @@ const MaintainHist = () => {
 												<Col xs={12} md={7} lg={6}>
 													<Form.Control
 														type="text"
-														id="maintainBy"
+														id="repairBy"
 														value={searchMaintainBy}
 														onChange={(e) =>
 															setSearchMaintainBy(e.target.value)

@@ -76,7 +76,9 @@ const PurchasingInfo = ({ formData, handleChange, isValidated, handleSubmit }) =
 									<Row className="justify-content-md-center">
 										<Col lg={5}>
 											<Form.Label>구매비용</Form.Label>
+											<Form.Label className="text-danger">＊</Form.Label>
 											<Form.Control
+												required
 												placeholder="구매비용을 입력해주세요"
 												className="mb-2"
 												type="number"

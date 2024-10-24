@@ -10,6 +10,7 @@ import { getMenuItems } from './utils/menu';
 import { Button, Modal, Col, Nav, Tab, Row, Form, InputGroup, Card } from 'react-bootstrap';
 import { useToggle } from '@/hooks';
 import { authApi, useAuthContext } from '@/common';
+import api from '@/common/api/authAxios';
 
 // const UserBox = () => {
 // 	return (
@@ -32,11 +33,12 @@ const URL = import.meta.env.VITE_BASIC_URL;
 //시스템 설정 모달이 뜰 때 자산 기준 금액 정보를 가져옴
 const getAmountSet = async () => {
 	try {
-		const response = await fetch(`${URL}/getAmountSet`);
-		const data = await response.json();
+		const response = await api.get(`${URL}/getAmountSet`);
+		//const data = await response.json();
 		//console.log('받은 데이터 : ' + JSON.stringify(data));
 		//console.log("고가치 기준 금액 : " + data.high_value_standard);
-		return data;
+		//console.log("사이드바1: " + JSON.stringify(response));
+		return response.data;
 	} catch (error) {
 		console.error('error : ', error);
 		return null; // 에러가 발생하면 null을 반환합니다.
@@ -76,17 +78,14 @@ const SideBarContent = () => {
 	// 자산 가치 기준 금액 설정 요청
 	const saveAmountSet = async () => {
 		try {
-			const response = await fetch(`${URL}/changeAmountSet`, {
-				method: 'POST',
+			const response = await api.post(`${URL}/changeAmountSet`, amountSetData, {
 				headers: {
 					'Content-Type': 'application/json',
 				},
-				body: JSON.stringify(amountSetData), // amountSetData를 서버로 전송
 			});
 
-			if (!response.ok) {
-				throw new Error('서버 요청 실패');
-			}
+			//백엔드 인가 설정을 해 놓았기 때문에 권한이 없는 사람이 수정할 경우
+			//저장이 완료되었다고 하는데 실제 DB는 변경 안됨
 			alert('저장이 완료되었습니다.');
 		} catch (error) {
 			console.error('저장 중 오류 발생:', error);

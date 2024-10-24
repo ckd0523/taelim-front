@@ -85,7 +85,18 @@ export default function jsx() {
 						)
 					}
 				/>
-				<Route path="AssetSurveyHistory" element={<AssetSurveyHistory />} />
+
+				{/* 자산 조사 이력 - ADMIN과 ASSET_MANAGER만 접근 가능 */}
+				<Route
+					path="AssetSurveyHistory"
+					element={
+						checkPermission(['ADMIN', 'ASSET_MANAGER']) ? (
+							<AssetSurveyHistory />
+						) : (
+							<Navigate to="/jsx/dashboard" />
+						)
+					}
+				/>
 
 				{/* 요청 내역 - ADMIN과 ASSET_MANAGER만 접근 가능 */}
 				<Route

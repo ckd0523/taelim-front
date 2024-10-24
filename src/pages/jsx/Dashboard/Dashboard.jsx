@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Row, Col, Table, Card } from 'react-bootstrap';
 
-import TotalAssetValue from './TotalAssetValue';
+import TotalAssetValue from './TotalAssetRatio';
 import RealTimeStatus from './RealTimeStatus';
 import ReactApexChart from 'react-apexcharts';
 const DistributedColumnOps = {

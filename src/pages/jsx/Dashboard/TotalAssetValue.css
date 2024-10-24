@@ -1,0 +1,12 @@
+.chart-container {
+  max-width: 100%;
+  width: 100%;
+  /* 차트 너비를 100%로 설정 */
+  height: auto;
+  /* 높이를 유동적으로 설정 */
+}
+
+.apexcharts-canvas {
+  max-width: 100%;
+  /* ApexCharts 캔버스도 화면에 맞게 조정 */
+}

@@ -19,6 +19,7 @@ const ActionModal = ({ show, handleClose, actionData, actionType }) => {
 	const reset = () => {
 		setDepartment('');
 		setDisposeMethod('');
+		setAssetLocation('');
 		setDisposeLocation('');
 		setReason('');
 		setDetail('');
@@ -188,6 +189,7 @@ const ActionModal = ({ show, handleClose, actionData, actionType }) => {
 					.catch(handleErrorResponse);
 				break;
 			case 'AllUpdateDemand':
+				console.log('머가 들어있지', updateToSend);
 				api.post(`${API_URL}/allUpdateDemand`, updateToSend)
 					.then(handleSuccessResponse)
 					.catch(handleErrorResponse);
@@ -230,21 +232,50 @@ const ActionModal = ({ show, handleClose, actionData, actionType }) => {
 						{(actionType === 'AllUpdate' || actionType === 'AllUpdateDemand') && (
 							<>
 								<Form.Group className="mb-1">
-									<Form.Label className="mb-0">자산소재지</Form.Label>
-									<Form.Control
-										type="text"
-										value={department}
-										onChange={departmentChange}
-									/>
+									<Form.Label className="mb-0">위치</Form.Label>
+									<Form.Select
+										value={assetLocation}
+										onChange={assetLocationChange}
+									>
+										<option value="">위치를 선택해주세요.</option>
+										<option value="MAIN_B1_DOCUMENT_STORAGE">
+											본관 지하 문서고
+										</option>
+										<option value="MAIN_1F">본관 1층</option>
+										<option value="MAIN_1F_RECEPTION_ROOM">
+											본관 1층 접견실
+										</option>
+										<option value="MAIN_2F">본관 2층</option>
+										<option value="MAIN_2F_PRESIDENT_OFFICE">
+											본관 2층 사장실
+										</option>
+										<option value="MAIN_2F_RESEARCH_OFFICE">
+											본관 2층 기술연구소 사무실
+										</option>
+										<option value="MAIN_2F_CONFERENCE_ROOM">
+											본관 2층 대회의실
+										</option>
+										<option value="MAIN_2F_CEO_OFFICE">
+											본관 2층 대표 이사실
+										</option>
+										<option value="MAIN_3F_STORAGE">본관 3층 창고</option>
+										<option value="MDCG">MDCG</option>
+										<option value="FACTORY_BUILDING">공장동</option>
+									</Form.Select>
 								</Form.Group>
 
 								<Form.Group className="mb-1">
-									<Form.Label className="mb-0">위치</Form.Label>
-									<Form.Control
-										type="text"
-										value={assetLocation}
-										onChange={assetLocationChange}
-									/>
+									<Form.Label className="mb-0">부서</Form.Label>
+									<Form.Select value={department} onChange={departmentChange}>
+										<option value="">부서를 선택해주세요.</option>
+										<option value="IT_DEPARTMENT">IT부</option>
+										<option value="ADMINISTRATIVE_DEPARTMENT">관리부</option>
+										<option value="SALES_DEPARTMENT">영업부</option>
+										<option value="MARKETING_DEPARTMENT">마케팅부</option>
+										<option value="PRODUCTION_DEPARTMENT">생산부</option>
+										<option value="OPERATIONS_DEPARTMENT">운영부</option>
+										<option value="HUMAN_RESOURCES_DEPARTMENT">인사부</option>
+									</Form.Select>
 								</Form.Group>
 
 								{/* 추가된 부분: 소유자 입력 필드 */}
@@ -327,7 +358,7 @@ const ActionModal = ({ show, handleClose, actionData, actionType }) => {
 									<Form.Label className="mb-0">폐기 위치</Form.Label>
 									<Form.Control
 										type="text"
-										value={department}
+										value={disposeLocation}
 										onChange={disposeLocationChange}
 									/>
 								</Form.Group>
@@ -336,7 +367,7 @@ const ActionModal = ({ show, handleClose, actionData, actionType }) => {
 									<Form.Label className="mb-0">폐기 방법</Form.Label>
 									<Form.Control
 										type="text"
-										value={assetLocation}
+										value={disposeMethod}
 										onChange={disposeMethodChange}
 									/>
 								</Form.Group>

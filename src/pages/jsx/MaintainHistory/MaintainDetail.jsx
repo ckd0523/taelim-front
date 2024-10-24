@@ -3,7 +3,6 @@ import { useState, useRef, useEffect } from 'react';
 import { Form, FormGroup, Modal, Button, ModalFooter, Alert } from 'react-bootstrap';
 import { BsImage } from 'react-icons/bs';
 import Swal from 'sweetalert2';
-import { useAuthContext } from '@/common';
 const urlConfig = import.meta.env.VITE_BASIC_URL;
 const MaintainDetail = ({ show, selectData, handleClose }) => {
 	// const [change, setChange] = useState(selectData.repairEndDate || '');
@@ -22,7 +21,6 @@ const MaintainDetail = ({ show, selectData, handleClose }) => {
 
 	const imgRef = useRef();
 	const afterImgRef = useRef();
-	const { user } = useAuthContext();
 	const handleEditToggle = () => {
 		setIsEditing(!isEditing);
 
@@ -35,7 +33,6 @@ const MaintainDetail = ({ show, selectData, handleClose }) => {
 			);
 		}
 	};
-	console.log(user.role);
 	const handleFileUpload = (file, repairType) => {
 		const updateFiles = [...files, { file, repairType }];
 		setFiles(updateFiles);
@@ -96,8 +93,8 @@ const MaintainDetail = ({ show, selectData, handleClose }) => {
 	const saveImages = async () => {
 		const updateFileNames = [];
 
-		let imageUploadSuccess = true;
-		let endDateSaveSuccess = true;
+		const imageUploadSuccess = true;
+		const endDateSaveSuccess = true;
 		for (let { file, repairType } of files) {
 			const uploadData = new FormData();
 			uploadData.append('file', file);
@@ -107,15 +104,13 @@ const MaintainDetail = ({ show, selectData, handleClose }) => {
 
 			try {
 				if (uploadData.has('file')) {
-					const response = await fetch(
+					const response = await api.post(
 						`${urlConfig}/maintain/file/upload/${selectData.repairNo}`,
-						{
-							method: 'POST',
-							body: uploadData,
-						}
+						uploadData
 					);
-					if (response.ok) {
-						const fileName = await response.text();
+					console.log(response.status);
+					if (response.status == 200) {
+						const fileName = await response.data;
 						updateFileNames.push(fileName);
 						console.log(fileName);
 					} else {
@@ -133,9 +128,12 @@ const MaintainDetail = ({ show, selectData, handleClose }) => {
 		}
 
 		try {
-			const response = await api.post('/maintain/update/${selectData.repairNo}', formData);
+			const response = await api.post(
+				`${urlConfig}/maintain/update/${selectData.repairNo}`,
+				formData
+			);
 
-			if (response.ok) {
+			if (response.status == 200) {
 				Swal.fire({
 					icon: 'success',
 					title: '유지보수가 성공적으로 수정되었습니다.',
@@ -148,7 +146,6 @@ const MaintainDetail = ({ show, selectData, handleClose }) => {
 		}
 		handleClose();
 	};
-
 	return (
 		<>
 			<Modal show={show} onHide={handleClose}>
@@ -161,7 +158,7 @@ const MaintainDetail = ({ show, selectData, handleClose }) => {
 						<Form.Label>자산코드</Form.Label>
 						<Form.Control type="text" value={selectData.assetCode} readOnly />
 						<Form.Label className="pt-2">유지보수 담당자</Form.Label>
-						<Form.Control type="text" value={selectData.maintainBy} readOnly />
+						<Form.Control type="text" value={selectData.repairBy} readOnly />
 						<Form.Label className="pt-2">시작일</Form.Label>
 						<Form.Control
 							type={isEditing ? 'date' : 'text'}
@@ -290,15 +287,12 @@ const MaintainDetail = ({ show, selectData, handleClose }) => {
 							</Button>
 						</>
 					) : (
-						user.role === '[ADMIN]' ||
-						(user.role === '[ASSET_MANAGER]' && (
-							<Button
-								style={{ background: '#5e83bb', border: 'none' }}
-								onClick={handleEditToggle}
-							>
-								수정
-							</Button>
-						))
+						<Button
+							style={{ background: '#5e83bb', border: 'none' }}
+							onClick={handleEditToggle}
+						>
+							수정
+						</Button>
 					)}
 					<Button variant="secondary" onClick={handleClose}>
 						닫기

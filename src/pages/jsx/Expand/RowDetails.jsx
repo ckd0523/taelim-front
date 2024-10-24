@@ -1419,7 +1419,7 @@ const RowDetails = ({
 							</>
 						) : (
 							<>
-								{(user.role === '[ADMIN]' || user.role === '[ASSET_MANAGER]') && (
+								{(user.role === 'ADMIN' || user.role === 'ASSET_MANAGER') && (
 									<>
 										<Button
 											variant="primary"

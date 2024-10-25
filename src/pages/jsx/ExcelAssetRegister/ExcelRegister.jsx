@@ -309,7 +309,7 @@ const ExcelRegister = () => {
 					text: '자산조회화면으로 이동',
 				});
 				setTimeout(() => {
-					window.location.replace('/jsx/AssetPageTest');
+					window.location.replace('/jsx/Expand');
 				}, 1000);
 
 				// 파일 입력 필드 초기화

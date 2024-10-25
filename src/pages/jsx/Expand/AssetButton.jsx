@@ -5,7 +5,7 @@ const AssetButtons = ({ handleButtonClick, handleQrClick, handleExcelClick, rowS
 	const { user } = useAuthContext();
 	return (
 		<Row className="row-cols-auto justify-content-end">
-			{user.role === '[ADMIN]' && (
+			{user.role === 'ADMIN' && (
 				<>
 					<Col>
 						<Button
@@ -26,7 +26,7 @@ const AssetButtons = ({ handleButtonClick, handleQrClick, handleExcelClick, rowS
 					</Col>
 				</>
 			)}
-			{user.role === '[ASSET_MANAGER]' && (
+			{user.role === 'ASSET_MANAGER' && (
 				<>
 					<Col>
 						<Button

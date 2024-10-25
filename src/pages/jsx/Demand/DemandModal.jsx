@@ -54,7 +54,7 @@ const InfoModal = ({ show, handleClose, modalData }) => {
 		if (modalData && modalData.demandType === 'update') {
 			const fetchRowData = async () => {
 				setIsLoading(true);
-				console.log('dddd', modalData);
+				console.log('modaldata', modalData);
 				try {
 					const response = await api.get(`${urlConfig}/list1/${modalData.assetNo}`);
 					const [lowestAsset, modifiedAsset] = response.data;
@@ -154,6 +154,26 @@ const InfoModal = ({ show, handleClose, modalData }) => {
 											</Row>
 											<Row>
 												<Col lg={6}>
+													<Form.Label className="pt-2">
+														자산코드
+													</Form.Label>
+													<Form.Control
+														type="text"
+														value={modalData.assetCode}
+														readOnly
+													/>
+												</Col>
+												<Col lg={6}>
+													<Form.Label className="pt-2">자산명</Form.Label>
+													<Form.Control
+														type="text"
+														value={modalData.assetName}
+														readOnly
+													/>
+												</Col>
+											</Row>
+											<Row>
+												<Col lg={6}>
 													<Form.Label className="pt-2">요청자</Form.Label>
 													<Form.Control
 														type="text"
@@ -180,6 +200,28 @@ const InfoModal = ({ show, handleClose, modalData }) => {
 														readOnly
 													/>
 												</Col>
+
+												<Col lg={6}>
+													<Form.Label className="pt-2">
+														수정사유
+													</Form.Label>
+													<Form.Control
+														type="text"
+														value={modalData.demandReason}
+														readOnly
+													/>
+												</Col>
+												<Col lg={6}>
+													<Form.Label className="pt-2">
+														수정내용
+													</Form.Label>
+													<Form.Control
+														type="text"
+														value={modalData.demandDetail}
+														readOnly
+													/>
+												</Col>
+
 												{!isUnconfirmed && (
 													<Col lg={6}>
 														<Form.Label className="pt-2">
@@ -225,17 +267,19 @@ const InfoModal = ({ show, handleClose, modalData }) => {
 				<Modal.Footer>
 					{isUnconfirmed && (
 						<>
-							<Form>
-								<Form.Group>
-									<Form.Control
-										type="text"
-										value={reason}
-										onChange={handleReasonChange}
-										placeholder={'사유'}
-										size="lg"
-									/>
-								</Form.Group>
-							</Form>
+							<Col lg={12}>
+								<Form>
+									<Form.Group>
+										<Form.Control
+											type="text"
+											value={reason}
+											onChange={handleReasonChange}
+											placeholder={'사유'}
+											size="lg"
+										/>
+									</Form.Group>
+								</Form>
+							</Col>
 							<Button
 								style={{ background: '#5e83bb', border: 'none' }}
 								onClick={() => handleFormSubmit('approve')}
@@ -436,7 +480,7 @@ const ProcessModal = ({ show, handleClose }) => {
 					const response = await api.get(`${urlConfig}/DemandList`);
 					const responseData = response.data;
 					setDemandList(responseData);
-
+					console.log('자산명 :', response.data);
 					// 데이터를 불러온 후 첫 번째 데이터를 기준으로 modalType 설정
 					if (responseData.length > 0) {
 						const firstDemandType = responseData[0].demandHistoryDto.demandType;
@@ -608,6 +652,24 @@ const ProcessModal = ({ show, handleClose }) => {
 							</Row>
 							<Row>
 								<Col lg={6}>
+									<Form.Label className="pt-2">자산코드</Form.Label>
+									<Form.Control
+										type="text"
+										value={demandHistoryDto.assetCode}
+										readOnly
+									/>
+								</Col>
+								<Col lg={6}>
+									<Form.Label className="pt-2">자산명</Form.Label>
+									<Form.Control
+										type="text"
+										value={demandHistoryDto.assetName}
+										readOnly
+									/>
+								</Col>
+							</Row>
+							<Row>
+								<Col lg={6}>
 									<Form.Label className="pt-2">요청자</Form.Label>
 									<Form.Control
 										type="text"
@@ -629,6 +691,24 @@ const ProcessModal = ({ show, handleClose }) => {
 												    ? '거절'
 												    : demandHistoryDto.demandStatus // 다른 상태일 경우 원래 값 유지
 										}
+										readOnly
+									/>
+								</Col>
+							</Row>
+							<Row>
+								<Col lg={6}>
+									<Form.Label className="pt-2">수정사유</Form.Label>
+									<Form.Control
+										type="text"
+										value={demandHistoryDto.demandReason}
+										readOnly
+									/>
+								</Col>
+								<Col lg={6}>
+									<Form.Label className="pt-2">수정내용</Form.Label>
+									<Form.Control
+										type="text"
+										value={demandHistoryDto.demandDetail}
 										readOnly
 									/>
 								</Col>
@@ -681,6 +761,7 @@ const ProcessModal = ({ show, handleClose }) => {
 									/>
 								</Col>
 							</Row>
+
 							<Row>
 								<Col lg={6}>
 									<Form.Label className="pt-2">상태</Form.Label>
@@ -845,8 +926,9 @@ const ActionModal = ({ show, handleClose, actionData, actionType, handleSubmit }
 					console.error('Unknown demand type:', item.demandType);
 			}
 		}
-		handleSubmit(reason); // 사유를 넘겨주면서 처리
+		//handleSubmit(reason); // 사유를 넘겨주면서 처리
 		handleClose(); // 모달 닫기
+		setReason('');
 	};
 
 	return (

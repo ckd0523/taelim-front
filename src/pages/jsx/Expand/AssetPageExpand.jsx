@@ -11,6 +11,7 @@ import { SearchForm } from './AssetSearchBar';
 import { AssetButtons } from './AssetButton';
 import { DisposeModal } from './DisposeModal';
 import { ActionModal } from './AllChangeModal';
+import Swal from 'sweetalert2';
 import api from '@/common/api/authAxios';
 import { useAuthContext } from '@/common';
 
@@ -140,7 +141,17 @@ const AssetPageTest = (props) => {
 
 				// 폐기된 자산을 data 배열에서 제거
 				setData((prevData) => prevData.filter((item) => item.assetCode !== assetCode));
-				fetchData(pageIndex, pageSize); // 현재 페이지 인덱스와 페이지 크기로 데이터 요청
+
+				setTimeout(() => {
+					Swal.fire({
+						icon: 'success',
+						title: `${assetCode} : 자산이 성공적으로 폐기되었습니다.`,
+					});
+
+					// 폐기가 완료되면 해당 페이지로 이동
+					setPageIndex(pageIndex); // 원하는 페이지 번호로 설정 (예: 0은 첫 페이지)
+					fetchData(pageIndex, pageSize); // 현재 페이지 인덱스와 페이지 크기로 데이터 요청
+				}, 500);
 			} else {
 				console.error('자산 폐기 실패:', assetCode);
 			}
@@ -162,7 +173,17 @@ const AssetPageTest = (props) => {
 						item.assetCode === assetCode ? { ...item, isDisposed: true } : item
 					)
 				);
-				fetchData(pageIndex, pageSize); // 현재 페이지 인덱스와 페이지 크기로 데이터 요청
+
+				setTimeout(() => {
+					Swal.fire({
+						icon: 'success',
+						title: `${assetCode} : 자산이 성공적으로 폐기요청되었습니다.`,
+					});
+
+					// 폐기가 완료되면 해당 페이지로 이동
+					setPageIndex(pageIndex); // 원하는 페이지 번호로 설정 (예: 0은 첫 페이지)
+					fetchData(pageIndex, pageSize); // 현재 페이지 인덱스와 페이지 크기로 데이터 요청
+				}, 500);
 			} else {
 				console.error('자산 폐기 요청 실패:', assetCode);
 			}
@@ -178,7 +199,7 @@ const AssetPageTest = (props) => {
 		.map((column) => {
 			if (column.Header === 'Action') {
 				// role에 따라 Action 열 숨기기
-				if (user.role === '[ADMIN]' || user.role === '[ASSET_MANAGER]') {
+				if (user.role === 'ADMIN' || user.role === 'ASSET_MANAGER') {
 					return {
 						...column,
 						Cell: ({ row }) => (
@@ -224,6 +245,30 @@ const AssetPageTest = (props) => {
 		fetchData();
 	};
 
+	// 엑셀 동작 넣기
+	// Excel 버튼 클릭 핸들러
+	const handleExcelClick = async (classification) => {
+		try {
+			const classificationStr = classification ? classification.name : null; // 예를 들어, classification 객체의 name 속성을 사용
+			const response = await api.get('/assets/export', {
+				params: { assetClassification: classificationStr },
+				responseType: 'blob',
+			});
+
+			const blob = new Blob([response.data], { type: 'application/octet-stream' });
+			const url = window.URL.createObjectURL(blob);
+
+			const link = document.createElement('a');
+			link.href = url;
+			link.setAttribute('download', 'assets.xlsx');
+			document.body.appendChild(link);
+			link.click();
+			link.remove();
+		} catch (error) {
+			console.error('파일 다운로드 중 오류 발생:', error);
+		}
+	};
+
 	return (
 		<>
 			<div className="pt-3 px-2">
@@ -239,7 +284,7 @@ const AssetPageTest = (props) => {
 					rowSelect={rowSelect} // 선택된 row 데이터 전달
 					handleButtonClick={handleOpenModal} // 공통 핸들러 전달
 					handleQrClick={QRPrint}
-					handleExcelClick={() => console.log('엑셀 출력 클릭')}
+					handleExcelClick={handleExcelClick}
 				/>
 
 				<Card></Card>
@@ -290,6 +335,9 @@ const AssetPageTest = (props) => {
 				handleClose={() => setShowActModal(false)}
 				actionType={actionType}
 				actionData={rowSelect}
+				fetchData={fetchData} // 데이터를 새로 고치는 함수
+				setPageIndex={setPageIndex} // 페이지 인덱스 업데이트 함수 전달
+				pageSize={pageSize}
 			/>
 		</>
 	);

@@ -28,7 +28,7 @@ import { HistoryTableInvestigation } from './HistoryTableInvestigation';
 import Swal from 'sweetalert2';
 import api from '@/common/api/authAxios';
 import { useAuthContext } from '@/common';
-
+const API_URL = import.meta.env.VITE_BASIC_URL;
 const urlConfig = import.meta.env.VITE_BASIC_URL;
 
 const RowDetails = ({
@@ -55,6 +55,189 @@ const RowDetails = ({
 	);
 
 	const { user } = useAuthContext();
+
+	// 사람이름들 리스트 가져오기
+	//소유자 검색어와 소유자 리스트 상태
+	const [members, setMembers] = useState([]); // 공통 멤버 리스트 상태 (소유자, 보안담당자, 사용자)
+	const [selectedMemberID, setSelectedMemberID] = useState(''); // 선택된 멤버 ID
+	const [selectedMemberName, setSelectedMemberName] = useState(''); // 선택된 멤버 이름
+	const [selectedRole, setSelectedRole] = useState(''); // 선택된 역할 ('owner', 'user', 'securityManager')
+	const [showMemberModal, setShowMemberModal] = useState(false); // 모달 열림/닫힘 상태
+
+	const [owners, setOwners] = useState([]); // 소유자 리스트
+	const [assetOwnerID, setAssetOwnerID] = useState(''); //실제 들어갈 소유자 ID값
+	const [assetOwner, setAssetOwner] = useState(''); //보여지는 소유자 이름
+	const [showOwnerModal, setShowOwnerModal] = useState(false); // 소유자 선택 모달 상태
+	const [selectedOwner, setSelectedOwner] = useState(null); // 선택된 소유자
+
+	const assetOwnerChange = (e) => {
+		setAssetOwner(e.target.value);
+		// 소유자 검색어에 따라 소유자 검색
+		if (e.target.value) {
+			handleOwnerSearch(e.target.value); // 소유자 검색 호출
+		} else {
+			setOwners([]); // 입력이 비었으면 리스트 초기화
+		}
+	};
+
+	// 소유자 검색 함수
+	const handleOwnerSearch = async (searchTerm) => {
+		try {
+			const response = await api.get(`${API_URL}/user/search`, {
+				params: { name: searchTerm },
+			});
+			setOwners(response.data); // 소유자 리스트 업데이트
+		} catch (error) {
+			console.error('소유자 검색 중 오류 발생:', error);
+		}
+	};
+	// 소유자 선택 핸들러
+	const handleSelectOwner = (owner) => {
+		setSelectedOwner(owner); // 선택된 소유자 저장
+		setAssetOwner(owner.fullname); // 선택된 소유자의 이름을 보여주기 위해 설정
+		setAssetOwnerID(owner.id); // 실제로 저장될 소유자 ID 설정
+		setFormData((prevData) => ({
+			...prevData,
+			assetOwnerId: owner.id, // 실제 데이터베이스에 저장될 ID
+			assetOwner: owner.fullname, // 조회 시 보여줄 이름
+		})); // 소유자 이름 설정se
+		setOwners([]); // 선택 후 리스트 초기화
+		setShowOwnerModal(false); // 모달 닫기
+	};
+
+	const [users, setUsers] = useState([]); // 소유자 리스트
+	const [assetUserID, setAssetUserID] = useState(''); //실제 들어갈 소유자 ID값
+	const [assetUser, setAssetUser] = useState(''); //보여지는 소유자 이름
+	const [showUserModal, setShowUserModal] = useState(false); // 소유자 선택 모달 상태
+	const [selectedUser, setSelectedUser] = useState(null); // 선택된 소유자
+
+	const assetUserChange = (e) => {
+		setAssetUser(e.target.value);
+		// 소유자 검색어에 따라 소유자 검색
+		if (e.target.value) {
+			handleUserSearch(e.target.value); // 소유자 검색 호출
+		} else {
+			setUsers([]); // 입력이 비었으면 리스트 초기화
+		}
+	};
+
+	// 소유자 검색 함수
+	const handleUserSearch = async (searchTerm) => {
+		try {
+			const response = await api.get(`${API_URL}/user/search`, {
+				params: { name: searchTerm },
+			});
+			setUsers(response.data); // 소유자 리스트 업데이트
+		} catch (error) {
+			console.error('사용자 검색 중 오류 발생:', error);
+		}
+	};
+	// 소유자 선택 핸들러
+	const handleSelectUser = (user) => {
+		setSelectedUser(user); // 선택된 소유자 저장
+		setAssetUser(user.fullname);
+		setAssetUserID(user.id);
+		setFormData((prevData) => ({
+			...prevData,
+			assetUserId: user.id, // or owner.id depending on the backend field requirement
+			assetUser: user.fullname,
+		})); // 소유자 이름 설정se
+		setUsers([]); // 선택 후 리스트 초기화
+		setShowUserModal(false); // 모달 닫기
+	};
+
+	const [securityManagers, setSecurityManagers] = useState([]);
+	const [assetSecurityManagerID, setAssetSecurityManagerID] = useState('');
+	const [assetSecurityManager, setAssetSecurityManager] = useState('');
+	const [showSecurityManagerModal, setShowSecurityManagerModal] = useState(false); // 소유자 선택 모달 상태
+	const [selectedSecurityManager, setSelectedSecurityManager] = useState(null); // 선택된 소유자
+
+	const assetSecurityManagerChange = (e) => {
+		setAssetSecurityManager(e.target.value);
+		// 소유자 검색어에 따라 소유자 검색
+		if (e.target.value) {
+			handleSecurityManagerSearch(e.target.value); // 소유자 검색 호출
+		} else {
+			setSecurityManagers([]); // 입력이 비었으면 리스트 초기화
+		}
+	};
+
+	// 소유자 검색 함수
+	const handleSecurityManagerSearch = async (searchTerm) => {
+		try {
+			const response = await api.get(`${API_URL}/user/search`, {
+				params: { name: searchTerm },
+			});
+			setSecurityManagers(response.data); // 소유자 리스트 업데이트
+		} catch (error) {
+			console.error('소유자 검색 중 오류 발생:', error);
+		}
+	};
+
+	const handleSelectSecurityManager = (securityManager) => {
+		setSelectedSecurityManager(securityManager);
+		setAssetSecurityManager(securityManager.fullname);
+		setAssetSecurityManagerID(securityManager.id);
+		setFormData((prevData) => ({
+			...prevData,
+			assetSecurityManagerId: securityManager.id,
+			assetSecurityManager: securityManager.fullname,
+		}));
+		setSecurityManagers([]);
+		setShowSecurityManagerModal(false);
+	};
+
+	// // 역할에 따라 상태를 설정하는 함수
+	// const handleRoleChange = (role, value) => {
+	// 	if (role === 'owner') {
+	// 		setAssetOwner(value);
+	// 	} else if (role === 'user') {
+	// 		setAssetUser(value);
+	// 	} else if (role === 'securityManager') {
+	// 		setAssetSecurityManager(value);
+	// 	}
+	// };
+
+	// const [assetOwner, setAssetOwner] = useState(''); // 소유자 이름 상태
+	// const [assetUser, setAssetUser] = useState(''); // 사용자 이름 상태
+	// const [assetSecurityManager, setAssetSecurityManager] = useState(''); // 보안담당자 이름 상태
+
+	//  // 멤버 입력 변경 핸들러 (검색 호출)
+	//  const handleMemberChange = (e) => {
+	//     handleRoleChange(selectedRole, e.target.value); // 역할별로 입력 상태 반영
+	//     if (e.target.value) {
+	//         handleMemberSearch(e.target.value); // 검색 호출
+	//     } else {
+	//         setMembers([]); // 입력이 비었으면 리스트 초기화
+	//     }
+	// };
+
+	// // 멤버 검색 함수
+	// const handleMemberSearch = async (searchTerm) => {
+	//     try {
+	//         const response = await api.get(`${API_URL}/user/search`, {
+	//             params: { name: searchTerm },
+	//         });
+	//         setMembers(response.data); // 검색 결과 업데이트
+	//     } catch (error) {
+	//         console.error('멤버 검색 중 오류 발생:', error);
+	//     }
+	// };
+
+	// // 멤버 선택 핸들러 (모달에서 선택)
+	// const handleSelectMember = (member) => {
+	//     handleRoleChange(selectedRole, member.fullname); // 선택된 멤버 이름 설정
+	//     setSelectedMemberID(member.id); // 선택된 멤버 ID 설정
+	//     setMembers([]); // 리스트 초기화
+	//     setShowModal(false); // 모달 닫기
+	// };
+
+	// // 모달 열기
+	// const openModalForRole = (role) => {
+	//     setSelectedRole(role); // 역할 설정 (소유자, 사용자, 보안담당자)
+	//     setShowModal(true); // 모달 열기
+	// };
+	// 소유자 입력 변경 핸들러
 
 	// assetCode와 initialFormData가 변경될 때마다 formData를 업데이트
 	useEffect(() => {
@@ -119,6 +302,7 @@ const RowDetails = ({
 		setFormData((prevData) => ({
 			...prevData,
 			[key]: value, // 해당 키의 값을 업데이트
+			updateBy: user.id, // 현재 접속자 ID를 updateBy에 저장
 		}));
 	};
 	// 모달 닫기 처리
@@ -575,6 +759,66 @@ const RowDetails = ({
 						<option value="트럭">트럭</option>
 						<option value="밴">밴</option>
 					</Form.Select>
+				);
+			}
+
+			// 소유자 필드에 대해 수정모드인 경우 별도로 렌더링
+			if (key === 'assetUser') {
+				return (
+					<Form.Group className="mb-1">
+						<Form.Control
+							type="text"
+							value={selectedUser ? selectedUser.fullname : formData.assetUser || ''} // 선택된 소유자의 fullname 또는 기존 값 사용
+							disabled // 입력 필드 비활성화
+							style={{ textAlign: 'center' }} // 텍스트 가운데 정렬
+						/>
+						<Button variant="secondary" onClick={() => setShowUserModal(true)}>
+							사용자 선택
+						</Button>
+					</Form.Group>
+				);
+			}
+
+			// 소유자 필드에 대해 수정모드인 경우 별도로 렌더링
+			if (key === 'assetOwner') {
+				return (
+					<Form.Group className="mb-1">
+						<Form.Control
+							type="text"
+							value={
+								selectedOwner ? selectedOwner.fullname : formData.assetOwner || ''
+							} // 선택된 소유자의 fullname 또는 기존 값 사용
+							disabled // 입력 필드 비활성화
+							style={{ textAlign: 'center' }} // 텍스트 가운데 정렬
+						/>
+						<Button variant="secondary" onClick={() => setShowOwnerModal(true)}>
+							소유자 선택
+						</Button>
+					</Form.Group>
+				);
+			}
+
+			// 소유자 필드에 대해 수정모드인 경우 별도로 렌더링
+			if (key === 'assetSecurityManager') {
+				return (
+					<Form.Group className="mb-1">
+						<Form.Control
+							type="text"
+							value={
+								selectedSecurityManager
+									? selectedSecurityManager.fullname
+									: formData.assetSecurityManager || ''
+							} // 선택된 소유자의 fullname 또는 기존 값 사용
+							disabled // 입력 필드 비활성화
+							style={{ textAlign: 'center' }} // 텍스트 가운데 정렬
+						/>
+						<Button
+							variant="secondary"
+							onClick={() => setShowSecurityManagerModal(true)}
+						>
+							보안담당자 선택
+						</Button>
+					</Form.Group>
 				);
 			}
 			// select 외는 text input 설정
@@ -1060,16 +1304,14 @@ const RowDetails = ({
 									<Form.Control type="text" value="수정" readOnly />
 								</Form.Group>
 								<Form.Group className="mb-3">
-									<Form.Label>수정사유</Form.Label>
-									<Form.Select
+									<Form.Label>수정 사유</Form.Label>
+									<Form.Control
+										type="text"
 										value={formData.updateReason}
 										onChange={(e) => handleInputChange(e, 'updateReason')}
-									>
-										<option value="사유 1">사유 1</option>
-										<option value="사유 2">사유 2</option>
-										<option value="사유 3">사유 3</option>
-									</Form.Select>
+									/>
 								</Form.Group>
+
 								<Form.Group className="mb-3">
 									<Form.Label>수정내용</Form.Label>
 									<Form.Control
@@ -1085,12 +1327,12 @@ const RowDetails = ({
 							<Button variant="secondary" onClick={handleModalClose}>
 								취소
 							</Button>
-							{user.role === '[ASSET_MANAGER]' && (
+							{user.role === 'ASSET_MANAGER' && (
 								<Button variant="primary" onClick={handleSubmit1}>
 									수정 요청
 								</Button>
 							)}
-							{user.role === '[ADMIN]' && (
+							{user.role === 'ADMIN' && (
 								<Button variant="primary" onClick={handleSubmit}>
 									수정
 								</Button>
@@ -1399,6 +1641,138 @@ const RowDetails = ({
 				</div>
 			</div>
 
+			<Modal show={showOwnerModal} onHide={() => setShowOwnerModal(false)}>
+				<Modal.Header closeButton>
+					<Modal.Title>소유자 선택</Modal.Title>
+				</Modal.Header>
+				<Modal.Body>
+					<Form.Control
+						type="text"
+						placeholder="소유자 이름으로 검색..."
+						onChange={assetOwnerChange} // 소유자 검색 핸들러
+					/>
+					{owners.length > 0 && (
+						<div className="owner-list">
+							{owners.map((owner) => (
+								<Form.Check
+									key={owner.id}
+									type="radio" // 라디오 버튼으로 선택
+									id={`owner-${owner.id}`}
+									label={`${owner.fullname} (${owner.department})`}
+									name="assetOwner" // 같은 그룹으로 묶기
+									onChange={() => setSelectedOwner(owner)} // 선택 시 상태 업데이트
+								/>
+							))}
+						</div>
+					)}
+				</Modal.Body>
+				<Modal.Footer>
+					<Button
+						variant="primary"
+						onClick={() => {
+							if (selectedOwner) {
+								handleSelectOwner(selectedOwner); // 선택된 소유자를 적용
+							}
+							setShowOwnerModal(false); // 모달 닫기
+						}}
+					>
+						확인
+					</Button>
+					<Button variant="secondary" onClick={() => setShowOwnerModal(false)}>
+						닫기
+					</Button>
+				</Modal.Footer>
+			</Modal>
+
+			<Modal show={showUserModal} onHide={() => setShowUserModal(false)}>
+				<Modal.Header closeButton>
+					<Modal.Title>사용자 선택</Modal.Title>
+				</Modal.Header>
+				<Modal.Body>
+					<Form.Control
+						type="text"
+						placeholder="사용자 이름으로 검색..."
+						onChange={assetUserChange} // 소유자 검색 핸들러
+					/>
+					{users.length > 0 && (
+						<div className="user-list">
+							{users.map((user) => (
+								<Form.Check
+									key={user.id}
+									type="radio" // 라디오 버튼으로 선택
+									id={`user-${user.id}`}
+									label={`${user.fullname} (${user.department})`}
+									name="assetUser" // 같은 그룹으로 묶기
+									onChange={() => setSelectedUser(user)} // 선택 시 상태 업데이트
+								/>
+							))}
+						</div>
+					)}
+				</Modal.Body>
+				<Modal.Footer>
+					<Button
+						variant="primary"
+						onClick={() => {
+							if (selectedUser) {
+								handleSelectUser(selectedUser); // 선택된 소유자를 적용
+							}
+							setShowUserModal(false); // 모달 닫기
+						}}
+					>
+						확인
+					</Button>
+					<Button variant="secondary" onClick={() => setShowUserModal(false)}>
+						닫기
+					</Button>
+				</Modal.Footer>
+			</Modal>
+
+			<Modal
+				show={showSecurityManagerModal}
+				onHide={() => setShowSecurityManagerModal(false)}
+			>
+				<Modal.Header closeButton>
+					<Modal.Title>보안담당자 선택</Modal.Title>
+				</Modal.Header>
+				<Modal.Body>
+					<Form.Control
+						type="text"
+						placeholder="보안담당자 이름으로 검색..."
+						onChange={assetSecurityManagerChange} // 소유자 검색 핸들러
+					/>
+					{securityManagers.length > 0 && (
+						<div className="securityManager-list">
+							{securityManagers.map((securityManager) => (
+								<Form.Check
+									key={securityManager.id}
+									type="radio" // 라디오 버튼으로 선택
+									id={`securityManager-${securityManager.id}`}
+									label={`${securityManager.fullname} (${securityManager.department})`}
+									name="assetSecurityManger" // 같은 그룹으로 묶기
+									onChange={() => setSelectedSecurityManager(securityManager)} // 선택 시 상태 업데이트
+								/>
+							))}
+						</div>
+					)}
+				</Modal.Body>
+				<Modal.Footer>
+					<Button
+						variant="primary"
+						onClick={() => {
+							if (selectedSecurityManager) {
+								handleSelectSecurityManager(selectedSecurityManager); // 선택된 소유자를 적용
+							}
+							setShowSecurityManagerModal(false); // 모달 닫기
+						}}
+					>
+						확인
+					</Button>
+					<Button variant="secondary" onClick={() => setShowSecurityManagerModal(false)}>
+						닫기
+					</Button>
+				</Modal.Footer>
+			</Modal>
+
 			{/* 버튼 */}
 			<div>
 				<Row className="mt-3">
@@ -1419,7 +1793,7 @@ const RowDetails = ({
 							</>
 						) : (
 							<>
-								{(user.role === '[ADMIN]' || user.role === '[ASSET_MANAGER]') && (
+								{(user.role === 'ADMIN' || user.role === 'ASSET_MANAGER') && (
 									<>
 										<Button
 											variant="primary"

@@ -8,6 +8,7 @@ import api from '@/common/api/authAxios';
 import { getClassificationColumns } from './RowDetailColumn';
 import { columns, columns1, columns2 } from './ColumnsSet';
 import Accordion from 'react-bootstrap/Accordion';
+import MaintainRegister from '@/pages/jsx/Maintain';
 
 const urlConfig = import.meta.env.VITE_BASIC_URL;
 
@@ -321,6 +322,12 @@ const Test = () => {
 					<QuickAccess quickAccessFiles={USERMANUAL} />
 				</Col>
 			</Row>
+
+			<MaintainRegister
+				assetCode={commonData.assetCode}
+				assetName={commonData.assetName}
+				assetNo={commonData.assetNo}
+			/>
 
 			{/* Tabs1 컴포넌트 */}
 			{/* <Row>

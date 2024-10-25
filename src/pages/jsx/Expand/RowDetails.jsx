@@ -133,15 +133,16 @@ const RowDetails = ({
 		}
 	};
 	// 소유자 선택 핸들러
-	const handleSelectUser = (user) => {
-		setSelectedUser(user); // 선택된 소유자 저장
-		setAssetUser(user.fullname);
-		setAssetUserID(user.id);
+	const handleSelectUser = (realUser) => {
+		setSelectedUser(realUser); // 선택된 소유자 저장
+		setAssetUser(realUser.fullname);
+		setAssetUserID(realUser.id);
 		setFormData((prevData) => ({
 			...prevData,
-			assetUserId: user.id, // or owner.id depending on the backend field requirement
-			assetUser: user.fullname,
+			assetUserId: realUser.id, // or owner.id depending on the backend field requirement
+			assetUser: realUser.fullname,
 		})); // 소유자 이름 설정se
+
 		setUsers([]); // 선택 후 리스트 초기화
 		setShowUserModal(false); // 모달 닫기
 	};
@@ -187,57 +188,7 @@ const RowDetails = ({
 		setShowSecurityManagerModal(false);
 	};
 
-	// // 역할에 따라 상태를 설정하는 함수
-	// const handleRoleChange = (role, value) => {
-	// 	if (role === 'owner') {
-	// 		setAssetOwner(value);
-	// 	} else if (role === 'user') {
-	// 		setAssetUser(value);
-	// 	} else if (role === 'securityManager') {
-	// 		setAssetSecurityManager(value);
-	// 	}
-	// };
-
-	// const [assetOwner, setAssetOwner] = useState(''); // 소유자 이름 상태
-	// const [assetUser, setAssetUser] = useState(''); // 사용자 이름 상태
-	// const [assetSecurityManager, setAssetSecurityManager] = useState(''); // 보안담당자 이름 상태
-
-	//  // 멤버 입력 변경 핸들러 (검색 호출)
-	//  const handleMemberChange = (e) => {
-	//     handleRoleChange(selectedRole, e.target.value); // 역할별로 입력 상태 반영
-	//     if (e.target.value) {
-	//         handleMemberSearch(e.target.value); // 검색 호출
-	//     } else {
-	//         setMembers([]); // 입력이 비었으면 리스트 초기화
-	//     }
-	// };
-
-	// // 멤버 검색 함수
-	// const handleMemberSearch = async (searchTerm) => {
-	//     try {
-	//         const response = await api.get(`${API_URL}/user/search`, {
-	//             params: { name: searchTerm },
-	//         });
-	//         setMembers(response.data); // 검색 결과 업데이트
-	//     } catch (error) {
-	//         console.error('멤버 검색 중 오류 발생:', error);
-	//     }
-	// };
-
-	// // 멤버 선택 핸들러 (모달에서 선택)
-	// const handleSelectMember = (member) => {
-	//     handleRoleChange(selectedRole, member.fullname); // 선택된 멤버 이름 설정
-	//     setSelectedMemberID(member.id); // 선택된 멤버 ID 설정
-	//     setMembers([]); // 리스트 초기화
-	//     setShowModal(false); // 모달 닫기
-	// };
-
-	// // 모달 열기
-	// const openModalForRole = (role) => {
-	//     setSelectedRole(role); // 역할 설정 (소유자, 사용자, 보안담당자)
-	//     setShowModal(true); // 모달 열기
-	// };
-	// 소유자 입력 변경 핸들러
+	// 나중에 합칠수있으면 여기 밑으로
 
 	// assetCode와 initialFormData가 변경될 때마다 formData를 업데이트
 	useEffect(() => {
@@ -295,6 +246,16 @@ const RowDetails = ({
 			}
 		}
 	};
+
+	// 무조건적으로 updateBy 담기기위해서
+	useEffect(() => {
+		if (user && user.id) {
+			setFormData((prevData) => ({
+				...prevData,
+				updateBy: user.id,
+			}));
+		}
+	}, [user]);
 
 	// formData를 변경하는 함수
 	const handleInputChange = (event, key) => {
@@ -553,7 +514,7 @@ const RowDetails = ({
 				);
 			}
 			// useState select 설정
-			if (key === 'usestate') {
+			if (key === 'useStated') {
 				return (
 					<Form.Select
 						value={formData[key] || ''}
@@ -713,8 +674,8 @@ const RowDetails = ({
 						onChange={(e) => handleInputChange(e, key)}
 						style={{ textAlign: 'center' }}
 					>
-						<option value="NEW_MATERIALS">신소재</option>
-						<option value="INCUBATION">인큐베이션</option>
+						<option value="신소재">신소재</option>
+						<option value="인큐베이션">인큐베이션</option>
 					</Form.Select>
 				);
 			}
@@ -726,8 +687,8 @@ const RowDetails = ({
 						onChange={(e) => handleInputChange(e, key)}
 						style={{ textAlign: 'center' }}
 					>
-						<option value="COMPOSITE_MATERIALS">복합재</option>
-						<option value="CORPORATE_VENTURE">사내벤처</option>
+						<option value="복합재">복합재</option>
+						<option value="사내벤처">사내벤처</option>
 					</Form.Select>
 				);
 			}
@@ -954,7 +915,7 @@ const RowDetails = ({
 							</thead>
 							<tbody>
 								<tr>
-									<td>{renderCellContent('usestate')}</td>
+									<td>{renderCellContent('useStated')}</td>
 									<td>{renderCellContent('operationStatus')}</td>
 									<td>{renderCellContent('introducedDate')}</td>
 									<td style={{ width: '80px' }}>

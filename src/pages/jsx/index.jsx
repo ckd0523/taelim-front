@@ -74,7 +74,16 @@ export default function jsx() {
 					}
 				/>
 				<Route path="Crawling" element={<Crawler />} />
-				<Route path=":assetCode" element={<ProductDetailsEcom />} />
+
+				<Route
+					path=":assetCode"
+					element={checkPermission(['ADMIN', 'ASSET_MANAGER', 'USER']) ? (
+						<ProductDetailsEcom />
+					) : (
+						<Navigate to="/jsx/dashboard" />
+					)
+					}
+				/>
 
 				{/* 백업 내역 - ADMIN만 접근 가능 */}
 				<Route

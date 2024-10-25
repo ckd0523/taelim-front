@@ -62,6 +62,15 @@ const TotalAssetRatio = () => {
 						const total = tooltipItem.dataset.data.reduce((acc, val) => acc + val, 0);
 						const value = tooltipItem.raw; // 각 데이터 값
 						const percentage = (value / total * 100).toFixed(2); // 퍼센트 계산
+
+						// 각 항목의 각도 계산 예시
+						//const total = data.datasets[0].data.reduce((acc, val) => acc + val, 0);
+						// const angles = data.datasets[0].data.map((value) => (value / total) * 360);
+
+						// angles.forEach((angle, index) => {
+						// 	console.log(`${data.labels[index]}: ${angle.toFixed(2)}도`);
+						// });
+
 						return `${value}개 (${percentage}%)`; // 툴팁에 표시할 내용
 					},
 				},

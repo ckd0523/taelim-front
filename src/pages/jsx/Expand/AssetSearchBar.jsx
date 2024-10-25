@@ -103,6 +103,13 @@ const SearchForm = ({ onSearch }) => {
 		setSelectedDepartment(selectedOption1);
 	};
 
+	// 날짜 포맷 함수
+	const formatDate = (date) => {
+		if (!date) return null;
+		const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
+		return new Date(date).toLocaleDateString('fr-CA', options).replace(/-/g, '-');
+	};
+
 	// 검색 버튼 클릭시 부모로 검색 조건 전달
 	const handleSearchClick = () => {
 		onSearch({
@@ -111,7 +118,8 @@ const SearchForm = ({ onSearch }) => {
 			assetUser,
 			assetLocationEnum: selectedAssetLocation?.value || '', // 선택된 자산 위치
 			departmentEnum: selectedDepartment?.value || '', // 선택된 부서
-			introducedDate,
+			startDate: formatDate(selectedStartDate), // 선택한 시작 날짜 포맷
+			endDate: formatDate(selectedEndDate), // 선택한 종료 날짜 포맷
 		});
 	};
 
@@ -207,8 +215,8 @@ const SearchForm = ({ onSearch }) => {
 												<CustomDatePicker
 													hideAddon={true}
 													dateFormat="yyyy-MM-dd"
-													value={introducedDate}
-													onChange={(date) => setSelectedStartDate(date)}
+													value={selectedStartDate}
+													onChange={(date) => setSelectedStartDate(date)} // 시작 날짜 상태 업데이트
 												/>
 											</Col>
 											<Col
@@ -221,8 +229,8 @@ const SearchForm = ({ onSearch }) => {
 												<CustomDatePicker
 													hideAddon={true}
 													dateFormat="yyyy-MM-dd"
-													value={introducedDate}
-													onChange={(date) => setSelectedEndDate(date)}
+													value={selectedEndDate}
+													onChange={(date) => setSelectedEndDate(date)} // 종료 날짜 상태 업데이트
 												/>
 											</Col>
 											<Col>

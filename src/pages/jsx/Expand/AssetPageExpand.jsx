@@ -32,12 +32,11 @@ const AssetPageTest = (props) => {
 	const [pageSize, setPageSize] = useState(10); // 한 페이지당 항목 수
 	const [searchParams, setSearchParams] = useState({
 		assetName: '',
-		assetLocationString: '',
 		assetLocationEnum: '',
 		assetUser: '',
-		departmentString: '',
 		departmentEnum: '',
 		introducedDate: '',
+		assetClassification: null, // 분류 추가
 	}); // 검색 필터 상태 관리
 
 	// 정렬 상태 관리
@@ -82,12 +81,11 @@ const AssetPageTest = (props) => {
 				const response = await api.get(`${urlConfig}/getAssetSearch`, {
 					params: {
 						assetName: searchParams.assetName || null,
-						assetLocationString: searchParams.assetLocationString || null,
 						assetLocationEnum: searchParams.assetLocationEnum || null,
 						assetUser: searchParams.assetUser || null,
-						departmentString: searchParams.departmentString || null,
 						departmentEnum: searchParams.departmentEnum || null,
-						introducedDate: searchParams.introducedDate || null,
+						startDate: searchParams.startDate || null, // 선택한 시작 날짜
+						endDate: searchParams.endDate || null, // 선택한 종료 날짜
 						assetClassification: classification || null, // classification 전달
 						page: pageIndex,
 						size: pageSize,

@@ -98,12 +98,6 @@ const MENU_ITEMS = [
 				parentKey: 'check',
 			},
 			{
-				key: 'ds-Expand-SOFTWARE',
-				label: '소프트에어',
-				url: '/jsx/Expand/SOFTWARE',
-				parentKey: 'check',
-			},
-			{
 				key: 'ds-Expand-FUR',
 				label: '가구',
 				url: '/jsx/Expand/FURNITURE',

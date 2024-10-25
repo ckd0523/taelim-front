@@ -202,9 +202,9 @@ const Test = () => {
 
 			<Row className="mb-3">
 				<Col xs={12}>
-					<Card className="p-3">
+					<Card>
 						<Card.Body>
-							<Row className="g-3">
+							<Row>
 								<Col xs={12}>
 									<p>
 										<strong>자산 이름:</strong> {commonData.assetName}

@@ -107,7 +107,7 @@ const ExcelRegister = () => {
 		소유자: 'assetOwner',
 		보안담당자: 'assetSecurityManager',
 		비고: 'note',
-		사용상태: 'usestate',
+		사용상태: 'useStated',
 		구매비용: 'purchaseCost',
 		구매날짜: 'purchaseDate',
 		내용연수: 'usefulLife',

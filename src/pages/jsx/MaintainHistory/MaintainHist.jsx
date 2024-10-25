@@ -6,7 +6,7 @@ import { useState } from 'react';
 import { useEffect } from 'react';
 import './Searchbar.css';
 import api from '@/common/api/authAxios';
-
+import classNames from 'classnames';
 const columns = [
 	{
 		Header: '번호',
@@ -342,17 +342,51 @@ const MaintainHist = () => {
 				<Col>
 					<Card className="card">
 						<CardBody className="card-body">
-							<Table3
-								theadClass="table-dark"
-								tableClass="border-black"
-								sizePerPageList={sizePerPageList}
-								columns={columns}
-								data={searchData}
-								isSortable={true}
-								pagination={true}
-								pageSize={5}
-								onRowClick={handleClick}
-							/>
+							{searchData.length > 0 ? (
+								<Table3
+									theadClass="table-dark"
+									tableClass="border-black"
+									sizePerPageList={sizePerPageList}
+									columns={columns}
+									data={searchData}
+									isSortable={true}
+									pagination={true}
+									pageSize={5}
+									onRowClick={handleClick}
+								/>
+							) : (
+								<div className="table-responsive">
+									<table
+										className={classNames('table table-centered react-table')}
+									>
+										<thead style={{ background: '#313a46' }}>
+											<tr>
+												<th style={{ color: 'white' }}>번호</th>
+												<th style={{ color: 'white' }}>자산코드</th>
+												<th style={{ color: 'white' }}>자산명</th>
+												<th style={{ color: 'white' }}>시작일자</th>
+												<th style={{ color: 'white' }}>종료일자</th>
+												<th style={{ color: 'white' }}>유지보수자</th>
+												<th style={{ color: 'white' }}>상태</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr>
+												<td colSpan="8" className="text-center">
+													<div
+														className="alert alert-warning"
+														role="alert"
+													>
+														<strong>데이터가 없습니다!</strong>
+														<br />
+														폐기이력 데이터가 없습니다.
+													</div>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							)}
 						</CardBody>
 					</Card>
 				</Col>

@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import { useTable, usePagination } from 'react-table';
 import { Row, Col, Card, Button, Form, Modal } from 'react-bootstrap';
-import { PageBreadcrumb, Form as RHForm } from '@/components';
+import { PageBreadcrumb, Form as RHForm, Spinner } from '@/components';
 //import axios from 'axios';
 import { Pagination } from './PaginationNew';
 import { baseColumns } from './ColumnsSet'; // table의 column 설정
@@ -292,29 +292,31 @@ const AssetPageTest = (props) => {
 				<RHForm>
 					<Card>
 						<Card.Body>
-							<Table
-								columns={finalColumns}
-								data={data}
-								pageSize={10}
-								isSortable={true}
-								isSelectable={true}
-								pagination={true}
-								theadClass="table-dark"
-								searchBoxClass="mb-2"
-								isExpandable={true} // 확장 가능
-								setRowSelect={setRowSelect}
-								fetchData={fetchData} // 데이터를 새로 고치는 함수
-								setPageIndex={setPageIndex} // 페이지 인덱스 업데이트 함수 전달
-							/>
-							{/* 페이지네이션 */}
-							<Pagination
-								pageIndex={pageIndex}
-								pageCount={pageCount}
-								gotoPage={setPageIndex}
-								pageSize={pageSize}
-								setPageSize={setPageSize}
-								sizePerPageList={[10]}
-							/>
+							<>
+								<Table
+									columns={finalColumns}
+									data={data}
+									pageSize={10}
+									isSortable={true}
+									isSelectable={true}
+									pagination={true}
+									theadClass="table-dark"
+									searchBoxClass="mb-2"
+									isExpandable={true} // 확장 가능
+									setRowSelect={setRowSelect}
+									fetchData={fetchData} // 데이터를 새로 고치는 함수
+									setPageIndex={setPageIndex} // 페이지 인덱스 업데이트 함수 전달
+								/>
+								{/* 페이지네이션 */}
+								<Pagination
+									pageIndex={pageIndex}
+									pageCount={pageCount}
+									gotoPage={setPageIndex}
+									pageSize={pageSize}
+									setPageSize={setPageSize}
+									sizePerPageList={[10]}
+								/>
+							</>
 						</Card.Body>
 					</Card>
 				</RHForm>

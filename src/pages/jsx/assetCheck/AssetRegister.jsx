@@ -44,7 +44,7 @@ const AssetRegister = () => {
 		assetSecurityManager: '',
 		quantity: '',
 		ownership: '',
-		usestate: null,
+		useStated: null,
 		operationStatus: null,
 		introducedDate: null,
 		confidentiality: '',

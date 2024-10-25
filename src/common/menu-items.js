@@ -177,7 +177,7 @@ const MENU_ITEMS = [
 		key: 'ds-Crawling',
 		label: 'Web-Search',
 		url: '/jsx/Crawling',
-		icon: ' ri-search-line',
+		icon: 'ri-search-line',
 	},
 	{
 		key: 'ds-SystemSetting',

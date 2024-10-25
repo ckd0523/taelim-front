@@ -9,7 +9,7 @@ import api from '@/common/api/authAxios';
 
 import { InfoModal } from './UpdateHistoryModal';
 import { SearchForm } from './UpdateSearchBar';
-
+import classNames from 'classnames';
 //import Select from 'react-select';
 
 const urlConfig = import.meta.env.VITE_BASIC_URL;
@@ -93,22 +93,55 @@ const UpdateHistory = () => {
 				<RHForm className="pt-3">
 					<Card>
 						<Card.Body>
-							<Table
-								columns={columns(setModalData, setSelectedAssetNo)}
-								data={UpdateList}
-								pageSize={10}
-								//isExpandable={true}
-								isSortable={true}
-								pagination={true}
-								//isSelectable={true}
-								theadClass="table-dark"
-								tableClass="border-black"
-								searchBoxClass="mb-2"
-								onRowClick={() => {}}
-								setModalData={setModalData}
-								setSelectedAssetNo={setSelectedAssetNo}
-								setShowModal={setShowModal}
-							/>
+							{UpdateList.length > 0 ? (
+								<Table
+									columns={columns(setModalData, setSelectedAssetNo)}
+									data={UpdateList}
+									pageSize={10}
+									//isExpandable={true}
+									isSortable={true}
+									pagination={true}
+									//isSelectable={true}
+									theadClass="table-dark"
+									tableClass="border-black"
+									searchBoxClass="mb-2"
+									onRowClick={() => {}}
+									setModalData={setModalData}
+									setSelectedAssetNo={setSelectedAssetNo}
+									setShowModal={setShowModal}
+								/>
+							) : (
+								<div className="table-responsive">
+									<table
+										className={classNames('table table-centered react-table')}
+									>
+										<thead style={{ background: '#313a46' }}>
+											<tr>
+												<th style={{ color: 'white' }}>번호</th>
+												<th style={{ color: 'white' }}>자산코드</th>
+												<th style={{ color: 'white' }}>자산명</th>
+												<th style={{ color: 'white' }}>수정일자</th>
+												<th style={{ color: 'white' }}>수정요청자</th>
+												<th style={{ color: 'white' }}>수정사유</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr>
+												<td colSpan="8" className="text-center">
+													<div
+														className="alert alert-warning"
+														role="alert"
+													>
+														<strong>데이터가 없습니다!</strong>
+														<br />
+														수정이력 데이터가 없습니다.
+													</div>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							)}
 						</Card.Body>
 					</Card>
 				</RHForm>

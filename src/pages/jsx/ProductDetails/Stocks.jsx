@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Table } from '@/components/table';
 import Tabs1 from './Tab';
 import QuickAccess from '@/pages/apps/FileManager/QuickAccess';
-import { Row, Col } from 'react-bootstrap';
+import { Row, Col, Alert } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
 import api from '@/common/api/authAxios';
 const urlConfig = import.meta.env.VITE_BASIC_URL;
@@ -144,7 +144,15 @@ const Stocks = () => {
 	}
 
 	if (error) {
-		return <div>Error: {error.message}</div>;
+		return (
+			<Alert
+				variant="danger"
+				className="mb-0 text-center d-flex align-items-center justify-content-center"
+				style={{ height: '100%' }}
+			>
+				해당자산을 찾을수 없습니다.
+			</Alert>
+		);
 	}
 
 	const USERMANUAL = [

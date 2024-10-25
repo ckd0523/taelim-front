@@ -9,7 +9,7 @@ import {
 	useExpanded,
 } from 'react-table';
 import classNames from 'classnames';
-import { Pagination } from './Pagination';
+import { Pagination } from '@/components/table/Pagination';
 
 const GlobalFilter = ({ preGlobalFilteredRows, globalFilter, setGlobalFilter, searchBoxClass }) => {
 	const count = preGlobalFilteredRows.length;
@@ -172,7 +172,7 @@ const Table = (props) => {
 				/>
 			)}
 
-			<div className="table-responsive" style={{ whiteSpace: 'nowrap' }}>
+			<div style={{ whiteSpace: 'nowrap' }}>
 				<table
 					{...dataTable.getTableProps()}
 					className={classNames('table table-centered react-table', props['tableClass'])}

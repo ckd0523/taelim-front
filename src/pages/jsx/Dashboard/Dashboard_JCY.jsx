@@ -2,9 +2,10 @@ import { Container, Row, Col, Card } from 'react-bootstrap';
 import TotalAssetRatio from './TotalAssetRatio';
 import LocationStatus from './LocationStatus';
 import Header from './Header';
-import AssetStatus from './AssetStatus';
+//import AssetStatus from './AssetStatus';
 import OperationStatus from './OperationStatus';
-import DepartmentStatus from './DepartmentStatus';
+import { DepartmentStatus, DepartmentStatus2 } from './DepartmentStatus';
+import AssetStatus from './AssetStatus';
 
 const Dashboard_JCY = () => {
 
@@ -17,31 +18,76 @@ const Dashboard_JCY = () => {
       </Container>
 
       <Container fluid>
+        <Row className='justify-content-center'>
+          <Col md={3}>
+            <Card>
+              <Card.Body>
+                <p>왼쪽</p>
+              </Card.Body>
+            </Card>
+          </Col>
+
+          <Col md={6}>
+            {/* 위치별 현황 */}
+            <LocationStatus />
+          </Col>
+
+          <Col md={3}>
+            <Card>
+              <Card.Body>
+                <p>오른쪽</p>
+              </Card.Body>
+            </Card>
+          </Col>
+        </Row>
+
         <Row>
           <Col md={4}>
             {/* 분류별 자산 비율 */}
             <TotalAssetRatio />
           </Col>
-          <Col md={8}>
-            {/* 위치별 현황 */}
-            <LocationStatus />
-          </Col>
-        </Row>
 
-        <Row>
           <Col md={4}>
             {/* 자산 현황 */}
             <AssetStatus />
           </Col>
 
           <Col md={4}>
-            {/* 부서별 자산현황 */}
+            {/* 가동 현황 */}
+            <OperationStatus />
+          </Col>
+
+        </Row>
+
+        <Row>
+          <Col md={4}>
+            {/* 부서별 자산현황1 */}
             <DepartmentStatus />
           </Col>
 
           <Col md={4}>
-            {/* 가동 현황 */}
-            <OperationStatus />
+            {/* 부서별 자산현황1 */}
+            <DepartmentStatus2 />
+          </Col>
+
+          <Col md={4}>
+            <Row>
+              <Col md={5}>
+                <Card>
+                  <Card.Body>
+                    <p>소유권별 현황</p>
+                  </Card.Body>
+                </Card>
+              </Col>
+
+              <Col md={7}>
+                <Card>
+                  <Card.Body>
+                    <p>중요성별 현황</p>
+                  </Card.Body>
+                </Card>
+              </Col>
+            </Row>
           </Col>
         </Row>
       </Container>

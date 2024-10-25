@@ -2,9 +2,12 @@ import { Button, Form, Modal, Alert } from 'react-bootstrap';
 import { useState } from 'react';
 import Swal from 'sweetalert2';
 import RepairFileUpload from '@/pages/jsx/Maintain/RepairFileUpload';
+import api from '@/common/api/authAxios';
+import { useAuthContext } from '@/common';
 
 const urlConfig = import.meta.env.VITE_BASIC_URL;
 const MaintainRegister = ({ assetCode, assetNo }) => {
+	const { user } = useAuthContext();
 	const [files, setFiles] = useState([]);
 	const [show, setShow] = useState(false);
 	const [formData, setFormData] = useState({
@@ -12,7 +15,7 @@ const MaintainRegister = ({ assetCode, assetNo }) => {
 		assetCode: assetCode,
 		repairStartDate: new Date().toISOString().slice(0, 10),
 		repairEndDate: '',
-		repairBy: '',
+		repairBy: user.id,
 		repairResult: '',
 		repairStatus: '',
 		repairFiles: [],
@@ -35,13 +38,10 @@ const MaintainRegister = ({ assetCode, assetNo }) => {
 			console.log('fileFormData: ', fileFormData.get('file'));
 			console.log('repairType: ', fileFormData.get('repairType'));
 
-			const fileResponse = await fetch(`${urlConfig}/maintain/file/upload`, {
-				method: 'POST',
-				body: fileFormData,
-			});
+			const fileResponse = await api.post('/maintain/file/upload', fileFormData);
 
-			if (fileResponse.ok) {
-				const fileName = await fileResponse.text();
+			if (fileResponse.status == 200) {
+				const fileName = await fileResponse.data;
 				uploadFileNames.push(fileName);
 				console.log(fileName);
 			} else {
@@ -60,18 +60,12 @@ const MaintainRegister = ({ assetCode, assetNo }) => {
 
 		// };
 		try {
-			const maintainResponse = await fetch(`${urlConfig}/maintain/register`, {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify(formData),
-			});
+			const maintainResponse = await api.post('/maintain/register', formData);
 			console.log('assetNo : ', assetNo);
 			console.log('assetCode: ', assetCode);
 
-			if (maintainResponse.ok) {
-				const repairNo = await maintainResponse.text();
+			if (maintainResponse.status == 200) {
+				const repairNo = await maintainResponse.data;
 				console.log('repairNo : ', repairNo);
 
 				// if (files.length > 0) {
@@ -163,12 +157,7 @@ const MaintainRegister = ({ assetCode, assetNo }) => {
 								readOnly
 							/>
 							<Form.Label>유지보수 담당자</Form.Label>
-							<Form.Control
-								className="mb-2"
-								value={formData.repairBy}
-								type="text"
-								readOnly
-							/>
+							<Form.Control className="mb-2" value={user.name} type="text" readOnly />
 							<Form.Label>시작일</Form.Label>
 							<Form.Control
 								className="mb-2"

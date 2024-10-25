@@ -26,7 +26,9 @@ import { HistoryTableUpdate } from './HistoryTableUpdate';
 import { HistoryTableMaintenance } from './HistoryTableMaintenance';
 import { HistoryTableInvestigation } from './HistoryTableInvestigation';
 import Swal from 'sweetalert2';
-
+import api from '@/common/api/authAxios';
+import { useAuthContext } from '@/common';
+const API_URL = import.meta.env.VITE_BASIC_URL;
 const urlConfig = import.meta.env.VITE_BASIC_URL;
 
 const RowDetails = ({
@@ -51,6 +53,142 @@ const RowDetails = ({
 		() => getClassificationColumns(classification),
 		[classification]
 	);
+
+	const { user } = useAuthContext();
+
+	// 사람이름들 리스트 가져오기
+	//소유자 검색어와 소유자 리스트 상태
+	const [members, setMembers] = useState([]); // 공통 멤버 리스트 상태 (소유자, 보안담당자, 사용자)
+	const [selectedMemberID, setSelectedMemberID] = useState(''); // 선택된 멤버 ID
+	const [selectedMemberName, setSelectedMemberName] = useState(''); // 선택된 멤버 이름
+	const [selectedRole, setSelectedRole] = useState(''); // 선택된 역할 ('owner', 'user', 'securityManager')
+	const [showMemberModal, setShowMemberModal] = useState(false); // 모달 열림/닫힘 상태
+
+	const [owners, setOwners] = useState([]); // 소유자 리스트
+	const [assetOwnerID, setAssetOwnerID] = useState(''); //실제 들어갈 소유자 ID값
+	const [assetOwner, setAssetOwner] = useState(''); //보여지는 소유자 이름
+	const [showOwnerModal, setShowOwnerModal] = useState(false); // 소유자 선택 모달 상태
+	const [selectedOwner, setSelectedOwner] = useState(null); // 선택된 소유자
+
+	const assetOwnerChange = (e) => {
+		setAssetOwner(e.target.value);
+		// 소유자 검색어에 따라 소유자 검색
+		if (e.target.value) {
+			handleOwnerSearch(e.target.value); // 소유자 검색 호출
+		} else {
+			setOwners([]); // 입력이 비었으면 리스트 초기화
+		}
+	};
+
+	// 소유자 검색 함수
+	const handleOwnerSearch = async (searchTerm) => {
+		try {
+			const response = await api.get(`${API_URL}/user/search`, {
+				params: { name: searchTerm },
+			});
+			setOwners(response.data); // 소유자 리스트 업데이트
+		} catch (error) {
+			console.error('소유자 검색 중 오류 발생:', error);
+		}
+	};
+	// 소유자 선택 핸들러
+	const handleSelectOwner = (owner) => {
+		setSelectedOwner(owner); // 선택된 소유자 저장
+		setAssetOwner(owner.fullname); // 선택된 소유자의 이름을 보여주기 위해 설정
+		setAssetOwnerID(owner.id); // 실제로 저장될 소유자 ID 설정
+		setFormData((prevData) => ({
+			...prevData,
+			assetOwnerId: owner.id, // 실제 데이터베이스에 저장될 ID
+			assetOwner: owner.fullname, // 조회 시 보여줄 이름
+		})); // 소유자 이름 설정se
+		setOwners([]); // 선택 후 리스트 초기화
+		setShowOwnerModal(false); // 모달 닫기
+	};
+
+	const [users, setUsers] = useState([]); // 소유자 리스트
+	const [assetUserID, setAssetUserID] = useState(''); //실제 들어갈 소유자 ID값
+	const [assetUser, setAssetUser] = useState(''); //보여지는 소유자 이름
+	const [showUserModal, setShowUserModal] = useState(false); // 소유자 선택 모달 상태
+	const [selectedUser, setSelectedUser] = useState(null); // 선택된 소유자
+
+	const assetUserChange = (e) => {
+		setAssetUser(e.target.value);
+		// 소유자 검색어에 따라 소유자 검색
+		if (e.target.value) {
+			handleUserSearch(e.target.value); // 소유자 검색 호출
+		} else {
+			setUsers([]); // 입력이 비었으면 리스트 초기화
+		}
+	};
+
+	// 소유자 검색 함수
+	const handleUserSearch = async (searchTerm) => {
+		try {
+			const response = await api.get(`${API_URL}/user/search`, {
+				params: { name: searchTerm },
+			});
+			setUsers(response.data); // 소유자 리스트 업데이트
+		} catch (error) {
+			console.error('사용자 검색 중 오류 발생:', error);
+		}
+	};
+	// 소유자 선택 핸들러
+	const handleSelectUser = (realUser) => {
+		setSelectedUser(realUser); // 선택된 소유자 저장
+		setAssetUser(realUser.fullname);
+		setAssetUserID(realUser.id);
+		setFormData((prevData) => ({
+			...prevData,
+			assetUserId: realUser.id, // or owner.id depending on the backend field requirement
+			assetUser: realUser.fullname,
+		})); // 소유자 이름 설정se
+
+		setUsers([]); // 선택 후 리스트 초기화
+		setShowUserModal(false); // 모달 닫기
+	};
+
+	const [securityManagers, setSecurityManagers] = useState([]);
+	const [assetSecurityManagerID, setAssetSecurityManagerID] = useState('');
+	const [assetSecurityManager, setAssetSecurityManager] = useState('');
+	const [showSecurityManagerModal, setShowSecurityManagerModal] = useState(false); // 소유자 선택 모달 상태
+	const [selectedSecurityManager, setSelectedSecurityManager] = useState(null); // 선택된 소유자
+
+	const assetSecurityManagerChange = (e) => {
+		setAssetSecurityManager(e.target.value);
+		// 소유자 검색어에 따라 소유자 검색
+		if (e.target.value) {
+			handleSecurityManagerSearch(e.target.value); // 소유자 검색 호출
+		} else {
+			setSecurityManagers([]); // 입력이 비었으면 리스트 초기화
+		}
+	};
+
+	// 소유자 검색 함수
+	const handleSecurityManagerSearch = async (searchTerm) => {
+		try {
+			const response = await api.get(`${API_URL}/user/search`, {
+				params: { name: searchTerm },
+			});
+			setSecurityManagers(response.data); // 소유자 리스트 업데이트
+		} catch (error) {
+			console.error('소유자 검색 중 오류 발생:', error);
+		}
+	};
+
+	const handleSelectSecurityManager = (securityManager) => {
+		setSelectedSecurityManager(securityManager);
+		setAssetSecurityManager(securityManager.fullname);
+		setAssetSecurityManagerID(securityManager.id);
+		setFormData((prevData) => ({
+			...prevData,
+			assetSecurityManagerId: securityManager.id,
+			assetSecurityManager: securityManager.fullname,
+		}));
+		setSecurityManagers([]);
+		setShowSecurityManagerModal(false);
+	};
+
+	// 나중에 합칠수있으면 여기 밑으로
 
 	// assetCode와 initialFormData가 변경될 때마다 formData를 업데이트
 	useEffect(() => {
@@ -109,12 +247,23 @@ const RowDetails = ({
 		}
 	};
 
+	// 무조건적으로 updateBy 담기기위해서
+	useEffect(() => {
+		if (user && user.id) {
+			setFormData((prevData) => ({
+				...prevData,
+				updateBy: user.id,
+			}));
+		}
+	}, [user]);
+
 	// formData를 변경하는 함수
 	const handleInputChange = (event, key) => {
 		const { value } = event.target; // 이벤트 객체에서 value 추출
 		setFormData((prevData) => ({
 			...prevData,
 			[key]: value, // 해당 키의 값을 업데이트
+			updateBy: user.id, // 현재 접속자 ID를 updateBy에 저장
 		}));
 	};
 	// 모달 닫기 처리
@@ -126,7 +275,7 @@ const RowDetails = ({
 
 		try {
 			// 1. 수정 처리 (기존 파일 정보 포함)
-			const response = await axios.post(`${urlConfig}/asset/update/${formData.assetCode}`, {
+			const response = await api.post(`${urlConfig}/asset/update/${formData.assetCode}`, {
 				...formData,
 				existingFiles: formData.existingFiles, // 기존 파일 정보 추가
 			});
@@ -156,7 +305,7 @@ const RowDetails = ({
 					// 파일 업로드 API 호출 (새 파일만 처리)
 					if (fileData.has('files')) {
 						// 파일이 존재하는 경우에만 전송
-						const fileResponse = await axios.post(
+						const fileResponse = await api.post(
 							`${urlConfig}/${formData.assetCode}/files`,
 							fileData,
 							{ headers: { 'Content-Type': 'multipart/form-data' } }
@@ -206,7 +355,7 @@ const RowDetails = ({
 		console.log('handleSubmit1:', formData); // 상태 확인
 		try {
 			// 1. 수정 요청 처리 (기존 파일 정보 포함)
-			const response = await axios.post(
+			const response = await api.post(
 				`${urlConfig}/asset/updateDemand/${formData.assetCode}`,
 				{
 					...formData,
@@ -248,7 +397,7 @@ const RowDetails = ({
 					// 파일 업로드 API 호출 (새 파일만 처리)
 					if (fileData.has('files')) {
 						// 파일이 존재하는 경우에만 전송
-						const fileResponse = await axios.post(
+						const fileResponse = await api.post(
 							`${urlConfig}/${formData.assetCode}/files`,
 							fileData,
 							{ headers: { 'Content-Type': 'multipart/form-data' } }
@@ -365,7 +514,7 @@ const RowDetails = ({
 				);
 			}
 			// useState select 설정
-			if (key === 'usestate') {
+			if (key === 'useStated') {
 				return (
 					<Form.Select
 						value={formData[key] || ''}
@@ -525,8 +674,8 @@ const RowDetails = ({
 						onChange={(e) => handleInputChange(e, key)}
 						style={{ textAlign: 'center' }}
 					>
-						<option value="NEW_MATERIALS">신소재</option>
-						<option value="INCUBATION">인큐베이션</option>
+						<option value="신소재">신소재</option>
+						<option value="인큐베이션">인큐베이션</option>
 					</Form.Select>
 				);
 			}
@@ -538,8 +687,8 @@ const RowDetails = ({
 						onChange={(e) => handleInputChange(e, key)}
 						style={{ textAlign: 'center' }}
 					>
-						<option value="COMPOSITE_MATERIALS">복합재</option>
-						<option value="CORPORATE_VENTURE">사내벤처</option>
+						<option value="복합재">복합재</option>
+						<option value="사내벤처">사내벤처</option>
 					</Form.Select>
 				);
 			}
@@ -571,6 +720,66 @@ const RowDetails = ({
 						<option value="트럭">트럭</option>
 						<option value="밴">밴</option>
 					</Form.Select>
+				);
+			}
+
+			// 소유자 필드에 대해 수정모드인 경우 별도로 렌더링
+			if (key === 'assetUser') {
+				return (
+					<Form.Group className="mb-1">
+						<Form.Control
+							type="text"
+							value={selectedUser ? selectedUser.fullname : formData.assetUser || ''} // 선택된 소유자의 fullname 또는 기존 값 사용
+							disabled // 입력 필드 비활성화
+							style={{ textAlign: 'center' }} // 텍스트 가운데 정렬
+						/>
+						<Button variant="secondary" onClick={() => setShowUserModal(true)}>
+							사용자 선택
+						</Button>
+					</Form.Group>
+				);
+			}
+
+			// 소유자 필드에 대해 수정모드인 경우 별도로 렌더링
+			if (key === 'assetOwner') {
+				return (
+					<Form.Group className="mb-1">
+						<Form.Control
+							type="text"
+							value={
+								selectedOwner ? selectedOwner.fullname : formData.assetOwner || ''
+							} // 선택된 소유자의 fullname 또는 기존 값 사용
+							disabled // 입력 필드 비활성화
+							style={{ textAlign: 'center' }} // 텍스트 가운데 정렬
+						/>
+						<Button variant="secondary" onClick={() => setShowOwnerModal(true)}>
+							소유자 선택
+						</Button>
+					</Form.Group>
+				);
+			}
+
+			// 소유자 필드에 대해 수정모드인 경우 별도로 렌더링
+			if (key === 'assetSecurityManager') {
+				return (
+					<Form.Group className="mb-1">
+						<Form.Control
+							type="text"
+							value={
+								selectedSecurityManager
+									? selectedSecurityManager.fullname
+									: formData.assetSecurityManager || ''
+							} // 선택된 소유자의 fullname 또는 기존 값 사용
+							disabled // 입력 필드 비활성화
+							style={{ textAlign: 'center' }} // 텍스트 가운데 정렬
+						/>
+						<Button
+							variant="secondary"
+							onClick={() => setShowSecurityManagerModal(true)}
+						>
+							보안담당자 선택
+						</Button>
+					</Form.Group>
 				);
 			}
 			// select 외는 text input 설정
@@ -706,7 +915,7 @@ const RowDetails = ({
 							</thead>
 							<tbody>
 								<tr>
-									<td>{renderCellContent('usestate')}</td>
+									<td>{renderCellContent('useStated')}</td>
 									<td>{renderCellContent('operationStatus')}</td>
 									<td>{renderCellContent('introducedDate')}</td>
 									<td style={{ width: '80px' }}>
@@ -1047,7 +1256,7 @@ const RowDetails = ({
 					{/* 모달 */}
 					<Modal show={showModal} onHide={handleModalClose}>
 						<Modal.Header closeButton>
-							<Modal.Title>수정 요청</Modal.Title>
+							<Modal.Title>수정</Modal.Title>
 						</Modal.Header>
 						<Modal.Body>
 							<Form>
@@ -1056,16 +1265,14 @@ const RowDetails = ({
 									<Form.Control type="text" value="수정" readOnly />
 								</Form.Group>
 								<Form.Group className="mb-3">
-									<Form.Label>수정사유</Form.Label>
-									<Form.Select
+									<Form.Label>수정 사유</Form.Label>
+									<Form.Control
+										type="text"
 										value={formData.updateReason}
 										onChange={(e) => handleInputChange(e, 'updateReason')}
-									>
-										<option value="사유 1">사유 1</option>
-										<option value="사유 2">사유 2</option>
-										<option value="사유 3">사유 3</option>
-									</Form.Select>
+									/>
 								</Form.Group>
+
 								<Form.Group className="mb-3">
 									<Form.Label>수정내용</Form.Label>
 									<Form.Control
@@ -1081,12 +1288,16 @@ const RowDetails = ({
 							<Button variant="secondary" onClick={handleModalClose}>
 								취소
 							</Button>
-							<Button variant="primary" onClick={handleSubmit1}>
-								수정 요청
-							</Button>
-							<Button variant="primary" onClick={handleSubmit}>
-								수정
-							</Button>
+							{user.role === 'ASSET_MANAGER' && (
+								<Button variant="primary" onClick={handleSubmit1}>
+									수정 요청
+								</Button>
+							)}
+							{user.role === 'ADMIN' && (
+								<Button variant="primary" onClick={handleSubmit}>
+									수정
+								</Button>
+							)}
 						</Modal.Footer>
 					</Modal>
 				</div>
@@ -1391,6 +1602,138 @@ const RowDetails = ({
 				</div>
 			</div>
 
+			<Modal show={showOwnerModal} onHide={() => setShowOwnerModal(false)}>
+				<Modal.Header closeButton>
+					<Modal.Title>소유자 선택</Modal.Title>
+				</Modal.Header>
+				<Modal.Body>
+					<Form.Control
+						type="text"
+						placeholder="소유자 이름으로 검색..."
+						onChange={assetOwnerChange} // 소유자 검색 핸들러
+					/>
+					{owners.length > 0 && (
+						<div className="owner-list">
+							{owners.map((owner) => (
+								<Form.Check
+									key={owner.id}
+									type="radio" // 라디오 버튼으로 선택
+									id={`owner-${owner.id}`}
+									label={`${owner.fullname} (${owner.department})`}
+									name="assetOwner" // 같은 그룹으로 묶기
+									onChange={() => setSelectedOwner(owner)} // 선택 시 상태 업데이트
+								/>
+							))}
+						</div>
+					)}
+				</Modal.Body>
+				<Modal.Footer>
+					<Button
+						variant="primary"
+						onClick={() => {
+							if (selectedOwner) {
+								handleSelectOwner(selectedOwner); // 선택된 소유자를 적용
+							}
+							setShowOwnerModal(false); // 모달 닫기
+						}}
+					>
+						확인
+					</Button>
+					<Button variant="secondary" onClick={() => setShowOwnerModal(false)}>
+						닫기
+					</Button>
+				</Modal.Footer>
+			</Modal>
+
+			<Modal show={showUserModal} onHide={() => setShowUserModal(false)}>
+				<Modal.Header closeButton>
+					<Modal.Title>사용자 선택</Modal.Title>
+				</Modal.Header>
+				<Modal.Body>
+					<Form.Control
+						type="text"
+						placeholder="사용자 이름으로 검색..."
+						onChange={assetUserChange} // 소유자 검색 핸들러
+					/>
+					{users.length > 0 && (
+						<div className="user-list">
+							{users.map((user) => (
+								<Form.Check
+									key={user.id}
+									type="radio" // 라디오 버튼으로 선택
+									id={`user-${user.id}`}
+									label={`${user.fullname} (${user.department})`}
+									name="assetUser" // 같은 그룹으로 묶기
+									onChange={() => setSelectedUser(user)} // 선택 시 상태 업데이트
+								/>
+							))}
+						</div>
+					)}
+				</Modal.Body>
+				<Modal.Footer>
+					<Button
+						variant="primary"
+						onClick={() => {
+							if (selectedUser) {
+								handleSelectUser(selectedUser); // 선택된 소유자를 적용
+							}
+							setShowUserModal(false); // 모달 닫기
+						}}
+					>
+						확인
+					</Button>
+					<Button variant="secondary" onClick={() => setShowUserModal(false)}>
+						닫기
+					</Button>
+				</Modal.Footer>
+			</Modal>
+
+			<Modal
+				show={showSecurityManagerModal}
+				onHide={() => setShowSecurityManagerModal(false)}
+			>
+				<Modal.Header closeButton>
+					<Modal.Title>보안담당자 선택</Modal.Title>
+				</Modal.Header>
+				<Modal.Body>
+					<Form.Control
+						type="text"
+						placeholder="보안담당자 이름으로 검색..."
+						onChange={assetSecurityManagerChange} // 소유자 검색 핸들러
+					/>
+					{securityManagers.length > 0 && (
+						<div className="securityManager-list">
+							{securityManagers.map((securityManager) => (
+								<Form.Check
+									key={securityManager.id}
+									type="radio" // 라디오 버튼으로 선택
+									id={`securityManager-${securityManager.id}`}
+									label={`${securityManager.fullname} (${securityManager.department})`}
+									name="assetSecurityManger" // 같은 그룹으로 묶기
+									onChange={() => setSelectedSecurityManager(securityManager)} // 선택 시 상태 업데이트
+								/>
+							))}
+						</div>
+					)}
+				</Modal.Body>
+				<Modal.Footer>
+					<Button
+						variant="primary"
+						onClick={() => {
+							if (selectedSecurityManager) {
+								handleSelectSecurityManager(selectedSecurityManager); // 선택된 소유자를 적용
+							}
+							setShowSecurityManagerModal(false); // 모달 닫기
+						}}
+					>
+						확인
+					</Button>
+					<Button variant="secondary" onClick={() => setShowSecurityManagerModal(false)}>
+						닫기
+					</Button>
+				</Modal.Footer>
+			</Modal>
+
 			{/* 버튼 */}
 			<div>
 				<Row className="mt-3">
@@ -1411,20 +1754,24 @@ const RowDetails = ({
 							</>
 						) : (
 							<>
-								<Button
-									variant="primary"
-									className="me-2"
-									onClick={handleEditClick}
-								>
-									수정
-								</Button>
+								{(user.role === 'ADMIN' || user.role === 'ASSET_MANAGER') && (
+									<>
+										<Button
+											variant="primary"
+											className="me-2"
+											onClick={handleEditClick}
+										>
+											수정
+										</Button>
 
-								{/* 유지보수 */}
-								<MaintainRegister
-									assetCode={formData.assetCode}
-									assetName={formData.assetName}
-									assetNo={formData.assetNo}
-								/>
+										{/* 유지보수 */}
+										<MaintainRegister
+											assetCode={formData.assetCode}
+											assetName={formData.assetName}
+											assetNo={formData.assetNo}
+										/>
+									</>
+								)}
 								<Button variant="danger" onClick={onClose}>
 									닫기
 								</Button>

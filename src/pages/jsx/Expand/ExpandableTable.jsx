@@ -11,7 +11,8 @@ import {
 import classNames from 'classnames';
 //import { Pagination } from '@/components';
 import RowDetails from './RowDetails';
-
+import { Spinner } from '@/components';
+import { PropagateLoader } from 'react-spinners';
 const GlobalFilter = ({ preGlobalFilteredRows, globalFilter, setGlobalFilter, searchBoxClass }) => {
 	const count = preGlobalFilteredRows.length;
 	const [value, setValue] = useState(globalFilter);
@@ -209,37 +210,57 @@ const Table = (props) => {
 						))}
 					</thead>
 					<tbody {...dataTable.getTableBodyProps()}>
-						{(rows || []).map((row, index) => {
-							dataTable.prepareRow(row);
-							return (
-								<React.Fragment key={index}>
-									<tr {...row.getRowProps()}>
-										{row.cells.map((cell) => (
-											<td {...cell.getCellProps()}>{cell.render('Cell')}</td>
-										))}
-									</tr>
-									{/* 확장된 내용 렌더링 */}
-									{row.isExpanded && isExpandable && (
-										<tr>
-											<td colSpan={dataTable.headerGroups[0].headers.length}>
-												<div className="expanded-content">
-													<RowDetails
-														// row={row}
-														// assetCode={row.original.assetCode}
-														assetCode={row.original.assetCode} // assetCode 전달
-														formData={row.original} // 전체 데이터를 formData로 전달
-														onClose={() => row.toggleRowExpanded(false)} // onClose에 행 확장 상태 닫기 핸들러 추가
-														fetchData={fetchData} // 데이터를 새로 고치는 함수
-														setPageIndex={setPageIndex} // 페이지 인덱스 업데이트 함수 전달
-														pageSize={pageSize}
-													/>
-												</div>
-											</td>
+						{rows.length > 0 ? (
+							(rows || []).map((row, index) => {
+								dataTable.prepareRow(row);
+								return (
+									<React.Fragment key={index}>
+										<tr {...row.getRowProps()}>
+											{row.cells.map((cell) => (
+												<td {...cell.getCellProps()}>
+													{cell.render('Cell')}
+												</td>
+											))}
 										</tr>
-									)}
-								</React.Fragment>
-							);
-						})}
+										{/* 확장된 내용 렌더링 */}
+										{row.isExpanded && isExpandable && (
+											<tr>
+												<td
+													colSpan={
+														dataTable.headerGroups[0].headers.length
+													}
+												>
+													<div className="expanded-content">
+														<RowDetails
+															// row={row}
+															// assetCode={row.original.assetCode}
+															assetCode={row.original.assetCode} // assetCode 전달
+															formData={row.original} // 전체 데이터를 formData로 전달
+															onClose={() =>
+																row.toggleRowExpanded(false)
+															} // onClose에 행 확장 상태 닫기 핸들러 추가
+															fetchData={fetchData} // 데이터를 새로 고치는 함수
+															setPageIndex={setPageIndex} // 페이지 인덱스 업데이트 함수 전달
+															pageSize={pageSize}
+														/>
+													</div>
+												</td>
+											</tr>
+										)}
+									</React.Fragment>
+								);
+							})
+						) : (
+							<>
+								<tr>
+									<td colSpan={13}>
+										<div className="pt-5 pb-5 d-flex justify-content-center">
+											<PropagateLoader color="#3760b3" size={20} />
+										</div>
+									</td>
+								</tr>
+							</>
+						)}
 					</tbody>
 				</table>
 			</div>

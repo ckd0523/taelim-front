@@ -19,6 +19,7 @@ import {
 	calculateImportanceScore,
 	calculateImportanceRating,
 } from './UpdateHistoryColumn';
+import api from '@/common/api/authAxios';
 
 const API_URL = import.meta.env.VITE_BASIC_URL;
 const urlConfig = import.meta.env.VITE_BASIC_URL;
@@ -53,11 +54,9 @@ const InfoModal = ({ show, handleClose, modalData }) => {
 		if (modalData && modalData.demandType === 'update') {
 			const fetchRowData = async () => {
 				setIsLoading(true);
-
+				console.log('modaldata', modalData);
 				try {
-					const response = await axios.get(
-						`${urlConfig}/updateDetail/${modalData.assetNo}`
-					);
+					const response = await api.get(`${urlConfig}/list1/${modalData.assetNo}`);
 					const [lowestAsset, modifiedAsset] = response.data;
 					setAssetInfo(lowestAsset); // 변경 전 데이터 설정
 					setModifiedAssetInfo(modifiedAsset); // 변경 후 데이터 설정
@@ -78,8 +77,7 @@ const InfoModal = ({ show, handleClose, modalData }) => {
 			reason,
 			actionType,
 		};
-		axios
-			.post(`${API_URL}/updateAction`, dataToSend)
+		api.post(`${API_URL}/updateAction`, dataToSend)
 			.then((response) => {
 				console.log('Update successful:', response.data);
 			})
@@ -96,8 +94,7 @@ const InfoModal = ({ show, handleClose, modalData }) => {
 			reason,
 			actionType,
 		};
-		axios
-			.post(`${API_URL}/deleteAction`, dataToSend)
+		api.post(`${API_URL}/deleteAction`, dataToSend)
 			.then((response) => {
 				console.log('Update successful:', response.data);
 			})
@@ -157,6 +154,26 @@ const InfoModal = ({ show, handleClose, modalData }) => {
 											</Row>
 											<Row>
 												<Col lg={6}>
+													<Form.Label className="pt-2">
+														자산코드
+													</Form.Label>
+													<Form.Control
+														type="text"
+														value={modalData.assetCode}
+														readOnly
+													/>
+												</Col>
+												<Col lg={6}>
+													<Form.Label className="pt-2">자산명</Form.Label>
+													<Form.Control
+														type="text"
+														value={modalData.assetName}
+														readOnly
+													/>
+												</Col>
+											</Row>
+											<Row>
+												<Col lg={6}>
 													<Form.Label className="pt-2">요청자</Form.Label>
 													<Form.Control
 														type="text"
@@ -183,6 +200,40 @@ const InfoModal = ({ show, handleClose, modalData }) => {
 														readOnly
 													/>
 												</Col>
+
+												<Col lg={6}>
+													<Form.Label className="pt-2">
+														수정사유
+													</Form.Label>
+													<Form.Control
+														type="text"
+														value={modalData.demandReason}
+														readOnly
+													/>
+												</Col>
+												<Col lg={6}>
+													<Form.Label className="pt-2">
+														수정내용
+													</Form.Label>
+													<Form.Control
+														type="text"
+														value={modalData.demandDetail}
+														readOnly
+													/>
+												</Col>
+
+												{!isUnconfirmed && (
+													<Col lg={6}>
+														<Form.Label className="pt-2">
+															처리사유
+														</Form.Label>
+														<Form.Control
+															type="text"
+															value={modalData.comment}
+															readOnly
+														/>
+													</Col>
+												)}
 											</Row>
 										</Form.Group>
 										<div className="info-update-container">
@@ -216,17 +267,19 @@ const InfoModal = ({ show, handleClose, modalData }) => {
 				<Modal.Footer>
 					{isUnconfirmed && (
 						<>
-							<Form>
-								<Form.Group>
-									<Form.Control
-										type="text"
-										value={reason}
-										onChange={handleReasonChange}
-										placeholder={'사유'}
-										size="lg"
-									/>
-								</Form.Group>
-							</Form>
+							<Col lg={12}>
+								<Form>
+									<Form.Group>
+										<Form.Control
+											type="text"
+											value={reason}
+											onChange={handleReasonChange}
+											placeholder={'사유'}
+											size="lg"
+										/>
+									</Form.Group>
+								</Form>
+							</Col>
 							<Button
 								style={{ background: '#5e83bb', border: 'none' }}
 								onClick={() => handleFormSubmit('approve')}
@@ -289,6 +342,16 @@ const InfoModal = ({ show, handleClose, modalData }) => {
 										readOnly
 									/>
 								</Col>
+								{!isUnconfirmed && (
+									<Col lg={12}>
+										<Form.Label className="pt-2">처리사유</Form.Label>
+										<Form.Control
+											type="text"
+											value={modalData.comment}
+											readOnly
+										/>
+									</Col>
+								)}
 
 								<Col lg={12}>
 									<Form.Label className="pt-2">폐기일자</Form.Label>
@@ -414,10 +477,10 @@ const ProcessModal = ({ show, handleClose }) => {
 				setIsLoading(true); // 데이터 요청 시작
 
 				try {
-					const response = await axios.get(`${urlConfig}/DemandList`);
+					const response = await api.get(`${urlConfig}/DemandList`);
 					const responseData = response.data;
 					setDemandList(responseData);
-
+					console.log('자산명 :', response.data);
 					// 데이터를 불러온 후 첫 번째 데이터를 기준으로 modalType 설정
 					if (responseData.length > 0) {
 						const firstDemandType = responseData[0].demandHistoryDto.demandType;
@@ -508,8 +571,7 @@ const ProcessModal = ({ show, handleClose }) => {
 	};
 
 	const handleFormSubmit = () => {
-		axios
-			.post(`${API_URL}/demandAction`, demandList1)
+		api.post(`${API_URL}/demandAction`, demandList1)
 			.then((response) => {
 				console.log('Action successful:', response.data);
 			})
@@ -549,7 +611,7 @@ const ProcessModal = ({ show, handleClose }) => {
 		return <div>미처리 자산이 없습니다.</div>; // currentData가 없는 경우를 대비한 처리
 	}
 
-	const { demandHistoryDto, assetDto } = currentData;
+	const { demandHistoryDto } = currentData;
 
 	return (
 		<Modal
@@ -590,6 +652,24 @@ const ProcessModal = ({ show, handleClose }) => {
 							</Row>
 							<Row>
 								<Col lg={6}>
+									<Form.Label className="pt-2">자산코드</Form.Label>
+									<Form.Control
+										type="text"
+										value={demandHistoryDto.assetCode}
+										readOnly
+									/>
+								</Col>
+								<Col lg={6}>
+									<Form.Label className="pt-2">자산명</Form.Label>
+									<Form.Control
+										type="text"
+										value={demandHistoryDto.assetName}
+										readOnly
+									/>
+								</Col>
+							</Row>
+							<Row>
+								<Col lg={6}>
 									<Form.Label className="pt-2">요청자</Form.Label>
 									<Form.Control
 										type="text"
@@ -611,6 +691,24 @@ const ProcessModal = ({ show, handleClose }) => {
 												    ? '거절'
 												    : demandHistoryDto.demandStatus // 다른 상태일 경우 원래 값 유지
 										}
+										readOnly
+									/>
+								</Col>
+							</Row>
+							<Row>
+								<Col lg={6}>
+									<Form.Label className="pt-2">수정사유</Form.Label>
+									<Form.Control
+										type="text"
+										value={demandHistoryDto.demandReason}
+										readOnly
+									/>
+								</Col>
+								<Col lg={6}>
+									<Form.Label className="pt-2">수정내용</Form.Label>
+									<Form.Control
+										type="text"
+										value={demandHistoryDto.demandDetail}
 										readOnly
 									/>
 								</Col>
@@ -663,6 +761,7 @@ const ProcessModal = ({ show, handleClose }) => {
 									/>
 								</Col>
 							</Row>
+
 							<Row>
 								<Col lg={6}>
 									<Form.Label className="pt-2">상태</Form.Label>
@@ -803,8 +902,7 @@ const ActionModal = ({ show, handleClose, actionData, actionType, handleSubmit }
 			switch (item.demandType) {
 				case 'update':
 				case 'allUpdateDemand':
-					axios
-						.post(`${API_URL}/updateAction`, dataToSend)
+					api.post(`${API_URL}/updateAction`, dataToSend)
 						.then((response) => {
 							console.log('Update successful:', response.data);
 						})
@@ -815,8 +913,7 @@ const ActionModal = ({ show, handleClose, actionData, actionType, handleSubmit }
 
 				case 'delete':
 				case 'allDisposeDemand':
-					axios
-						.post(`${API_URL}/deleteAction`, dataToSend)
+					api.post(`${API_URL}/deleteAction`, dataToSend)
 						.then((response) => {
 							console.log('Delete successful:', response.data);
 						})
@@ -829,8 +926,9 @@ const ActionModal = ({ show, handleClose, actionData, actionType, handleSubmit }
 					console.error('Unknown demand type:', item.demandType);
 			}
 		}
-		handleSubmit(reason); // 사유를 넘겨주면서 처리
+		//handleSubmit(reason); // 사유를 넘겨주면서 처리
 		handleClose(); // 모달 닫기
+		setReason('');
 	};
 
 	return (

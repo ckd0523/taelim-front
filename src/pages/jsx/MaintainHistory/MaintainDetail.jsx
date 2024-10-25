@@ -1,3 +1,4 @@
+import api from '@/common/api/authAxios';
 import { useState, useRef, useEffect } from 'react';
 import { Form, FormGroup, Modal, Button, ModalFooter, Alert } from 'react-bootstrap';
 import { BsImage } from 'react-icons/bs';
@@ -20,7 +21,6 @@ const MaintainDetail = ({ show, selectData, handleClose }) => {
 
 	const imgRef = useRef();
 	const afterImgRef = useRef();
-
 	const handleEditToggle = () => {
 		setIsEditing(!isEditing);
 
@@ -33,7 +33,6 @@ const MaintainDetail = ({ show, selectData, handleClose }) => {
 			);
 		}
 	};
-
 	const handleFileUpload = (file, repairType) => {
 		const updateFiles = [...files, { file, repairType }];
 		setFiles(updateFiles);
@@ -94,8 +93,8 @@ const MaintainDetail = ({ show, selectData, handleClose }) => {
 	const saveImages = async () => {
 		const updateFileNames = [];
 
-		let imageUploadSuccess = true;
-		let endDateSaveSuccess = true;
+		const imageUploadSuccess = true;
+		const endDateSaveSuccess = true;
 		for (let { file, repairType } of files) {
 			const uploadData = new FormData();
 			uploadData.append('file', file);
@@ -105,15 +104,13 @@ const MaintainDetail = ({ show, selectData, handleClose }) => {
 
 			try {
 				if (uploadData.has('file')) {
-					const response = await fetch(
+					const response = await api.post(
 						`${urlConfig}/maintain/file/upload/${selectData.repairNo}`,
-						{
-							method: 'POST',
-							body: uploadData,
-						}
+						uploadData
 					);
-					if (response.ok) {
-						const fileName = await response.text();
+					console.log(response.status);
+					if (response.status == 200) {
+						const fileName = await response.data;
 						updateFileNames.push(fileName);
 						console.log(fileName);
 					} else {
@@ -131,15 +128,12 @@ const MaintainDetail = ({ show, selectData, handleClose }) => {
 		}
 
 		try {
-			const response = await fetch(`${urlConfig}/maintain/update/${selectData.repairNo}`, {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify(formData),
-			});
+			const response = await api.post(
+				`${urlConfig}/maintain/update/${selectData.repairNo}`,
+				formData
+			);
 
-			if (response.ok) {
+			if (response.status == 200) {
 				Swal.fire({
 					icon: 'success',
 					title: '유지보수가 성공적으로 수정되었습니다.',
@@ -152,7 +146,6 @@ const MaintainDetail = ({ show, selectData, handleClose }) => {
 		}
 		handleClose();
 	};
-
 	return (
 		<>
 			<Modal show={show} onHide={handleClose}>
@@ -165,7 +158,7 @@ const MaintainDetail = ({ show, selectData, handleClose }) => {
 						<Form.Label>자산코드</Form.Label>
 						<Form.Control type="text" value={selectData.assetCode} readOnly />
 						<Form.Label className="pt-2">유지보수 담당자</Form.Label>
-						<Form.Control type="text" value={selectData.maintainBy} readOnly />
+						<Form.Control type="text" value={selectData.repairBy} readOnly />
 						<Form.Label className="pt-2">시작일</Form.Label>
 						<Form.Control
 							type={isEditing ? 'date' : 'text'}

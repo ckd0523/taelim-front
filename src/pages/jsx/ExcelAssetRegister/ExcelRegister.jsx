@@ -3,6 +3,7 @@ import * as XLSX from 'xlsx';
 import { Button, Table, Row, Col, Form, Alert, Card } from 'react-bootstrap';
 import Select from 'react-select';
 import Swal from 'sweetalert2';
+import api from '@/common/api/authAxios';
 
 const urlConfig = import.meta.env.VITE_BASIC_URL;
 const ExcelRegister = () => {
@@ -106,7 +107,7 @@ const ExcelRegister = () => {
 		소유자: 'assetOwner',
 		보안담당자: 'assetSecurityManager',
 		비고: 'note',
-		사용상태: 'usestate',
+		사용상태: 'useStated',
 		구매비용: 'purchaseCost',
 		구매날짜: 'purchaseDate',
 		내용연수: 'usefulLife',
@@ -300,22 +301,15 @@ const ExcelRegister = () => {
 		}
 
 		try {
-			const excelResponse = await fetch(`${urlConfig}/asset/excelRegister`, {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify(formData),
-			});
-
-			if (excelResponse.ok) {
+			const excelResponse = await api.post('/asset/excelRegister', formData);
+			if (excelResponse.status == 200) {
 				Swal.fire({
 					icon: 'success',
 					title: '자산이 성공적으로 등록되었습니다.',
 					text: '자산조회화면으로 이동',
 				});
 				setTimeout(() => {
-					window.location.replace('/jsx/AssetPageTest');
+					window.location.replace('/jsx/Expand');
 				}, 1000);
 
 				// 파일 입력 필드 초기화

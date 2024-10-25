@@ -10,7 +10,6 @@ import {
 } from 'react-table';
 import classNames from 'classnames';
 import { Pagination } from '@/components';
-
 const GlobalFilter = ({ preGlobalFilteredRows, globalFilter, setGlobalFilter, searchBoxClass }) => {
 	const count = preGlobalFilteredRows.length;
 	const [value, setValue] = useState(globalFilter);
@@ -138,7 +137,7 @@ const Table = (props) => {
 						// to render a checkbox
 						Header: ({ getToggleAllPageRowsSelectedProps }) => (
 							<div>
-								<IndeterminateCheckbox {...getToggleAllPageRowsSelectedProps()} />
+								{/* <IndeterminateCheckbox {...getToggleAllPageRowsSelectedProps()} /> */}
 							</div>
 						),
 						// The cell can use the individual row's getToggleRowSelectedProps method
@@ -257,6 +256,7 @@ const Table = (props) => {
 							</tr>
 						))}
 					</thead>
+
 					<tbody {...dataTable.getTableBodyProps()}>
 						{rows.map((row, index) => {
 							dataTable.prepareRow(row); // 각 행에 대해 한 번만 호출

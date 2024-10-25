@@ -1,13 +1,15 @@
 import BasisAssetInfo from './BasisAssetInfo';
 import { useState, useEffect } from 'react';
 import FileUpload from './FileUpload';
-import { Button, Row, Col, Container, Form } from 'react-bootstrap';
+import { Button, Row, Col, Container } from 'react-bootstrap';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import AssetCategories from './AssetCategories';
 import PurchasingInfo from './PurchasingInfo';
 import { useFormValidation } from '@/pages/ui/forms/hooks';
+import api from '@/common/api/authAxios';
+import { FormProvider } from 'react-hook-form';
 const urlConfig = import.meta.env.VITE_BASIC_URL;
 const ResponsivePadding = styled.div`
 	@media (max-width: 768px) {
@@ -42,14 +44,14 @@ const AssetRegister = () => {
 		assetSecurityManager: '',
 		quantity: '',
 		ownership: '',
-		usestate: null,
+		useStated: null,
 		operationStatus: null,
 		introducedDate: null,
 		confidentiality: '',
 		integrity: '',
 		availability: '',
 		note: '',
-		purchaseCost: 0,
+		purchaseCost: '',
 		purchaseDate: null,
 		usefulLife: '',
 		depreciationMethod: '',
@@ -134,6 +136,7 @@ const AssetRegister = () => {
 					formData.usefulLife,
 					formData.depreciationMethod,
 					formData.maintenancePeriod,
+					formData.purchaseCost,
 					formData.serviceScope,
 				];
 				break;
@@ -149,6 +152,7 @@ const AssetRegister = () => {
 					formData.usefulLife,
 					formData.depreciationMethod,
 					formData.maintenancePeriod,
+					formData.purchaseCost,
 					formData.serviceScope,
 					formData.os,
 					formData.ip,
@@ -166,6 +170,7 @@ const AssetRegister = () => {
 					formData.usefulLife,
 					formData.depreciationMethod,
 					formData.maintenancePeriod,
+					formData.purchaseCost,
 					formData.os,
 					formData.ip,
 					formData.serverPassword,
@@ -184,6 +189,7 @@ const AssetRegister = () => {
 					formData.usefulLife,
 					formData.depreciationMethod,
 					formData.maintenancePeriod,
+					formData.purchaseCost,
 					formData.os,
 					formData.system,
 					formData.DBType,
@@ -201,6 +207,7 @@ const AssetRegister = () => {
 					formData.usefulLife,
 					formData.depreciationMethod,
 					formData.maintenancePeriod,
+					formData.purchaseCost,
 					formData.documentGrade,
 					formData.documentType,
 					formData.documentLink,
@@ -218,6 +225,7 @@ const AssetRegister = () => {
 					formData.usefulLife,
 					formData.depreciationMethod,
 					formData.maintenancePeriod,
+					formData.purchaseCost,
 					formData.applicationDate,
 					formData.registrationDate,
 					formData.patentTrademarkStatus,
@@ -239,6 +247,7 @@ const AssetRegister = () => {
 					formData.usefulLife,
 					formData.depreciationMethod,
 					formData.maintenancePeriod,
+					formData.purchaseCost,
 					formData.equipmentType,
 				];
 				break;
@@ -254,6 +263,7 @@ const AssetRegister = () => {
 					formData.usefulLife,
 					formData.depreciationMethod,
 					formData.maintenancePeriod,
+					formData.purchaseCost,
 					formData.equipmentType,
 					formData.serviceScope,
 				];
@@ -270,6 +280,7 @@ const AssetRegister = () => {
 					formData.usefulLife,
 					formData.depreciationMethod,
 					formData.maintenancePeriod,
+					formData.purchaseCost,
 					formData.ip,
 					formData.os,
 				];
@@ -286,6 +297,7 @@ const AssetRegister = () => {
 					formData.usefulLife,
 					formData.depreciationMethod,
 					formData.maintenancePeriod,
+					formData.purchaseCost,
 					formData.deviceType,
 				];
 				break;
@@ -301,6 +313,7 @@ const AssetRegister = () => {
 					formData.usefulLife,
 					formData.depreciationMethod,
 					formData.maintenancePeriod,
+					formData.purchaseCost,
 					formData.carType,
 					formData.identificationNo,
 				];
@@ -317,6 +330,7 @@ const AssetRegister = () => {
 					formData.usefulLife,
 					formData.depreciationMethod,
 					formData.maintenancePeriod,
+					formData.purchaseCost,
 				];
 		}
 		for (let fields of validateInput) {
@@ -328,32 +342,22 @@ const AssetRegister = () => {
 	};
 	const handleOnSubmit = async (e) => {
 		e.preventDefault(); // 페이지 새로고침 방지
-		handleSubmit(e);
-		// const form = e.target.closest('form');
-
-		// if (!validateInput || form.checkValidity() === false) {
-		// 	e.stopPropagation();
-		// 	return;
-		// }
+		if (isValidated === false) {
+			handleSubmit(e);
+		}
 		if (!validatedForm()) {
 			Swal.fire({
 				icon: 'error',
 				title: '필수 항목을 채워주세요.',
 				text: '모든 필수 항목을 채워야 합니다',
 			});
-			return;
+			return false;
 		}
 		try {
-			const assetResponse = await fetch(`${urlConfig}/asset/register`, {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify(formData), // JSON으로 변환하여 전송
-			});
-
-			if (assetResponse.ok) {
-				const assetNo = await assetResponse.text();
+			const assetResponse = await api.post('/asset/register', formData);
+			console.log(assetResponse);
+			if (assetResponse.status == 200) {
+				const assetNo = assetResponse.data;
 
 				Swal.fire({
 					icon: 'success',
@@ -361,7 +365,7 @@ const AssetRegister = () => {
 					text: '자산조회화면으로 이동',
 				});
 				setTimeout(() => {
-					window.location.replace('/jsx/AssetPageTest');
+					window.location.replace('/jsx/Expand');
 				}, 1000);
 
 				console.log(typeof assetNo);
@@ -376,12 +380,9 @@ const AssetRegister = () => {
 						console.log('assetNo:', fileFormData.get('assetNo'));
 						console.log('fileType:', fileFormData.get('fileType'));
 
-						const fileResponse = await fetch(`${urlConfig}/asset/file/upload`, {
-							method: 'POST',
-							body: fileFormData,
-						});
+						const fileResponse = await api.post('/asset/file/upload', fileFormData);
 
-						if (!fileResponse.ok) {
+						if (!fileResponse.status == 200) {
 							Swal.fire({
 								icon: 'error',
 								title: '파일 등록에 실패하였습니다.',
@@ -442,43 +443,51 @@ const AssetRegister = () => {
 				<h4 className="header-title">자산 등록</h4>
 			</div>
 			<Container>
-				<form noValidate onSubmit={handleOnSubmit}>
+				<FormProvider noValidate>
 					<Row>
 						<ResponsivePadding>
 							<Col xs={12} md={8} lg={12}>
-								<BasisAssetInfo
-									isValidated={isValidated}
-									formData={formData}
-									handleChange={handleChange}
-									handleSubmit={handleSubmit}
-								/>
+								<div>
+									<BasisAssetInfo
+										isValidated={isValidated}
+										formData={formData}
+										handleChange={handleChange}
+										handleSubmit={handleSubmit}
+									/>
+								</div>
 							</Col>
 							<Col className="pt-1" xs={12} md={8} lg={12}>
-								<AssetCategories
-									isValidated={isValidated}
-									formData={formData}
-									assetClassification={formData.assetClassification}
-									handleChange={handleChange}
-									files={files}
-									setFiles={setFiles}
-									handleSubmit={handleSubmit}
-								/>
+								<div>
+									<AssetCategories
+										isValidated={isValidated}
+										formData={formData}
+										assetClassification={formData.assetClassification}
+										handleChange={handleChange}
+										files={files}
+										setFiles={setFiles}
+										handleSubmit={handleSubmit}
+									/>
+								</div>
 							</Col>
 							<Col xs={12} md={8} lg={12}>
-								<PurchasingInfo
-									isValidated={isValidated}
-									formData={formData}
-									handleChange={handleChange}
-									handleSubmit={handleSubmit}
-								/>
+								<div>
+									<PurchasingInfo
+										isValidated={isValidated}
+										formData={formData}
+										handleChange={handleChange}
+										handleSubmit={handleSubmit}
+									/>
+								</div>
 							</Col>
 							<Col xs={12} md={8} lg={12}>
-								<FileUpload
-									formData={formData}
-									handleChange={handleChange}
-									files={files}
-									setFiles={setFiles}
-								/>
+								<div>
+									<FileUpload
+										formData={formData}
+										handleChange={handleChange}
+										files={files}
+										setFiles={setFiles}
+									/>
+								</div>
 							</Col>
 						</ResponsivePadding>
 					</Row>
@@ -489,8 +498,7 @@ const AssetRegister = () => {
 							className="btn-rounded"
 							variant="dark"
 							type="submit"
-							// onClick={handleOnSubmit}
-							// onClick={handleSubmit}
+							onClick={handleOnSubmit}
 						>
 							저장
 						</Button>
@@ -507,7 +515,7 @@ const AssetRegister = () => {
 							취소
 						</Button>
 					</div>
-				</form>
+				</FormProvider>
 			</Container>
 		</>
 	);

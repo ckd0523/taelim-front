@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
+import { useAuthContext } from '@/common';
 
 const DisposeModal = ({
 	showModal,
@@ -14,6 +15,7 @@ const DisposeModal = ({
 	const [disposeDetail, setDisposeDetail] = useState('');
 	const [disposeLocation, setDisposeLocation] = useState('');
 	const [disposeMethod, setDisposeMethod] = useState('');
+	const { user } = useAuthContext();
 
 	// 폐기 modal 부분 폼관련 내용 초기화 설정
 	const resetForm = () => {
@@ -29,6 +31,7 @@ const DisposeModal = ({
 			setErrorMessage('폐기 요청이 이미 들어간 자산입니다.');
 		} else {
 			await handleDisposeDemand(selectedAssetCode, {
+				disposeUser: user.id,
 				disposeReason,
 				disposeDetail,
 				disposeLocation,
@@ -42,6 +45,7 @@ const DisposeModal = ({
 	// 자산 관리자 폐기 동작 받음
 	const handleDispose = async () => {
 		await handleDisposeAsset(selectedAssetCode, {
+			disposeUser: user.id,
 			disposeReason,
 			disposeDetail,
 			disposeLocation,
@@ -63,15 +67,11 @@ const DisposeModal = ({
 					</Form.Group>
 					<Form.Group className="mb-3">
 						<Form.Label>폐기 사유</Form.Label>
-						<Form.Select
+						<Form.Control
+							type="text"
 							value={disposeReason}
 							onChange={(e) => setDisposeReason(e.target.value)}
-						>
-							<option value="">사유를 선택하세요</option>
-							<option value="노후화">노후화</option>
-							<option value="고장">고장</option>
-							<option value="성능저하">성능저하</option>
-						</Form.Select>
+						/>
 					</Form.Group>
 					<Form.Group className="mb-3">
 						<Form.Label>폐기 내용</Form.Label>
@@ -101,12 +101,16 @@ const DisposeModal = ({
 				</Form>
 			</Modal.Body>
 			<Modal.Footer>
-				<Button variant="danger" onClick={handleRequest}>
-					폐기요청
-				</Button>
-				<Button variant="danger" onClick={() => handleDispose(selectedAssetCode)}>
-					폐기
-				</Button>
+				{user.role === 'ASSET_MANAGER' && (
+					<Button variant="danger" onClick={handleRequest}>
+						폐기요청
+					</Button>
+				)}
+				{user.role === 'ADMIN' && (
+					<Button variant="danger" onClick={() => handleDispose(selectedAssetCode)}>
+						폐기
+					</Button>
+				)}
 				<Button variant="secondary" onClick={handleClose}>
 					취소
 				</Button>

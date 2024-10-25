@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import api from '@/common/api/authAxios';
 import { Row, Col, Card } from 'react-bootstrap';
 import { Table2 } from '../../../components/table/Table2';
 import assetSurveyLocation from './assetSurveyLocation';
@@ -51,20 +52,30 @@ const sizePerPageList = [
 
 const SurveyTable = ({ tableChange, setSelectedRows, data, setData, setOriginalData }) => {
 	const [isDataExist, setIsDataExist] = useState(false); //fetch로 데이터를 못불러 왔는지
-	//const [loading, setLoading] = useState(true); // fetch로 데이터 불러오는 중인지
+	//const { removeSession } = useAuthContext();
 
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
-				const response = await axios.get(`${URL}/assetSurveyHistory`);
+				const response = await api.get(`${URL}/assetSurveyHistory`);
 				//검색을 위해서 불변 데이터를 하나 더 만들어줌
-				setData(response.data); // API로부터 받은 데이터 설정
-				setOriginalData(response.data);
+				console.log('자산 조사 테이블 1 : ' + JSON.stringify(response));
+				console.log(response.status);
+
+				if (response.status === 403) {
+					setData(tableData);
+				} else {
+					setData(response.data); // API로부터 받은 데이터 설정
+					setOriginalData(response.data);
+				}
+				setLoading(false);
 			} catch (error) {
+				//console.log("자산 조사 테이블 2");
 				setData(tableData);
 
 				setIsDataExist(true);
 				console.error('Error fetching data:', error);
+				//removeSession();
 			}
 		};
 

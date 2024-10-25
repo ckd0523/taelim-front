@@ -4,12 +4,11 @@ import { Table } from './Table';
 import { columns } from './ColumnsSet';
 import { useState, useEffect } from 'react';
 //import { assetDeletes } from './data';
-import axios from 'axios';
 const urlConfig = import.meta.env.VITE_BASIC_URL;
-
+import api from '@/common/api/authAxios';
 import { InfoModal } from './DeleteHistoryModal';
 import { SearchForm } from './DeleteSearchBar';
-// import Select from 'react-select';
+import classNames from 'classnames';
 
 const DeleteHistory = () => {
 	// 데이터 저장
@@ -24,7 +23,7 @@ const DeleteHistory = () => {
 	useEffect(() => {
 		const fetchDeleteHistory = async () => {
 			try {
-				const response = await axios.get(`${urlConfig}/deleteHistory`); // API 호출
+				const response = await api.get(`${urlConfig}/deleteHistory`); // API 호출
 				setDeleteList(response.data); // 가져온 데이터를 상태에 저장
 				setOriginalData(response.data); // 검색을 위한 원본 데이터도 저장
 			} catch (error) {
@@ -76,21 +75,56 @@ const DeleteHistory = () => {
 				<RHForm className="pt-3">
 					<Card>
 						<Card.Body>
-							<Table
-								columns={columns()}
-								data={DeleteList}
-								pageSize={10}
-								//isExpandable={true}
-								isSortable={true}
-								pagination={true}
-								//isSelectable={true}
-								theadClass="table-dark"
-								tableClass="border-black"
-								searchBoxClass="mb-2"
-								onRowClick={() => {}} // onRowClick 이벤트를 빈 함수로 설정하여 무시
-								setModalData={setModalData}
-								setShowModal={setShowModal}
-							/>
+							{DeleteList.length > 0 ? (
+								<Table
+									columns={columns()}
+									data={DeleteList}
+									pageSize={10}
+									//isExpandable={true}
+									isSortable={true}
+									pagination={true}
+									//isSelectable={true}
+									theadClass="table-dark"
+									tableClass="border-black"
+									searchBoxClass="mb-2"
+									onRowClick={() => {}} // onRowClick 이벤트를 빈 함수로 설정하여 무시
+									setModalData={setModalData}
+									setShowModal={setShowModal}
+								/>
+							) : (
+								<div className="table-responsive">
+									<table
+										className={classNames('table table-centered react-table')}
+									>
+										<thead style={{ background: '#313a46' }}>
+											<tr>
+												<th style={{ color: 'white' }}>번호</th>
+												<th style={{ color: 'white' }}>자산코드</th>
+												<th style={{ color: 'white' }}>자산명</th>
+												<th style={{ color: 'white' }}>폐기일자</th>
+												<th style={{ color: 'white' }}>폐기자</th>
+												<th style={{ color: 'white' }}>폐기사유</th>
+												<th style={{ color: 'white' }}>폐기방법</th>
+												<th style={{ color: 'white' }}>폐기위치</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr>
+												<td colSpan="8" className="text-center">
+													<div
+														className="alert alert-warning"
+														role="alert"
+													>
+														<strong>데이터가 없습니다!</strong>
+														<br />
+														폐기이력 데이터가 없습니다.
+													</div>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							)}
 						</Card.Body>
 					</Card>
 				</RHForm>

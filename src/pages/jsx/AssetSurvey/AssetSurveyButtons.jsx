@@ -1,31 +1,22 @@
-import { Row, Col, Button, Modal, Card } from 'react-bootstrap';
+import { Row, Col, Button, Modal } from 'react-bootstrap';
 import RegisterButton from './AssetSurveyRegisterButton';
-import { useState } from 'react';
 import { useToggle } from '@/hooks';
 import { Link } from 'react-router-dom';
 
 const Buttons = ({ onClickRegister, onDelete }) => {
-	const [signUpModal, toggleSignUp] = useToggle();
-
 	return (
-		<Row className="pt-3 row-cols-auto justify-content-end">
-			{/* <Col>
-				<Button style={{ background: '#73af82' }} variant="success">
-					엑셀 출력
+		<Row className="row-cols-auto justify-content-end">
+			<Col>
+				<Button className="btn btn-success">엑셀 출력</Button>
+			</Col>
+			<Col>
+				<Button className="btn btn-danger" onClick={onDelete}>
+					자산 조사 삭제
 				</Button>
-			</Col> */}
+			</Col>
 			<Col>
 				{/* 자산 조사 등록 버튼 */}
 				<RegisterButton onClickRegister={onClickRegister} />
-			</Col>
-			<Col>
-				<Button
-					style={{ background: '#c66464', border: 'none' }}
-					variant="danger"
-					onClick={onDelete}
-				>
-					자산 조사 삭제
-				</Button>
 			</Col>
 		</Row>
 	);

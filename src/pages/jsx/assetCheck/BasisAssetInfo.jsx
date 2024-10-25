@@ -605,12 +605,12 @@ const BasisAssetInfo = ({ isValidated, formData, handleChange, handleSubmit }) =
 												<Form.Select
 													className="mb-2"
 													placeholder="사용상태를 선택해주세요"
-													name="usestate"
-													value={formData.usestate || ''}
+													name="useStated"
+													value={formData.useStated || ''}
 													onChange={(selectedOption) =>
 														handleChange({
 															target: {
-																name: 'usestate',
+																name: 'useStated',
 																value:
 																	selectedOption.target.value ===
 																	''

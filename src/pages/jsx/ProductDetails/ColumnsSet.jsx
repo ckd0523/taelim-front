@@ -78,7 +78,7 @@ const columns = () => [
 const columns1 = () => [
 	{
 		Header: '사용 상태',
-		accessor: 'useState', // 사용 상태
+		accessor: 'useStated', // 사용 상태
 	},
 	{
 		Header: '가동 여부',

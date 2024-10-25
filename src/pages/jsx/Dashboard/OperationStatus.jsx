@@ -74,10 +74,8 @@ const OperationStatus = () => {
         <h4 className="header-title">가동 현황</h4>
         <Col>
           <Row>
-
             {/* <Doughnut data={doughnutData} options={doughnutOptions} height={135} /> */}
             <Doughnut data={doughnutData} options={doughnutOptions} height={215} />
-
           </Row>
           {/*
           <Row>

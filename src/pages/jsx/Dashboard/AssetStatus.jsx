@@ -87,9 +87,7 @@ const AssetStatus = () => {
     <Card>
       <Card.Body>
         <h4 className="header-title">자산현황</h4>
-
         <Bar data={data} options={options} height={215} />
-
       </Card.Body>
     </Card>
   );

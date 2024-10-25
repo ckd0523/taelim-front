@@ -118,9 +118,7 @@ const DepartmentStatus = () => {
     <Card>
       <Card.Body>
         <h4 className="header-title">부서별 자산현황1(부서별 각 자산 표시)</h4>
-        <div dir="ltr">
-          <Bar data={data} options={options} height={215} />
-        </div>
+        <Bar data={data} options={options} height={215} />
       </Card.Body>
     </Card>
   );
@@ -198,9 +196,7 @@ const DepartmentStatus2 = () => {
     <Card>
       <Card.Body>
         <h4 className="header-title">부서별 자산현황2(부서별 총 자산 표시)</h4>
-
         <Bar data={data} options={options} height={215} />
-
       </Card.Body>
     </Card>
   );

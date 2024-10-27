@@ -121,7 +121,16 @@ const InfoModal = ({ show, handleClose, modalData, assetNo }) => {
 											readOnly
 										/>
 									</Col>
-
+									<Col lg={6}>
+										<Form.Label className="pt-2">수정일자</Form.Label>
+										<Form.Control
+											type="text"
+											value={modalData.updateDate}
+											readOnly
+										/>
+									</Col>
+								</Row>
+								<Row>
 									<Col lg={6}>
 										<Form.Label className="pt-2">수정사유</Form.Label>
 										<Form.Control
@@ -130,13 +139,11 @@ const InfoModal = ({ show, handleClose, modalData, assetNo }) => {
 											readOnly
 										/>
 									</Col>
-								</Row>
-								<Row>
 									<Col lg={6}>
-										<Form.Label className="pt-2">수정일자</Form.Label>
+										<Form.Label className="pt-2">수정내용</Form.Label>
 										<Form.Control
 											type="text"
-											value={modalData.updateDate}
+											value={modalData.updateDetail}
 											readOnly
 										/>
 									</Col>

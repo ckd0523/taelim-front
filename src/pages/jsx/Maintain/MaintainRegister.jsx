@@ -17,7 +17,7 @@ const MaintainRegister = ({ assetCode, assetNo }) => {
 		repairEndDate: '',
 		repairBy: user.id,
 		repairResult: '',
-		repairStatus: '',
+		repairStatus: '진행중 ',
 		repairFiles: [],
 	});
 	const [showAlert, setShowAlert] = useState(false);

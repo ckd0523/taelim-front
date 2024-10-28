@@ -1,14 +1,23 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import api from '@/common/api/authAxios';
 import { Button, Table } from 'react-bootstrap';
 import { PropagateLoader } from 'react-spinners';
+import { Input } from 'react-bootstrap-typeahead';
 const urlConfig = import.meta.env.VITE_BASIC_URL;
 function Crawler() {
 	const [products, setProducts] = useState([]);
+	const [keyword, setKeyword] = useState('');
+	const [loading, setLoading] = useState(false);
 
 	const fetchProducts = async () => {
+		if (!keyword) {
+			setProducts([]);
+			setLoading(true);
+			return;
+		}
 		try {
-			const resposne = await api.get(`${urlConfig}/api/crawl/products`);
+			setLoading(true);
+			const resposne = await api.get(`${urlConfig}/api/crawl/products?keyword=${keyword}`);
 			if (Array.isArray(resposne.data)) {
 				console.log(resposne.data);
 				setProducts(resposne.data);
@@ -16,6 +25,8 @@ function Crawler() {
 			}
 		} catch (error) {
 			console.log('error fetching data : ', error);
+		} finally {
+			setLoading(false);
 		}
 	};
 
@@ -28,7 +39,12 @@ function Crawler() {
 			<div className="d-flex justify-content-center">
 				<h1>Web Search</h1>
 			</div>
-			<div>
+			<div className="d-flex justify-content-end">
+				<Input
+					value={keyword}
+					onChange={(e) => setKeyword(e.target.value)}
+					placeholder="상품을 검색하세요"
+				/>
 				<Button type="button" onClick={handleButton} variant="dark">
 					검색
 				</Button>
@@ -42,7 +58,17 @@ function Crawler() {
 							<th>price</th>
 						</tr>
 					</thead>
-					{Array.isArray(products) && products.length > 0 ? (
+					{loading ? (
+						<tbody>
+							<tr>
+								<td colSpan={3}>
+									<div className="pt-5 pb-5 d-flex justify-content-center">
+										<PropagateLoader color="#3760b3" size={20} />
+									</div>
+								</td>
+							</tr>
+						</tbody>
+					) : Array.isArray(products) && products.length > 0 ? (
 						<tbody>
 							{products.map((product, index) => (
 								<tr key={index}>

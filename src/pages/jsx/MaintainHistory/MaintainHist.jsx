@@ -42,22 +42,22 @@ const columns = [
 		Header: '상태',
 		accessor: 'repairStatus',
 		defaultCanSort: true,
-		Cell: ({ row }) => {
-			const { repairStartDate, repairEndDate, repairResult, repairFiles } = row.original;
-			row.repairStatus = '진행중';
-			const hasBeforeRepair = repairFiles?.some((file) => file.repairType === '보수전');
-			const hasAfterRepair = repairFiles?.some((file) => file.repairType === '보수후');
-			if (
-				repairStartDate &&
-				repairEndDate &&
-				repairResult &&
-				hasBeforeRepair &&
-				hasAfterRepair
-			) {
-				row.repairStatus = '완료';
-			}
-			return row.repairStatus;
-		},
+		// Cell: ({ row }) => {
+		// 	const { repairStartDate, repairEndDate, repairResult, repairFiles } = row.original;
+		// 	row.repairStatus = '진행중';
+		// 	const hasBeforeRepair = repairFiles?.some((file) => file.repairType === '보수전');
+		// 	const hasAfterRepair = repairFiles?.some((file) => file.repairType === '보수후');
+		// 	if (
+		// 		repairStartDate &&
+		// 		repairEndDate &&
+		// 		repairResult &&
+		// 		hasBeforeRepair &&
+		// 		hasAfterRepair
+		// 	) {
+		// 		row.repairStatus = '완료';
+		// 	}
+		// 	return row.repairStatus;
+		// },
 	},
 ];
 
@@ -379,7 +379,7 @@ const MaintainHist = () => {
 													>
 														<strong>데이터가 없습니다!</strong>
 														<br />
-														폐기이력 데이터가 없습니다.
+														유지보수이력 데이터가 없습니다.
 													</div>
 												</td>
 											</tr>

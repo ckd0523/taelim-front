@@ -1,4 +1,5 @@
 import React, { useRef, useEffect, forwardRef, useState } from 'react';
+import { Alert } from 'react-bootstrap';
 import {
 	useTable,
 	useSortBy,
@@ -258,6 +259,19 @@ const Table = (props) => {
 					</thead>
 
 					<tbody {...dataTable.getTableBodyProps()}>
+						{rows.length === 0 && (
+							<tr>
+								<td colSpan="100%">
+									<Alert
+										variant="danger"
+										className="mb-0 text-center d-flex align-items-center justify-content-center"
+										style={{ height: '100%' }}
+									>
+										데이터가 없습니다.
+									</Alert>
+								</td>
+							</tr>
+						)}
 						{rows.map((row, index) => {
 							dataTable.prepareRow(row); // 각 행에 대해 한 번만 호출
 							return (
@@ -282,7 +296,11 @@ const Table = (props) => {
 				</table>
 			</div>
 
-			{pagination && <Pagination tableProps={dataTable} sizePerPageList={sizePerPageList} />}
+			<div>
+				{rows.length > 0 && (
+					<Pagination tableProps={dataTable} sizePerPageList={sizePerPageList} />
+				)}
+			</div>
 		</>
 	);
 };

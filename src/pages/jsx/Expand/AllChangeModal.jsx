@@ -4,6 +4,7 @@ import axios from 'axios';
 import api from '@/common/api/authAxios';
 import { useAuthContext } from '@/common';
 import Swal from 'sweetalert2';
+import './li.css';
 const API_URL = import.meta.env.VITE_BASIC_URL;
 
 const ActionModal = ({
@@ -299,7 +300,7 @@ const ActionModal = ({
 								</Form.Group>
 
 								{/* 추가된 부분: 소유자 입력 필드 */}
-								<Form.Group className="mb-1">
+								<Form.Group className="mb-1" style={{ position: 'relative' }}>
 									<Form.Label className="mb-0">소유자</Form.Label>
 									<Form.Control
 										type="text"
@@ -322,7 +323,7 @@ const ActionModal = ({
 								</Form.Group>
 
 								{/* 추가된 부분: 소유자 입력 필드 */}
-								<Form.Group className="mb-1">
+								<Form.Group className="mb-1" style={{ position: 'relative' }}>
 									<Form.Label className="mb-0">사용자</Form.Label>
 									<Form.Control
 										type="text"
@@ -345,7 +346,7 @@ const ActionModal = ({
 								</Form.Group>
 
 								{/* 추가된 부분: 소유자 입력 필드 */}
-								<Form.Group className="mb-1">
+								<Form.Group className="mb-1" style={{ position: 'relative' }}>
 									<Form.Label className="mb-0">보안담당자</Form.Label>
 									<Form.Control
 										type="text"

@@ -267,17 +267,19 @@ const InfoModal = ({ show, handleClose, modalData }) => {
 				<Modal.Footer>
 					{isUnconfirmed && (
 						<>
-							<Form>
-								<Form.Group>
-									<Form.Control
-										type="text"
-										value={reason}
-										onChange={handleReasonChange}
-										placeholder={'사유'}
-										size="lg"
-									/>
-								</Form.Group>
-							</Form>
+							<Col lg={12}>
+								<Form>
+									<Form.Group>
+										<Form.Control
+											type="text"
+											value={reason}
+											onChange={handleReasonChange}
+											placeholder={'사유'}
+											size="lg"
+										/>
+									</Form.Group>
+								</Form>
+							</Col>
 							<Button
 								style={{ background: '#5e83bb', border: 'none' }}
 								onClick={() => handleFormSubmit('approve')}

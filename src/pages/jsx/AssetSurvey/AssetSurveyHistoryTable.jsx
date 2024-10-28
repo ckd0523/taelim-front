@@ -9,36 +9,36 @@ import assetSurveyLocation from './assetSurveyLocation';
 const URL = import.meta.env.VITE_BASIC_URL;
 
 const columns = [
-  { Header: '자산 조사 번호', accessor: 'assetSurveyNo', show: false },
-  { Header: '회차', accessor: 'round', defaultCanSort: true },
-  {
-    Header: '위치',
-    accessor: 'assetSurveyLocation',
-    defaultCanSort: false,
-    Cell: ({ value }) => {
-      const location = assetSurveyLocation.find((loc) => loc.value === value);
-      return location ? location.label : value; // 매칭되는 label을 찾아 표시
-    },
-  },
-  { Header: '자산조사일자', accessor: 'assetSurveyStartDate', defaultCanSort: false },
-  { Header: '자산조사자', accessor: 'assetSurveyBy', defaultCanSort: false },
-  {
-    Header: '상태',
-    accessor: 'surveyStatus',
-    defaultCanSort: true,
-    //Cell: StatusColumn,
-    Cell: ({ value }) => (value === '' ? null : value ? '완료' : '진행 중'),
-  },
+	{ Header: '자산 조사 번호', accessor: 'assetSurveyNo', show: false },
+	{ Header: '회차', accessor: 'round', defaultCanSort: true },
+	{
+		Header: '위치',
+		accessor: 'assetSurveyLocation',
+		defaultCanSort: false,
+		Cell: ({ value }) => {
+			const location = assetSurveyLocation.find((loc) => loc.value === value);
+			return location ? location.label : value; // 매칭되는 label을 찾아 표시
+		},
+	},
+	{ Header: '자산조사일자', accessor: 'assetSurveyStartDate', defaultCanSort: false },
+	{ Header: '자산조사자', accessor: 'assetSurveyBy', defaultCanSort: false },
+	{
+		Header: '상태',
+		accessor: 'surveyStatus',
+		defaultCanSort: true,
+		//Cell: StatusColumn,
+		Cell: ({ value }) => (value === '' ? null : value ? '완료' : '진행 중'),
+	},
 ];
 
 const tableData = [
-  {
-    round: '',
-    assetSurveyLocation: '',
-    assetSurveyStartDate: '',
-    assetSurveyBy: '',
-    surveyStatus: '',
-  },
+	{
+		round: '',
+		assetSurveyLocation: '',
+		assetSurveyStartDate: '',
+		assetSurveyBy: '',
+		surveyStatus: '',
+	},
 ];
 
 /*
@@ -51,78 +51,76 @@ const sizePerPageList = [
 */
 
 const SurveyTable = ({ tableChange, setSelectedRows, data, setData, setOriginalData }) => {
+	const [isDataExist, setIsDataExist] = useState(false); //fetch로 데이터를 못불러 왔는지
+	//const { removeSession } = useAuthContext();
 
-  const [isDataExist, setIsDataExist] = useState(false); //fetch로 데이터를 못불러 왔는지
-  //const [loading, setLoading] = useState(true); // fetch로 데이터 불러오는 중인지
-  //const { removeSession } = useAuthContext();
+	useEffect(() => {
+		const fetchData = async () => {
+			try {
+				const response = await api.get(`${URL}/assetSurveyHistory`);
+				//검색을 위해서 불변 데이터를 하나 더 만들어줌
+				console.log('자산 조사 테이블 1 : ' + JSON.stringify(response));
+				console.log(response.status);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await api.get(`${URL}/assetSurveyHistory`);
-        //검색을 위해서 불변 데이터를 하나 더 만들어줌
-        console.log("자산 조사 테이블 1 : " + JSON.stringify(response));
-        console.log(response.status);
+				if (response.status === 403) {
+					setData(tableData);
+				} else {
+					setData(response.data); // API로부터 받은 데이터 설정
+					setOriginalData(response.data);
+				}
+				setLoading(false);
+			} catch (error) {
+				//console.log("자산 조사 테이블 2");
+				setData(tableData);
 
-        if (response.status === 403) {
-          setData(tableData);
-        } else {
-          setData(response.data); // API로부터 받은 데이터 설정
-          setOriginalData(response.data);
-        }
+				setIsDataExist(true);
+				console.error('Error fetching data:', error);
+				//removeSession();
+			}
+		};
 
-      } catch (error) {
-        //console.log("자산 조사 테이블 2");
-        setData(tableData);
+		fetchData();
+	}, [tableChange]);
 
-        setIsDataExist(true);
-        console.error('Error fetching data:', error);
-        //removeSession();
-      }
-    };
-
-    fetchData();
-  }, [tableChange]);
-
-  return (
-    <Row className="pt-3">
-      <Col>
-        <Card>
-          <Card.Body>
-            {/* 이 Table은 리액트의 테이블이 아니라 Hyper의 테이블임 */}
-            <Table2
-              columns={columns}
-              data={data}
-              pagesize={5}
-              //sizePerPageList={sizePerPageList}
-              theadClass="table-dark"
-              tableClass="border-black"
-              isSortable={true}
-              pagination={true}
-              isSelectable={true}
-              isDataExist={isDataExist}
-              setSelectedRows={setSelectedRows}
-            />
-          </Card.Body>
-        </Card>
-      </Col>
-    </Row>
-  );
+	return (
+		<Row className="pt-3">
+			<Col>
+				<Card>
+					<Card.Body>
+						{/* 이 Table은 리액트의 테이블이 아니라 Hyper의 테이블임 */}
+						<Table2
+							columns={columns}
+							data={data}
+							pagesize={5}
+							//sizePerPageList={sizePerPageList}
+							theadClass="table-dark"
+							tableClass="border-black"
+							isSortable={true}
+							pagination={true}
+							isSelectable={true}
+							isDataExist={isDataExist}
+							setSelectedRows={setSelectedRows}
+						/>
+					</Card.Body>
+				</Card>
+			</Col>
+		</Row>
+	);
 };
 
 const DetailTable = ({ detailColumn, detailData }) => {
-  return (
-    <Table2
-      columns={detailColumn}
-      data={detailData}
-      pagesize={5}
-      sizePerPageList={20}
-      tableClass="border-black"
-      isSortable={true}
-      pagination={true}
-      isSelectable={false}
-    />
-  );
+	return (
+		<Table2
+			columns={detailColumn}
+			data={detailData}
+			pagesize={5}
+			sizePerPageList={20}
+			tableClass="border-black"
+			isSortable={true}
+			pagination={true}
+			isSelectable={false}
+		/>
+	);
 };
 
 export { SurveyTable, DetailTable };

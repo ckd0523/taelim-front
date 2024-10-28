@@ -2,117 +2,117 @@
 export const getClassificationColumns = (classification) => {
 	switch (classification) {
 		case '정보보호시스템':
-			return [{ title: '서비스범위', data: 'serviceScope' }];
+			return [{ Header: '서비스범위', accessor: 'serviceScope' }];
 
 		case '응용프로그램':
 			return [
-				{ title: '서비스범위', data: 'serviceScope' },
-				{ title: 'OS', data: 'os' },
-				{ title: '관련DB', data: 'relatedDB' },
-				{ title: 'IP', data: 'ip' },
-				{ title: '화면수', data: 'screenNumber' },
+				{ Header: '서비스범위', accessor: 'serviceScope' },
+				{ Header: 'OS', accessor: 'os' },
+				{ Header: '관련DB', accessor: 'relatedDB' },
+				{ Header: 'IP', accessor: 'ip' },
+				{ Header: '화면수', accessor: 'screenNumber' },
 			];
 
 		case '소프트웨어':
 			return [
-				{ title: 'IP', data: 'ip' },
-				{ title: 'ID', data: 'serverId' },
-				{ title: 'PW', data: 'serverPassword' },
-				{ title: '담당업체', data: 'companyManager' },
-				{ title: 'OS', data: 'os' },
+				{ Header: 'IP', accessor: 'ip' },
+				{ Header: 'ID', accessor: 'serverId' },
+				{ Header: 'PW', accessor: 'serverPassword' },
+				{ Header: '담당업체', accessor: 'companyManager' },
+				{ Header: 'OS', accessor: 'os' },
 			];
 
 		case '전자정보':
 			return [
-				{ title: 'OS', data: 'os' },
-				{ title: '시스템', data: 'system' },
-				{ title: 'DB종류', data: 'dbtype' },
+				{ Header: 'OS', accessor: 'os' },
+				{ Header: '시스템', accessor: 'system' },
+				{ Header: 'DB종류', accessor: 'dbtype' },
 			];
 
 		case '문서':
 			return [
-				{ title: '문서등급', data: 'documentGrade' },
-				{ title: '문서형태', data: 'documentType' },
-				{ title: '문서링크', data: 'documentLink' },
+				{ Header: '문서등급', accessor: 'documentGrade' },
+				{ Header: '문서형태', accessor: 'documentType' },
+				{ Header: '문서링크', accessor: 'documentLink' },
 			];
 
 		case '특허 및 상표':
 			return [
-				{ title: '출원일자', data: 'applicationDate' },
-				{ title: '등록일자', data: 'registrationDate' },
-				{ title: '만료일자', data: 'expirationDate' },
-				{ title: '특허/상표 상태', data: 'patentTrademarkStatus' },
-				{ title: '출원국가', data: 'countryApplication' },
-				{ title: '특허분류', data: 'patentClassification' },
-				{ title: '특허세목', data: 'patentItem' },
-				{ title: '출원번호', data: 'applicationNo' },
-				{ title: '발명자', data: 'inventor' },
-				{ title: '권리권자', data: 'assignee' },
-				{ title: '관련문서', data: 'relatedDocuments' },
+				{ Header: '출원일자', accessor: 'applicationDate' },
+				{ Header: '등록일자', accessor: 'registrationDate' },
+				{ Header: '만료일자', accessor: 'expirationDate' },
+				{ Header: '특허/상표 상태', accessor: 'patentTrademarkStatus' },
+				{ Header: '출원국가', accessor: 'countryApplication' },
+				{ Header: '특허분류', accessor: 'patentClassification' },
+				{ Header: '특허세목', accessor: 'patentItem' },
+				{ Header: '출원번호', accessor: 'applicationNo' },
+				{ Header: '발명자', accessor: 'inventor' },
+				{ Header: '권리권자', accessor: 'assignee' },
+				{ Header: '관련문서', accessor: 'relatedDocuments' },
 			];
 
 		case 'IT 장비 - 시스템':
 			return [
-				{ title: '장비유형', data: 'equipmentType' },
-				{ title: '랙유닛', data: 'rackUnit' },
-				{ title: '전원공급장치', data: 'powerSupply' },
-				{ title: '쿨링시스템', data: 'coolingSystem' },
-				{ title: '인터페이스 포트', data: 'interfacePorts' },
-				{ title: '폼팩터', data: 'formFactor' },
-				{ title: '확장슬롯수', data: 'expansionSlots' },
-				{ title: '그래픽카드', data: 'graphicsCard' },
-				{ title: '포트 구성', data: 'portConfiguration' },
-				{ title: '모니터 포함여부', data: 'monitorIncluded' },
+				{ Header: '장비유형', accessor: 'equipmentType' },
+				{ Header: '랙유닛', accessor: 'rackUnit' },
+				{ Header: '전원공급장치', accessor: 'powerSupply' },
+				{ Header: '쿨링시스템', accessor: 'coolingSystem' },
+				{ Header: '인터페이스 포트', accessor: 'interfacePorts' },
+				{ Header: '폼팩터', accessor: 'formFactor' },
+				{ Header: '확장슬롯수', accessor: 'expansionSlots' },
+				{ Header: '그래픽카드', accessor: 'graphicsCard' },
+				{ Header: '포트 구성', accessor: 'portConfiguration' },
+				{ Header: '모니터 포함여부', accessor: 'monitorIncluded' },
 			];
 
 		case 'IT 장비 – 네트워크':
 			return [
-				{ title: '장비유형', data: 'equipmentType' },
-				{ title: '포트수', data: 'numberOfPorts' },
-				{ title: '지원프로토콜', data: 'supportedProtocols' },
-				{ title: '펌웨어 버전', data: 'firmwareVersion' },
-				{ title: '네트워크 속도', data: 'networkSpeed' },
-				{ title: '서비스범위', data: 'serviceScope' },
+				{ Header: '장비유형', accessor: 'equipmentType' },
+				{ Header: '포트수', accessor: 'numberOfPorts' },
+				{ Header: '지원프로토콜', accessor: 'supportedProtocols' },
+				{ Header: '펌웨어 버전', accessor: 'firmwareVersion' },
+				{ Header: '네트워크 속도', accessor: 'networkSpeed' },
+				{ Header: '서비스범위', accessor: 'serviceScope' },
 			];
 
 		case '단말기':
 			return [
-				{ title: 'IP', data: 'ip' },
-				{ title: '제품 시리얼 번호', data: 'productSerialNumber' },
-				{ title: 'OS', data: 'os' },
-				{ title: '보안관제', data: 'securityControl' },
-				{ title: '내부정보 유출 방지', data: 'kaitsKeeper' },
-				{ title: '악성코드,랜섬웨어 탐지', data: 'V3OfficeSecurity' },
-				{ title: '안티랜섬웨어', data: 'appCheckPro' },
-				{ title: 'NAC agent', data: 'tgate' },
+				{ Header: 'IP', accessor: 'ip' },
+				{ Header: '제품 시리얼 번호', accessor: 'productSerialNumber' },
+				{ Header: 'OS', accessor: 'os' },
+				{ Header: '보안관제', accessor: 'securityControl' },
+				{ Header: '내부정보 유출 방지', accessor: 'kaitsKeeper' },
+				{ Header: '악성코드,랜섬웨어 탐지', accessor: 'V3OfficeSecurity' },
+				{ Header: '안티랜섬웨어', accessor: 'appCheckPro' },
+				{ Header: 'NAC agent', accessor: 'tgate' },
 			];
 
 		case '가구':
-			return [{ title: '크기', data: 'furnitureSize' }];
+			return [{ Header: '크기', accessor: 'furnitureSize' }];
 
 		case '기기':
 			return [
-				{ title: '기기유형', data: 'deviceType' },
-				{ title: '모델번호', data: 'modelNumber' },
-				{ title: '연결방식', data: 'connectionType' },
-				{ title: '전원사양', data: 'powerSpecifications' },
+				{ Header: '기기유형', accessor: 'deviceType' },
+				{ Header: '모델번호', accessor: 'modelNumber' },
+				{ Header: '연결방식', accessor: 'connectionType' },
+				{ Header: '전원사양', accessor: 'powerSpecifications' },
 			];
 
 		case '차량':
 			return [
-				{ title: '배기량', data: 'displacement' },
-				{ title: '차량의 문 수', data: 'doorsCount' },
-				{ title: '엔진 형식', data: 'engineType' },
-				{ title: '차량 종류', data: 'carType' },
-				{ title: '차량 식별번호', data: 'identificationNo' },
-				{ title: '차량 색상', data: 'carColor' },
-				{ title: '연식', data: 'modelYear' },
+				{ Header: '배기량', accessor: 'displacement' },
+				{ Header: '차량의 문 수', accessor: 'doorsCount' },
+				{ Header: '엔진 형식', accessor: 'engineType' },
+				{ Header: '차량 종류', accessor: 'carType' },
+				{ Header: '차량 식별번호', accessor: 'identificationNo' },
+				{ Header: '차량 색상', accessor: 'carColor' },
+				{ Header: '연식', accessor: 'modelYear' },
 			];
 
 		case '기타':
 			return [
-				{ title: '기타 세부 설명', data: 'otherDescription' },
-				{ title: '사용 빈도', data: 'usageFrequency' },
+				{ Header: '기타 세부 설명', accessor: 'otherDescription' },
+				{ Header: '사용 빈도', accessor: 'usageFrequency' },
 			];
 
 		default:
@@ -121,9 +121,9 @@ export const getClassificationColumns = (classification) => {
 };
 
 // 중요성 점수를 계산
-export const calculateImportanceScore = (formData) => {
-	if (formData) {
-		const { confidentiality, integrity, availability } = formData;
+export const calculateImportanceScore = (formaccessor) => {
+	if (formaccessor) {
+		const { confidentiality, integrity, availability } = formaccessor;
 		return (confidentiality || 0) + (integrity || 0) + (availability || 0);
 	}
 	return 0;

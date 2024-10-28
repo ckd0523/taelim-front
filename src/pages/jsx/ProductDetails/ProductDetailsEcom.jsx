@@ -1,8 +1,6 @@
 import { Row, Col, Card } from 'react-bootstrap';
 import Stocks from './Stocks';
-
-// images
-import productImg1 from '@/assets/images/products/product-5.jpg';
+import Test from './Test';
 
 const ProductDetailsEcom = () => {
 	return (
@@ -13,7 +11,7 @@ const ProductDetailsEcom = () => {
 						<Card.Body>
 							<Row>
 								<Col lg={12}>
-									<Stocks />
+									<Test />
 								</Col>
 							</Row>
 						</Card.Body>

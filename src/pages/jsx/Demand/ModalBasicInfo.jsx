@@ -149,11 +149,11 @@ const ModalBasicInfo = ({
 										</td>
 										<td
 											className={getCellClassName(
-												assetInfo.useState,
-												modifiedAssetInfo.useState
+												assetInfo.useStated,
+												modifiedAssetInfo.useStated
 											)}
 										>
-											{assetInfo.useState || 'N/A'}
+											{assetInfo.useStated || 'N/A'}
 										</td>
 										<td
 											className={getCellClassName(

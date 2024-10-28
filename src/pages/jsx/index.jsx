@@ -2,6 +2,7 @@ import { lazy } from 'react';
 import { Outlet, Route, Routes, Navigate } from 'react-router-dom';
 import JSX from '../jsx';
 import { useAuthContext } from '@/common'; // 인증 및 사용자 정보 가져오기
+import { Crawler } from '@/pages/jsx/Crawling/Crawler';
 
 const ProductDetailsEcom = lazy(() => import('./ProductDetails'));
 const AssetRegister = lazy(() => import('./assetCheck'));
@@ -72,7 +73,17 @@ export default function jsx() {
 						)
 					}
 				/>
-				<Route path=":assetCode" element={<ProductDetailsEcom />} />
+				<Route path="Crawling" element={<Crawler />} />
+
+				<Route
+					path=":assetCode"
+					element={checkPermission(['ADMIN', 'ASSET_MANAGER', 'USER']) ? (
+						<ProductDetailsEcom />
+					) : (
+						<Navigate to="/jsx/dashboard" />
+					)
+					}
+				/>
 
 				{/* 백업 내역 - ADMIN만 접근 가능 */}
 				<Route

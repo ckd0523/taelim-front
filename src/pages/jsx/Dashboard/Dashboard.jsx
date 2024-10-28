@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Row, Col, Table, Card } from 'react-bootstrap';
 
-import TotalAssetValue from './TotalAssetValue';
+import TotalAssetValue from './TotalAssetRatio';
 import RealTimeStatus from './RealTimeStatus';
 import ReactApexChart from 'react-apexcharts';
 const DistributedColumnOps = {
@@ -69,6 +69,19 @@ const DistributedColumnOps = {
 			opacity: 0.2,
 		},
 		borderColor: '#f1f3fa',
+	},
+	fill: {
+		type: 'gradient',
+		gradient: {
+			shade: 'light',
+			type: 'horizontal',
+			shadeIntensity: 0.25,
+			gradientToColors: undefined,
+			inverseColors: true,
+			opacityFrom: 0.85,
+			opacityTo: 0.85,
+			stops: [50, 0, 100],
+		},
 	},
 };
 const ColumnWithRotatedlabelsOps = {

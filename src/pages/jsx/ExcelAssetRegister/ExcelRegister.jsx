@@ -107,7 +107,7 @@ const ExcelRegister = () => {
 		소유자: 'assetOwner',
 		보안담당자: 'assetSecurityManager',
 		비고: 'note',
-		사용상태: 'usestate',
+		사용상태: 'useStated',
 		구매비용: 'purchaseCost',
 		구매날짜: 'purchaseDate',
 		내용연수: 'usefulLife',
@@ -309,7 +309,7 @@ const ExcelRegister = () => {
 					text: '자산조회화면으로 이동',
 				});
 				setTimeout(() => {
-					window.location.replace('/jsx/AssetPageTest');
+					window.location.replace('/jsx/Expand');
 				}, 1000);
 
 				// 파일 입력 필드 초기화

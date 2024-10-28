@@ -1,20 +1,22 @@
 import { Card } from "react-bootstrap";
 import { Bar } from "react-chartjs-2";
 
-const OwnerShipStatus = () => {
+const ImportantStatus = () => {
   const data = {
-    labels: ["소유", "임대"],
+    labels: ["A급", "B급", "C급"],
     datasets: [
       {
-        label: "개수",
-        data: [423, 159],
+        //label: "개수",
+        data: [244, 111, 642],
         backgroundColor: [
-          "#5a85dc",
-          "#acaba6",
+          "#e15759",
+          "#f28e2b",
+          "#59a14f",
         ],
         borderColor: [
-          "#5a85dc",
-          "#acaba6",
+          "#e15759",
+          "#f28e2b",
+          "#59a14f",
         ],
         borderWidth: 1,
         barThickness: 45,
@@ -50,11 +52,11 @@ const OwnerShipStatus = () => {
   return (
     <Card>
       <Card.Body>
-        <h4 className="header-title">소유권별 현황</h4>
+        <h4 className="header-title">중요성별 현황</h4>
         <Bar data={data} options={options} height={215} />
       </Card.Body>
     </Card>
   );
 };
 
-export default OwnerShipStatus;
+export default ImportantStatus;

@@ -1,5 +1,5 @@
-import { Card, Row, Col } from "react-bootstrap";
-import { Doughnut, Bar } from 'react-chartjs-2';
+import { Card } from "react-bootstrap";
+import { Doughnut } from 'react-chartjs-2';
 
 const OperationStatus = () => {
   const doughnutData = {
@@ -72,17 +72,10 @@ const OperationStatus = () => {
     <Card>
       <Card.Body>
         <h4 className="header-title">가동 현황</h4>
-        <Col>
-          <Row>
-            {/* <Doughnut data={doughnutData} options={doughnutOptions} height={135} /> */}
-            <Doughnut data={doughnutData} options={doughnutOptions} height={215} />
-          </Row>
-          {/*
-          <Row>
-            <Bar data={barData} options={barOptions} height={80} />
-          </Row>
-          */}
-        </Col>
+        {/* 도넛을 div나 아무거나로 감싸줘야함 */}
+        <div>
+          <Doughnut data={doughnutData} options={doughnutOptions} height={333} />
+        </div>
       </Card.Body>
     </Card>
   );

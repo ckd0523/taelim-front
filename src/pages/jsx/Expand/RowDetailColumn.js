@@ -136,6 +136,7 @@ export const calculateImportanceRating = (score) => {
 	if (score >= 3 && score <= 4) return 'C급';
 	return 'N/A';
 };
+
 const RowDetailColumn = {
 	getClassificationColumns,
 	calculateImportanceScore,

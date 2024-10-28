@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Row, Col, Button, Card, Form, CardBody } from 'react-bootstrap';
 import { TextInput, CustomDatePicker, Form as RHForm } from '@/components';
 import Select from 'react-select';
@@ -123,6 +123,18 @@ const SearchForm = ({ onSearch }) => {
 		});
 	};
 
+	const handleResetClick = () => {
+		setAssetCode('');
+		setAssetName('');
+		setAssetUser('');
+		setSelectedAssetLocation(null);
+		setSelectedDepartment(null);
+		setIntroduceDate('');
+		setSelectedStartDate(null);
+		setSelectedEndDate(null);
+		onSearch({}); // 검색 조건 초기화 전달
+	};
+
 	// react-select의 스타일 커스터마이징
 	const customSelectStyles = {
 		container: (provided) => ({
@@ -168,6 +180,7 @@ const SearchForm = ({ onSearch }) => {
 										<Select
 											options={assetLocationOptions}
 											onChange={handleAssetLocationChange}
+											value={selectedAssetLocation}
 											styles={{
 												container: (provided) => ({
 													...provided,
@@ -189,16 +202,11 @@ const SearchForm = ({ onSearch }) => {
 									</Col>
 									<Col lg={2}>
 										<Form.Label>부서</Form.Label>
-										{/* <Form.Control
-											name="department"
-											type="text"
-											placeholder="부서를 입력하세요"
-											// value={department}
-											// onChange={handleFormChange}
-										/> */}
+
 										<Select
 											options={departmentOptions}
 											onChange={handleDepartmentChange}
+											value={selectedDepartment}
 											styles={{
 												container: (provided) => ({
 													...provided,
@@ -239,7 +247,15 @@ const SearchForm = ({ onSearch }) => {
 													type="button"
 													onClick={handleSearchClick}
 												>
-													검색
+													<i className="ri-search-line font-22"></i>
+												</Button>
+												&nbsp; &nbsp;
+												<Button
+													variant="dark"
+													type="button"
+													onClick={handleResetClick}
+												>
+													<i className=" ri-find-replace-line font-22"></i>
 												</Button>
 											</Col>
 										</Row>

@@ -35,9 +35,10 @@ const AssetPageTest = (props) => {
 		assetLocationEnum: '',
 		assetUser: '',
 		departmentEnum: '',
-		introducedDate: '',
-		assetClassification: null, // 분류 추가
-	}); // 검색 필터 상태 관리
+		startDate: null,
+		endDate: null,
+		assetClassification: null,
+	});
 
 	// 정렬 상태 관리
 	const [sortBy, setSortBy] = useState('assetBasis'); // 기본 정렬 기준

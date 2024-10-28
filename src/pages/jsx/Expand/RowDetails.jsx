@@ -11,6 +11,7 @@ import {
 	Accordion,
 	Tab,
 	Tabs,
+	InputGroup,
 } from 'react-bootstrap';
 import { BsCaretUpFill } from 'react-icons/bs';
 import { BsCaretDownFill } from 'react-icons/bs';
@@ -22,6 +23,11 @@ import {
 	calculateImportanceScore,
 	calculateImportanceRating,
 } from './RowDetailColumn';
+import {
+	getResidualValueRate,
+	calculateResidualValue,
+	calculatePresentValue,
+} from './RowDetailCalulate';
 import { HistoryTableUpdate } from './HistoryTableUpdate';
 import { HistoryTableMaintenance } from './HistoryTableMaintenance';
 import { HistoryTableInvestigation } from './HistoryTableInvestigation';
@@ -53,6 +59,10 @@ const RowDetails = ({
 		() => getClassificationColumns(classification),
 		[classification]
 	);
+
+	// 잔존가치와 현재가치 계산
+	const residualValue = calculateResidualValue(formData);
+	const currentValue = calculatePresentValue(formData);
 
 	const { user } = useAuthContext();
 
@@ -723,19 +733,23 @@ const RowDetails = ({
 				);
 			}
 
-			// 소유자 필드에 대해 수정모드인 경우 별도로 렌더링
+			// 사용자 필드에 대해 수정모드인 경우 별도로 렌더링
 			if (key === 'assetUser') {
 				return (
-					<Form.Group className="mb-1">
-						<Form.Control
-							type="text"
-							value={selectedUser ? selectedUser.fullname : formData.assetUser || ''} // 선택된 소유자의 fullname 또는 기존 값 사용
-							disabled // 입력 필드 비활성화
-							style={{ textAlign: 'center' }} // 텍스트 가운데 정렬
-						/>
-						<Button variant="secondary" onClick={() => setShowUserModal(true)}>
-							사용자 선택
-						</Button>
+					<Form.Group className="mb-3">
+						<InputGroup>
+							<Form.Control
+								type="text"
+								value={
+									selectedUser ? selectedUser.fullname : formData.assetUser || ''
+								} // 선택된 사용자의 fullname 또는 기존 값 사용
+								disabled // 입력 필드 비활성화
+								style={{ textAlign: 'center' }} // 텍스트 가운데 정렬
+							/>
+							<Button variant="secondary" onClick={() => setShowUserModal(true)}>
+								<i className="ri-search-line font-22"></i> {/* 아이콘 추가 */}
+							</Button>
+						</InputGroup>
 					</Form.Group>
 				);
 			}
@@ -743,45 +757,51 @@ const RowDetails = ({
 			// 소유자 필드에 대해 수정모드인 경우 별도로 렌더링
 			if (key === 'assetOwner') {
 				return (
-					<Form.Group className="mb-1">
-						<Form.Control
-							type="text"
-							value={
-								selectedOwner ? selectedOwner.fullname : formData.assetOwner || ''
-							} // 선택된 소유자의 fullname 또는 기존 값 사용
-							disabled // 입력 필드 비활성화
-							style={{ textAlign: 'center' }} // 텍스트 가운데 정렬
-						/>
-						<Button variant="secondary" onClick={() => setShowOwnerModal(true)}>
-							소유자 선택
-						</Button>
+					<Form.Group className="mb-3">
+						<InputGroup>
+							<Form.Control
+								type="text"
+								value={
+									selectedOwner
+										? selectedOwner.fullname
+										: formData.assetOwner || ''
+								} // 선택된 소유자의 fullname 또는 기존 값 사용
+								disabled // 입력 필드 비활성화
+								style={{ textAlign: 'center' }} // 텍스트 가운데 정렬
+							/>
+							<Button variant="secondary" onClick={() => setShowOwnerModal(true)}>
+								<i className="ri-search-line font-22"></i> {/* 아이콘 추가 */}
+							</Button>
+						</InputGroup>
+					</Form.Group>
+				);
+			}
+			// 보안담당자 필드에 대해 수정모드인 경우 별도로 렌더링
+			if (key === 'assetSecurityManager') {
+				return (
+					<Form.Group className="mb-3">
+						<InputGroup>
+							<Form.Control
+								type="text"
+								value={
+									selectedSecurityManager
+										? selectedSecurityManager.fullname
+										: formData.assetSecurityManager || ''
+								} // 선택된 보안담당자의 fullname 또는 기존 값 사용
+								disabled // 입력 필드 비활성화
+								style={{ textAlign: 'center' }} // 텍스트 가운데 정렬
+							/>
+							<Button
+								variant="secondary"
+								onClick={() => setShowSecurityManagerModal(true)}
+							>
+								<i className="ri-search-line font-22"></i> {/* 아이콘 추가 */}
+							</Button>
+						</InputGroup>
 					</Form.Group>
 				);
 			}
 
-			// 소유자 필드에 대해 수정모드인 경우 별도로 렌더링
-			if (key === 'assetSecurityManager') {
-				return (
-					<Form.Group className="mb-1">
-						<Form.Control
-							type="text"
-							value={
-								selectedSecurityManager
-									? selectedSecurityManager.fullname
-									: formData.assetSecurityManager || ''
-							} // 선택된 소유자의 fullname 또는 기존 값 사용
-							disabled // 입력 필드 비활성화
-							style={{ textAlign: 'center' }} // 텍스트 가운데 정렬
-						/>
-						<Button
-							variant="secondary"
-							onClick={() => setShowSecurityManagerModal(true)}
-						>
-							보안담당자 선택
-						</Button>
-					</Form.Group>
-				);
-			}
 			// select 외는 text input 설정
 			return (
 				<Form.Control
@@ -927,7 +947,13 @@ const RowDetails = ({
 									<td style={{ width: '80px' }}>
 										{renderCellContent('availability')}
 									</td>
-									<td style={{ width: '80px' }}>{importanceScore}</td>
+									<td style={{ width: '80px' }}>
+										{
+											isEditing
+												? '계산중' // 수정 모드에서는 비워둡니다.
+												: importanceScore // 수정 모드가 아닐 때는 계산된 등급 표시
+										}
+									</td>
 									<td style={{ width: '80px' }}>{importanceRating}</td>
 									<td>{renderCellContent('note')}</td>
 								</tr>
@@ -967,8 +993,8 @@ const RowDetails = ({
 									<td>{renderCellContent('contactInformation')}</td>
 									<td>{renderCellContent('acquisitionRoute')}</td>
 									<td>{renderCellContent('maintenancePeriod')}</td>
-									<td>{renderCellContent('residualValue')}</td>
-									<td>{renderCellContent('currentValue')}</td>
+									<td>{residualValue}</td>
+									<td>{currentValue}</td>
 								</tr>
 							</tbody>
 						</BootstrapTable>

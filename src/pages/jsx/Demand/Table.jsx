@@ -261,13 +261,16 @@ const Table = (props) => {
 					<tbody {...dataTable.getTableBodyProps()}>
 						{rows.length === 0 && (
 							<tr>
-								<td colSpan="100%">
+								<td colSpan="8" className="text-center">
 									<Alert
-										variant="danger"
+										variant="warning"
 										className="mb-0 text-center d-flex align-items-center justify-content-center"
 										style={{ height: '100%' }}
 									>
-										데이터가 없습니다.
+										<div>
+											<strong>데이터가 없습니다!</strong>
+											<p>요청내역 데이터가 없습니다.</p>
+										</div>
 									</Alert>
 								</td>
 							</tr>

@@ -67,7 +67,11 @@ const AssetPageTest = (props) => {
 
 	const handleOpenModal = (type) => {
 		if (rowSelect.length === 0) {
-			alert('데이터를 선택을 해주세요');
+			Swal.fire({
+				icon: 'error',
+				title: '데이터 없음',
+				text: '데이터를 하나이상 선택해주세요.',
+			});
 		} else {
 			setActionType(type); // 액션 타입 설정
 			setShowActModal(true); // 모달창 열기

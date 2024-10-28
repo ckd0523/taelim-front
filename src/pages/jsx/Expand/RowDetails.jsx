@@ -853,7 +853,7 @@ const RowDetails = ({
 					)}
 				</div>
 
-				<div className="scrollable-div" style={{ flex: 1 }}>
+				<div className="scrollable-div custom-div" style={{ flex: 1 }}>
 					{/* 기본 자산 정보 및 관리 정보 테이블 */}
 					<div className="info-section" style={{ flexGrow: 1 }}>
 						<h4>기본 자산 정보 및 관리 정보</h4>
@@ -861,7 +861,7 @@ const RowDetails = ({
 							striped
 							bordered
 							hover
-							className="table-detail"
+							className="table-detail custom-table"
 							style={{ width: '100%' }}
 						>
 							<thead>
@@ -897,7 +897,7 @@ const RowDetails = ({
 							striped
 							bordered
 							hover
-							className="table-detail"
+							className="table-detail custom-table"
 							style={{ width: '100%' }}
 						>
 							<thead>
@@ -940,7 +940,7 @@ const RowDetails = ({
 							striped
 							bordered
 							hover
-							className="table-detail"
+							className="table-detail custom-table"
 							style={{ width: '100%' }}
 						>
 							<thead>
@@ -981,7 +981,7 @@ const RowDetails = ({
 									striped
 									bordered
 									hover
-									className="table-detail"
+									className="table-detail custom-table"
 									style={{ width: '100%' }}
 								>
 									<thead>

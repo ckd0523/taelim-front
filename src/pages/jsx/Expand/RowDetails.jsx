@@ -11,10 +11,12 @@ import {
 	Accordion,
 	Tab,
 	Tabs,
+	InputGroup,
+	Popover,
+	OverlayTrigger,
 } from 'react-bootstrap';
 import { BsCaretUpFill } from 'react-icons/bs';
 import { BsCaretDownFill } from 'react-icons/bs';
-import axios from 'axios';
 import MaintainRegister from '@/pages/jsx/Maintain';
 import './style.css'; // 같은 폴더에서 CSS 파일 import
 import {
@@ -22,13 +24,17 @@ import {
 	calculateImportanceScore,
 	calculateImportanceRating,
 } from './RowDetailColumn';
+import {
+	getResidualValueRate,
+	calculateResidualValue,
+	calculatePresentValue,
+} from './RowDetailCalulate';
 import { HistoryTableUpdate } from './HistoryTableUpdate';
 import { HistoryTableMaintenance } from './HistoryTableMaintenance';
 import { HistoryTableInvestigation } from './HistoryTableInvestigation';
 import Swal from 'sweetalert2';
 import api from '@/common/api/authAxios';
 import { useAuthContext } from '@/common';
-import EditableCell from './RowDetailsCellContent';
 const API_URL = import.meta.env.VITE_BASIC_URL;
 const urlConfig = import.meta.env.VITE_BASIC_URL;
 
@@ -44,7 +50,6 @@ const RowDetails = ({
 	const [isEditing, setIsEditing] = useState(false);
 	const [formData, setFormData] = useState(initialFormData || {}); // 상위 컴포넌트에서 받은 formData를 상태로 설정
 	const [showModal, setShowModal] = useState(false); // 모달 열기/닫기 상태
-	const [isLoading, setIsLoading] = useState(true); // 로딩 상태
 	const [selectedFile, setSelectedFile] = useState(null);
 
 	const importanceScore = calculateImportanceScore(formData);
@@ -55,7 +60,15 @@ const RowDetails = ({
 		[classification]
 	);
 
+	// 잔존가치와 현재가치 계산
+	const residualValue = calculateResidualValue(formData);
+	const currentValue = calculatePresentValue(formData);
+
 	const { user } = useAuthContext();
+	const [showPopover, setShowPopover] = useState(false);
+	const handleTogglePopover = () => {
+		setShowPopover(!showPopover);
+	};
 
 	// 사람이름들 리스트 가져오기
 	//소유자 검색어와 소유자 리스트 상태
@@ -134,15 +147,16 @@ const RowDetails = ({
 		}
 	};
 	// 소유자 선택 핸들러
-	const handleSelectUser = (user) => {
-		setSelectedUser(user); // 선택된 소유자 저장
-		setAssetUser(user.fullname);
-		setAssetUserID(user.id);
+	const handleSelectUser = (realUser) => {
+		setSelectedUser(realUser); // 선택된 소유자 저장
+		setAssetUser(realUser.fullname);
+		setAssetUserID(realUser.id);
 		setFormData((prevData) => ({
 			...prevData,
-			assetUserId: user.id, // or owner.id depending on the backend field requirement
-			assetUser: user.fullname,
+			assetUserId: realUser.id, // or owner.id depending on the backend field requirement
+			assetUser: realUser.fullname,
 		})); // 소유자 이름 설정se
+
 		setUsers([]); // 선택 후 리스트 초기화
 		setShowUserModal(false); // 모달 닫기
 	};
@@ -188,57 +202,7 @@ const RowDetails = ({
 		setShowSecurityManagerModal(false);
 	};
 
-	// // 역할에 따라 상태를 설정하는 함수
-	// const handleRoleChange = (role, value) => {
-	// 	if (role === 'owner') {
-	// 		setAssetOwner(value);
-	// 	} else if (role === 'user') {
-	// 		setAssetUser(value);
-	// 	} else if (role === 'securityManager') {
-	// 		setAssetSecurityManager(value);
-	// 	}
-	// };
-
-	// const [assetOwner, setAssetOwner] = useState(''); // 소유자 이름 상태
-	// const [assetUser, setAssetUser] = useState(''); // 사용자 이름 상태
-	// const [assetSecurityManager, setAssetSecurityManager] = useState(''); // 보안담당자 이름 상태
-
-	//  // 멤버 입력 변경 핸들러 (검색 호출)
-	//  const handleMemberChange = (e) => {
-	//     handleRoleChange(selectedRole, e.target.value); // 역할별로 입력 상태 반영
-	//     if (e.target.value) {
-	//         handleMemberSearch(e.target.value); // 검색 호출
-	//     } else {
-	//         setMembers([]); // 입력이 비었으면 리스트 초기화
-	//     }
-	// };
-
-	// // 멤버 검색 함수
-	// const handleMemberSearch = async (searchTerm) => {
-	//     try {
-	//         const response = await api.get(`${API_URL}/user/search`, {
-	//             params: { name: searchTerm },
-	//         });
-	//         setMembers(response.data); // 검색 결과 업데이트
-	//     } catch (error) {
-	//         console.error('멤버 검색 중 오류 발생:', error);
-	//     }
-	// };
-
-	// // 멤버 선택 핸들러 (모달에서 선택)
-	// const handleSelectMember = (member) => {
-	//     handleRoleChange(selectedRole, member.fullname); // 선택된 멤버 이름 설정
-	//     setSelectedMemberID(member.id); // 선택된 멤버 ID 설정
-	//     setMembers([]); // 리스트 초기화
-	//     setShowModal(false); // 모달 닫기
-	// };
-
-	// // 모달 열기
-	// const openModalForRole = (role) => {
-	//     setSelectedRole(role); // 역할 설정 (소유자, 사용자, 보안담당자)
-	//     setShowModal(true); // 모달 열기
-	// };
-	// 소유자 입력 변경 핸들러
+	// 나중에 합칠수있으면 여기 밑으로
 
 	// assetCode와 initialFormData가 변경될 때마다 formData를 업데이트
 	useEffect(() => {
@@ -253,13 +217,14 @@ const RowDetails = ({
 	const handleEditClick = () => {
 		setIsEditing(true);
 	};
-	// 수정 취소 및 닫기 버튼 처리
-	const handleCloseClick = () => {
-		setIsEditing(false); // 수정 모드 해제
-	};
 
 	const handleNextClick = () => {
 		setShowModal(true);
+	};
+
+	// 수정 취소 및 닫기 버튼 처리
+	const handleCloseClick = () => {
+		setIsEditing(false); // 수정 모드 해제
 	};
 
 	// 파일 선택 처리
@@ -296,6 +261,16 @@ const RowDetails = ({
 		}
 	};
 
+	// 무조건적으로 updateBy 담기기위해서
+	useEffect(() => {
+		if (user && user.id) {
+			setFormData((prevData) => ({
+				...prevData,
+				updateBy: user.id,
+			}));
+		}
+	}, [user]);
+
 	// formData를 변경하는 함수
 	const handleInputChange = (event, key) => {
 		const { value } = event.target; // 이벤트 객체에서 value 추출
@@ -308,605 +283,674 @@ const RowDetails = ({
 	// 모달 닫기 처리
 	const handleModalClose = () => setShowModal(false);
 
-	// 수정  api 받아서 처리
 	const handleSubmit = async () => {
 		console.log('handleSubmit:', formData); // 상태 확인
 
-		try {
-			// 1. 수정 처리 (기존 파일 정보 포함)
-			const response = await api.post(`${urlConfig}/asset/update/${formData.assetCode}`, {
-				...formData,
-				existingFiles: formData.existingFiles, // 기존 파일 정보 추가
-			});
+		// 사용자에게 확인 메시지 표시
+		const result = await Swal.fire({
+			title: '확인',
+			text: '정말로 이 자산을 수정하시겠습니까?',
+			icon: 'question',
+			showCancelButton: true,
+			confirmButtonColor: '#3085d6',
+			cancelButtonColor: '#d33',
+			confirmButtonText: '예',
+			cancelButtonText: '아니오',
+		});
 
-			console.log('Update response:', response.data); // 응답 확인
-
-			// 2. 백엔드에서 받은 메시지 처리
-			if (response.data.includes('이미 수정이 들어간 자산입니다.')) {
-				alert(
-					`경고: 자산 수정 요청 처리부터 처리해주세요. 자산 코드: ${formData.assetCode}`
-				);
-			} else {
-				//alert(response.data); // 성공 메시지
-
-				// 3. 새 파일 업로드가 필요할 때만 실행
-				if (formData.files && formData.files.length > 0) {
-					const fileData = new FormData();
-
-					// 새 파일만 처리
-					for (const fileObj of formData.files) {
-						if (fileObj.file) {
-							fileData.append('files', fileObj.file); // 새 파일 추가
-							fileData.append('fileType', fileObj.fileType); // 파일 타입 추가
-						}
-					}
-
-					// 파일 업로드 API 호출 (새 파일만 처리)
-					if (fileData.has('files')) {
-						// 파일이 존재하는 경우에만 전송
-						const fileResponse = await api.post(
-							`${urlConfig}/${formData.assetCode}/files`,
-							fileData,
-							{ headers: { 'Content-Type': 'multipart/form-data' } }
-						);
-
-						console.log('File upload response:', fileResponse.data);
-
-						if (fileResponse.status !== 200) {
-							console.error('File upload failed:', fileResponse.data);
-							alert(
-								`파일 업데이트 중 오류가 발생했습니다. 상태 코드: ${fileResponse.status}`
-							);
-							return; // 오류 발생 시 더 이상 진행하지 않음
-						} else {
-							alert('모든 파일이 성공적으로 업로드되었습니다.');
-						}
-					}
-				}
-
-				// 성공 메시지 후 모달 닫기
-				setShowModal(false); // 모달 닫기
-				setTimeout(() => {
-					Swal.fire({
-						icon: 'success',
-						title: `${formData.assetCode} : 자산이 성공적으로 수정되었습니다`,
-					});
-
-					// 수정이 완료되면 해당 페이지로 이동
-					setPageIndex(0); // 원하는 페이지 번호로 설정 (예: 0은 첫 페이지)
-					fetchData(0, pageSize); // 해당 페이지의 데이터를 다시 가져옴
-				}, 500);
-			}
-		} catch (error) {
-			console.error('Error updating asset data:', error.response || error);
-			if (error.response) {
-				console.error('Response data:', error.response.data);
-				alert(`Error: ${error.response.data}`);
-			} else {
-				console.error('Error message:', error.message);
-				alert('자산 수정 요청 중 오류가 발생했습니다.');
-			}
-		}
-	};
-
-	// 수정 요청 api 받아서 처리
-	const handleSubmit1 = async () => {
-		console.log('handleSubmit1:', formData); // 상태 확인
-		try {
-			// 1. 수정 요청 처리 (기존 파일 정보 포함)
-			const response = await api.post(
-				`${urlConfig}/asset/updateDemand/${formData.assetCode}`,
-				{
+		if (result.isConfirmed) {
+			try {
+				// 1. 수정 처리 (기존 파일 정보 포함)
+				const response = await api.post(`${urlConfig}/asset/update/${formData.assetCode}`, {
 					...formData,
 					existingFiles: formData.existingFiles, // 기존 파일 정보 추가
-				}
-			);
-
-			console.log('UpdateDemand response:', response.data); // 응답 확인
-
-			// 2. 백엔드에서 받은 메시지 처리
-			if (response.data.includes('이미 수정 요청이 들어간 자산입니다.')) {
-				// 경고 메시지를 띄우기
-				alert(`경고: 이미 수정 요청이 들어간 자산입니다. 자산 코드: ${formData.assetCode}`);
-			} else {
-				// 성공 메시지 띄우기
-				//alert(response.data); // 성공 메시지
-				Swal.fire({
-					icon: 'success',
-					title: `${formData.assetCode} : 자산이 성공적으로 수정요청되었습니다`,
 				});
-				setTimeout(() => {
-					// 수정이 완료되면 해당 페이지로 이동
-					setPageIndex(0); // 원하는 페이지 번호로 설정 (예: 0은 첫 페이지)
-					fetchData(0, pageSize); // 해당 페이지의 데이터를 다시 가져옴
-				}, 1500);
 
-				// 3. 새 파일 업로드가 필요할 때만 실행
-				if (formData.files && formData.files.length > 0) {
-					const fileData = new FormData();
+				console.log('Update response:', response.data); // 응답 확인
 
-					// 새 파일만 처리
-					for (const fileObj of formData.files) {
-						if (fileObj.file) {
-							fileData.append('files', fileObj.file); // 새 파일 추가
-							fileData.append('fileType', fileObj.fileType); // 파일 타입 추가
+				// 2. 백엔드에서 받은 메시지 처리
+				if (response.data.includes('이미 수정이 들어간 자산입니다.')) {
+					Swal.fire({
+						icon: 'error',
+						title: '자산 수정 요청 처리부터 처리해주세요.',
+						text: `자산 코드: ${formData.assetCode}`,
+					});
+				} else {
+					// alert(response.data); // 성공 메시지
+
+					// 3. 새 파일 업로드가 필요할 때만 실행
+					if (formData.files && formData.files.length > 0) {
+						const fileData = new FormData();
+
+						// 새 파일만 처리
+						for (const fileObj of formData.files) {
+							if (fileObj.file) {
+								fileData.append('files', fileObj.file); // 새 파일 추가
+								fileData.append('fileType', fileObj.fileType); // 파일 타입 추가
+							}
 						}
-					}
 
-					// 파일 업로드 API 호출 (새 파일만 처리)
-					if (fileData.has('files')) {
-						// 파일이 존재하는 경우에만 전송
-						const fileResponse = await api.post(
-							`${urlConfig}/${formData.assetCode}/files`,
-							fileData,
-							{ headers: { 'Content-Type': 'multipart/form-data' } }
-						);
-
-						console.log('File upload response:', fileResponse.data);
-
-						if (fileResponse.status !== 200) {
-							console.error('File upload failed:', fileResponse.data);
-							alert(
-								`파일 업데이트 중 오류가 발생했습니다. 상태 코드: ${fileResponse.status}`
+						// 파일 업로드 API 호출 (새 파일만 처리)
+						if (fileData.has('files')) {
+							// 파일이 존재하는 경우에만 전송
+							const fileResponse = await api.post(
+								`${urlConfig}/${formData.assetCode}/files`,
+								fileData,
+								{ headers: { 'Content-Type': 'multipart/form-data' } }
 							);
-							return; // 오류 발생 시 더 이상 진행하지 않음
-						} else {
-							alert('모든 파일이 성공적으로 업로드되었습니다.');
+
+							console.log('File upload response:', fileResponse.data);
+
+							if (fileResponse.status !== 200) {
+								console.error('File upload failed:', fileResponse.data);
+
+								Swal.fire({
+									icon: 'error',
+									title: '파일 업데이트 중 오류가 발생했습니다.',
+									text: `상태 코드: ${fileResponse.status}`,
+								});
+								return; // 오류 발생 시 더 이상 진행하지 않음
+							} else {
+								console.log('모든 파일이 성공적으로 업로드되었습니다.');
+							}
 						}
 					}
-				}
 
-				setShowModal(false); // 모달 닫기
+					// 성공 메시지 후 모달 닫기
+					setShowModal(false); // 모달 닫기
+					setTimeout(() => {
+						Swal.fire({
+							icon: 'success',
+							title: `${formData.assetCode} : 자산이 성공적으로 수정되었습니다`,
+						});
+
+						// 수정이 완료되면 해당 페이지로 이동
+						setPageIndex(0); // 원하는 페이지 번호로 설정 (예: 0은 첫 페이지)
+						fetchData(0, pageSize); // 해당 페이지의 데이터를 다시 가져옴
+					}, 500);
+				}
+			} catch (error) {
+				console.error('Error updating asset data:', error.response || error);
+				if (error.response) {
+					console.error('Response data:', error.response.data);
+
+					Swal.fire({
+						icon: 'error',
+						title: '오류가 발생했습니다.',
+						text: `${error.response.data}`,
+					});
+				} else {
+					console.error('Error message:', error.message);
+					Swal.fire({
+						icon: 'error',
+						title: '오류가 발생했습니다.',
+					});
+				}
 			}
-		} catch (error) {
-			console.error('Error updating asset data:', error);
-			// setErrorMessage('자산 수정 요청 중 오류가 발생했습니다.');
-		} finally {
-			// 필요에 따라 페이지 새로고침 가능
-			// window.location.reload();
 		}
 	};
 
-	function CustomToggle({ children, eventKey }) {
-		const [isOpen, setIsOpen] = useState(false);
-		const decoratedOnClick = useAccordionButton(eventKey, () =>
-			setIsOpen((prevOpen) => !prevOpen)
-		);
+	const handleSubmit1 = async () => {
+		console.log('handleSubmit1:', formData); // 상태 확인
 
-		return (
-			<button
-				className="custom-button fw-bold h4"
-				type="button"
-				style={{
-					width: '100%',
-					backgroundColor: 'white',
-					textAlign: 'left',
-				}}
-				onClick={decoratedOnClick}
-			>
-				{isOpen ? (
-					<BsCaretUpFill style={{ paddingRight: '10' }} size="30" color="#2222226b" />
-				) : (
-					<BsCaretDownFill style={{ paddingRight: '10' }} size="30" color="#2222226b" />
-				)}
-				{children}
-			</button>
-		);
-	}
+		// 사용자에게 확인 메시지 표시
+		const result = await Swal.fire({
+			title: '확인',
+			text: '정말로 이 자산의 수정 요청을 하시겠습니까?',
+			icon: 'question',
+			showCancelButton: true,
+			confirmButtonColor: '#3085d6',
+			cancelButtonColor: '#d33',
+			confirmButtonText: '예',
+			cancelButtonText: '아니오',
+		});
 
-	const renderCellContent = (key) => (
-		<EditableCell
-			keyName={key}
-			value={formData[key]}
-			isEditing={isEditing}
-			handleInputChange={handleInputChange}
-			selectedUser={selectedUser}
-			selectedOwner={selectedOwner}
-			selectedSecurityManager={selectedSecurityManager}
-			setShowUserModal={setShowUserModal}
-			setShowOwnerModal={setShowOwnerModal}
-			setShowSecurityManagerModal={setShowSecurityManagerModal}
-		/>
-	);
-	// // 수정모드 설정
-	// if (isEditing) {
-	// 	// department select 설정
-	// 	if (key === 'department') {
-	// 		return (
-	// 			<Form.Select
-	// 				value={formData[key] || ''}
-	// 				onChange={(e) => handleInputChange(e, key)}
-	// 				style={{ textAlign: 'center' }}
-	// 			>
-	// 				<option value="IT부">IT부</option>
-	// 				<option value="관리부">관리부</option>
-	// 				<option value="영업부">영업부</option>
-	// 				<option value="마케팅부">마케팅부</option>
-	// 				<option value="생산부">생산부</option>
-	// 				<option value="운영부">운영부</option>
-	// 				<option value="인사부">인사부</option>
-	// 			</Form.Select>
-	// 		);
-	// 	}
-	// 	// assetLocation select 설정
-	// 	if (key === 'assetLocation') {
-	// 		return (
-	// 			<Form.Select
-	// 				value={formData[key] || ''}
-	// 				onChange={(e) => handleInputChange(e, key)}
-	// 				style={{ textAlign: 'center' }}
-	// 			>
-	// 				<option value="본관 지하 문서고">본관 지하 문서고</option>
-	// 				<option value="본관 1층">본관 1층</option>
-	// 				<option value="본관 1층 접견실">본관 1층 접견실</option>
-	// 				<option value="본관 2층">본관 2층</option>
-	// 				<option value="본관 2층 사장실">본관 2층 사장실</option>
-	// 				<option value="본관 2층 기술연구소 사무실">
-	// 					본관 2층 기술 연구소 사무실
-	// 				</option>
-	// 				<option value="본관 2층 대회의실">본관 2층 대회의실</option>
-	// 				<option value="본관 2층 대표이사실">본관 2층 대표 이사실</option>
-	// 				<option value="본관 3층 창고">본관 3층 창고</option>
-	// 				<option value="MDCG 천장">MDCG</option>
-	// 				<option value="공장동">공장동</option>
-	// 			</Form.Select>
-	// 		);
-	// 	}
-	// 	// owenership select 설정
-	// 	if (key === 'ownership') {
-	// 		return (
-	// 			<Form.Select
-	// 				value={formData[key] || ''}
-	// 				onChange={(e) => handleInputChange(e, key)}
-	// 				style={{ textAlign: 'center' }}
-	// 			>
-	// 				<option value="소유">소유</option>
-	// 				<option value="임대">임대</option>
-	// 			</Form.Select>
-	// 		);
-	// 	}
-	// 	// useState select 설정
-	// 	if (key === 'useStated') {
-	// 		return (
-	// 			<Form.Select
-	// 				value={formData[key] || ''}
-	// 				onChange={(e) => handleInputChange(e, key)}
-	// 				style={{ textAlign: 'center' }}
-	// 			>
-	// 				<option value="신규">신규</option>
-	// 				<option value="사용중">사용중</option>
-	// 				<option value="유지 관리 중 or 보수 작업 중">유지관리 중</option>
-	// 				<option value="예비">예비</option>
-	// 				<option value="퇴직/폐기">퇴직/폐기</option>
-	// 			</Form.Select>
-	// 		);
-	// 	}
-	// 	// operationStatus select 설정
-	// 	if (key === 'operationStatus') {
-	// 		return (
-	// 			<Form.Select
-	// 				value={formData[key] || ''}
-	// 				onChange={(e) => handleInputChange(e, key)}
-	// 				style={{ textAlign: 'center' }}
-	// 			>
-	// 				<option value="가동중">가동중</option>
-	// 				<option value="미가동">미가동</option>
-	// 				<option value="고장">고장</option>
-	// 			</Form.Select>
-	// 		);
-	// 	}
-	// 	// operationStatus select 설정
-	// 	if (key === 'depreciationMethod') {
-	// 		return (
-	// 			<Form.Select
-	// 				value={formData[key] || ''}
-	// 				onChange={(e) => handleInputChange(e, key)}
-	// 				style={{ textAlign: 'center' }}
-	// 			>
-	// 				<option value="정률법">정률법</option>
-	// 				<option value="정액법">정액법</option>
-	// 			</Form.Select>
-	// 		);
-	// 	}
-	// 	// introduceDate 날짜로 설정
-	// 	if (
-	// 		[
-	// 			'introducedDate',
-	// 			'maintenancePeriod',
-	// 			'purchaseDate',
-	// 			'applicationDate',
-	// 			'registrationDate',
-	// 			'expirationDate',
-	// 			'kaitsKeeper',
-	// 			'v3OfficeSecurity',
-	// 			'appCheckPro',
-	// 			'tgate',
-	// 		].includes(key)
-	// 	) {
-	// 		return (
-	// 			<Form.Control
-	// 				type="date" // 날짜 입력을 위한 date 타입 사용
-	// 				value={formData[key] || ''}
-	// 				onChange={(e) => handleInputChange(e, key)} // onChange 핸들러로 날짜 값 처리
-	// 				style={{ textAlign: 'center' }}
-	// 			/>
-	// 		);
-	// 	}
-	// 	if (['confidentiality', 'integrity', 'availability'].includes(key)) {
-	// 		return (
-	// 			<input
-	// 				type="number"
-	// 				min="1"
-	// 				max="3"
-	// 				defaultValue={formData[key] || ''} // formData에서 값을 가져옵니다.
-	// 				onChange={(e) => handleInputChange(e, key)}
-	// 				style={{ textAlign: 'center' }}
-	// 			/>
-	// 		);
-	// 	}
-	// 	if (key === 'screenNumber') {
-	// 		return (
-	// 			<input
-	// 				type="number"
-	// 				defaultValue={formData[key] || ''} // formData에서 값을 가져옵니다.
-	// 				onChange={(e) => handleInputChange(e, key)}
-	// 				style={{ textAlign: 'center' }}
-	// 			/>
-	// 		);
-	// 	}
-	// 	// patentTrademarkStatus select 설정
-	// 	if (key === 'documentGrade') {
-	// 		return (
-	// 			<Form.Select
-	// 				value={formData[key] || ''}
-	// 				onChange={(e) => handleInputChange(e, key)}
-	// 				style={{ textAlign: 'center' }}
-	// 			>
-	// 				<option value="대외비">대외비</option>
-	// 				<option value="내부용">내부용</option>
-	// 				<option value="일반">일반</option>
-	// 			</Form.Select>
-	// 		);
-	// 	}
-	// 	// patentTrademarkStatus select 설정
-	// 	if (key === 'documentType') {
-	// 		return (
-	// 			<Form.Select
-	// 				value={formData[key] || ''}
-	// 				onChange={(e) => handleInputChange(e, key)}
-	// 				style={{ textAlign: 'center' }}
-	// 			>
-	// 				<option value="일반문서">일반문서</option>
-	// 				<option value="계약 및 법적문서">계약 및 법적문서</option>
-	// 				<option value="보고서 및 프레젠테이션">보고서 및 프레젠테이션</option>
-	// 				<option value="양식 및 서식">양식 및 서식</option>
-	// 			</Form.Select>
-	// 		);
-	// 	}
-	// 	// 특허 칼럼 설정해주기
-	// 	// patentTrademarkStatus select 설정
-	// 	if (key === 'patentTrademarkStatus') {
-	// 		return (
-	// 			<Form.Select
-	// 				value={formData[key] || ''}
-	// 				onChange={(e) => handleInputChange(e, key)}
-	// 				style={{ textAlign: 'center' }}
-	// 			>
-	// 				<option value="PCT_APPLICATION">PCT 출원</option>
-	// 				<option value="APPLICATION">출원</option>
-	// 				<option value="REGISTERED">등록</option>
-	// 				<option value="EXPIRED">만료</option>
-	// 			</Form.Select>
-	// 		);
-	// 	}
-	// 	// patentTrademarkStatus select 설정
-	// 	if (key === 'countryApplication') {
-	// 		return (
-	// 			<Form.Select
-	// 				value={formData[key] || ''}
-	// 				onChange={(e) => handleInputChange(e, key)}
-	// 				style={{ textAlign: 'center' }}
-	// 			>
-	// 				<option value="한국">한국</option>
-	// 				<option value="미국">미국</option>
-	// 				<option value="일본">일본</option>
-	// 				<option value="중국">중국</option>
-	// 				<option value="독일">독일</option>
-	// 			</Form.Select>
-	// 		);
-	// 	}
-	// 	// patentTrademarkStatus select 설정
-	// 	if (key === 'patentClassification') {
-	// 		return (
-	// 			<Form.Select
-	// 				value={formData[key] || ''}
-	// 				onChange={(e) => handleInputChange(e, key)}
-	// 				style={{ textAlign: 'center' }}
-	// 			>
-	// 				<option value="NEW_MATERIALS">신소재</option>
-	// 				<option value="INCUBATION">인큐베이션</option>
-	// 			</Form.Select>
-	// 		);
-	// 	}
-	// 	// patentTrademarkStatus select 설정
-	// 	if (key === 'patentItem') {
-	// 		return (
-	// 			<Form.Select
-	// 				value={formData[key] || ''}
-	// 				onChange={(e) => handleInputChange(e, key)}
-	// 				style={{ textAlign: 'center' }}
-	// 			>
-	// 				<option value="COMPOSITE_MATERIALS">복합재</option>
-	// 				<option value="CORPORATE_VENTURE">사내벤처</option>
-	// 			</Form.Select>
-	// 		);
-	// 	}
-	// 	// terminal select 설정
-	// 	if (key === 'engineType') {
-	// 		return (
-	// 			<Form.Select
-	// 				value={formData[key] || ''}
-	// 				onChange={(e) => handleInputChange(e, key)}
-	// 				style={{ textAlign: 'center' }}
-	// 			>
-	// 				<option value="가솔린">가솔린</option>
-	// 				<option value="디젤">디젤</option>
-	// 				<option value="하이브리드">하이브리드</option>
-	// 				<option value="전기">전기</option>
-	// 			</Form.Select>
-	// 		);
-	// 	}
-	// 	// car select 설정
-	// 	if (key === 'carType') {
-	// 		return (
-	// 			<Form.Select
-	// 				value={formData[key] || ''}
-	// 				onChange={(e) => handleInputChange(e, key)}
-	// 				style={{ textAlign: 'center' }}
-	// 			>
-	// 				<option value="승용차">승용차</option>
-	// 				<option value="SUV">SUV</option>
-	// 				<option value="트럭">트럭</option>
-	// 				<option value="밴">밴</option>
-	// 			</Form.Select>
-	// 		);
-	// 	}
-	// 	// 소유자 필드에 대해 수정모드인 경우 별도로 렌더링
-	// 	if (key === 'assetUser') {
-	// 		return (
-	// 			<Form.Group className="mb-1">
-	// 				<Form.Control
-	// 					type="text"
-	// 					value={selectedUser ? selectedUser.fullname : formData.assetUser || ''} // 선택된 소유자의 fullname 또는 기존 값 사용
-	// 					disabled // 입력 필드 비활성화
-	// 					style={{ textAlign: 'center' }} // 텍스트 가운데 정렬
-	// 				/>
-	// 				<Button variant="secondary" onClick={() => setShowUserModal(true)}>
-	// 					사용자 선택
-	// 				</Button>
-	// 			</Form.Group>
-	// 		);
-	// 	}
-	// 	// 소유자 필드에 대해 수정모드인 경우 별도로 렌더링
-	// 	if (key === 'assetOwner') {
-	// 		return (
-	// 			<Form.Group className="mb-1">
-	// 				<Form.Control
-	// 					type="text"
-	// 					value={
-	// 						selectedOwner ? selectedOwner.fullname : formData.assetOwner || ''
-	// 					} // 선택된 소유자의 fullname 또는 기존 값 사용
-	// 					disabled // 입력 필드 비활성화
-	// 					style={{ textAlign: 'center' }} // 텍스트 가운데 정렬
-	// 				/>
-	// 				<Button variant="secondary" onClick={() => setShowOwnerModal(true)}>
-	// 					소유자 선택
-	// 				</Button>
-	// 			</Form.Group>
-	// 		);
-	// 	}
-	// 	// 소유자 필드에 대해 수정모드인 경우 별도로 렌더링
-	// 	if (key === 'assetSecurityManager') {
-	// 		return (
-	// 			<Form.Group className="mb-1">
-	// 				<Form.Control
-	// 					type="text"
-	// 					value={
-	// 						selectedSecurityManager
-	// 							? selectedSecurityManager.fullname
-	// 							: formData.assetSecurityManager || ''
-	// 					} // 선택된 소유자의 fullname 또는 기존 값 사용
-	// 					disabled // 입력 필드 비활성화
-	// 					style={{ textAlign: 'center' }} // 텍스트 가운데 정렬
-	// 				/>
-	// 				<Button
-	// 					variant="secondary"
-	// 					onClick={() => setShowSecurityManagerModal(true)}
-	// 				>
-	// 					보안담당자 선택
-	// 				</Button>
-	// 			</Form.Group>
-	// 		);
-	// 	}
-	// 	// select 외는 text input 설정
+		if (result.isConfirmed) {
+			try {
+				// 1. 수정 요청 처리 (기존 파일 정보 포함)
+				const response = await api.post(
+					`${urlConfig}/asset/updateDemand/${formData.assetCode}`,
+					{
+						...formData,
+						existingFiles: formData.existingFiles, // 기존 파일 정보 추가
+					}
+				);
+
+				console.log('UpdateDemand response:', response.data); // 응답 확인
+
+				// 2. 백엔드에서 받은 메시지 처리
+				if (response.data.includes('이미 수정 요청이 들어간 자산입니다.')) {
+					// 경고 메시지를 띄우기
+
+					Swal.fire({
+						icon: 'error',
+						title: '이미 수정 요청이 들어간 자산입니다.',
+						text: `경고:  자산 코드: ${formData.assetCode}`,
+					});
+				} else {
+					// 성공 메시지 띄우기
+					Swal.fire({
+						icon: 'success',
+						title: `${formData.assetCode} : 자산이 성공적으로 수정 요청되었습니다.`,
+					});
+					setTimeout(() => {
+						// 수정이 완료되면 해당 페이지로 이동
+						setPageIndex(0); // 원하는 페이지 번호로 설정 (예: 0은 첫 페이지)
+						fetchData(0, pageSize); // 해당 페이지의 데이터를 다시 가져옴
+					}, 1500);
+
+					// 3. 새 파일 업로드가 필요할 때만 실행
+					if (formData.files && formData.files.length > 0) {
+						const fileData = new FormData();
+
+						// 새 파일만 처리
+						for (const fileObj of formData.files) {
+							if (fileObj.file) {
+								fileData.append('files', fileObj.file); // 새 파일 추가
+								fileData.append('fileType', fileObj.fileType); // 파일 타입 추가
+							}
+						}
+
+						// 파일 업로드 API 호출 (새 파일만 처리)
+						if (fileData.has('files')) {
+							// 파일이 존재하는 경우에만 전송
+							const fileResponse = await api.post(
+								`${urlConfig}/${formData.assetCode}/files`,
+								fileData,
+								{ headers: { 'Content-Type': 'multipart/form-data' } }
+							);
+
+							console.log('File upload response:', fileResponse.data);
+
+							if (fileResponse.status !== 200) {
+								Swal.fire({
+									icon: 'error',
+									title: '파일 업데이트 중 오류가 발생했습니다.',
+									text: `상태 코드: ${fileResponse.status}`,
+								});
+								return; // 오류 발생 시 더 이상 진행하지 않음
+							} else {
+								console.log('모든 파일이 성공적으로 업로드되었습니다.');
+							}
+						}
+					}
+
+					setShowModal(false); // 모달 닫기
+				}
+			} catch (error) {
+				console.error('Error updating asset data:', error);
+				// setErrorMessage('자산 수정 요청 중 오류가 발생했습니다.');
+			} finally {
+				// 필요에 따라 페이지 새로고침 가능
+				// window.location.reload();
+			}
+		}
+	};
+
+	// function CustomToggle({ children, eventKey }) {
+	// 	const [isOpen, setIsOpen] = useState(false);
+	// 	const decoratedOnClick = useAccordionButton(eventKey, () =>
+	// 		setIsOpen((prevOpen) => !prevOpen)
+	// 	);
+
 	// 	return (
-	// 		<Form.Control
-	// 			type="text"
-	// 			value={formData[key] || ''}
-	// 			onChange={(e) => handleInputChange(e, key)}
-	// 			style={{ textAlign: 'center' }}
-	// 		/>
+	// 		<button
+	// 			className="custom-button fw-bold h4"
+	// 			type="button"
+	// 			style={{
+	// 				width: '100%',
+	// 				backgroundColor: 'white',
+	// 				textAlign: 'left',
+	// 			}}
+	// 			onClick={decoratedOnClick}
+	// 		>
+	// 			{isOpen ? (
+	// 				<BsCaretUpFill style={{ paddingRight: '10' }} size="30" color="#2222226b" />
+	// 			) : (
+	// 				<BsCaretDownFill style={{ paddingRight: '10' }} size="30" color="#2222226b" />
+	// 			)}
+	// 			{children}
+	// 		</button>
 	// 	);
 	// }
-	// // 수정 모드가 아닐 때 일반 텍스트 렌더링
-	// return formData[key] || 'N/A';
+
+	const renderCellContent = (key) => {
+		// 수정모드 설정
+		if (isEditing) {
+			// department select 설정
+			if (key === 'department') {
+				return (
+					<Form.Select
+						value={formData[key] || ''}
+						onChange={(e) => handleInputChange(e, key)}
+						style={{ textAlign: 'center' }}
+					>
+						<option value="IT부">IT부</option>
+						<option value="관리부">관리부</option>
+						<option value="영업부">영업부</option>
+						<option value="마케팅부">마케팅부</option>
+						<option value="생산부">생산부</option>
+						<option value="운영부">운영부</option>
+						<option value="인사부">인사부</option>
+					</Form.Select>
+				);
+			}
+			// assetLocation select 설정
+			if (key === 'assetLocation') {
+				return (
+					<Form.Select
+						value={formData[key] || ''}
+						onChange={(e) => handleInputChange(e, key)}
+						style={{ textAlign: 'center' }}
+					>
+						<option value="본관 지하 문서고">본관 지하 문서고</option>
+						<option value="본관 1층">본관 1층</option>
+						<option value="본관 1층 접견실">본관 1층 접견실</option>
+						<option value="본관 2층">본관 2층</option>
+						<option value="본관 2층 사장실">본관 2층 사장실</option>
+						<option value="본관 2층 기술연구소 사무실">
+							본관 2층 기술 연구소 사무실
+						</option>
+						<option value="본관 2층 대회의실">본관 2층 대회의실</option>
+						<option value="본관 2층 대표이사실">본관 2층 대표 이사실</option>
+						<option value="본관 3층 창고">본관 3층 창고</option>
+						<option value="MDCG 천장">MDCG</option>
+						<option value="공장동">공장동</option>
+					</Form.Select>
+				);
+			}
+			// owenership select 설정
+			if (key === 'ownership') {
+				return (
+					<Form.Select
+						value={formData[key] || ''}
+						onChange={(e) => handleInputChange(e, key)}
+						style={{ textAlign: 'center' }}
+					>
+						<option value="소유">소유</option>
+						<option value="임대">임대</option>
+					</Form.Select>
+				);
+			}
+			// useState select 설정
+			if (key === 'useStated') {
+				return (
+					<Form.Select
+						value={formData[key] || ''}
+						onChange={(e) => handleInputChange(e, key)}
+						style={{ textAlign: 'center' }}
+					>
+						<option value="신규">신규</option>
+						<option value="사용중">사용중</option>
+						<option value="유지 관리 중 or 보수 작업 중">유지관리 중</option>
+						<option value="예비">예비</option>
+						<option value="퇴직/폐기">퇴직/폐기</option>
+					</Form.Select>
+				);
+			}
+			// operationStatus select 설정
+			if (key === 'operationStatus') {
+				return (
+					<Form.Select
+						value={formData[key] || ''}
+						onChange={(e) => handleInputChange(e, key)}
+						style={{ textAlign: 'center' }}
+					>
+						<option value="가동중">가동중</option>
+						<option value="미가동">미가동</option>
+						<option value="고장">고장</option>
+					</Form.Select>
+				);
+			}
+			// operationStatus select 설정
+			if (key === 'depreciationMethod') {
+				return (
+					<Form.Select
+						value={formData[key] || ''}
+						onChange={(e) => handleInputChange(e, key)}
+						style={{ textAlign: 'center' }}
+					>
+						<option value="정률법">정률법</option>
+						<option value="정액법">정액법</option>
+					</Form.Select>
+				);
+			}
+			// introduceDate 날짜로 설정
+			if (
+				[
+					'introducedDate',
+					'maintenancePeriod',
+					'purchaseDate',
+					'applicationDate',
+					'registrationDate',
+					'expirationDate',
+					'kaitsKeeper',
+					'v3OfficeSecurity',
+					'appCheckPro',
+					'tgate',
+				].includes(key)
+			) {
+				return (
+					<Form.Control
+						type="date" // 날짜 입력을 위한 date 타입 사용
+						value={formData[key] || ''}
+						onChange={(e) => handleInputChange(e, key)} // onChange 핸들러로 날짜 값 처리
+						style={{ textAlign: 'center' }}
+					/>
+				);
+			}
+
+			if (['confidentiality', 'integrity', 'availability'].includes(key)) {
+				return (
+					<input
+						type="number"
+						min="1"
+						max="3"
+						defaultValue={formData[key] || ''} // formData에서 값을 가져옵니다.
+						onChange={(e) => handleInputChange(e, key)}
+						style={{ textAlign: 'center' }}
+					/>
+				);
+			}
+
+			if (key === 'screenNumber') {
+				return (
+					<input
+						type="number"
+						defaultValue={formData[key] || ''} // formData에서 값을 가져옵니다.
+						onChange={(e) => handleInputChange(e, key)}
+						style={{ textAlign: 'center' }}
+					/>
+				);
+			}
+			// patentTrademarkStatus select 설정
+			if (key === 'documentGrade') {
+				return (
+					<Form.Select
+						value={formData[key] || ''}
+						onChange={(e) => handleInputChange(e, key)}
+						style={{ textAlign: 'center' }}
+					>
+						<option value="대외비">대외비</option>
+						<option value="내부용">내부용</option>
+						<option value="일반">일반</option>
+					</Form.Select>
+				);
+			}
+			// patentTrademarkStatus select 설정
+			if (key === 'documentType') {
+				return (
+					<Form.Select
+						value={formData[key] || ''}
+						onChange={(e) => handleInputChange(e, key)}
+						style={{ textAlign: 'center' }}
+					>
+						<option value="일반문서">일반문서</option>
+						<option value="계약 및 법적문서">계약 및 법적문서</option>
+						<option value="보고서 및 프레젠테이션">보고서 및 프레젠테이션</option>
+						<option value="양식 및 서식">양식 및 서식</option>
+					</Form.Select>
+				);
+			}
+			// 특허 칼럼 설정해주기
+			// patentTrademarkStatus select 설정
+			if (key === 'patentTrademarkStatus') {
+				return (
+					<Form.Select
+						value={formData[key] || ''}
+						onChange={(e) => handleInputChange(e, key)}
+						style={{ textAlign: 'center' }}
+					>
+						<option value="PCT_APPLICATION">PCT 출원</option>
+						<option value="APPLICATION">출원</option>
+						<option value="REGISTERED">등록</option>
+						<option value="EXPIRED">만료</option>
+					</Form.Select>
+				);
+			}
+			// patentTrademarkStatus select 설정
+			if (key === 'countryApplication') {
+				return (
+					<Form.Select
+						value={formData[key] || ''}
+						onChange={(e) => handleInputChange(e, key)}
+						style={{ textAlign: 'center' }}
+					>
+						<option value="한국">한국</option>
+						<option value="미국">미국</option>
+						<option value="일본">일본</option>
+						<option value="중국">중국</option>
+
+						<option value="독일">독일</option>
+					</Form.Select>
+				);
+			}
+			// patentTrademarkStatus select 설정
+			if (key === 'patentClassification') {
+				return (
+					<Form.Select
+						value={formData[key] || ''}
+						onChange={(e) => handleInputChange(e, key)}
+						style={{ textAlign: 'center' }}
+					>
+						<option value="신소재">신소재</option>
+						<option value="인큐베이션">인큐베이션</option>
+					</Form.Select>
+				);
+			}
+			// patentTrademarkStatus select 설정
+			if (key === 'patentItem') {
+				return (
+					<Form.Select
+						value={formData[key] || ''}
+						onChange={(e) => handleInputChange(e, key)}
+						style={{ textAlign: 'center' }}
+					>
+						<option value="복합재">복합재</option>
+						<option value="사내벤처">사내벤처</option>
+					</Form.Select>
+				);
+			}
+			// terminal select 설정
+			if (key === 'engineType') {
+				return (
+					<Form.Select
+						value={formData[key] || ''}
+						onChange={(e) => handleInputChange(e, key)}
+						style={{ textAlign: 'center' }}
+					>
+						<option value="가솔린">가솔린</option>
+						<option value="디젤">디젤</option>
+						<option value="하이브리드">하이브리드</option>
+						<option value="전기">전기</option>
+					</Form.Select>
+				);
+			}
+			// car select 설정
+			if (key === 'carType') {
+				return (
+					<Form.Select
+						value={formData[key] || ''}
+						onChange={(e) => handleInputChange(e, key)}
+						style={{ textAlign: 'center' }}
+					>
+						<option value="승용차">승용차</option>
+						<option value="SUV">SUV</option>
+						<option value="트럭">트럭</option>
+						<option value="밴">밴</option>
+					</Form.Select>
+				);
+			}
+
+			// 사용자 필드에 대해 수정모드인 경우 별도로 렌더링
+			if (key === 'assetUser') {
+				return (
+					<Form.Group className="mb-3">
+						<InputGroup>
+							<Form.Control
+								type="text"
+								value={
+									selectedUser ? selectedUser.fullname : formData.assetUser || ''
+								} // 선택된 사용자의 fullname 또는 기존 값 사용
+								disabled // 입력 필드 비활성화
+								style={{ textAlign: 'center' }} // 텍스트 가운데 정렬
+							/>
+							<Button variant="secondary" onClick={() => setShowUserModal(true)}>
+								<i className="ri-search-line font-22"></i> {/* 아이콘 추가 */}
+							</Button>
+						</InputGroup>
+					</Form.Group>
+				);
+			}
+
+			// 소유자 필드에 대해 수정모드인 경우 별도로 렌더링
+			if (key === 'assetOwner') {
+				return (
+					<Form.Group className="mb-3">
+						<InputGroup>
+							<Form.Control
+								type="text"
+								value={
+									selectedOwner
+										? selectedOwner.fullname
+										: formData.assetOwner || ''
+								} // 선택된 소유자의 fullname 또는 기존 값 사용
+								disabled // 입력 필드 비활성화
+								style={{ textAlign: 'center' }} // 텍스트 가운데 정렬
+							/>
+							<Button variant="secondary" onClick={() => setShowOwnerModal(true)}>
+								<i className="ri-search-line font-22"></i> {/* 아이콘 추가 */}
+							</Button>
+						</InputGroup>
+					</Form.Group>
+				);
+			}
+			// 보안담당자 필드에 대해 수정모드인 경우 별도로 렌더링
+			if (key === 'assetSecurityManager') {
+				return (
+					<Form.Group className="mb-3">
+						<InputGroup>
+							<Form.Control
+								type="text"
+								value={
+									selectedSecurityManager
+										? selectedSecurityManager.fullname
+										: formData.assetSecurityManager || ''
+								} // 선택된 보안담당자의 fullname 또는 기존 값 사용
+								disabled // 입력 필드 비활성화
+								style={{ textAlign: 'center' }} // 텍스트 가운데 정렬
+							/>
+							<Button
+								variant="secondary"
+								onClick={() => setShowSecurityManagerModal(true)}
+							>
+								<i className="ri-search-line font-22"></i> {/* 아이콘 추가 */}
+							</Button>
+						</InputGroup>
+					</Form.Group>
+				);
+			}
+
+			// select 외는 text input 설정
+			return (
+				<Form.Control
+					type="text"
+					value={formData[key] || ''}
+					onChange={(e) => handleInputChange(e, key)}
+					style={{ textAlign: 'center' }}
+				/>
+			);
+		}
+		// 수정 모드가 아닐 때 일반 텍스트 렌더링
+		return formData[key] || 'N/A';
+	};
 
 	return (
 		<>
 			{/* 큰 부모 div */}
 			<div style={{ display: 'flex', alignItems: 'center', flexGrow: 1 }}>
-				{/* 이미지 표시 부분 */}
-				<div
-					style={{
-						display: 'flex',
-						flexDirection: 'column',
-						alignItems: 'center',
-						marginRight: '40px',
-					}}
-				>
-					{formData.files.some((file) => file.fileType === 'PHOTO') ? (
-						<img
-							src={
-								selectedFile
-									? selectedFile.fileURL
-									: formData.files.find((file) => file.fileType === 'PHOTO')
-											.fileURL
-							}
-							alt={
-								selectedFile
-									? selectedFile.oriFileName
-									: formData.files.find((file) => file.fileType === 'PHOTO')
-											.oriFileName
-							}
-							style={{ width: '350px', height: 'auto' }}
-						/>
-					) : (
-						<div
-							style={{
-								width: '300px',
-								height: 'auto',
-								backgroundColor: '#f0f0f0',
-								border: '1px dashed #ccc',
-								display: 'flex',
-								justifyContent: 'center',
-								alignItems: 'center',
-								color: '#aaa',
-							}}
-						>
-							<span>이미지가 없습니다</span>
-						</div>
-					)}
-
-					{/* 수정 모드일 때 파일 입력: 이미지 아래에 위치 */}
-					{isEditing && (
-						<input
-							type="file"
-							accept="image/*"
-							onChange={(e) => handleFileChange(e, 'PHOTO')} // 이미지 파일 처리
-							style={{ marginTop: '10px' }}
-						/>
-					)}
-				</div>
-
-				<div className="scrollable-div" style={{ flex: 1 }}>
+				<div className="scrollable-div custom-div" style={{ flex: 1 }}>
 					{/* 기본 자산 정보 및 관리 정보 테이블 */}
 					<div className="info-section" style={{ flexGrow: 1 }}>
-						<h4>기본 자산 정보 및 관리 정보</h4>
+						<Row className="justify-content-between">
+							<Col xs={10} sm={10} lg={10}>
+								<h4>기본 자산 정보 및 관리 정보</h4>
+							</Col>
+							<Col xs={2} sm={2} lg={2} className="d-flex justify-content-end">
+								<OverlayTrigger
+									trigger="click"
+									placement="left-end"
+									show={showPopover}
+									onToggle={setShowPopover}
+									overlay={
+										<Popover id="popover-image" style={{ width: '100%' }}>
+											<Popover.Body>
+												{formData.files.some(
+													(file) => file.fileType === 'PHOTO'
+												) ? (
+													<img
+														src={
+															selectedFile
+																? selectedFile.fileURL
+																: formData.files.find(
+																		(file) =>
+																			file.fileType ===
+																			'PHOTO'
+																  ).fileURL
+														}
+														alt={
+															selectedFile
+																? selectedFile.oriFileName
+																: formData.files.find(
+																		(file) =>
+																			file.fileType ===
+																			'PHOTO'
+																  ).oriFileName
+														}
+														style={{ width: '100%', height: 'auto' }}
+													/>
+												) : (
+													<div
+														style={{
+															width: '100%',
+															height: 'auto',
+															backgroundColor: '#f0f0f0',
+															border: '1px dashed #ccc',
+															display: 'flex',
+															justifyContent: 'center',
+															alignItems: 'center',
+															color: '#aaa',
+														}}
+													>
+														<span>이미지가 없습니다</span>
+													</div>
+												)}
+												{isEditing && (
+													<input
+														type="file"
+														accept="image/*"
+														onChange={(e) =>
+															handleFileChange(e, 'PHOTO')
+														}
+														style={{ marginTop: '10px' }}
+													/>
+												)}
+											</Popover.Body>
+										</Popover>
+									}
+								>
+									<Button variant="dark" style={{ marginBottom: '10px' }}>
+										이미지 보기
+									</Button>
+								</OverlayTrigger>
+							</Col>
+						</Row>
+
 						<BootstrapTable
 							striped
 							bordered
 							hover
-							className="table-detail"
+							className="table-detail custom-table"
 							style={{ width: '100%' }}
 						>
 							<thead>
@@ -942,7 +986,7 @@ const RowDetails = ({
 							striped
 							bordered
 							hover
-							className="table-detail"
+							className="table-detail custom-table"
 							style={{ width: '100%' }}
 						>
 							<thead>
@@ -985,7 +1029,7 @@ const RowDetails = ({
 							striped
 							bordered
 							hover
-							className="table-detail"
+							className="table-detail custom-table"
 							style={{ width: '100%' }}
 						>
 							<thead>
@@ -1012,8 +1056,8 @@ const RowDetails = ({
 									<td>{renderCellContent('contactInformation')}</td>
 									<td>{renderCellContent('acquisitionRoute')}</td>
 									<td>{renderCellContent('maintenancePeriod')}</td>
-									<td>{renderCellContent('residualValue')}</td>
-									<td>{renderCellContent('currentValue')}</td>
+									<td>{residualValue}</td>
+									<td>{currentValue}</td>
 								</tr>
 							</tbody>
 						</BootstrapTable>
@@ -1026,7 +1070,7 @@ const RowDetails = ({
 									striped
 									bordered
 									hover
-									className="table-detail"
+									className="table-detail custom-table"
 									style={{ width: '100%' }}
 								>
 									<thead>
@@ -1330,24 +1374,31 @@ const RowDetails = ({
 							</Form>
 						</Modal.Body>
 						<Modal.Footer>
-							<Button variant="secondary" onClick={handleModalClose}>
-								취소
-							</Button>
 							{user.role === 'ASSET_MANAGER' && (
-								<Button variant="primary" onClick={handleSubmit1}>
+								<Button
+									style={{ background: '#5e83bb', border: 'none' }}
+									onClick={handleSubmit1}
+								>
 									수정 요청
 								</Button>
 							)}
 							{user.role === 'ADMIN' && (
-								<Button variant="primary" onClick={handleSubmit}>
+								<Button
+									style={{ background: '#5e83bb', border: 'none' }}
+									onClick={handleSubmit}
+								>
 									수정
 								</Button>
 							)}
+							<Button variant="secondary" onClick={handleModalClose}>
+								취소
+							</Button>
 						</Modal.Footer>
 					</Modal>
 				</div>
 			</div>
 			<Card></Card>
+
 			{/* 새로 추가할 div: 테이블 바로 아래에 위치 */}
 			<div>
 				<div style={{ marginTop: '20px' }}>
@@ -1786,15 +1837,15 @@ const RowDetails = ({
 						{isEditing ? (
 							<>
 								<Button
-									variant="primary"
+									style={{ background: '#5e83bb', border: 'none' }}
 									className="me-2"
 									onClick={handleNextClick}
 								>
 									다음
 								</Button>
 
-								<Button variant="danger" onClick={handleCloseClick}>
-									닫기1
+								<Button variant="secondary" onClick={handleCloseClick}>
+									닫기
 								</Button>
 							</>
 						) : (
@@ -1802,7 +1853,7 @@ const RowDetails = ({
 								{(user.role === 'ADMIN' || user.role === 'ASSET_MANAGER') && (
 									<>
 										<Button
-											variant="primary"
+											style={{ background: '#5e83bb', border: 'none' }}
 											className="me-2"
 											onClick={handleEditClick}
 										>
@@ -1817,7 +1868,7 @@ const RowDetails = ({
 										/>
 									</>
 								)}
-								<Button variant="danger" onClick={onClose}>
+								<Button variant="secondary" onClick={onClose}>
 									닫기
 								</Button>
 							</>

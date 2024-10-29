@@ -939,7 +939,9 @@ const RowDetails = ({
 										</Popover>
 									}
 								>
-									<Button style={{ marginBottom: '10px' }}>이미지 보기</Button>
+									<Button variant="dark" style={{ marginBottom: '10px' }}>
+										이미지 보기
+									</Button>
 								</OverlayTrigger>
 							</Col>
 						</Row>

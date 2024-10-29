@@ -79,10 +79,11 @@ const TotalAssetRatio = () => {
 	};
 
 	return (
-		<Card>
+		<Card style={{ width: '100%', height: '93%' }}>
 			<Card.Body>
 				<h4 className="header-title">분류별 자산 비율</h4>
-				<div style={{ height: '333px' }}>
+				{/* 도넛을 div나 아무거나로 감싸줘야함 */}
+				<div style={{ width: "100%", height: "93%" }}>
 					<Doughnut data={data} options={options} />
 				</div>
 			</Card.Body>

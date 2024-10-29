@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
 import { useAuthContext } from '@/common';
+import Swal from 'sweetalert2';
 
 const DisposeModal = ({
 	showModal,
@@ -8,8 +9,6 @@ const DisposeModal = ({
 	selectedAssetCode,
 	handleDisposeDemand,
 	handleDisposeAsset,
-	isDisposed,
-	setErrorMessage,
 }) => {
 	const [disposeReason, setDisposeReason] = useState('');
 	const [disposeDetail, setDisposeDetail] = useState('');
@@ -27,33 +26,63 @@ const DisposeModal = ({
 
 	// 관리 담당자 폐기 동작 받음
 	const handleRequest = async () => {
-		if (isDisposed) {
-			setErrorMessage('폐기 요청이 이미 들어간 자산입니다.');
-		} else {
-			await handleDisposeDemand(selectedAssetCode, {
-				disposeUser: user.id,
-				disposeReason,
-				disposeDetail,
-				disposeLocation,
-				disposeMethod,
-			});
-			resetForm();
-			handleClose();
-		}
-	};
-
-	// 자산 관리자 폐기 동작 받음
-	const handleDispose = async () => {
-		await handleDisposeAsset(selectedAssetCode, {
+		const disposeDto = {
 			disposeUser: user.id,
 			disposeReason,
 			disposeDetail,
 			disposeLocation,
 			disposeMethod,
+		};
+		// Swal을 사용하여 사용자에게 확인 메시지 표시
+		const result = await Swal.fire({
+			title: '확인',
+			text: '정말로 이 자산을 폐기요청하시겠습니까?',
+			icon: 'question',
+			showCancelButton: true,
+			confirmButtonColor: '#3085d6',
+			cancelButtonColor: '#d33',
+			confirmButtonText: '예',
+			cancelButtonText: '아니오',
 		});
-		resetForm();
-		handleClose();
+
+		if (result.isConfirmed) {
+			// 사용자가 확인했을 경우, 자산 폐기 처리
+			await handleDisposeDemand(selectedAssetCode, disposeDto);
+			resetForm();
+			handleClose();
+		}
 	};
+
+	/// 자산 관리자 폐기 동작 받음
+	const handleDispose = async () => {
+		const disposeDto = {
+			disposeUser: user.id,
+			disposeReason,
+			disposeDetail,
+			disposeLocation,
+			disposeMethod,
+		};
+
+		// Swal을 사용하여 사용자에게 확인 메시지 표시
+		const result = await Swal.fire({
+			title: '확인',
+			text: '정말로 이 자산을 폐기하시겠습니까?',
+			icon: 'question',
+			showCancelButton: true,
+			confirmButtonColor: '#3085d6',
+			cancelButtonColor: '#d33',
+			confirmButtonText: '예',
+			cancelButtonText: '아니오',
+		});
+
+		if (result.isConfirmed) {
+			// 사용자가 확인했을 경우, 자산 폐기 처리
+			await handleDisposeAsset(selectedAssetCode, disposeDto);
+			resetForm();
+			handleClose();
+		}
+	};
+
 	return (
 		<Modal show={showModal} onHide={handleClose}>
 			<Modal.Header closeButton>
@@ -107,11 +136,17 @@ const DisposeModal = ({
 					</Button>
 				)}
 				{user.role === 'ADMIN' && (
-					<Button variant="danger" onClick={() => handleDispose(selectedAssetCode)}>
+					<Button variant="danger" onClick={handleDispose}>
 						폐기
 					</Button>
 				)}
-				<Button variant="secondary" onClick={handleClose}>
+				<Button
+					variant="secondary"
+					onClick={() => {
+						resetForm();
+						handleClose();
+					}}
+				>
 					취소
 				</Button>
 			</Modal.Footer>

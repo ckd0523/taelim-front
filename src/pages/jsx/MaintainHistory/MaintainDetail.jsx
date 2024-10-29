@@ -14,11 +14,32 @@ const MaintainDetail = ({ show, selectData, handleClose }) => {
 		repairStartDate: selectData.repairStartDate,
 		repairEndDate: selectData.repairEndDate || '',
 		repairResult: selectData.repairResult,
+		repairStatus: selectData.repairStatus,
 		repairFiles: selectData.repairFiles || [],
 	});
 	const [showAlert, setShowAlert] = useState(false);
 	const [alertMessage, setAlertMessage] = useState('');
 
+	const handleSuccess = async () => {
+		// setFormData((prevState) => ({
+		// 	...prevState,
+		// 	formData.repairStatus: '완료',
+		// }));
+		Swal.fire({
+			title: '최종 확인',
+			text: '지금까지 작업을 모두 처리하시겠습니까?',
+			icon: 'question',
+			showCancelButton: true,
+			confirmButtonColor: '#255892a8',
+			cancelButtonColor: '#a519198e',
+			confirmButtonText: '예',
+			cancelButtonText: '아니오',
+		}).then((result) => {
+			if (result.isConfirmed) {
+				(formData.repairStatus = '완료'), saveImages();
+			}
+		});
+	};
 	const imgRef = useRef();
 	const afterImgRef = useRef();
 	const handleEditToggle = () => {
@@ -93,8 +114,8 @@ const MaintainDetail = ({ show, selectData, handleClose }) => {
 	const saveImages = async () => {
 		const updateFileNames = [];
 
-		const imageUploadSuccess = true;
-		const endDateSaveSuccess = true;
+		let imageUploadSuccess = true;
+		let endDateSaveSuccess = true;
 		for (let { file, repairType } of files) {
 			const uploadData = new FormData();
 			uploadData.append('file', file);
@@ -119,6 +140,7 @@ const MaintainDetail = ({ show, selectData, handleClose }) => {
 							title: '파일 수정을 실패하였습니다.',
 							text: '파일을 다시 확인해주세요',
 						});
+						imageUploadSuccess = false;
 					}
 				}
 			} catch (error) {
@@ -139,6 +161,8 @@ const MaintainDetail = ({ show, selectData, handleClose }) => {
 					title: '유지보수가 성공적으로 수정되었습니다.',
 					text: '유지보수 이력 화면으로 이동',
 				});
+			} else {
+				endDateSaveSuccess = false;
 			}
 		} catch (error) {
 			endDateSaveSuccess = false;
@@ -287,12 +311,22 @@ const MaintainDetail = ({ show, selectData, handleClose }) => {
 							</Button>
 						</>
 					) : (
-						<Button
-							style={{ background: '#5e83bb', border: 'none' }}
-							onClick={handleEditToggle}
-						>
-							수정
-						</Button>
+						!(formData.repairStatus === '완료') && (
+							<>
+								<div className="me-auto">
+									<Button variant="dark" onClick={handleSuccess}>
+										완료
+									</Button>
+								</div>
+
+								<Button
+									style={{ background: '#5e83bb', border: 'none' }}
+									onClick={handleEditToggle}
+								>
+									수정
+								</Button>
+							</>
+						)
 					)}
 					<Button variant="secondary" onClick={handleClose}>
 						닫기

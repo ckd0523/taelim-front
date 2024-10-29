@@ -288,8 +288,8 @@ const Test = () => {
 								<div className="table-responsive">
 									{[
 										commonColumns,
-										commonColumns1,
 										commonColumns2,
+										commonColumns1,
 										subColumns,
 									].map((col, index) => (
 										<Table

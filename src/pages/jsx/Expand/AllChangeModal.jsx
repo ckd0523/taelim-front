@@ -4,6 +4,7 @@ import axios from 'axios';
 import api from '@/common/api/authAxios';
 import { useAuthContext } from '@/common';
 import Swal from 'sweetalert2';
+import './li.css';
 const API_URL = import.meta.env.VITE_BASIC_URL;
 
 const ActionModal = ({
@@ -154,77 +155,92 @@ const ActionModal = ({
 	};
 
 	const handleFormSubmit = () => {
-		const updateToSend = {
-			assetDtos: actionData,
-			department,
-			assetLocation,
-			assetUser: assetUserID,
-			assetSecurityManager: assetSecurityManagerID,
-			assetOwner: assetOwnerID,
-			reason,
-			detail,
-			demandBy: user.id,
-		};
+		Swal.fire({
+			title: '확인',
+			text: '정말로 이 작업을 진행하시겠습니까?',
+			icon: 'question',
+			showCancelButton: true,
+			confirmButtonColor: '#3085d6',
+			cancelButtonColor: '#d33',
+			confirmButtonText: '예',
+			cancelButtonText: '아니오',
+		}).then((result) => {
+			if (result.isConfirmed) {
+				// 사용자가 '예'를 선택한 경우 실행될 코드
+				const updateToSend = {
+					assetDtos: actionData,
+					department,
+					assetLocation,
+					assetUser: assetUserID,
+					assetSecurityManager: assetSecurityManagerID,
+					assetOwner: assetOwnerID,
+					reason,
+					detail,
+					demandBy: user.id,
+				};
 
-		const disposeToSend = {
-			assetDtos: actionData,
-			disposeMethod,
-			disposeLocation,
-			reason,
-			detail,
-			demandBy: user.id,
-		};
+				const disposeToSend = {
+					assetDtos: actionData,
+					disposeMethod,
+					disposeLocation,
+					reason,
+					detail,
+					demandBy: user.id,
+				};
 
-		const handleSuccessResponse = (response) => {
-			console.log('Success:', response.data);
+				const handleSuccessResponse = (response) => {
+					console.log('Success:', response.data);
 
-			Swal.fire({
-				icon: 'success',
-				title: '성공',
-				text: '자산조회 페이지로 이동합니다.',
-			});
-			// 수정이 완료되면 해당 페이지로 이동
-			setPageIndex(0); // 원하는 페이지 번호로 설정 (예: 0은 첫 페이지)
-			fetchData(0, pageSize); // 해당 페이지의 데이터를 다시 가져옴
-		};
+					Swal.fire({
+						icon: 'success',
+						title: '성공',
+						text: '자산조회 페이지로 이동합니다.',
+					});
 
-		const handleErrorResponse = (error) => {
-			console.error('Error:', error);
-			Swal.fire({
-				icon: 'error',
-				title: '실패',
-				text: error.response.data,
-			});
-		};
+					// 수정이 완료되면 해당 페이지로 이동
+					setPageIndex(0); // 원하는 페이지 번호로 설정 (예: 0은 첫 페이지)
+					fetchData(0, pageSize); // 해당 페이지의 데이터를 다시 가져옴
+				};
 
-		switch (actionType) {
-			case 'AllUpdate':
-				api.post(`${API_URL}/allUpdate`, updateToSend)
-					.then(handleSuccessResponse)
-					.catch(handleErrorResponse);
-				break;
-			case 'AllDispose':
-				api.post(`${API_URL}/allDelete`, disposeToSend)
-					.then(handleSuccessResponse)
-					.catch(handleErrorResponse);
-				break;
-			case 'AllUpdateDemand':
-				console.log('머가 들어있지', updateToSend);
-				api.post(`${API_URL}/allUpdateDemand`, updateToSend)
-					.then(handleSuccessResponse)
-					.catch(handleErrorResponse);
-				break;
-			case 'AllDisposeDemand':
-				api.post(`${API_URL}/allDeleteDemand`, disposeToSend)
-					.then(handleSuccessResponse)
-					.catch(handleErrorResponse);
-				break;
-			default:
-				console.log('Invalid action type');
-		}
+				const handleErrorResponse = (error) => {
+					console.error('Error:', error);
+					Swal.fire({
+						icon: 'error',
+						title: '실패',
+						text: error.response.data,
+					});
+				};
 
-		reset();
-		handleClose(); // 모달 닫기
+				switch (actionType) {
+					case 'AllUpdate':
+						api.post(`${API_URL}/allUpdate`, updateToSend)
+							.then(handleSuccessResponse)
+							.catch(handleErrorResponse);
+						break;
+					case 'AllDispose':
+						api.post(`${API_URL}/allDelete`, disposeToSend)
+							.then(handleSuccessResponse)
+							.catch(handleErrorResponse);
+						break;
+					case 'AllUpdateDemand':
+						console.log('머가 들어있지', updateToSend);
+						api.post(`${API_URL}/allUpdateDemand`, updateToSend)
+							.then(handleSuccessResponse)
+							.catch(handleErrorResponse);
+						break;
+					case 'AllDisposeDemand':
+						api.post(`${API_URL}/allDeleteDemand`, disposeToSend)
+							.then(handleSuccessResponse)
+							.catch(handleErrorResponse);
+						break;
+					default:
+						console.log('Invalid action type');
+				}
+
+				reset();
+				handleClose(); // 모달 닫기
+			}
+		});
 	};
 
 	return (
@@ -299,7 +315,7 @@ const ActionModal = ({
 								</Form.Group>
 
 								{/* 추가된 부분: 소유자 입력 필드 */}
-								<Form.Group className="mb-1">
+								<Form.Group className="mb-1" style={{ position: 'relative' }}>
 									<Form.Label className="mb-0">소유자</Form.Label>
 									<Form.Control
 										type="text"
@@ -322,7 +338,7 @@ const ActionModal = ({
 								</Form.Group>
 
 								{/* 추가된 부분: 소유자 입력 필드 */}
-								<Form.Group className="mb-1">
+								<Form.Group className="mb-1" style={{ position: 'relative' }}>
 									<Form.Label className="mb-0">사용자</Form.Label>
 									<Form.Control
 										type="text"
@@ -345,7 +361,7 @@ const ActionModal = ({
 								</Form.Group>
 
 								{/* 추가된 부분: 소유자 입력 필드 */}
-								<Form.Group className="mb-1">
+								<Form.Group className="mb-1" style={{ position: 'relative' }}>
 									<Form.Label className="mb-0">보안담당자</Form.Label>
 									<Form.Control
 										type="text"
@@ -409,11 +425,16 @@ const ActionModal = ({
 
 			<Modal.Footer>
 				<Button
-					variant={
+					style={
 						actionType === 'AllUpdate' || actionType === 'AllUpdateDemand'
-							? 'primary'
-							: 'danger'
+							? { background: '#5e83bb', border: 'none' }
+							: { background: '#c66464', border: 'none' }
 					}
+					// variant={
+					// 	actionType === 'AllUpdate' || actionType === 'AllUpdateDemand'
+					// 		? 'primary'
+					// 		: 'danger'
+					// }
 					onClick={handleFormSubmit}
 				>
 					처리

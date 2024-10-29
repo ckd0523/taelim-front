@@ -9,7 +9,7 @@ const AssetButtons = ({ handleButtonClick, handleQrClick, handleExcelClick, rowS
 				<>
 					<Col>
 						<Button
-							style={{ background: '#5e83bb' }}
+							style={{ background: '#5e83bb', border: 'none' }}
 							onClick={() => handleButtonClick('AllUpdate', rowSelect)}
 						>
 							일괄수정
@@ -17,7 +17,7 @@ const AssetButtons = ({ handleButtonClick, handleQrClick, handleExcelClick, rowS
 					</Col>
 					<Col>
 						<Button
-							style={{ background: '#c66464' }}
+							style={{ background: '#c66464', border: 'none' }}
 							variant="danger"
 							onClick={() => handleButtonClick('AllDispose', rowSelect)}
 						>
@@ -30,7 +30,7 @@ const AssetButtons = ({ handleButtonClick, handleQrClick, handleExcelClick, rowS
 				<>
 					<Col>
 						<Button
-							style={{ background: '#5e83bb' }}
+							style={{ background: '#5e83bb', border: 'none' }}
 							onClick={() => handleButtonClick('AllUpdateDemand', rowSelect)}
 						>
 							일괄 수정요청
@@ -38,7 +38,7 @@ const AssetButtons = ({ handleButtonClick, handleQrClick, handleExcelClick, rowS
 					</Col>
 					<Col>
 						<Button
-							style={{ background: '#c66464' }}
+							style={{ background: '#c66464', border: 'none' }}
 							variant="danger"
 							onClick={() => handleButtonClick('AllDisposeDemand', rowSelect)}
 						>
@@ -55,7 +55,7 @@ const AssetButtons = ({ handleButtonClick, handleQrClick, handleExcelClick, rowS
 			</Col>
 			<Col>
 				<Button
-					style={{ background: '#73af82' }}
+					style={{ background: '#73af82', border: 'none' }}
 					variant="success"
 					onClick={handleExcelClick}
 				>

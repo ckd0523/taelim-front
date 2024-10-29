@@ -10,7 +10,7 @@ import '../MaintainHistory/Searchbar.css';
 const columns = [
 	{ Header: '번호', accessor: 'backUpNo', defaultCanSort: true },
 	{ Header: '백업 날짜', accessor: 'backUpDate', defaultCanSort: true },
-	{ Header: '백업 범위', accessor: 'backUpScope', defaultCanSort: false },
+	//{ Header: '백업 범위', accessor: 'backUpScope', defaultCanSort: false },
 ];
 
 const sizePerPageList = [
@@ -89,7 +89,7 @@ const BackUpHistory = () => {
 							<Card.Body>
 								<Form>
 									<Row className="align-items-center">
-										<Col xs={12} md={4} lg={2}>
+										{/* <Col xs={12} md={4} lg={2}>
 											<Form.Group as={Row}>
 												<Form.Label xs={12} md={12} lg={10}>
 													백업범위
@@ -112,11 +112,11 @@ const BackUpHistory = () => {
 													</option>
 												</Form.Select>
 											</Form.Group>
-										</Col>
-										<Col xs={12} md={5} lg={5}>
+										</Col> */}
+										<Col xs={12} md={12} lg={12}>
 											<Form.Group as={Row}>
 												<Form.Label>백업 날짜</Form.Label>
-												<Col>
+												<Col xs={3} md={3} lg={3}>
 													<Form.Control
 														type="date"
 														value={selectedDate}
@@ -133,7 +133,7 @@ const BackUpHistory = () => {
 												>
 													~
 												</Col>
-												<Col>
+												<Col xs={3} md={3} lg={3}>
 													<Form.Control
 														type="date"
 														value={selectedDate}
@@ -142,13 +142,16 @@ const BackUpHistory = () => {
 														}}
 													/>
 												</Col>
-											</Form.Group>
-										</Col>
-										<Col className="px-2 pt-4">
-											<Form.Group>
-												<Button variant="dark" type="button">
-													검색
-												</Button>
+												<Col
+													xs={5}
+													md={5}
+													lg={5}
+													className="d-flex align-items-center justify-content-end"
+												>
+													<Button variant="dark" type="button">
+														검색
+													</Button>
+												</Col>
 											</Form.Group>
 										</Col>
 									</Row>
@@ -181,7 +184,7 @@ const BackUpHistory = () => {
 											<tr>
 												<th style={{ color: 'white' }}>번호</th>
 												<th style={{ color: 'white' }}>백업날짜</th>
-												<th style={{ color: 'white' }}>백업범위</th>
+												{/* <th style={{ color: 'white' }}>백업범위</th> */}
 											</tr>
 										</thead>
 										<tbody>

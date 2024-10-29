@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Row, Col, Button, Card, Form, CardBody } from 'react-bootstrap';
 import { TextInput, CustomDatePicker, Form as RHForm } from '@/components';
 import Select from 'react-select';
@@ -123,6 +123,18 @@ const SearchForm = ({ onSearch }) => {
 		});
 	};
 
+	const handleResetClick = () => {
+		setAssetCode('');
+		setAssetName('');
+		setAssetUser('');
+		setSelectedAssetLocation(null);
+		setSelectedDepartment(null);
+		setIntroduceDate('');
+		setSelectedStartDate(null);
+		setSelectedEndDate(null);
+		onSearch({}); // 검색 조건 초기화 전달
+	};
+
 	// react-select의 스타일 커스터마이징
 	const customSelectStyles = {
 		container: (provided) => ({
@@ -146,7 +158,7 @@ const SearchForm = ({ onSearch }) => {
 						<CardBody>
 							<RHForm onChange={handleFormChange}>
 								<Row>
-									<Col lg={2}>
+									<Col xxl={2} xl={6} lg={6} sm={6} md={6} xs={6}>
 										<Form.Label>자산명</Form.Label>
 										<Form.Control
 											name="assetName"
@@ -156,7 +168,7 @@ const SearchForm = ({ onSearch }) => {
 											onChange={handleFormChange}
 										/>
 									</Col>
-									<Col lg={2}>
+									<Col xxl={2} xl={6} lg={6} sm={6} md={6} xs={6}>
 										<Form.Label>자산위치</Form.Label>
 										{/* <Form.Control
 											name="assetLocation"
@@ -168,16 +180,17 @@ const SearchForm = ({ onSearch }) => {
 										<Select
 											options={assetLocationOptions}
 											onChange={handleAssetLocationChange}
+											value={selectedAssetLocation}
 											styles={{
 												container: (provided) => ({
 													...provided,
 													width: '100%',
 												}),
 											}}
-											placeholder="자산위치를 선택하세요" // 여기에 placeholder 추가
+											placeholder="위치를 선택하세요" // 여기에 placeholder 추가
 										/>
 									</Col>
-									<Col lg={2}>
+									<Col xxl={2} xl={6} lg={6} sm={6} md={6} xs={6}>
 										<Form.Label>사용자</Form.Label>
 										<Form.Control
 											name="assetUser"
@@ -187,18 +200,13 @@ const SearchForm = ({ onSearch }) => {
 											onChange={handleFormChange}
 										/>
 									</Col>
-									<Col lg={2}>
+									<Col xxl={2} xl={6} lg={6} sm={6} md={6} xs={6}>
 										<Form.Label>부서</Form.Label>
-										{/* <Form.Control
-											name="department"
-											type="text"
-											placeholder="부서를 입력하세요"
-											// value={department}
-											// onChange={handleFormChange}
-										/> */}
+
 										<Select
 											options={departmentOptions}
 											onChange={handleDepartmentChange}
+											value={selectedDepartment}
 											styles={{
 												container: (provided) => ({
 													...provided,
@@ -208,10 +216,10 @@ const SearchForm = ({ onSearch }) => {
 											placeholder="부서를 선택하세요" // 여기에 placeholder 추가
 										/>
 									</Col>
-									<Col>
+									<Col xxl={4} lg={12} sm={12} md={12} xs={12}>
 										<Form.Label>취득일자</Form.Label>
 										<Row>
-											<Col lg={4}>
+											<Col lg={4} sm={4} md={4} xs={4}>
 												<CustomDatePicker
 													hideAddon={true}
 													dateFormat="yyyy-MM-dd"
@@ -221,11 +229,14 @@ const SearchForm = ({ onSearch }) => {
 											</Col>
 											<Col
 												lg={1}
+												sm={1}
+												md={1}
+												xs={1}
 												className="justify-content-center pt-1 text-center fw-bold"
 											>
 												~
 											</Col>
-											<Col lg={4}>
+											<Col lg={4} sm={4} md={4} xs={4}>
 												<CustomDatePicker
 													hideAddon={true}
 													dateFormat="yyyy-MM-dd"
@@ -233,13 +244,21 @@ const SearchForm = ({ onSearch }) => {
 													onChange={(date) => setSelectedEndDate(date)} // 종료 날짜 상태 업데이트
 												/>
 											</Col>
-											<Col>
+											<Col className="d-flex align-items-center justify-content-end mt-1">
 												<Button
 													variant="dark"
 													type="button"
 													onClick={handleSearchClick}
 												>
-													검색
+													<i className="ri-search-line font-22"></i>
+												</Button>
+												&nbsp; &nbsp;
+												<Button
+													variant="dark"
+													type="button"
+													onClick={handleResetClick}
+												>
+													<i className=" ri-find-replace-line font-22"></i>
 												</Button>
 											</Col>
 										</Row>

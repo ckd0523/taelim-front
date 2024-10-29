@@ -4,7 +4,7 @@ import { Navigate, Route, Routes as ReactRoutes } from 'react-router-dom';
 import VerticalLayout from '@/layouts/Vertical';
 import HorizontalLayout from '@/layouts/Horizontal';
 import Root from './Root';
-
+//import './drag.css';
 /**
  * routes import
  */

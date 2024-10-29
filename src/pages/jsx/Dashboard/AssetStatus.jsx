@@ -87,7 +87,7 @@ const AssetStatus = () => {
   return (
     <Card style={{ width: '100%', height: '93%' }}>
       <Card.Body>
-        <h4 className="header-title">자산현황</h4>
+        <h4 className="header-title" style={{ color: 'red' }}>자산현황</h4>
         <div style={{ width: "100%", height: "93%" }}>
           <Bar data={data} options={options} />
         </div>

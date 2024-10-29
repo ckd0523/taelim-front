@@ -81,6 +81,7 @@ const DepartmentStatus = () => {
   // Define options for the bar chart
   const options = {
     responsive: true,
+    maintainAspectRatio: false, // Card에 꽉 차도록 설정
     plugins: {
       legend: {
         position: 'right',
@@ -115,10 +116,12 @@ const DepartmentStatus = () => {
   };
 
   return (
-    <Card>
+    <Card style={{ width: '100%', height: '93%' }}>
       <Card.Body>
         <h4 className="header-title">부서별 자산현황1(부서별 각 자산 표시)</h4>
-        <Bar data={data} options={options} height={215} />
+        <div style={{ width: "100%", height: "93%" }}>
+          <Bar data={data} options={options} />
+        </div>
       </Card.Body>
     </Card>
   );
@@ -160,6 +163,7 @@ const DepartmentStatus2 = () => {
   // Define options for the bar chart
   const options = {
     responsive: true,
+    maintainAspectRatio: false, // Card에 꽉 차도록 설정
     plugins: {
       legend: {
         //position: 'top',
@@ -193,10 +197,12 @@ const DepartmentStatus2 = () => {
   };
 
   return (
-    <Card>
+    <Card style={{ width: '100%', height: '93%' }}>
       <Card.Body>
         <h4 className="header-title">부서별 자산현황2(부서별 총 자산 표시)</h4>
-        <Bar data={data} options={options} height={215} />
+        <div style={{ width: "100%", height: "93%" }}>
+          <Bar data={data} options={options} />
+        </div>
       </Card.Body>
     </Card>
   );

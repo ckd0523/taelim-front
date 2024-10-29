@@ -24,6 +24,7 @@ const OwnerShipStatus = () => {
 
   const options = {
     responsive: true,
+    maintainAspectRatio: false, // Card에 꽉 차도록 설정
     plugins: {
       legend: {
         display: false,
@@ -48,10 +49,12 @@ const OwnerShipStatus = () => {
   };
 
   return (
-    <Card>
+    <Card style={{ width: '100%', height: '93%' }}>
       <Card.Body>
         <h4 className="header-title">소유권별 현황</h4>
-        <Bar data={data} options={options} height={215} />
+        <div style={{ width: "100%", height: "93%" }}>
+          <Bar data={data} options={options} />
+        </div>
       </Card.Body>
     </Card>
   );

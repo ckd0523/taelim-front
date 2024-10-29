@@ -1,6 +1,24 @@
+import api from '@/common/api/authAxios';
+import { useState } from 'react';
+import { useEffect } from 'react';
 import { Row, Col, Table, Card } from 'react-bootstrap';
 
+const URL = import.meta.env.VITE_BASIC_URL;
+
 const Header = () => {
+
+  const [data, setData] = useState();
+
+  useEffect(() => {
+    const getData = async () => {
+      const response = await api.get(`${URL}/chart/1`);
+      console.log("헤더1 : " + JSON.stringify(response.data));
+      setData(response.data);
+    }
+
+    getData();
+
+  }, []);
 
   return (
     <Card>
@@ -17,9 +35,9 @@ const Header = () => {
             </thead>
             <tbody>
               <tr>
-                <td>3건</td>
-                <td>0건</td>
-                <td>4839개</td>
+                <td>{data ? data.repairAmount : '-'}건</td>
+                <td>{data ? data.assetSurveyAmount : '-'}건</td>
+                <td>{data ? data.totalAssetAmount : '-'}개</td>
               </tr>
             </tbody>
           </Table>
@@ -37,9 +55,9 @@ const Header = () => {
             </thead>
             <tbody>
               <tr>
-                <td>525,00,000원</td>
-                <td>50,00,000원</td>
-                <td>250,000원</td>
+                <td>{data ? data.ownCost + data.leasedCost : '-'}원</td>
+                <td>{data ? data.ownCost : '-'}원</td>
+                <td>{data ? data.leasedCost : '-'}원</td>
               </tr>
             </tbody>
           </Table>

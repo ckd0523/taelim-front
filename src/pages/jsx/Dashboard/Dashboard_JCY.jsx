@@ -1,13 +1,20 @@
 import { Container, Row, Col, Card } from 'react-bootstrap';
 import TotalAssetRatio from './TotalAssetRatio';
-import LocationStatus from './LocationStatus';
+import { LocationStatus, SelectedLocation } from './LocationStatus';
 import Header from './Header';
 //import AssetStatus from './AssetStatus';
 import OperationStatus from './OperationStatus';
 import { DepartmentStatus, DepartmentStatus2 } from './DepartmentStatus';
 import AssetStatus from './AssetStatus';
+import OwnerShipStatus from './OwnerShipStatus';
+import ImportantStatus from './ImportantStatus';
+import { useState } from 'react';
+import AssetTrend from './AssetTrend';
+import PlannedDisposalStatus from './PlannedDisposalStatus';
+import ZoomableTimeseriesChart from './ZoomableChart';
 
 const Dashboard_JCY = () => {
+  const [location, setLocation] = useState("공장동");
 
   return (
     <>
@@ -18,26 +25,15 @@ const Dashboard_JCY = () => {
       </Container>
 
       <Container fluid>
-        <Row className='justify-content-center'>
-          <Col md={3}>
-            <Card>
-              <Card.Body>
-                <p>왼쪽</p>
-              </Card.Body>
-            </Card>
+        <Row >
+          <Col md={6}>
+            {/* 선택한 위치별 현황 */}
+            <SelectedLocation location={location} />
           </Col>
 
           <Col md={6}>
             {/* 위치별 현황 */}
-            <LocationStatus />
-          </Col>
-
-          <Col md={3}>
-            <Card>
-              <Card.Body>
-                <p>오른쪽</p>
-              </Card.Body>
-            </Card>
+            <LocationStatus setLocation={setLocation} />
           </Col>
         </Row>
 
@@ -56,7 +52,6 @@ const Dashboard_JCY = () => {
             {/* 가동 현황 */}
             <OperationStatus />
           </Col>
-
         </Row>
 
         <Row>
@@ -73,21 +68,34 @@ const Dashboard_JCY = () => {
           <Col md={4}>
             <Row>
               <Col md={5}>
-                <Card>
-                  <Card.Body>
-                    <p>소유권별 현황</p>
-                  </Card.Body>
-                </Card>
+                {/* 소유권별 현황 */}
+                <OwnerShipStatus />
               </Col>
 
               <Col md={7}>
-                <Card>
-                  <Card.Body>
-                    <p>중요성별 현황</p>
-                  </Card.Body>
-                </Card>
+                {/* 중요성별 현황 */}
+                <ImportantStatus />
               </Col>
             </Row>
+          </Col>
+        </Row>
+
+        <Row>
+          <Col md={7}>
+            {/* 자산 총액 추이 */}
+            <AssetTrend />
+          </Col>
+
+          <Col md={5}>
+            {/* 폐기 예정 현황 */}
+            <PlannedDisposalStatus />
+          </Col>
+        </Row>
+
+        <Row>
+          <Col md={7}>
+            {/* 자산 총액 추이2 */}
+            <ZoomableTimeseriesChart />
           </Col>
         </Row>
       </Container>

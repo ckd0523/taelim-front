@@ -72,37 +72,67 @@ const InfoModal = ({ show, handleClose, modalData }) => {
 	}, [modalData]);
 
 	const handleFormSubmit = (actionType) => {
-		const dataToSend = {
-			demandAction: modalData,
-			reason,
-			actionType,
-		};
-		api.post(`${API_URL}/updateAction`, dataToSend)
-			.then((response) => {
-				console.log('Update successful:', response.data);
-			})
-			.catch((error) => {
-				console.error('Error:', error.message);
-			});
-		setReason('');
-		handleClose();
+		Swal.fire({
+			title: '확인',
+			text: '이 작업을 진행하시겠습니까?',
+			icon: 'question',
+			showCancelButton: true,
+			confirmButtonColor: '#3085d6',
+			cancelButtonColor: '#d33',
+			confirmButtonText: '예',
+			cancelButtonText: '아니오',
+		}).then((result) => {
+			if (result.isConfirmed) {
+				const dataToSend = {
+					demandAction: modalData,
+					reason,
+					actionType,
+				};
+
+				api.post(`${API_URL}/updateAction`, dataToSend)
+					.then((response) => {
+						console.log('Update successful:', response.data);
+					})
+					.catch((error) => {
+						console.error('Error:', error.message);
+					});
+
+				setReason('');
+				handleClose();
+			}
+		});
 	};
 
 	const handleFormSubmit2 = (actionType) => {
-		const dataToSend = {
-			demandAction: modalData,
-			reason,
-			actionType,
-		};
-		api.post(`${API_URL}/deleteAction`, dataToSend)
-			.then((response) => {
-				console.log('Update successful:', response.data);
-			})
-			.catch((error) => {
-				console.error('Error:', error.message);
-			});
-		setReason('');
-		handleClose();
+		Swal.fire({
+			title: '확인',
+			text: '이 작업을 진행하시겠습니까?',
+			icon: 'question',
+			showCancelButton: true,
+			confirmButtonColor: '#3085d6',
+			cancelButtonColor: '#d33',
+			confirmButtonText: '예',
+			cancelButtonText: '아니오',
+		}).then((result) => {
+			if (result.isConfirmed) {
+				const dataToSend = {
+					demandAction: modalData,
+					reason,
+					actionType,
+				};
+
+				api.post(`${API_URL}/deleteAction`, dataToSend)
+					.then((response) => {
+						console.log('Delete successful:', response.data);
+					})
+					.catch((error) => {
+						console.error('Error:', error.message);
+					});
+
+				setReason('');
+				handleClose();
+			}
+		});
 	};
 
 	const isUnconfirmed = modalData?.demandStatus === 'UNCONFIRMED';
@@ -571,16 +601,29 @@ const ProcessModal = ({ show, handleClose }) => {
 	};
 
 	const handleFormSubmit = () => {
-		api.post(`${API_URL}/demandAction`, demandList1)
-			.then((response) => {
-				console.log('Action successful:', response.data);
-			})
-			.catch((error) => {
-				console.error('Update error:', error);
-			})
-			.finally(() => {
-				handleCloseWithReset();
-			});
+		Swal.fire({
+			title: '최종 확인',
+			text: '지금까지 작업을 모두 처리하시겠습니까?',
+			icon: 'question',
+			showCancelButton: true,
+			confirmButtonColor: '#3085d6',
+			cancelButtonColor: '#d33',
+			confirmButtonText: '예',
+			cancelButtonText: '아니오',
+		}).then((result) => {
+			if (result.isConfirmed) {
+				api.post(`${API_URL}/demandAction`, demandList1)
+					.then((response) => {
+						console.log('Action successful:', response.data);
+					})
+					.catch((error) => {
+						console.error('Update error:', error);
+					})
+					.finally(() => {
+						handleCloseWithReset();
+					});
+			}
+		});
 	};
 
 	// handleClose에 currentIndex 초기화 로직 추가
@@ -892,43 +935,55 @@ const ActionModal = ({ show, handleClose, actionData, actionType, handleSubmit }
 	const handleReasonChange = (e) => setReason(e.target.value);
 
 	const handleFormSubmit = () => {
-		for (const item of actionData) {
-			const dataToSend = {
-				demandAction: item, // 각 항목의 데이터
-				reason,
-				actionType,
-			};
+		Swal.fire({
+			title: '확인',
+			text: '이 작업을 진행하시겠습니까?',
+			icon: 'question',
+			showCancelButton: true,
+			confirmButtonColor: '#3085d6',
+			cancelButtonColor: '#d33',
+			confirmButtonText: '예',
+			cancelButtonText: '아니오',
+		}).then((result) => {
+			if (result.isConfirmed) {
+				for (const item of actionData) {
+					const dataToSend = {
+						demandAction: item, // 각 항목의 데이터
+						reason,
+						actionType,
+					};
 
-			switch (item.demandType) {
-				case 'update':
-				case 'allUpdateDemand':
-					api.post(`${API_URL}/updateAction`, dataToSend)
-						.then((response) => {
-							console.log('Update successful:', response.data);
-						})
-						.catch((error) => {
-							console.error('Update error:', error);
-						});
-					break;
+					switch (item.demandType) {
+						case 'update':
+						case 'allUpdateDemand':
+							api.post(`${API_URL}/updateAction`, dataToSend)
+								.then((response) => {
+									console.log('Update successful:', response.data);
+								})
+								.catch((error) => {
+									console.error('Update error:', error);
+								});
+							break;
 
-				case 'delete':
-				case 'allDisposeDemand':
-					api.post(`${API_URL}/deleteAction`, dataToSend)
-						.then((response) => {
-							console.log('Delete successful:', response.data);
-						})
-						.catch((error) => {
-							console.error('Delete error:', error);
-						});
-					break;
+						case 'delete':
+						case 'allDisposeDemand':
+							api.post(`${API_URL}/deleteAction`, dataToSend)
+								.then((response) => {
+									console.log('Delete successful:', response.data);
+								})
+								.catch((error) => {
+									console.error('Delete error:', error);
+								});
+							break;
 
-				default:
-					console.error('Unknown demand type:', item.demandType);
+						default:
+							console.error('Unknown demand type:', item.demandType);
+					}
+				}
+				handleClose(); // 모달 닫기
+				setReason('');
 			}
-		}
-		//handleSubmit(reason); // 사유를 넘겨주면서 처리
-		handleClose(); // 모달 닫기
-		setReason('');
+		});
 	};
 
 	return (

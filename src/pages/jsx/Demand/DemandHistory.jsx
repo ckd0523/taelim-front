@@ -51,7 +51,6 @@ const DemandHistory = () => {
 		fetchData();
 	}, []);
 
-	//리랜더링
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
@@ -62,9 +61,9 @@ const DemandHistory = () => {
 			}
 		};
 
-		// process가 false로 바뀔 때 데이터를 다시 불러옴
-		if (!process || !showActModal || !showModal) {
-			fetchData();
+		if (!process && !showActModal && !showModal) {
+			// 약간의 지연을 주어 상태가 업데이트될 시간을 확보
+			setTimeout(fetchData, 10);
 		}
 	}, [process, showActModal, showModal]);
 
@@ -194,7 +193,7 @@ const DemandHistory = () => {
 							<Card.Body>
 								<RHForm onChange={handleChange}>
 									<Row className="mb-2">
-										<Col xl={2}>
+										<Col lg={2} xs={4}>
 											<label className="form-label">요청구분</label> <br />
 											<Select
 												className="react-select"
@@ -211,7 +210,7 @@ const DemandHistory = () => {
 												}
 											></Select>
 										</Col>
-										<Col xl={2}>
+										<Col lg={2} xs={4}>
 											<label className="form-label">요청자</label> <br />
 											<TextInput
 												type="text"
@@ -222,7 +221,7 @@ const DemandHistory = () => {
 												onChange={handleChange}
 											/>
 										</Col>
-										<Col xl={2}>
+										<Col lg={2} xs={4}>
 											<label className="form-label">처리여부</label> <br />
 											<Select
 												className="react-select"
@@ -240,12 +239,12 @@ const DemandHistory = () => {
 											></Select>
 										</Col>
 
-										<Col xl={4}>
+										<Col lg={4} xs={12}>
 											<div className="text-lg mt-xl-0 mt-2">
 												<label className="form-label">요청일자</label>{' '}
 												<br />
 												<Row>
-													<Col>
+													<Col lg={5} xs={5}>
 														<CustomDatePicker
 															hideAddon={true}
 															dateFormat="yyyy-MM-dd"
@@ -256,12 +255,13 @@ const DemandHistory = () => {
 														/>
 													</Col>
 													<Col
-														lg={1}
+														lg={2}
+														xs={2}
 														className="d-flex justify-content-center pt-1 text-center fw-bold"
 													>
 														~
 													</Col>
-													<Col>
+													<Col lg={5} xs={5}>
 														<CustomDatePicker
 															hideAddon={true}
 															dateFormat="yyyy-MM-dd"
@@ -276,6 +276,7 @@ const DemandHistory = () => {
 										</Col>
 										<Col
 											lg={2}
+											xs={12}
 											className="d-flex align-items-center justify-content-end"
 										>
 											<div className="text-lg mt-xl-0 mt-2">

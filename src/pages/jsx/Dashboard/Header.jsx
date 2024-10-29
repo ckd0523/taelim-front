@@ -6,7 +6,7 @@ const Header = () => {
     <Card>
       <Row className="p-3">
         <Col lg={6}>
-          <h4 className="header-title">중요알림 및 경고</h4>
+          <h4 className="header-title" style={{ color: 'red' }}>중요알림 및 경고</h4>
           <Table className="border-black">
             <thead className="table-dark">
               <tr>
@@ -26,7 +26,7 @@ const Header = () => {
         </Col>
 
         <Col lg={6}>
-          <h4 className="header-title">자산총액</h4>
+          <h4 className="header-title" style={{ color: 'red' }}>자산총액</h4>
           <Table className="border-black">
             <thead className="table-dark">
               <tr>

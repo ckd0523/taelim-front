@@ -310,9 +310,11 @@ const RowDetails = ({
 
 				// 2. 백엔드에서 받은 메시지 처리
 				if (response.data.includes('이미 수정이 들어간 자산입니다.')) {
-					alert(
-						`경고: 자산 수정 요청 처리부터 처리해주세요. 자산 코드: ${formData.assetCode}`
-					);
+					Swal.fire({
+						icon: 'error',
+						title: '자산 수정 요청 처리부터 처리해주세요.',
+						text: `자산 코드: ${formData.assetCode}`,
+					});
 				} else {
 					// alert(response.data); // 성공 메시지
 
@@ -341,12 +343,15 @@ const RowDetails = ({
 
 							if (fileResponse.status !== 200) {
 								console.error('File upload failed:', fileResponse.data);
-								alert(
-									`파일 업데이트 중 오류가 발생했습니다. 상태 코드: ${fileResponse.status}`
-								);
+
+								Swal.fire({
+									icon: 'error',
+									title: '파일 업데이트 중 오류가 발생했습니다.',
+									text: `상태 코드: ${fileResponse.status}`,
+								});
 								return; // 오류 발생 시 더 이상 진행하지 않음
 							} else {
-								alert('모든 파일이 성공적으로 업로드되었습니다.');
+								console.log('모든 파일이 성공적으로 업로드되었습니다.');
 							}
 						}
 					}
@@ -368,10 +373,18 @@ const RowDetails = ({
 				console.error('Error updating asset data:', error.response || error);
 				if (error.response) {
 					console.error('Response data:', error.response.data);
-					alert(`Error: ${error.response.data}`);
+
+					Swal.fire({
+						icon: 'error',
+						title: '오류가 발생했습니다.',
+						text: `${error.response.data}`,
+					});
 				} else {
 					console.error('Error message:', error.message);
-					alert('자산 수정 요청 중 오류가 발생했습니다.');
+					Swal.fire({
+						icon: 'error',
+						title: '오류가 발생했습니다.',
+					});
 				}
 			}
 		}
@@ -408,9 +421,12 @@ const RowDetails = ({
 				// 2. 백엔드에서 받은 메시지 처리
 				if (response.data.includes('이미 수정 요청이 들어간 자산입니다.')) {
 					// 경고 메시지를 띄우기
-					alert(
-						`경고: 이미 수정 요청이 들어간 자산입니다. 자산 코드: ${formData.assetCode}`
-					);
+
+					Swal.fire({
+						icon: 'error',
+						title: '이미 수정 요청이 들어간 자산입니다.',
+						text: `경고:  자산 코드: ${formData.assetCode}`,
+					});
 				} else {
 					// 성공 메시지 띄우기
 					Swal.fire({
@@ -447,13 +463,14 @@ const RowDetails = ({
 							console.log('File upload response:', fileResponse.data);
 
 							if (fileResponse.status !== 200) {
-								console.error('File upload failed:', fileResponse.data);
-								alert(
-									`파일 업데이트 중 오류가 발생했습니다. 상태 코드: ${fileResponse.status}`
-								);
+								Swal.fire({
+									icon: 'error',
+									title: '파일 업데이트 중 오류가 발생했습니다.',
+									text: `상태 코드: ${fileResponse.status}`,
+								});
 								return; // 오류 발생 시 더 이상 진행하지 않음
 							} else {
-								alert('모든 파일이 성공적으로 업로드되었습니다.');
+								console.log('모든 파일이 성공적으로 업로드되었습니다.');
 							}
 						}
 					}
@@ -855,72 +872,78 @@ const RowDetails = ({
 				<div className="scrollable-div custom-div" style={{ flex: 1 }}>
 					{/* 기본 자산 정보 및 관리 정보 테이블 */}
 					<div className="info-section" style={{ flexGrow: 1 }}>
-						{/* Popover를 포함하는 OverlayTrigger */}
-						<OverlayTrigger
-							trigger="click"
-							placement="bottom" // Popover를 버튼 아래에 표시
-							show={showPopover}
-							onToggle={setShowPopover}
-							overlay={
-								<Popover
-									id="popover-image"
-									style={{ width: '400px' }} // 원하는 너비로 조절
+						<Row className="justify-content-between">
+							<Col xs={10} sm={10} lg={10}>
+								<h4>기본 자산 정보 및 관리 정보</h4>
+							</Col>
+							<Col xs={2} sm={2} lg={2} className="d-flex justify-content-end">
+								<OverlayTrigger
+									trigger="click"
+									placement="left-end"
+									show={showPopover}
+									onToggle={setShowPopover}
+									overlay={
+										<Popover id="popover-image" style={{ width: '100%' }}>
+											<Popover.Body>
+												{formData.files.some(
+													(file) => file.fileType === 'PHOTO'
+												) ? (
+													<img
+														src={
+															selectedFile
+																? selectedFile.fileURL
+																: formData.files.find(
+																		(file) =>
+																			file.fileType ===
+																			'PHOTO'
+																  ).fileURL
+														}
+														alt={
+															selectedFile
+																? selectedFile.oriFileName
+																: formData.files.find(
+																		(file) =>
+																			file.fileType ===
+																			'PHOTO'
+																  ).oriFileName
+														}
+														style={{ width: '100%', height: 'auto' }}
+													/>
+												) : (
+													<div
+														style={{
+															width: '100%',
+															height: 'auto',
+															backgroundColor: '#f0f0f0',
+															border: '1px dashed #ccc',
+															display: 'flex',
+															justifyContent: 'center',
+															alignItems: 'center',
+															color: '#aaa',
+														}}
+													>
+														<span>이미지가 없습니다</span>
+													</div>
+												)}
+												{isEditing && (
+													<input
+														type="file"
+														accept="image/*"
+														onChange={(e) =>
+															handleFileChange(e, 'PHOTO')
+														}
+														style={{ marginTop: '10px' }}
+													/>
+												)}
+											</Popover.Body>
+										</Popover>
+									}
 								>
-									<Popover.Body>
-										{formData.files.some(
-											(file) => file.fileType === 'PHOTO'
-										) ? (
-											<img
-												src={
-													selectedFile
-														? selectedFile.fileURL
-														: formData.files.find(
-																(file) => file.fileType === 'PHOTO'
-														  ).fileURL
-												}
-												alt={
-													selectedFile
-														? selectedFile.oriFileName
-														: formData.files.find(
-																(file) => file.fileType === 'PHOTO'
-														  ).oriFileName
-												}
-												style={{ width: '350px', height: 'auto' }}
-											/>
-										) : (
-											<div
-												style={{
-													width: '300px',
-													height: 'auto',
-													backgroundColor: '#f0f0f0',
-													border: '1px dashed #ccc',
-													display: 'flex',
-													justifyContent: 'center',
-													alignItems: 'center',
-													color: '#aaa',
-												}}
-											>
-												<span>이미지가 없습니다</span>
-											</div>
-										)}
+									<Button style={{ marginBottom: '10px' }}>이미지 보기</Button>
+								</OverlayTrigger>
+							</Col>
+						</Row>
 
-										{/* 수정 모드일 때 파일 입력: 이미지 아래에 위치 */}
-										{isEditing && (
-											<input
-												type="file"
-												accept="image/*"
-												onChange={(e) => handleFileChange(e, 'PHOTO')} // 이미지 파일 처리
-												style={{ marginTop: '10px' }}
-											/>
-										)}
-									</Popover.Body>
-								</Popover>
-							}
-						>
-							{/* 이미지 보기 버튼 */}
-							<Button style={{ marginBottom: '10px' }}>이미지 보기</Button>
-						</OverlayTrigger>
-						<h4>기본 자산 정보 및 관리 정보</h4>
 						<BootstrapTable
 							striped
 							bordered
@@ -1367,6 +1390,7 @@ const RowDetails = ({
 				</div>
 			</div>
 			<Card></Card>
+
 			{/* 새로 추가할 div: 테이블 바로 아래에 위치 */}
 			<div>
 				<div style={{ marginTop: '20px' }}>

@@ -4,6 +4,7 @@ import { Button, Table, Row, Col, Form, Alert, Card } from 'react-bootstrap';
 import Select from 'react-select';
 import Swal from 'sweetalert2';
 import api from '@/common/api/authAxios';
+import { PropagateLoader } from 'react-spinners';
 
 const urlConfig = import.meta.env.VITE_BASIC_URL;
 const ExcelRegister = () => {
@@ -14,6 +15,7 @@ const ExcelRegister = () => {
 	const [formData, setFormData] = useState([]); // 여러 행을 처리하기 위해 배열로 변경
 	const [showAlert, setShowAlert] = useState(false);
 	const [alertMessage, setAlertMessage] = useState('');
+	const [loading, setLoading] = useState(false);
 
 	const fileInputRef = useRef(null);
 
@@ -25,7 +27,7 @@ const ExcelRegister = () => {
 		{ value: '2.5 문서', label: '문서' },
 		{ value: '2.6 특허 및 상표', label: '특허 및 상표' },
 		{ value: '2.7 IT장비-시스템', label: 'IT장비-시스템' },
-		{ value: '2.8 IT장비-네트워크', label: 'IT장비-네트워크' },
+		{ value: '2.8 IT장비–네트워크', label: 'IT장비–네트워크' },
 		{ value: '2.9 단말기', label: '단말기' },
 		{ value: '2.10 가구', label: '가구' },
 		{ value: '2.11 기기', label: '기기' },
@@ -54,43 +56,14 @@ const ExcelRegister = () => {
 		'2.5 문서',
 		'2.6 특허 및 상표',
 		'2.7 IT장비-시스템',
-		'2.8 IT장비-네트워크',
+		'2.8 IT장비–네트워크',
 		'2.9 단말기',
 		'2.10 가구',
 		'2.11 기기',
 		'2.12 차량',
 		'2.13 기타',
 	];
-	const excelDateToJSDate = (serial) => {
-		// if (!serial || isNaN(serial)) {
-		// 	console.log('Invalid serial date : ', serial);
-		// 	return '';
-		// }
-		if (typeof serial === 'number') {
-			const excelEpoch = new Date(Date.UTC(1899, 11, 30));
-			const jsDate = new Date(excelEpoch.getTime() + serial * 24 * 60 * 60 * 1000);
-			return jsDate.toISOString().split('T')[0];
 
-			// } else {
-			// 	const datePattern = /^(\d{4})년\s*(\d{2})월$/;
-			// 	const match = serial.match(datePattern);
-			// 	if (match) {
-			// 		const [_, year, month] = match;
-			// 		return `${year}-${month}-01`;
-			// 	}
-		}
-
-		if (typeof serial === 'string') {
-			const datePattern = /^(\d{4})년\s*(\d{2})월$/;
-			const match = serial.match(datePattern);
-			if (match) {
-				const [_, year, month] = match;
-				console(match);
-				return `${year}-${month}-01`;
-			}
-		}
-		return;
-	};
 	const commonFieldMapping = {
 		자산기준: 'assetBasis',
 		자산명: 'assetName',
@@ -99,7 +72,7 @@ const ExcelRegister = () => {
 		수량: 'quantity',
 		부서: 'department',
 		가동여부: 'operationStatus',
-		도입일자: (introducedDate) => excelDateToJSDate(introducedDate),
+		도입일자: 'introducedDate',
 		기밀성: 'confidentiality',
 		무결성: 'integrity',
 		가용성: 'availability',
@@ -112,9 +85,10 @@ const ExcelRegister = () => {
 		구매날짜: 'purchaseDate',
 		내용연수: 'usefulLife',
 		구입처: 'purchaseSource',
-		구입연락처: 'contactInformation',
+		구입처연락처: 'contactInformation',
 		취득경로: 'acquisitionRoute',
 		유지기간: 'maintenancePeriod',
+		감각상각방법: 'depreciationMethod',
 	};
 	const sheetSpeciificMappings = {
 		'2.1 정보보호시스템': {
@@ -129,15 +103,15 @@ const ExcelRegister = () => {
 		},
 		'2.3 소프트웨어': {
 			IP: 'ip',
-			ID: 'id',
-			PW: 'pw',
+			ServerID: 'serverId',
+			ServerPW: 'serverPassword',
 			담당업체: 'companyManager',
 			사용OS: 'os',
 		},
 		'2.4 전자정보': {
 			사용OS: 'os',
 			시스템: 'system',
-			DB종류: 'DBType',
+			DB종류: 'dbtype',
 		},
 		'2.5 문서': {
 			문서등급: 'documentGrade',
@@ -169,20 +143,20 @@ const ExcelRegister = () => {
 			포트구성: 'portConfiguration',
 			모니터포함여부: 'monitorIncluded',
 		},
-		'2.8 IT장비-네트워크': {
+		'2.8 IT장비–네트워크': {
 			장비유형: 'equipmentType',
 			포트수: 'numberOfPorts',
 			지원프로토콜: 'supportedProtocols',
-			펌웨어버전: 'firmwareVersion',
+			펨웨어버전: 'firmwareVersion',
 			네트워크속도: 'networkSpeed',
 			서비스범위: 'serviceScope',
 		},
 		'2.9 단말기': {
 			IP: 'ip',
-			OS: 'os',
+			사용OS: 'os',
 			보안관제: 'securityControl',
 			내부정보유출방지: 'kaitsKeeper',
-			'악성코드,랜섬웨어탐지': 'V3OfficeSecurity',
+			'악성코드, 랜섬웨어 탐지': 'V3OfficeSecurity',
 			안티랜섬웨어: 'appCheckPro',
 			NACagent: 'tgate',
 		},
@@ -214,6 +188,7 @@ const ExcelRegister = () => {
 		const file = e.target.files[0];
 		setUploadFile(file);
 		setShowAlert(false);
+		setLoading(true);
 		const reader = new FileReader();
 
 		reader.onload = (event) => {
@@ -246,13 +221,18 @@ const ExcelRegister = () => {
 									const formKey = fieldMapping[cleanedHeader];
 
 									if (formKey) {
-										if (cleanedHeader === '도입일자') {
-											updatedFormData['introducedDate'] = fieldMapping[
-												cleanedHeader
-											](excelRow[index]);
-										}
+										// if (cleanedHeader === '도입일자') {
+										// 	updatedFormData['introducedDate'] = fieldMapping[
+										// 		cleanedHeader
+										// 	](excelRow[index]);
+										// }
+
 										updatedFormData['assetClassification'] =
-											sheetName.substring(4, 12);
+											sheetName.match(/^2\.(\d+)/) &&
+											sheetName.match(/^2\.(\d+)/)[1] >= 10
+												? sheetName.substring(5)
+												: sheetName.substring(4);
+
 										updatedFormData[formKey] = excelRow[index];
 									}
 								});
@@ -261,6 +241,7 @@ const ExcelRegister = () => {
 
 						// 모든 행 데이터를 formData 배열에 저장
 						setFormData(allFormData);
+						setLoading(false);
 						console.log(allFormData);
 
 						const jsonData = rows
@@ -372,7 +353,7 @@ const ExcelRegister = () => {
 						<Row>
 							<Col>
 								{Object.keys(data).map((sheetName, index) => (
-									<h3 key={index}>Sheet: {sheetName.substring(4, 12)}</h3>
+									<h3 key={index}>Sheet: {sheetName.substring(4, 13)}</h3>
 								))}
 
 								<Table className="border-black">
@@ -381,40 +362,49 @@ const ExcelRegister = () => {
 											{/* {headers.map((header, index) => (
 														<th key={index}>{header}</th>
 													))} */}
-											<th>자산기준</th>
+											<th>자산 기준</th>
 											<th>자산명</th>
 											<th>자산분류</th>
 											<th>목적/기능</th>
-											<th>자산위치</th>
+											<th>자산 위치</th>
 											<th>부서</th>
 											<th>사용자</th>
 											<th>소유자</th>
 										</tr>
 									</thead>
-									{Object.keys(data).length > 0 ? (
-										<tbody>
-											{Object.keys(data).map((sheetName) => (
+									<tbody>
+										{loading ? (
+											<tr>
+												<td colSpan={8}>
+													<div className="pt-5 pb-5 d-flex justify-content-center">
+														<PropagateLoader
+															color="#3760b3"
+															size={20}
+														/>
+													</div>
+												</td>
+											</tr>
+										) : Object.keys(data).length > 0 ? (
+											Object.keys(data).map((sheetName) => (
 												<React.Fragment key={sheetName}>
 													{data[sheetName].map((row, rowIndex) => (
 														<tr key={rowIndex}>
 															{/* {headers.map((header, colIndex) => (
 															<td key={colIndex}>{row[header]}</td>
 														))} */}
-															<td>{row['자산기준']}</td>
+															<td>{row['자산 기준']}</td>
 															<td>{row['자산명']}</td>
 															<td>{sheetName.substring(4, 12)}</td>
 															<td>{row['목적/기능']}</td>
-															<td>{row['자산위치']}</td>
+															<td>{row['자산 위치']}</td>
 															<td>{row['부서']}</td>
 															<td>{row['사용자']}</td>
 															<td>{row['소유자']}</td>
 														</tr>
 													))}
 												</React.Fragment>
-											))}
-										</tbody>
-									) : (
-										<tbody>
+											))
+										) : (
 											<tr>
 												<td colSpan="8" className="text-center">
 													<div
@@ -427,8 +417,8 @@ const ExcelRegister = () => {
 													</div>
 												</td>
 											</tr>
-										</tbody>
-									)}
+										)}
+									</tbody>
 								</Table>
 							</Col>
 						</Row>

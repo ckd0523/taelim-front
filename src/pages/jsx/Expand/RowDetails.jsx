@@ -1285,19 +1285,25 @@ const RowDetails = ({
 							</Form>
 						</Modal.Body>
 						<Modal.Footer>
-							<Button variant="secondary" onClick={handleModalClose}>
-								취소
-							</Button>
 							{user.role === 'ASSET_MANAGER' && (
-								<Button variant="primary" onClick={handleSubmit1}>
+								<Button
+									style={{ background: '#5e83bb', border: 'none' }}
+									onClick={handleSubmit1}
+								>
 									수정 요청
 								</Button>
 							)}
 							{user.role === 'ADMIN' && (
-								<Button variant="primary" onClick={handleSubmit}>
+								<Button
+									style={{ background: '#5e83bb', border: 'none' }}
+									onClick={handleSubmit}
+								>
 									수정
 								</Button>
 							)}
+							<Button variant="secondary" onClick={handleModalClose}>
+								취소
+							</Button>
 						</Modal.Footer>
 					</Modal>
 				</div>
@@ -1741,15 +1747,15 @@ const RowDetails = ({
 						{isEditing ? (
 							<>
 								<Button
-									variant="primary"
+									style={{ background: '#5e83bb', border: 'none' }}
 									className="me-2"
 									onClick={handleNextClick}
 								>
 									다음
 								</Button>
 
-								<Button variant="danger" onClick={handleCloseClick}>
-									닫기1
+								<Button variant="secondary" onClick={handleCloseClick}>
+									닫기
 								</Button>
 							</>
 						) : (
@@ -1757,7 +1763,7 @@ const RowDetails = ({
 								{(user.role === 'ADMIN' || user.role === 'ASSET_MANAGER') && (
 									<>
 										<Button
-											variant="primary"
+											style={{ background: '#5e83bb', border: 'none' }}
 											className="me-2"
 											onClick={handleEditClick}
 										>
@@ -1772,7 +1778,7 @@ const RowDetails = ({
 										/>
 									</>
 								)}
-								<Button variant="danger" onClick={onClose}>
+								<Button variant="secondary" onClick={onClose}>
 									닫기
 								</Button>
 							</>

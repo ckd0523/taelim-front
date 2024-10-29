@@ -265,7 +265,7 @@ const ModalModifiedInfo = ({
 												assetInfo.purchaseCost
 											)}
 										>
-											{modifiedAssetInfo.purchaseCost}
+											{modifiedAssetInfo.purchaseCost || 'N/A'}
 										</td>
 										<td
 											className={getCellClassName(
@@ -273,7 +273,7 @@ const ModalModifiedInfo = ({
 												assetInfo.purchaseDate
 											)}
 										>
-											{modifiedAssetInfo.purchaseDate}
+											{modifiedAssetInfo.purchaseDate || 'N/A'}
 										</td>
 										<td
 											className={getCellClassName(
@@ -281,7 +281,7 @@ const ModalModifiedInfo = ({
 												assetInfo.usefulLife
 											)}
 										>
-											{modifiedAssetInfo.usefulLife}
+											{modifiedAssetInfo.usefulLife || 'N/A'}
 										</td>
 										<td
 											className={getCellClassName(
@@ -289,7 +289,7 @@ const ModalModifiedInfo = ({
 												assetInfo.depreciationMethod
 											)}
 										>
-											{modifiedAssetInfo.depreciationMethod}
+											{modifiedAssetInfo.depreciationMethod || 'N/A'}
 										</td>
 										<td
 											className={getCellClassName(
@@ -297,7 +297,7 @@ const ModalModifiedInfo = ({
 												assetInfo.acquisitionRoute
 											)}
 										>
-											{modifiedAssetInfo.acquisitionRoute}
+											{modifiedAssetInfo.acquisitionRoute || 'N/A'}
 										</td>
 									</tr>
 								</tbody>
@@ -320,7 +320,7 @@ const ModalModifiedInfo = ({
 												assetInfo.purchaseSource
 											)}
 										>
-											{modifiedAssetInfo.purchaseSource}
+											{modifiedAssetInfo.purchaseSource || 'N/A'}
 										</td>
 										<td
 											className={getCellClassName(
@@ -328,7 +328,7 @@ const ModalModifiedInfo = ({
 												assetInfo.contactInformation
 											)}
 										>
-											{modifiedAssetInfo.contactInformation}
+											{modifiedAssetInfo.contactInformation || 'N/A'}
 										</td>
 										<td
 											className={getCellClassName(
@@ -336,7 +336,7 @@ const ModalModifiedInfo = ({
 												assetInfo.maintenancePeriod
 											)}
 										>
-											{modifiedAssetInfo.maintenancePeriod}
+											{modifiedAssetInfo.maintenancePeriod || 'N/A'}
 										</td>
 										<td
 											className={getCellClassName(

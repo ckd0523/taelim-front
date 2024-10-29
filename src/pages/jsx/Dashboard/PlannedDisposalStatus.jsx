@@ -10,7 +10,7 @@ const PlannedDisposalStatus = () => {
     ],
     datasets: [{
       //label: '자산 수량',
-      data: [127, 195, 211, 262, 163, 203, 117, 169, 55, 89, 97, 155, 241],
+      data: [7, 13, 4, 19, 2, 15, 8, 11, 0, 16, 5, 20, 3],
       backgroundColor: [
         '#f02424da', '#f0932fdf', '#ebe82be7', '#4b8e08dd', '#2a8cc9',
         '#1527ae', '#a842ec', '#d524d5', '#36899cea', '#1e8f80',
@@ -44,7 +44,7 @@ const PlannedDisposalStatus = () => {
   return (
     <Card style={{ width: '100%', height: '93%' }}>
       <Card.Body>
-        <h4 className="header-title">폐기 예정 현황</h4>
+        <h4 className="header-title">폐기 예정 현황(30일 내)</h4>
         <div style={{ width: "100%", height: "93%" }}>
           <Bar data={data} options={options} />
         </div>

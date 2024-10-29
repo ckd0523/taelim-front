@@ -11,6 +11,7 @@ import ImportantStatus from './ImportantStatus';
 import { useState } from 'react';
 import AssetTrend from './AssetTrend';
 import PlannedDisposalStatus from './PlannedDisposalStatus';
+import ZoomableTimeseriesChart from './ZoomableChart';
 
 const Dashboard_JCY = () => {
   const [location, setLocation] = useState("공장동");
@@ -88,6 +89,13 @@ const Dashboard_JCY = () => {
           <Col md={5}>
             {/* 폐기 예정 현황 */}
             <PlannedDisposalStatus />
+          </Col>
+        </Row>
+
+        <Row>
+          <Col md={7}>
+            {/* 자산 총액 추이2 */}
+            <ZoomableTimeseriesChart />
           </Col>
         </Row>
       </Container>

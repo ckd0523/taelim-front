@@ -45,7 +45,8 @@ const Pagination = ({ pageIndex, pageCount, gotoPage, pageSize, setPageSize, siz
 
 			{/* 페이지당 항목 수 선택 */}
 			<span className="d-inline-block align-items-center text-sm-start text-center my-sm-0 my-2">
-				<label>Go to page : </label>
+				<label>Go to page : &thinsp;&thinsp;&thinsp;</label>
+
 				<input
 					type="number"
 					value={pageIndex + 1}
@@ -58,7 +59,7 @@ const Pagination = ({ pageIndex, pageCount, gotoPage, pageSize, setPageSize, siz
 							gotoPage(page); // 페이지 이동
 						}
 					}}
-					className="form-control w-25 ms-1 d-inline-block"
+					className="w-25 ms-1 d-inline-block"
 				/>
 			</span>
 

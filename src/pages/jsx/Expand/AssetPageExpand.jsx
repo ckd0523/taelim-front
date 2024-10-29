@@ -35,9 +35,10 @@ const AssetPageTest = (props) => {
 		assetLocationEnum: '',
 		assetUser: '',
 		departmentEnum: '',
-		introducedDate: '',
-		assetClassification: null, // 분류 추가
-	}); // 검색 필터 상태 관리
+		startDate: null,
+		endDate: null,
+		assetClassification: null,
+	});
 
 	// 정렬 상태 관리
 	const [sortBy, setSortBy] = useState('assetBasis'); // 기본 정렬 기준
@@ -249,23 +250,40 @@ const AssetPageTest = (props) => {
 
 	// 엑셀 동작 넣기
 	// Excel 버튼 클릭 핸들러
+	// Excel 버튼 클릭 핸들러
 	const handleExcelClick = async (classification) => {
 		try {
 			const classificationStr = classification ? classification.name : null; // 예를 들어, classification 객체의 name 속성을 사용
-			const response = await api.get('/assets/export', {
-				params: { assetClassification: classificationStr },
-				responseType: 'blob',
+
+			// 사용자에게 확인 메시지 표시
+			const result = await Swal.fire({
+				title: '확인',
+				text: '자산 목록을 Excel로 내보내시겠습니까?',
+				icon: 'question',
+				showCancelButton: true,
+				confirmButtonColor: '#3085d6',
+				cancelButtonColor: '#d33',
+				confirmButtonText: '예',
+				cancelButtonText: '아니오',
 			});
 
-			const blob = new Blob([response.data], { type: 'application/octet-stream' });
-			const url = window.URL.createObjectURL(blob);
+			if (result.isConfirmed) {
+				// 사용자가 확인했을 경우, Excel 파일 다운로드 로직 실행
+				const response = await api.get('/assets/export', {
+					params: { assetClassification: classificationStr },
+					responseType: 'blob',
+				});
 
-			const link = document.createElement('a');
-			link.href = url;
-			link.setAttribute('download', 'assets.xlsx');
-			document.body.appendChild(link);
-			link.click();
-			link.remove();
+				const blob = new Blob([response.data], { type: 'application/octet-stream' });
+				const url = window.URL.createObjectURL(blob);
+
+				const link = document.createElement('a');
+				link.href = url;
+				link.setAttribute('download', 'assets.xlsx');
+				document.body.appendChild(link);
+				link.click();
+				link.remove();
+			}
 		} catch (error) {
 			console.error('파일 다운로드 중 오류 발생:', error);
 		}

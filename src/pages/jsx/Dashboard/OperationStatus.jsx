@@ -69,12 +69,12 @@ const OperationStatus = () => {
   };
 
   return (
-    <Card>
+    <Card style={{ width: '100%', height: '93%' }}>
       <Card.Body>
         <h4 className="header-title">가동 현황</h4>
         {/* 도넛을 div나 아무거나로 감싸줘야함 */}
-        <div>
-          <Doughnut data={doughnutData} options={doughnutOptions} height={333} />
+        <div style={{ width: "100%", height: "93%" }}>
+          <Doughnut data={doughnutData} options={doughnutOptions} />
         </div>
       </Card.Body>
     </Card>

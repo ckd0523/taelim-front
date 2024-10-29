@@ -76,6 +76,7 @@ const AssetTrend = () => {
 
   const options = {
     responsive: true,
+    maintainAspectRatio: false, // Card에 꽉 차도록 설정
     plugins: {
       legend: {
         display: false,
@@ -106,10 +107,12 @@ const AssetTrend = () => {
   };
 
   return (
-    <Card>
+    <Card style={{ width: '100%', height: '93%' }}>
       <Card.Body>
         <h4 className='header-title'>자산 총액 추이</h4>
-        <Line data={data} options={options} />
+        <div style={{ width: "100%", height: "93%" }}>
+          <Line data={data} options={options} />
+        </div>
       </Card.Body>
     </Card >
   );

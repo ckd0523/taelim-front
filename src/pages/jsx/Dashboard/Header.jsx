@@ -6,20 +6,20 @@ const Header = () => {
     <Card>
       <Row className="p-3">
         <Col lg={6}>
-          <h4 className="header-title" style={{ color: 'red' }}>중요알림 및 경고</h4>
+          <h4 className="header-title" style={{ color: 'red' }}>자산 정보</h4>
           <Table className="border-black">
             <thead className="table-dark">
               <tr>
                 <th>유지보수</th>
-                <th>계약만료</th>
-                <th>이상지출</th>
+                <th>자산 조사</th>
+                <th>총 자산 수</th>
               </tr>
             </thead>
             <tbody>
               <tr>
                 <td>3건</td>
-                <td>1건</td>
-                <td>-</td>
+                <td>0건</td>
+                <td>4839개</td>
               </tr>
             </tbody>
           </Table>
@@ -30,14 +30,14 @@ const Header = () => {
           <Table className="border-black">
             <thead className="table-dark">
               <tr>
-                <th>태림</th>
-                <th>정부지원</th>
-                <th>기타</th>
+                <th>총액</th>
+                <th>소유</th>
+                <th>임대</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td>100,00,000원</td>
+                <td>525,00,000원</td>
                 <td>50,00,000원</td>
                 <td>250,000원</td>
               </tr>

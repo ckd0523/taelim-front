@@ -44,7 +44,7 @@ const PlannedDisposalStatus = () => {
   return (
     <Card style={{ width: '100%', height: '93%' }}>
       <Card.Body>
-        <h4 className="header-title">폐기 예정 현황</h4>
+        <h4 className="header-title">폐기 예정 현황(30일 내)</h4>
         <div style={{ width: "100%", height: "93%" }}>
           <Bar data={data} options={options} />
         </div>

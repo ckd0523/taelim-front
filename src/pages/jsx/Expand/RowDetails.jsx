@@ -11,10 +11,12 @@ import {
 	Accordion,
 	Tab,
 	Tabs,
+	InputGroup,
+	Popover,
+	OverlayTrigger,
 } from 'react-bootstrap';
 import { BsCaretUpFill } from 'react-icons/bs';
 import { BsCaretDownFill } from 'react-icons/bs';
-import axios from 'axios';
 import MaintainRegister from '@/pages/jsx/Maintain';
 import './style.css'; // 같은 폴더에서 CSS 파일 import
 import {
@@ -22,6 +24,11 @@ import {
 	calculateImportanceScore,
 	calculateImportanceRating,
 } from './RowDetailColumn';
+import {
+	getResidualValueRate,
+	calculateResidualValue,
+	calculatePresentValue,
+} from './RowDetailCalulate';
 import { HistoryTableUpdate } from './HistoryTableUpdate';
 import { HistoryTableMaintenance } from './HistoryTableMaintenance';
 import { HistoryTableInvestigation } from './HistoryTableInvestigation';
@@ -43,7 +50,6 @@ const RowDetails = ({
 	const [isEditing, setIsEditing] = useState(false);
 	const [formData, setFormData] = useState(initialFormData || {}); // 상위 컴포넌트에서 받은 formData를 상태로 설정
 	const [showModal, setShowModal] = useState(false); // 모달 열기/닫기 상태
-	const [isLoading, setIsLoading] = useState(true); // 로딩 상태
 	const [selectedFile, setSelectedFile] = useState(null);
 
 	const importanceScore = calculateImportanceScore(formData);
@@ -54,7 +60,15 @@ const RowDetails = ({
 		[classification]
 	);
 
+	// 잔존가치와 현재가치 계산
+	const residualValue = calculateResidualValue(formData);
+	const currentValue = calculatePresentValue(formData);
+
 	const { user } = useAuthContext();
+	const [showPopover, setShowPopover] = useState(false);
+	const handleTogglePopover = () => {
+		setShowPopover(!showPopover);
+	};
 
 	// 사람이름들 리스트 가져오기
 	//소유자 검색어와 소유자 리스트 상태
@@ -269,191 +283,219 @@ const RowDetails = ({
 	// 모달 닫기 처리
 	const handleModalClose = () => setShowModal(false);
 
-	// 수정  api 받아서 처리
 	const handleSubmit = async () => {
 		console.log('handleSubmit:', formData); // 상태 확인
 
-		try {
-			// 1. 수정 처리 (기존 파일 정보 포함)
-			const response = await api.post(`${urlConfig}/asset/update/${formData.assetCode}`, {
-				...formData,
-				existingFiles: formData.existingFiles, // 기존 파일 정보 추가
-			});
+		// 사용자에게 확인 메시지 표시
+		const result = await Swal.fire({
+			title: '확인',
+			text: '정말로 이 자산을 수정하시겠습니까?',
+			icon: 'question',
+			showCancelButton: true,
+			confirmButtonColor: '#3085d6',
+			cancelButtonColor: '#d33',
+			confirmButtonText: '예',
+			cancelButtonText: '아니오',
+		});
 
-			console.log('Update response:', response.data); // 응답 확인
-
-			// 2. 백엔드에서 받은 메시지 처리
-			if (response.data.includes('이미 수정이 들어간 자산입니다.')) {
-				alert(
-					`경고: 자산 수정 요청 처리부터 처리해주세요. 자산 코드: ${formData.assetCode}`
-				);
-			} else {
-				//alert(response.data); // 성공 메시지
-
-				// 3. 새 파일 업로드가 필요할 때만 실행
-				if (formData.files && formData.files.length > 0) {
-					const fileData = new FormData();
-
-					// 새 파일만 처리
-					for (const fileObj of formData.files) {
-						if (fileObj.file) {
-							fileData.append('files', fileObj.file); // 새 파일 추가
-							fileData.append('fileType', fileObj.fileType); // 파일 타입 추가
-						}
-					}
-
-					// 파일 업로드 API 호출 (새 파일만 처리)
-					if (fileData.has('files')) {
-						// 파일이 존재하는 경우에만 전송
-						const fileResponse = await api.post(
-							`${urlConfig}/${formData.assetCode}/files`,
-							fileData,
-							{ headers: { 'Content-Type': 'multipart/form-data' } }
-						);
-
-						console.log('File upload response:', fileResponse.data);
-
-						if (fileResponse.status !== 200) {
-							console.error('File upload failed:', fileResponse.data);
-							alert(
-								`파일 업데이트 중 오류가 발생했습니다. 상태 코드: ${fileResponse.status}`
-							);
-							return; // 오류 발생 시 더 이상 진행하지 않음
-						} else {
-							alert('모든 파일이 성공적으로 업로드되었습니다.');
-						}
-					}
-				}
-
-				// 성공 메시지 후 모달 닫기
-				setShowModal(false); // 모달 닫기
-				setTimeout(() => {
-					Swal.fire({
-						icon: 'success',
-						title: `${formData.assetCode} : 자산이 성공적으로 수정되었습니다`,
-					});
-
-					// 수정이 완료되면 해당 페이지로 이동
-					setPageIndex(0); // 원하는 페이지 번호로 설정 (예: 0은 첫 페이지)
-					fetchData(0, pageSize); // 해당 페이지의 데이터를 다시 가져옴
-				}, 500);
-			}
-		} catch (error) {
-			console.error('Error updating asset data:', error.response || error);
-			if (error.response) {
-				console.error('Response data:', error.response.data);
-				alert(`Error: ${error.response.data}`);
-			} else {
-				console.error('Error message:', error.message);
-				alert('자산 수정 요청 중 오류가 발생했습니다.');
-			}
-		}
-	};
-
-	// 수정 요청 api 받아서 처리
-	const handleSubmit1 = async () => {
-		console.log('handleSubmit1:', formData); // 상태 확인
-		try {
-			// 1. 수정 요청 처리 (기존 파일 정보 포함)
-			const response = await api.post(
-				`${urlConfig}/asset/updateDemand/${formData.assetCode}`,
-				{
+		if (result.isConfirmed) {
+			try {
+				// 1. 수정 처리 (기존 파일 정보 포함)
+				const response = await api.post(`${urlConfig}/asset/update/${formData.assetCode}`, {
 					...formData,
 					existingFiles: formData.existingFiles, // 기존 파일 정보 추가
-				}
-			);
-
-			console.log('UpdateDemand response:', response.data); // 응답 확인
-
-			// 2. 백엔드에서 받은 메시지 처리
-			if (response.data.includes('이미 수정 요청이 들어간 자산입니다.')) {
-				// 경고 메시지를 띄우기
-				alert(`경고: 이미 수정 요청이 들어간 자산입니다. 자산 코드: ${formData.assetCode}`);
-			} else {
-				// 성공 메시지 띄우기
-				//alert(response.data); // 성공 메시지
-				Swal.fire({
-					icon: 'success',
-					title: `${formData.assetCode} : 자산이 성공적으로 수정요청되었습니다`,
 				});
-				setTimeout(() => {
-					// 수정이 완료되면 해당 페이지로 이동
-					setPageIndex(0); // 원하는 페이지 번호로 설정 (예: 0은 첫 페이지)
-					fetchData(0, pageSize); // 해당 페이지의 데이터를 다시 가져옴
-				}, 1500);
 
-				// 3. 새 파일 업로드가 필요할 때만 실행
-				if (formData.files && formData.files.length > 0) {
-					const fileData = new FormData();
+				console.log('Update response:', response.data); // 응답 확인
 
-					// 새 파일만 처리
-					for (const fileObj of formData.files) {
-						if (fileObj.file) {
-							fileData.append('files', fileObj.file); // 새 파일 추가
-							fileData.append('fileType', fileObj.fileType); // 파일 타입 추가
+				// 2. 백엔드에서 받은 메시지 처리
+				if (response.data.includes('이미 수정이 들어간 자산입니다.')) {
+					alert(
+						`경고: 자산 수정 요청 처리부터 처리해주세요. 자산 코드: ${formData.assetCode}`
+					);
+				} else {
+					// alert(response.data); // 성공 메시지
+
+					// 3. 새 파일 업로드가 필요할 때만 실행
+					if (formData.files && formData.files.length > 0) {
+						const fileData = new FormData();
+
+						// 새 파일만 처리
+						for (const fileObj of formData.files) {
+							if (fileObj.file) {
+								fileData.append('files', fileObj.file); // 새 파일 추가
+								fileData.append('fileType', fileObj.fileType); // 파일 타입 추가
+							}
 						}
-					}
 
-					// 파일 업로드 API 호출 (새 파일만 처리)
-					if (fileData.has('files')) {
-						// 파일이 존재하는 경우에만 전송
-						const fileResponse = await api.post(
-							`${urlConfig}/${formData.assetCode}/files`,
-							fileData,
-							{ headers: { 'Content-Type': 'multipart/form-data' } }
-						);
-
-						console.log('File upload response:', fileResponse.data);
-
-						if (fileResponse.status !== 200) {
-							console.error('File upload failed:', fileResponse.data);
-							alert(
-								`파일 업데이트 중 오류가 발생했습니다. 상태 코드: ${fileResponse.status}`
+						// 파일 업로드 API 호출 (새 파일만 처리)
+						if (fileData.has('files')) {
+							// 파일이 존재하는 경우에만 전송
+							const fileResponse = await api.post(
+								`${urlConfig}/${formData.assetCode}/files`,
+								fileData,
+								{ headers: { 'Content-Type': 'multipart/form-data' } }
 							);
-							return; // 오류 발생 시 더 이상 진행하지 않음
-						} else {
-							alert('모든 파일이 성공적으로 업로드되었습니다.');
+
+							console.log('File upload response:', fileResponse.data);
+
+							if (fileResponse.status !== 200) {
+								console.error('File upload failed:', fileResponse.data);
+								alert(
+									`파일 업데이트 중 오류가 발생했습니다. 상태 코드: ${fileResponse.status}`
+								);
+								return; // 오류 발생 시 더 이상 진행하지 않음
+							} else {
+								alert('모든 파일이 성공적으로 업로드되었습니다.');
+							}
 						}
 					}
-				}
 
-				setShowModal(false); // 모달 닫기
+					// 성공 메시지 후 모달 닫기
+					setShowModal(false); // 모달 닫기
+					setTimeout(() => {
+						Swal.fire({
+							icon: 'success',
+							title: `${formData.assetCode} : 자산이 성공적으로 수정되었습니다`,
+						});
+
+						// 수정이 완료되면 해당 페이지로 이동
+						setPageIndex(0); // 원하는 페이지 번호로 설정 (예: 0은 첫 페이지)
+						fetchData(0, pageSize); // 해당 페이지의 데이터를 다시 가져옴
+					}, 500);
+				}
+			} catch (error) {
+				console.error('Error updating asset data:', error.response || error);
+				if (error.response) {
+					console.error('Response data:', error.response.data);
+					alert(`Error: ${error.response.data}`);
+				} else {
+					console.error('Error message:', error.message);
+					alert('자산 수정 요청 중 오류가 발생했습니다.');
+				}
 			}
-		} catch (error) {
-			console.error('Error updating asset data:', error);
-			// setErrorMessage('자산 수정 요청 중 오류가 발생했습니다.');
-		} finally {
-			// 필요에 따라 페이지 새로고침 가능
-			// window.location.reload();
 		}
 	};
 
-	function CustomToggle({ children, eventKey }) {
-		const [isOpen, setIsOpen] = useState(false);
-		const decoratedOnClick = useAccordionButton(eventKey, () =>
-			setIsOpen((prevOpen) => !prevOpen)
-		);
+	const handleSubmit1 = async () => {
+		console.log('handleSubmit1:', formData); // 상태 확인
 
-		return (
-			<button
-				className="custom-button fw-bold h4"
-				type="button"
-				style={{
-					width: '100%',
-					backgroundColor: 'white',
-					textAlign: 'left',
-				}}
-				onClick={decoratedOnClick}
-			>
-				{isOpen ? (
-					<BsCaretUpFill style={{ paddingRight: '10' }} size="30" color="#2222226b" />
-				) : (
-					<BsCaretDownFill style={{ paddingRight: '10' }} size="30" color="#2222226b" />
-				)}
-				{children}
-			</button>
-		);
-	}
+		// 사용자에게 확인 메시지 표시
+		const result = await Swal.fire({
+			title: '확인',
+			text: '정말로 이 자산의 수정 요청을 하시겠습니까?',
+			icon: 'question',
+			showCancelButton: true,
+			confirmButtonColor: '#3085d6',
+			cancelButtonColor: '#d33',
+			confirmButtonText: '예',
+			cancelButtonText: '아니오',
+		});
+
+		if (result.isConfirmed) {
+			try {
+				// 1. 수정 요청 처리 (기존 파일 정보 포함)
+				const response = await api.post(
+					`${urlConfig}/asset/updateDemand/${formData.assetCode}`,
+					{
+						...formData,
+						existingFiles: formData.existingFiles, // 기존 파일 정보 추가
+					}
+				);
+
+				console.log('UpdateDemand response:', response.data); // 응답 확인
+
+				// 2. 백엔드에서 받은 메시지 처리
+				if (response.data.includes('이미 수정 요청이 들어간 자산입니다.')) {
+					// 경고 메시지를 띄우기
+					alert(
+						`경고: 이미 수정 요청이 들어간 자산입니다. 자산 코드: ${formData.assetCode}`
+					);
+				} else {
+					// 성공 메시지 띄우기
+					Swal.fire({
+						icon: 'success',
+						title: `${formData.assetCode} : 자산이 성공적으로 수정 요청되었습니다.`,
+					});
+					setTimeout(() => {
+						// 수정이 완료되면 해당 페이지로 이동
+						setPageIndex(0); // 원하는 페이지 번호로 설정 (예: 0은 첫 페이지)
+						fetchData(0, pageSize); // 해당 페이지의 데이터를 다시 가져옴
+					}, 1500);
+
+					// 3. 새 파일 업로드가 필요할 때만 실행
+					if (formData.files && formData.files.length > 0) {
+						const fileData = new FormData();
+
+						// 새 파일만 처리
+						for (const fileObj of formData.files) {
+							if (fileObj.file) {
+								fileData.append('files', fileObj.file); // 새 파일 추가
+								fileData.append('fileType', fileObj.fileType); // 파일 타입 추가
+							}
+						}
+
+						// 파일 업로드 API 호출 (새 파일만 처리)
+						if (fileData.has('files')) {
+							// 파일이 존재하는 경우에만 전송
+							const fileResponse = await api.post(
+								`${urlConfig}/${formData.assetCode}/files`,
+								fileData,
+								{ headers: { 'Content-Type': 'multipart/form-data' } }
+							);
+
+							console.log('File upload response:', fileResponse.data);
+
+							if (fileResponse.status !== 200) {
+								console.error('File upload failed:', fileResponse.data);
+								alert(
+									`파일 업데이트 중 오류가 발생했습니다. 상태 코드: ${fileResponse.status}`
+								);
+								return; // 오류 발생 시 더 이상 진행하지 않음
+							} else {
+								alert('모든 파일이 성공적으로 업로드되었습니다.');
+							}
+						}
+					}
+
+					setShowModal(false); // 모달 닫기
+				}
+			} catch (error) {
+				console.error('Error updating asset data:', error);
+				// setErrorMessage('자산 수정 요청 중 오류가 발생했습니다.');
+			} finally {
+				// 필요에 따라 페이지 새로고침 가능
+				// window.location.reload();
+			}
+		}
+	};
+
+	// function CustomToggle({ children, eventKey }) {
+	// 	const [isOpen, setIsOpen] = useState(false);
+	// 	const decoratedOnClick = useAccordionButton(eventKey, () =>
+	// 		setIsOpen((prevOpen) => !prevOpen)
+	// 	);
+
+	// 	return (
+	// 		<button
+	// 			className="custom-button fw-bold h4"
+	// 			type="button"
+	// 			style={{
+	// 				width: '100%',
+	// 				backgroundColor: 'white',
+	// 				textAlign: 'left',
+	// 			}}
+	// 			onClick={decoratedOnClick}
+	// 		>
+	// 			{isOpen ? (
+	// 				<BsCaretUpFill style={{ paddingRight: '10' }} size="30" color="#2222226b" />
+	// 			) : (
+	// 				<BsCaretDownFill style={{ paddingRight: '10' }} size="30" color="#2222226b" />
+	// 			)}
+	// 			{children}
+	// 		</button>
+	// 	);
+	// }
 
 	const renderCellContent = (key) => {
 		// 수정모드 설정
@@ -723,19 +765,23 @@ const RowDetails = ({
 				);
 			}
 
-			// 소유자 필드에 대해 수정모드인 경우 별도로 렌더링
+			// 사용자 필드에 대해 수정모드인 경우 별도로 렌더링
 			if (key === 'assetUser') {
 				return (
-					<Form.Group className="mb-1">
-						<Form.Control
-							type="text"
-							value={selectedUser ? selectedUser.fullname : formData.assetUser || ''} // 선택된 소유자의 fullname 또는 기존 값 사용
-							disabled // 입력 필드 비활성화
-							style={{ textAlign: 'center' }} // 텍스트 가운데 정렬
-						/>
-						<Button variant="secondary" onClick={() => setShowUserModal(true)}>
-							사용자 선택
-						</Button>
+					<Form.Group className="mb-3">
+						<InputGroup>
+							<Form.Control
+								type="text"
+								value={
+									selectedUser ? selectedUser.fullname : formData.assetUser || ''
+								} // 선택된 사용자의 fullname 또는 기존 값 사용
+								disabled // 입력 필드 비활성화
+								style={{ textAlign: 'center' }} // 텍스트 가운데 정렬
+							/>
+							<Button variant="secondary" onClick={() => setShowUserModal(true)}>
+								<i className="ri-search-line font-22"></i> {/* 아이콘 추가 */}
+							</Button>
+						</InputGroup>
 					</Form.Group>
 				);
 			}
@@ -743,45 +789,51 @@ const RowDetails = ({
 			// 소유자 필드에 대해 수정모드인 경우 별도로 렌더링
 			if (key === 'assetOwner') {
 				return (
-					<Form.Group className="mb-1">
-						<Form.Control
-							type="text"
-							value={
-								selectedOwner ? selectedOwner.fullname : formData.assetOwner || ''
-							} // 선택된 소유자의 fullname 또는 기존 값 사용
-							disabled // 입력 필드 비활성화
-							style={{ textAlign: 'center' }} // 텍스트 가운데 정렬
-						/>
-						<Button variant="secondary" onClick={() => setShowOwnerModal(true)}>
-							소유자 선택
-						</Button>
+					<Form.Group className="mb-3">
+						<InputGroup>
+							<Form.Control
+								type="text"
+								value={
+									selectedOwner
+										? selectedOwner.fullname
+										: formData.assetOwner || ''
+								} // 선택된 소유자의 fullname 또는 기존 값 사용
+								disabled // 입력 필드 비활성화
+								style={{ textAlign: 'center' }} // 텍스트 가운데 정렬
+							/>
+							<Button variant="secondary" onClick={() => setShowOwnerModal(true)}>
+								<i className="ri-search-line font-22"></i> {/* 아이콘 추가 */}
+							</Button>
+						</InputGroup>
+					</Form.Group>
+				);
+			}
+			// 보안담당자 필드에 대해 수정모드인 경우 별도로 렌더링
+			if (key === 'assetSecurityManager') {
+				return (
+					<Form.Group className="mb-3">
+						<InputGroup>
+							<Form.Control
+								type="text"
+								value={
+									selectedSecurityManager
+										? selectedSecurityManager.fullname
+										: formData.assetSecurityManager || ''
+								} // 선택된 보안담당자의 fullname 또는 기존 값 사용
+								disabled // 입력 필드 비활성화
+								style={{ textAlign: 'center' }} // 텍스트 가운데 정렬
+							/>
+							<Button
+								variant="secondary"
+								onClick={() => setShowSecurityManagerModal(true)}
+							>
+								<i className="ri-search-line font-22"></i> {/* 아이콘 추가 */}
+							</Button>
+						</InputGroup>
 					</Form.Group>
 				);
 			}
 
-			// 소유자 필드에 대해 수정모드인 경우 별도로 렌더링
-			if (key === 'assetSecurityManager') {
-				return (
-					<Form.Group className="mb-1">
-						<Form.Control
-							type="text"
-							value={
-								selectedSecurityManager
-									? selectedSecurityManager.fullname
-									: formData.assetSecurityManager || ''
-							} // 선택된 소유자의 fullname 또는 기존 값 사용
-							disabled // 입력 필드 비활성화
-							style={{ textAlign: 'center' }} // 텍스트 가운데 정렬
-						/>
-						<Button
-							variant="secondary"
-							onClick={() => setShowSecurityManagerModal(true)}
-						>
-							보안담당자 선택
-						</Button>
-					</Form.Group>
-				);
-			}
 			// select 외는 text input 설정
 			return (
 				<Form.Control
@@ -800,62 +852,74 @@ const RowDetails = ({
 		<>
 			{/* 큰 부모 div */}
 			<div style={{ display: 'flex', alignItems: 'center', flexGrow: 1 }}>
-				{/* 이미지 표시 부분 */}
-				<div
-					style={{
-						display: 'flex',
-						flexDirection: 'column',
-						alignItems: 'center',
-						marginRight: '40px',
-					}}
-				>
-					{formData.files.some((file) => file.fileType === 'PHOTO') ? (
-						<img
-							src={
-								selectedFile
-									? selectedFile.fileURL
-									: formData.files.find((file) => file.fileType === 'PHOTO')
-											.fileURL
-							}
-							alt={
-								selectedFile
-									? selectedFile.oriFileName
-									: formData.files.find((file) => file.fileType === 'PHOTO')
-											.oriFileName
-							}
-							style={{ width: '350px', height: 'auto' }}
-						/>
-					) : (
-						<div
-							style={{
-								width: '300px',
-								height: 'auto',
-								backgroundColor: '#f0f0f0',
-								border: '1px dashed #ccc',
-								display: 'flex',
-								justifyContent: 'center',
-								alignItems: 'center',
-								color: '#aaa',
-							}}
-						>
-							<span>이미지가 없습니다</span>
-						</div>
-					)}
-
-					{/* 수정 모드일 때 파일 입력: 이미지 아래에 위치 */}
-					{isEditing && (
-						<input
-							type="file"
-							accept="image/*"
-							onChange={(e) => handleFileChange(e, 'PHOTO')} // 이미지 파일 처리
-							style={{ marginTop: '10px' }}
-						/>
-					)}
-				</div>
-
 				<div className="scrollable-div custom-div" style={{ flex: 1 }}>
 					{/* 기본 자산 정보 및 관리 정보 테이블 */}
 					<div className="info-section" style={{ flexGrow: 1 }}>
+						{/* Popover를 포함하는 OverlayTrigger */}
+						<OverlayTrigger
+							trigger="click"
+							placement="bottom" // Popover를 버튼 아래에 표시
+							show={showPopover}
+							onToggle={setShowPopover}
+							overlay={
+								<Popover
+									id="popover-image"
+									style={{ width: '400px' }} // 원하는 너비로 조절
+								>
+									<Popover.Body>
+										{formData.files.some(
+											(file) => file.fileType === 'PHOTO'
+										) ? (
+											<img
+												src={
+													selectedFile
+														? selectedFile.fileURL
+														: formData.files.find(
+																(file) => file.fileType === 'PHOTO'
+														  ).fileURL
+												}
+												alt={
+													selectedFile
+														? selectedFile.oriFileName
+														: formData.files.find(
+																(file) => file.fileType === 'PHOTO'
+														  ).oriFileName
+												}
+												style={{ width: '350px', height: 'auto' }}
+											/>
+										) : (
+											<div
+												style={{
+													width: '300px',
+													height: 'auto',
+													backgroundColor: '#f0f0f0',
+													border: '1px dashed #ccc',
+													display: 'flex',
+													justifyContent: 'center',
+													alignItems: 'center',
+													color: '#aaa',
+												}}
+											>
+												<span>이미지가 없습니다</span>
+											</div>
+										)}
+
+										{/* 수정 모드일 때 파일 입력: 이미지 아래에 위치 */}
+										{isEditing && (
+											<input
+												type="file"
+												accept="image/*"
+												onChange={(e) => handleFileChange(e, 'PHOTO')} // 이미지 파일 처리
+												style={{ marginTop: '10px' }}
+											/>
+										)}
+									</Popover.Body>
+								</Popover>
+							}
+						>
+							{/* 이미지 보기 버튼 */}
+							<Button style={{ marginBottom: '10px' }}>이미지 보기</Button>
+						</OverlayTrigger>
 						<h4>기본 자산 정보 및 관리 정보</h4>
 						<BootstrapTable
 							striped
@@ -967,8 +1031,8 @@ const RowDetails = ({
 									<td>{renderCellContent('contactInformation')}</td>
 									<td>{renderCellContent('acquisitionRoute')}</td>
 									<td>{renderCellContent('maintenancePeriod')}</td>
-									<td>{renderCellContent('residualValue')}</td>
-									<td>{renderCellContent('currentValue')}</td>
+									<td>{residualValue}</td>
+									<td>{currentValue}</td>
 								</tr>
 							</tbody>
 						</BootstrapTable>
@@ -1749,7 +1813,7 @@ const RowDetails = ({
 								</Button>
 
 								<Button variant="danger" onClick={handleCloseClick}>
-									닫기1
+									닫기
 								</Button>
 							</>
 						) : (

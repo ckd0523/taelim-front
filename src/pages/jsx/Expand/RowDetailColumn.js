@@ -123,8 +123,10 @@ export const getClassificationColumns = (classification) => {
 // 중요성 점수를 계산
 export const calculateImportanceScore = (formData) => {
 	if (formData) {
-		const { confidentiality, integrity, availability } = formData;
-		return (confidentiality || 0) + (integrity || 0) + (availability || 0);
+		const confidentiality = Number(formData.confidentiality) || 0;
+		const integrity = Number(formData.integrity) || 0;
+		const availability = Number(formData.availability) || 0;
+		return confidentiality + integrity + availability;
 	}
 	return 0;
 };
@@ -136,6 +138,7 @@ export const calculateImportanceRating = (score) => {
 	if (score >= 3 && score <= 4) return 'C급';
 	return 'N/A';
 };
+
 const RowDetailColumn = {
 	getClassificationColumns,
 	calculateImportanceScore,

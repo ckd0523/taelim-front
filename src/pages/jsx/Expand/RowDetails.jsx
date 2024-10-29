@@ -947,13 +947,7 @@ const RowDetails = ({
 									<td style={{ width: '80px' }}>
 										{renderCellContent('availability')}
 									</td>
-									<td style={{ width: '80px' }}>
-										{
-											isEditing
-												? '계산중' // 수정 모드에서는 비워둡니다.
-												: importanceScore // 수정 모드가 아닐 때는 계산된 등급 표시
-										}
-									</td>
+									<td style={{ width: '80px' }}>{importanceScore}</td>
 									<td style={{ width: '80px' }}>{importanceRating}</td>
 									<td>{renderCellContent('note')}</td>
 								</tr>

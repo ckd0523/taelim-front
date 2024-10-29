@@ -68,7 +68,6 @@ const SurveyTable = ({ tableChange, setSelectedRows, data, setData, setOriginalD
 					setData(response.data); // API로부터 받은 데이터 설정
 					setOriginalData(response.data);
 				}
-				setLoading(false);
 			} catch (error) {
 				//console.log("자산 조사 테이블 2");
 				setData(tableData);

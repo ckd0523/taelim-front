@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import api from '@/common/api/authAxios';
-import { Button, Table } from 'react-bootstrap';
+import { Button, Table, Row, Col } from 'react-bootstrap';
 import { PropagateLoader } from 'react-spinners';
 import { Input } from 'react-bootstrap-typeahead';
 const urlConfig = import.meta.env.VITE_BASIC_URL;
@@ -8,20 +8,23 @@ function Crawler() {
 	const [products, setProducts] = useState([]);
 	const [keyword, setKeyword] = useState('');
 	const [loading, setLoading] = useState(false);
+	const [sourceUrl, setSourceUrl] = useState('');
 
 	const fetchProducts = async () => {
 		if (!keyword) {
 			setProducts([]);
+			setSourceUrl('');
 			setLoading(true);
 			return;
 		}
 		try {
 			setLoading(true);
 			const resposne = await api.get(`${urlConfig}/api/crawl/products?keyword=${keyword}`);
-			if (Array.isArray(resposne.data)) {
+			if (resposne.data) {
+				const { products, sourceUrl } = resposne.data;
 				console.log(resposne.data);
-				setProducts(resposne.data);
-				return resposne.data;
+				setProducts(products);
+				setSourceUrl(sourceUrl);
 			}
 		} catch (error) {
 			console.log('error fetching data : ', error);
@@ -83,13 +86,23 @@ function Crawler() {
 					) : (
 						<tbody>
 							<tr>
-								<td colSpan={3}>
-									<div className="pt-5 pb-5 d-flex justify-content-center">
-										<PropagateLoader color="#3760b3" size={20} />
+								<td colSpan={3} className="text-center">
+									<div className="alert alert-warning" role="alert">
+										<strong>데이터가 없습니다!</strong>
+										<br />
+										검색어를 입력해주세요.
 									</div>
 								</td>
 							</tr>
 						</tbody>
+					)}
+					{sourceUrl && (
+						<p>
+							출처 :{' '}
+							<a href={sourceUrl} target="_blank">
+								{sourceUrl}
+							</a>
+						</p>
 					)}
 				</Table>
 			</div>

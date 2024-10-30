@@ -25,7 +25,20 @@ const MaintainDetail = ({ show, selectData, handleClose }) => {
 		// 	...prevState,
 		// 	formData.repairStatus: '완료',
 		// }));
-		(formData.repairStatus = '완료'), saveImages();
+		Swal.fire({
+			title: '최종 확인',
+			text: '지금까지 작업을 모두 처리하시겠습니까?',
+			icon: 'question',
+			showCancelButton: true,
+			confirmButtonColor: '#255892a8',
+			cancelButtonColor: '#a519198e',
+			confirmButtonText: '예',
+			cancelButtonText: '아니오',
+		}).then((result) => {
+			if (result.isConfirmed) {
+				(formData.repairStatus = '완료'), saveImages();
+			}
+		});
 	};
 	const imgRef = useRef();
 	const afterImgRef = useRef();
@@ -298,18 +311,22 @@ const MaintainDetail = ({ show, selectData, handleClose }) => {
 							</Button>
 						</>
 					) : (
-						<>
-							<Button variant="dark" onClick={handleSuccess}>
-								완료
-							</Button>
+						!(formData.repairStatus === '완료') && (
+							<>
+								<div className="me-auto">
+									<Button variant="dark" onClick={handleSuccess}>
+										완료
+									</Button>
+								</div>
 
-							<Button
-								style={{ background: '#5e83bb', border: 'none' }}
-								onClick={handleEditToggle}
-							>
-								수정
-							</Button>
-						</>
+								<Button
+									style={{ background: '#5e83bb', border: 'none' }}
+									onClick={handleEditToggle}
+								>
+									수정
+								</Button>
+							</>
+						)
 					)}
 					<Button variant="secondary" onClick={handleClose}>
 						닫기

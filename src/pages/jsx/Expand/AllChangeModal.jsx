@@ -425,11 +425,16 @@ const ActionModal = ({
 
 			<Modal.Footer>
 				<Button
-					variant={
+					style={
 						actionType === 'AllUpdate' || actionType === 'AllUpdateDemand'
-							? 'primary'
-							: 'danger'
+							? { background: '#5e83bb', border: 'none' }
+							: { background: '#c66464', border: 'none' }
 					}
+					// variant={
+					// 	actionType === 'AllUpdate' || actionType === 'AllUpdateDemand'
+					// 		? 'primary'
+					// 		: 'danger'
+					// }
 					onClick={handleFormSubmit}
 				>
 					처리

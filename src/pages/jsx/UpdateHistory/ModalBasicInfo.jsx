@@ -58,6 +58,7 @@ const ModalBasicInfo = ({
 							<th>자산명</th> */}
 										<th>자산기준</th>
 										<th>제조사</th>
+										<th>제품시리얼 번호</th>
 										<th>목적</th>
 										<th>부서</th>
 										<th>위치</th>
@@ -80,6 +81,14 @@ const ModalBasicInfo = ({
 											)}
 										>
 											{assetInfo.manufacturingCompany || 'N/A'}
+										</td>
+										<td
+											className={getCellClassName(
+												assetInfo.productSerialNumber,
+												modifiedAssetInfo.productSerialNumber
+											)}
+										>
+											{assetInfo.productSerialNumber || 'N/A'}
 										</td>
 										<td
 											className={getCellClassName(
@@ -118,6 +127,7 @@ const ModalBasicInfo = ({
 										<th>보안담당자</th>
 										<th>사용상태</th>
 										<th>가동여부</th>
+										<th>소유권</th>
 										<th>도입일자</th>
 									</tr>
 								</thead>
@@ -165,6 +175,14 @@ const ModalBasicInfo = ({
 										</td>
 										<td
 											className={getCellClassName(
+												assetInfo.ownership,
+												modifiedAssetInfo.ownership
+											)}
+										>
+											{assetInfo.ownership || 'N/A'}
+										</td>
+										<td
+											className={getCellClassName(
 												assetInfo.introducedDate,
 												modifiedAssetInfo.introducedDate
 											)}
@@ -179,6 +197,7 @@ const ModalBasicInfo = ({
 							<BootstrapTable bordered className="table-update">
 								<thead>
 									<tr>
+										<th>수량</th>
 										<th>기밀성</th>
 										<th>무결성</th>
 										<th>가용성</th>
@@ -189,6 +208,14 @@ const ModalBasicInfo = ({
 								</thead>
 								<tbody>
 									<tr>
+										<td
+											className={getCellClassName(
+												assetInfo.quantity,
+												modifiedAssetInfo.quantity
+											)}
+										>
+											{assetInfo.quantity || 'N/A'}
+										</td>
 										<td
 											className={getCellClassName(
 												assetInfo.confidentiality,

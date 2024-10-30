@@ -172,7 +172,7 @@ const DepartmentStatus2 = () => {
       datalabels: {
         color: '#fff',
         font: {
-          size: 14,
+          size: 17,
         }
       },
       tooltip: {

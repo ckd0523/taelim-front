@@ -223,7 +223,7 @@ const SelectedLocation = ({ location }) => {
     <Card style={{ width: '100%', height: '95%' }}>
       <Card.Body>
         <Row sm={4}>
-          <h4 className="header-title" style={{ display: "inline" }}>{location} 자산 비율 </h4>
+          <h4 className="header-title" style={{ display: "inline" }}>{location} 자산 개수 </h4>
           <Select
             options={[
               { value: 'x', label: '세로' },

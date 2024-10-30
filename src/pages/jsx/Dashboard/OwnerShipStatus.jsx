@@ -1,5 +1,5 @@
 import { Card } from "react-bootstrap";
-import { Bar } from "react-chartjs-2";
+import { Doughnut } from "react-chartjs-2";
 
 const OwnerShipStatus = () => {
   const data = {
@@ -17,35 +17,32 @@ const OwnerShipStatus = () => {
           "#acaba6",
         ],
         borderWidth: 1,
-        barThickness: 45,
       },
     ],
   };
 
   const options = {
     responsive: true,
-    maintainAspectRatio: false, // Card에 꽉 차도록 설정
+    maintainAspectRatio: false,
     plugins: {
       legend: {
-        display: false,
+        display: true, // Pie 차트에서 범례는 표시하는 것이 일반적입니다.
+        position: "bottom",
+        labels: {
+          font: {
+            size: 17,
+          },
+        },
       },
       datalabels: {
         color: "#fff",
         font: {
-          size: 14,
+          size: 17,
         },
         anchor: "center",
         align: "center",
       },
     },
-    scales: {
-      y: {
-        title: {
-          display: true,
-          text: "개수",
-        }
-      }
-    }
   };
 
   return (
@@ -53,7 +50,7 @@ const OwnerShipStatus = () => {
       <Card.Body>
         <h4 className="header-title">소유권별 현황</h4>
         <div style={{ width: "100%", height: "93%" }}>
-          <Bar data={data} options={options} />
+          <Doughnut data={data} options={options} />
         </div>
       </Card.Body>
     </Card>

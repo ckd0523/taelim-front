@@ -214,13 +214,13 @@ const DepartmentStatus2 = () => {
           <Col sm={4}>
             <Select
               options={[
-                { value: 'x', label: '경영기획실' },
-                { value: 'y', label: '관리팀' },
-                { value: 'y', label: '영업팀' },
-                { value: 'y', label: '구매팀' },
-                { value: 'y', label: '품질팀' },
-                { value: 'y', label: '생산팀' },
-                { value: 'y', label: '기술연구소' },
+                { value: '1', label: '경영기획실' },
+                { value: '2', label: '관리팀' },
+                { value: '3', label: '영업팀' },
+                { value: '4', label: '구매팀' },
+                { value: '5', label: '품질팀' },
+                { value: '6', label: '생산팀' },
+                { value: '7', label: '기술연구소' },
               ]}
             />
           </Col>

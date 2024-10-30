@@ -10,7 +10,7 @@ const ExcelRegister = lazy(() => import('./ExcelAssetRegister'));
 const MaintainRegister = lazy(() => import('./Maintain'));
 const MaintainHist = lazy(() => import('./MaintainHistory'));
 const BackupHistory = lazy(() => import('./BackupHistory'));
-const AssetSurveyHistory = lazy(() => import('./AssetSurvey'));
+const AssetSurveyHistory2 = lazy(() => import('./AssetSurvey'));
 const DemandHistory = lazy(() => import('./Demand'));
 const UpdateHistory = lazy(() => import('./UpdateHistory'));
 const DeleteHistory = lazy(() => import('./DeleteHistory'));
@@ -103,7 +103,7 @@ export default function jsx() {
 					path="AssetSurveyHistory"
 					element={
 						checkPermission(['ADMIN', 'ASSET_MANAGER']) ? (
-							<AssetSurveyHistory />
+							<AssetSurveyHistory2 />
 						) : (
 							<Navigate to="/jsx/dashboard" />
 						)

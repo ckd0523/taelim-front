@@ -279,7 +279,7 @@ const AssetPageTest = (props) => {
 
 				const link = document.createElement('a');
 				link.href = url;
-				link.setAttribute('download', 'assets.xlsx');
+				link.setAttribute('download', '정보자산 목록 및 중요도 산정.xlsx');
 				document.body.appendChild(link);
 				link.click();
 				link.remove();

@@ -2,82 +2,64 @@ import { Button, Card, Col, Row } from 'react-bootstrap';
 import { Bar } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
 import Select from 'react-select';
+import { useState } from 'react';
+import { useEffect } from 'react';
 
 // Register required components
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 const label = ['경영기획실', '관리팀', '영업팀', '구매팀', '품질팀', '생산팀', '기술연구소'];
 
-const DepartmentStatus = () => {
-  // Define the data for the Chart.js bar chart
+const locationlabel = [
+  '정보보호시스템', '응용프로그램', '소프트웨어', '전자정보', '문서',
+  '특허 및 상표', 'IT 장비 - 시스템', 'IT 장비 – 네트워크', '단말기',
+  '가구', '기기', '차량', '기타',
+];
+
+const DepartmentStatus = ({ location }) => {
+  const data1 = [
+    199, 140, 59, 97, 83, 62, 175, 240, 216, 113, 257, 180, 70,
+  ];
+
+  const handleData = (selectedValue) => {
+    console.log(selectedValue);
+    // 빈 배열 생성
+    const numbers = [];
+
+    // 13개의 랜덤 숫자 생성
+    while (numbers.length < 13) {
+      // Math.random()은 0~1 사이의 난수를 생성
+      // Math.floor로 소수점 아래를 버림
+      const randomNumber = Math.floor(Math.random() * (300 - 50 + 1)) + 50;
+
+      // 중복되지 않는 숫자만 배열에 추가
+      if (!numbers.includes(randomNumber)) {
+        numbers.push(randomNumber);
+      }
+    }
+
+    setData(numbers);
+  };
+
+  const [chartData, setData] = useState(data1);
+
+  useEffect(() => {
+    handleData();
+
+  }, [location]);
+
+
   const data = {
-    labels: label,
-    datasets: [
-      {
-        label: 'Data1',
-        data: [44, 55, 41, 67, 22, 43, 21],
-        backgroundColor: '#4E79A7',
-      },
-      {
-        label: 'Data2',
-        data: [44, 55, 41, 67, 22, 43, 21],
-        backgroundColor: '#F28E2B',
-      },
-      {
-        label: 'Data3',
-        data: [44, 55, 41, 67, 22, 43, 21],
-        backgroundColor: '#76B7B2',
-      },
-      {
-        label: 'Data4',
-        data: [44, 55, 41, 67, 22, 43, 21],
-        backgroundColor: '#E15759',
-      },
-      {
-        label: 'Data5',
-        data: [44, 55, 41, 67, 22, 43, 21],
-        backgroundColor: '#59A14F',
-      },
-      {
-        label: 'Data6',
-        data: [44, 55, 41, 67, 22, 43, 21],
-        backgroundColor: '#acaba6',
-      },
-      {
-        label: 'Data7',
-        data: [44, 55, 41, 67, 22, 43, 21],
-        backgroundColor: '#4E79A7',
-      },
-      {
-        label: 'Data8',
-        data: [44, 55, 41, 67, 22, 43, 21],
-        backgroundColor: '#F28E2B',
-      },
-      {
-        label: 'Data9',
-        data: [44, 55, 41, 67, 22, 43, 21],
-        backgroundColor: '#76B7B2',
-      },
-      {
-        label: 'Data10',
-        data: [44, 55, 41, 67, 22, 43, 21],
-        backgroundColor: '#E15759',
-      },
-      {
-        label: 'Data11',
-        data: [44, 55, 41, 67, 22, 43, 21],
-        backgroundColor: '#59A14F',
-      },
-      {
-        label: 'Data12',
-        data: [44, 55, 41, 67, 22, 43, 21],
-        backgroundColor: '#acaba6',
-      },
-      {
-        label: 'Data13',
-        data: [44, 55, 41, 67, 22, 43, 21],
-        backgroundColor: '#acaba6',
-      },
+    labels: locationlabel,
+    datasets: [{
+      data: chartData,
+      backgroundColor: [
+        "rgba(24, 152, 51, 1)", "rgba(24, 152, 51, 1)", "rgba(24, 152, 51, 1)", "rgba(24, 152, 51, 1)",
+        "rgba(24, 152, 51, 0.9)", "rgba(24, 152, 51, 0.9)", "rgba(24, 152, 51, 0.9)", "rgba(24, 152, 51, 0.9)",
+        "rgba(24, 152, 51, 0.8)", "rgba(24, 152, 51, 0.8)", "rgba(24, 152, 51, 0.8)", "rgba(24, 152, 51, 0.8)",
+        "rgba(24, 152, 51, 0.7)",
+      ]
+    }
     ],
   };
 
@@ -88,6 +70,7 @@ const DepartmentStatus = () => {
     plugins: {
       legend: {
         position: 'right',
+        display: false,
       },
       datalabels: {
         color: 'white',
@@ -98,7 +81,7 @@ const DepartmentStatus = () => {
             console.log(tooltipItem);
             const label = tooltipItem.dataset.label;
             const value = tooltipItem.raw; // 각 데이터 값
-            return `${label}:${value}개`; // 툴팁에 표시할 내용
+            return `${value}개`; // 툴팁에 표시할 내용
           },
         },
       },
@@ -119,18 +102,19 @@ const DepartmentStatus = () => {
   };
 
   return (
-    <Card style={{ width: '100%', height: '93%' }}>
-      <Card.Body>
-        <h4 className="header-title">부서별 자산현황1(부서별 각 자산 표시)</h4>
-        <div style={{ width: "100%", height: "93%" }}>
-          <Bar data={data} options={options} />
-        </div>
-      </Card.Body>
-    </Card>
+    <>
+      <div style={{ width: "100%", height: "90%" }}>
+        <Bar data={data} options={options} />
+      </div>
+    </>
   );
 };
 
+//---------------------------------------------------------------------------------------------
+
 const DepartmentStatus2 = () => {
+  const [location, setLocation] = useState({ "value": "0", "label": "부서별 자산" });
+
   // Define the data for the Chart.js bar chart
   const data = {
     labels: label,
@@ -199,21 +183,32 @@ const DepartmentStatus2 = () => {
         grid: {
           display: false, // x축 그리드 라인 비활성화
         },
+        ticks: {
+          font: {
+            size: 12, // 원하는 폰트 사이즈로 설정
+          },
+        },
       },
     },
   };
+
+  const handleLocation = (selectedOption) => {
+    //console.log("아놔: " + JSON.stringify(selectedOption));
+    setLocation(selectedOption);
+  }
 
   return (
     <Card style={{ width: '100%', height: '93%' }}>
       <Card.Body>
         <Row>
           <Col>
-            <h4 className="header-title">부서별 자산현황</h4>
+            <h4 className="header-title">{location.value == 0 ? '부서별 자산현황' : `${location.label} 자산현황`}</h4>
           </Col>
 
           <Col sm={4}>
             <Select
               options={[
+                { value: '0', label: '부서별 자산' },
                 { value: '1', label: '경영기획실' },
                 { value: '2', label: '관리팀' },
                 { value: '3', label: '영업팀' },
@@ -221,14 +216,20 @@ const DepartmentStatus2 = () => {
                 { value: '5', label: '품질팀' },
                 { value: '6', label: '생산팀' },
                 { value: '7', label: '기술연구소' },
+
               ]}
+              defaultValue={{ value: '0', label: '부서별 자산' }}
+              onChange={handleLocation}
             />
           </Col>
         </Row>
 
-        <div style={{ width: "100%", height: "87%" }}>
-          <Bar data={data} options={options} />
-        </div>
+        {location.value == 0 ? (
+          <div style={{ width: "100%", height: "87%" }}>
+            <Bar data={data} options={options} />
+          </div>
+        ) : (<DepartmentStatus location={location} />)}
+
       </Card.Body>
     </Card>
   );

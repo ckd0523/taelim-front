@@ -57,7 +57,7 @@ const MENU_ITEMS = [
 			},
 			{
 				key: 'ds-Expand-SFT',
-				label: '소프트에어',
+				label: '소프트웨어',
 				url: '/jsx/Expand/SOFTWARE',
 				parentKey: 'check',
 			},

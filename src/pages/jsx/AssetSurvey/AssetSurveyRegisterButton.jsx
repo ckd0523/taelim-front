@@ -82,7 +82,7 @@ const RegisterButton = ({ onClickRegister }) => {
       const requestData = {
         round: round,
         location: selectedLocation,
-        email: user.id, //회원 id
+        userId: user.id, //회원 id
       };
 
       console.log(requestData.location);

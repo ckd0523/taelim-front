@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const ErrorCodeMessages= {
+const ErrorCodeMessages = {
 	401: 'Invalid credentials',
 	403: 'Access Forbidden',
 	404: 'Resource or page not found',
@@ -12,8 +12,8 @@ function HttpClient() {
 			Object.keys(ErrorCodeMessages).includes(error?.response?.status)
 				? ErrorCodeMessages[error.response.status]
 				: error.response.data && error.response.data.message
-				? error.response.data.message
-				: error.message || error
+					? error.response.data.message
+					: error.message || error
 		);
 
 	const _httpClient = axios.create({

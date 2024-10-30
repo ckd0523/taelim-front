@@ -151,7 +151,7 @@ export const CellContent = ({
 			);
 		}
 
-		if (keyName === 'screenNumber') {
+		if (['screenNumber', 'quantity', 'usefulLife', 'purchaseCost'].includes(keyName)) {
 			return (
 				<input
 					type="number"

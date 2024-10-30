@@ -47,7 +47,7 @@ const TotalAssetRatio = () => {
 					const total = context.dataset.data.reduce((acc, val) => acc + val, 0); // 전체 값 합산
 					const percentage = ((value / total) * 100).toFixed(2); // 비율 계산
 
-					return `    ${labels[context.dataIndex]}\n ${percentage}%`; // 알파벳과 비율 표시
+					return `     ${labels[context.dataIndex]}\n ${percentage}%`; // 알파벳과 비율 표시
 				},
 				color: '#fff',
 				font: {

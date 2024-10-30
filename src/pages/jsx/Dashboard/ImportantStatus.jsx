@@ -9,12 +9,12 @@ const ImportantStatus = () => {
         data: [244, 111, 642],
         backgroundColor: [
           "#5a85dc",
-          "#f28e2b",
+          "#d88b3f",
           "#acaba6",
         ],
         borderColor: [
           "#5a85dc",
-          "#f28e2b",
+          "#d88b3f",
           "#acaba6",
         ],
         borderWidth: 1,

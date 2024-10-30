@@ -2,7 +2,9 @@ import React from 'react';
 import { Line } from 'react-chartjs-2';
 import { Chart as ChartJS, LineElement, PointElement, CategoryScale, LinearScale, Tooltip, Legend } from 'chart.js';
 import { useState, useEffect } from 'react';
-import { Card } from 'react-bootstrap';
+import { Card, Col, Row, OverlayTrigger, Tooltip as Tooltip2, Button, Form } from 'react-bootstrap';
+import { AssetSummary } from './AssetSummary';
+import Select from 'react-select';
 
 // Chart.js에 필요한 요소 및 플러그인 등록
 ChartJS.register(LineElement, PointElement, CategoryScale, LinearScale, Tooltip, Legend);
@@ -105,7 +107,7 @@ const AssetTrend = () => {
       y: {
         title: {
           display: true,
-          text: '자산 총액',
+          //text: '자산 총액',
           font: {
             size: 14,
             weight: 'bold'
@@ -133,15 +135,52 @@ const AssetTrend = () => {
     }
   };
 
+  // const renderTooltip = (props) => (
+  //   <Tooltip2 id="tooltip" {...props}>
+  //     Simple tooltip
+  //   </Tooltip2>
+  // );
+
   return (
-    <Card style={{ width: '100%', height: '420px' }}>
-      <Card.Body>
-        <h4 className='header-title'>자산 총액 추이</h4>
-        <div style={{ width: "100%", height: "93%" }}>
+    <Row>
+      <Col>
+        <AssetSummary />
+      </Col>
+
+      <Col>
+        <Row>
+          <Col sm={3}>
+            <h4 className='header-title' style={{ display: 'inline' }}>자산 총액 추이</h4>
+          </Col>
+          <Col className='d-flex justify-content-end'>
+            <Select
+              options={[
+                { value: 'M', label: '월' },
+                { value: 'Y', label: '연' },
+              ]}
+              defaultValue={{ value: 'Y', label: '연' }}
+            />
+            <Form>
+              <Form.Control
+                type='month'>
+
+              </Form.Control>
+            </Form>
+          </Col>
+        </Row>
+        {/* <OverlayTrigger
+          placement="top"
+          delay={{ show: 100, hide: 50 }}
+          overlay={renderTooltip}
+        >
+          <i className='ri-question-line' />
+        </OverlayTrigger> */}
+
+        <div style={{ width: "100%", height: "87%" }}>
           <Line data={data} options={options} />
         </div>
-      </Card.Body>
-    </Card>
+      </Col>
+    </Row>
   );
 };
 

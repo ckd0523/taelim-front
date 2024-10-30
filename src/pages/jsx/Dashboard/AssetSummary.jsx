@@ -139,7 +139,7 @@ const AssetTotalCost = () => {
 };
 */
 
-const AssetInfo = () => {
+const AssetSummary = () => {
   const [data, setData] = useState();
 
   useEffect(() => {
@@ -223,7 +223,7 @@ const AssetInfo = () => {
 
               <h4 className="header-title">임대 총액</h4>
               {/* <h3 className="mt-3 mb-3" style={{ display: 'inline' }}>{data ? data.leasedCost : '-'} 원</h3> */}
-              <h3 className="mt-3 mb-3" style={{ display: 'inline' }}>4,27,890 원</h3>
+              <h3 className="mt-3 mb-3" style={{ display: 'inline' }}>427,890 원</h3>
             </Card.Body>
           </Card>
         </Col>
@@ -232,4 +232,4 @@ const AssetInfo = () => {
   );
 }
 
-export { AssetInfo };
+export { AssetSummary };

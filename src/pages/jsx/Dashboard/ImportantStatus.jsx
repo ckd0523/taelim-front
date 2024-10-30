@@ -1,53 +1,49 @@
 import { Card } from "react-bootstrap";
-import { Bar } from "react-chartjs-2";
+import { Doughnut } from "react-chartjs-2";
 
 const ImportantStatus = () => {
   const data = {
     labels: ["A급", "B급", "C급"],
     datasets: [
       {
-        //label: "개수",
         data: [244, 111, 642],
         backgroundColor: [
-          "#e15759",
+          "#5a85dc",
           "#f28e2b",
-          "#59a14f",
+          "#acaba6",
         ],
         borderColor: [
-          "#e15759",
+          "#5a85dc",
           "#f28e2b",
-          "#59a14f",
+          "#acaba6",
         ],
         borderWidth: 1,
-        barThickness: 45,
       },
     ],
   };
 
   const options = {
     responsive: true,
-    maintainAspectRatio: false, // Card에 꽉 차도록 설정
+    maintainAspectRatio: false,
     plugins: {
       legend: {
-        display: false,
+        display: true,
+        position: "bottom",
+        labels: {
+          font: {
+            size: 17,
+          },
+        },
       },
       datalabels: {
         color: "#fff",
         font: {
-          size: 14,
+          size: 17,
         },
         anchor: "center",
         align: "center",
       },
     },
-    scales: {
-      y: {
-        title: {
-          display: true,
-          text: "개수",
-        }
-      }
-    }
   };
 
   return (
@@ -55,7 +51,7 @@ const ImportantStatus = () => {
       <Card.Body>
         <h4 className="header-title">중요성별 현황</h4>
         <div style={{ width: "100%", height: "93%" }}>
-          <Bar data={data} options={options} />
+          <Doughnut data={data} options={options} />
         </div>
       </Card.Body>
     </Card>

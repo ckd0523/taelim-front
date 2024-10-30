@@ -166,9 +166,9 @@ const SelectedLocation = ({ location }) => {
       //label: '자산 수량',
       data: chartData,
       backgroundColor: [
-        '#f02424da', '#f0932fdf', '#ebe82be7', '#4b8e08dd', '#2a8cc9',
-        '#1527ae', '#a842ec', '#d524d5', '#36899cea', '#1e8f80',
-        '#a43e65', '#0a4e7889', '#9ea4a2',
+        'rgba(42, 140, 201, 1)', 'rgba(42, 140, 201, 1)', 'rgba(42, 140, 201, 1)', 'rgba(42, 140, 201, 1)', 'rgba(42, 140, 201, 0.8)',
+        'rgba(42, 140, 201, 0.8)', 'rgba(42, 140, 201, 0.8)', 'rgba(42, 140, 201, 0.8)', 'rgba(42, 140, 201, 0.7)', 'rgba(42, 140, 201, 0.7)',
+        'rgba(42, 140, 201, 0.7)', 'rgba(42, 140, 201, 0.7)', 'rgba(42, 140, 201, 0.6)',
       ],
       borderColor: '#fff',
       borderWidth: 1,
@@ -185,7 +185,10 @@ const SelectedLocation = ({ location }) => {
         title: {
           display: axis != 'x',
           text: "개수",
-        }
+        },
+        grid: {
+          display: false, // x축 그리드 라인 비활성화
+        },
       },
       y: {
         ticks: {
@@ -222,27 +225,35 @@ const SelectedLocation = ({ location }) => {
   return (
     <Card style={{ width: '100%', height: '95%' }}>
       <Card.Body>
-        <Row sm={4}>
-          <h4 className="header-title" style={{ display: "inline" }}>{location} 자산 개수 </h4>
-          <Select
-            options={[
-              { value: 'x', label: '세로' },
-              { value: 'y', label: '가로' },
-            ]}
-            defaultValue={{ value: 'x', label: '세로' }} // 기본 값 설정
-            onChange={(selectedOption) => handleAxis(selectedOption.value)}
-          />
 
-          {location === '본관' && (
-            <Col lg={4}>
+        <Col sm={12} className="d-flex justify-content-between">
+          <h4 className="header-title" style={{ display: "inline" }}>{location} 자산 개수 </h4>
+          <Row>
+            <Col>
               <Select
-                defaultValue={{ value: 'MAIN_1F', label: '본관 1층' }}
-                options={ChartLocation}
-                onChange={(selectedOption) => handleLocation(selectedOption.value)}
+                options={[
+                  { value: 'x', label: '세로' },
+                  { value: 'y', label: '가로' },
+                ]}
+                defaultValue={{ value: 'x', label: '세로' }} // 기본 값 설정
+                onChange={(selectedOption) => handleAxis(selectedOption.value)}
               />
             </Col>
-          )}
-        </Row>
+
+            {location === '본관' && (
+              <Col>
+                <Select
+                  defaultValue={{ value: 'MAIN_1F', label: '본관 1층' }}
+                  options={ChartLocation}
+                  onChange={(selectedOption) => handleLocation(selectedOption.value)}
+                />
+              </Col>
+            )}
+
+          </Row>
+        </Col>
+
+
 
         <div style={{ width: "100%", height: "90%" }}>
           <Bar data={data} options={options} />

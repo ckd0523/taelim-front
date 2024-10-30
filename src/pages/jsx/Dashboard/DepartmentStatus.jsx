@@ -1,14 +1,17 @@
-import { Card } from 'react-bootstrap';
+import { Button, Card, Col, Row } from 'react-bootstrap';
 import { Bar } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
+import Select from 'react-select';
 
 // Register required components
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
+const label = ['경영기획실', '관리팀', '영업팀', '구매팀', '품질팀', '생산팀', '기술연구소'];
+
 const DepartmentStatus = () => {
   // Define the data for the Chart.js bar chart
   const data = {
-    labels: ['IT부', '관리부', '영업부', '마케팅부', '생산부', '운영부', '인사부'],
+    labels: label,
     datasets: [
       {
         label: 'Data1',
@@ -130,7 +133,7 @@ const DepartmentStatus = () => {
 const DepartmentStatus2 = () => {
   // Define the data for the Chart.js bar chart
   const data = {
-    labels: ['IT부', '관리부', '영업부', '마케팅부', '생산부', '운영부', '인사부'],
+    labels: label,
     datasets: [
       {
         label: '개수',
@@ -186,11 +189,15 @@ const DepartmentStatus2 = () => {
     },
     scales: {
       y: {
-
         beginAtZero: true,
         title: {
           display: true,
           text: '개수',
+        },
+      },
+      x: {
+        grid: {
+          display: false, // x축 그리드 라인 비활성화
         },
       },
     },
@@ -199,8 +206,27 @@ const DepartmentStatus2 = () => {
   return (
     <Card style={{ width: '100%', height: '93%' }}>
       <Card.Body>
-        <h4 className="header-title">부서별 자산현황2(부서별 총 자산 표시)</h4>
-        <div style={{ width: "100%", height: "93%" }}>
+        <Row>
+          <Col>
+            <h4 className="header-title">부서별 자산현황</h4>
+          </Col>
+
+          <Col sm={4}>
+            <Select
+              options={[
+                { value: 'x', label: '경영기획실' },
+                { value: 'y', label: '관리팀' },
+                { value: 'y', label: '영업팀' },
+                { value: 'y', label: '구매팀' },
+                { value: 'y', label: '품질팀' },
+                { value: 'y', label: '생산팀' },
+                { value: 'y', label: '기술연구소' },
+              ]}
+            />
+          </Col>
+        </Row>
+
+        <div style={{ width: "100%", height: "87%" }}>
           <Bar data={data} options={options} />
         </div>
       </Card.Body>

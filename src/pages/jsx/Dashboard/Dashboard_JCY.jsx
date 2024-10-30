@@ -10,7 +10,6 @@ import ImportantStatus from './ImportantStatus';
 import { useState } from 'react';
 import AssetTrend from './AssetTrend';
 import PlannedDisposalStatus from './PlannedDisposalStatus';
-import { AssetInfo } from './AssetSummary';
 //import ZoomableTimeseriesChart from './ZoomableChart';
 
 const Dashboard_JCY = () => {
@@ -31,19 +30,18 @@ const Dashboard_JCY = () => {
 
         <Row>
           {/*style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }} */}
-          <Col md={6} >
-            {/* 자산 상태 요약 */}
-            <Row>
-              <Col md={12}>
+          <Col md={12} >
+            <Card style={{ width: '100%', height: '93%' }}>
+              <Card.Body>
                 {/* 자산 정보 */}
-                <AssetInfo />
-              </Col>
-            </Row>
-          </Col>
+                {/* 
+                <AssetInfo />*/}
+                {/* 자산 총액 추이 */}
+                <AssetTrend />
+              </Card.Body>
+            </Card>
 
-          <Col md={6}>
-            {/* 자산 총액 추이 */}
-            <AssetTrend />
+
           </Col>
         </Row>
 

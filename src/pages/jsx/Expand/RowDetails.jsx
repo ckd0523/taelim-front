@@ -552,11 +552,14 @@ const RowDetails = ({
 							<Col xs={2} sm={2} lg={2} className="d-flex justify-content-end">
 								<OverlayTrigger
 									trigger="click"
-									placement="left-end"
+									placement="bottom-start"
 									show={showPopover}
 									onToggle={setShowPopover}
 									overlay={
-										<Popover id="popover-image" style={{ width: '100%' }}>
+										<Popover
+											id="popover-image"
+											style={{ width: '100%', maxWidth: '800px' }}
+										>
 											<Popover.Body>
 												{formData.files.some(
 													(file) => file.fileType === 'PHOTO'

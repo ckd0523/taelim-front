@@ -39,21 +39,21 @@ const AssetTrend = () => {
     const generateRandomData = () => {
       const labels = [];
       const totalAssets = [];
-      let currentValue = 10000000;
+      let currentValue = 700000000;
 
       for (let i = 0; i < 12; i++) {
         labels.push(`${i + 1}월`);
 
         if (i === 2) {
-          currentValue -= Math.floor(Math.random() * 2000000);
+          currentValue -= Math.floor(Math.random() * 20000000);
         }
 
         if (i === 5) {
-          currentValue -= Math.floor(Math.random() * 2000000);
+          currentValue -= Math.floor(Math.random() * 20000000);
         }
 
         if (i > 2) {
-          currentValue += Math.floor(Math.random() * 1500000) + 250000;
+          currentValue += Math.floor(Math.random() * 15000000) + 2500000;
         }
 
         totalAssets.push(currentValue);
@@ -94,7 +94,7 @@ const AssetTrend = () => {
         callbacks: {
           label: (context) => {
             const value = context.raw;
-            return `자산 총액: ${formatCurrency(value)}`;
+            return `${formatCurrency(value)}`;
           }
         }
       }
@@ -109,7 +109,7 @@ const AssetTrend = () => {
           display: true,
           //text: '자산 총액',
           font: {
-            size: 14,
+            size: 17,
             weight: 'bold'
           }
         },
@@ -118,7 +118,7 @@ const AssetTrend = () => {
             return formatCurrency(value);
           },
           font: {
-            size: 12
+            size: 17
           }
         }
       },
@@ -128,7 +128,7 @@ const AssetTrend = () => {
         },
         ticks: {
           font: {
-            size: 12
+            size: 17
           }
         }
       }
@@ -158,7 +158,7 @@ const AssetTrend = () => {
                 { value: 'M', label: '월' },
                 { value: 'Y', label: '연' },
               ]}
-              defaultValue={{ value: 'Y', label: '연' }}
+              defaultValue={{ value: 'M', label: '월' }}
             />
             <Form>
               <Form.Control

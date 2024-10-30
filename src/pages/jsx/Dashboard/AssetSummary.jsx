@@ -200,7 +200,7 @@ const AssetSummary = () => {
 
               <h4 className="header-title">자산 총액</h4>
               {/* <h3 className="mt-3 mb-3" style={{ display: 'inline' }}>{data ? data.ownCost + data.leasedCost : '-'} 원</h3> */}
-              <h3 className="mt-3 mb-3" style={{ display: 'inline' }}>1,281,320 원</h3>
+              <h3 className="mt-3 mb-3" style={{ display: 'inline' }}>7,431,175,758 원</h3>
 
             </Card.Body>
           </Card>
@@ -212,7 +212,7 @@ const AssetSummary = () => {
 
               <h4 className="header-title">소유 총액</h4>
               {/* <h3 className="mt-3 mb-3" style={{ display: 'inline' }}>{data ? data.ownCost : '-'} 원</h3> */}
-              <h3 className="mt-3 mb-3" style={{ display: 'inline' }}>853,430 원</h3>
+              <h3 className="mt-3 mb-3" style={{ display: 'inline' }}>7382,981,038 원</h3>
             </Card.Body>
           </Card>
           <Card>
@@ -223,7 +223,7 @@ const AssetSummary = () => {
 
               <h4 className="header-title">임대 총액</h4>
               {/* <h3 className="mt-3 mb-3" style={{ display: 'inline' }}>{data ? data.leasedCost : '-'} 원</h3> */}
-              <h3 className="mt-3 mb-3" style={{ display: 'inline' }}>427,890 원</h3>
+              <h3 className="mt-3 mb-3" style={{ display: 'inline' }}>481,94,720 원</h3>
             </Card.Body>
           </Card>
         </Col>

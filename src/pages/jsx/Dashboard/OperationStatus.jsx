@@ -51,6 +51,14 @@ const OperationStatus = () => {
         anchor: "center",
         align: "center",
       },
+      tooltip: {
+        callbacks: {
+          label: function (tooltipItem) {
+            const value = tooltipItem.raw; // 각 데이터 값
+            return `${value}개`; // 툴팁에 표시할 내용
+          },
+        },
+      },
     },
   };
 

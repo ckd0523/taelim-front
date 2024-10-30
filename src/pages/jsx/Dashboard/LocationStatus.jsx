@@ -208,6 +208,9 @@ const SelectedLocation = ({ location }) => {
       },
       datalabels: {
         color: "#fff",
+        font: {
+          size: 17,
+        }
       },
       tooltip: {
         callbacks: {
@@ -215,7 +218,7 @@ const SelectedLocation = ({ location }) => {
             const total = tooltipItem.dataset.data.reduce((acc, val) => acc + val, 0);
             const value = tooltipItem.raw; // 각 데이터 값
             const percentage = (value / total * 100).toFixed(2); // 퍼센트 계산
-            return `${value}개 (${percentage}%)`; // 툴팁에 표시할 내용
+            return `${value}개`; // 툴팁에 표시할 내용
           },
         },
       },

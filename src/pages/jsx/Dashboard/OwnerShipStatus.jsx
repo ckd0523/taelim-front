@@ -3,18 +3,20 @@ import { Doughnut } from "react-chartjs-2";
 
 const OwnerShipStatus = () => {
   const data = {
-    labels: ["소유", "임대"],
+    labels: ["소유", "국책과제", "기타"],
     datasets: [
       {
         label: "개수",
-        data: [423, 159],
+        data: [423, 60, 37],
         backgroundColor: [
           "#5a85dc",
           "#acaba6",
+          "#d88b3f",
         ],
         borderColor: [
           "#5a85dc",
           "#acaba6",
+          "#d88b3f",
         ],
         borderWidth: 1,
       },
@@ -41,6 +43,14 @@ const OwnerShipStatus = () => {
         },
         anchor: "center",
         align: "center",
+      },
+      tooltip: {
+        callbacks: {
+          label: function (tooltipItem) {
+            const value = tooltipItem.raw; // 각 데이터 값
+            return `${value}개`; // 툴팁에 표시할 내용
+          },
+        },
       },
     },
   };

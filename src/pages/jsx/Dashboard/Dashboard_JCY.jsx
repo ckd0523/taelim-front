@@ -51,12 +51,12 @@ const Dashboard_JCY = () => {
             <TotalAssetRatio />
           </Col>
 
-          <Col md={4}>
+          <Col md={5}>
             {/* 부서별 자산현황1 */}
             <DepartmentStatus2 />
           </Col>
 
-          <Col md={4}>
+          <Col md={3}>
             {/* 운용 현황 */}
             <OperationStatus />
           </Col>

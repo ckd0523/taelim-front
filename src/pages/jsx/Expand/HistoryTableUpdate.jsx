@@ -5,7 +5,7 @@ const HistoryTableUpdate = ({ updateHistory }) => {
 	return (
 		<div style={{ padding: '20px', border: '1px solid #ccc' }}>
 			<BootstrapTable striped bordered hover className="table-detail">
-				<thead>
+				<thead style={{ textAlign: 'center' }}>
 					<tr>
 						<th>번호</th>
 						<th>자산코드</th>
@@ -16,7 +16,7 @@ const HistoryTableUpdate = ({ updateHistory }) => {
 						<th>수정내용</th>
 					</tr>
 				</thead>
-				<tbody>
+				<tbody style={{ textAlign: 'center' }}>
 					{updateHistory.length > 0 ? (
 						updateHistory.map((update, index) => (
 							<tr key={index}>

@@ -940,24 +940,32 @@ const RowDetails = ({
 													<td>{renderCellContent('inventor')}</td>
 													<td>{renderCellContent('assignee')}</td>
 													<td>
-														<a
-															href={
-																formData.files.find(
-																	(file) =>
-																		file.fileType ===
-																		'PATENT_DOCUMENTS'
-																).fileURL
-															}
-															download
-														>
-															{
-																formData.files.find(
-																	(file) =>
-																		file.fileType ===
-																		'PATENT_DOCUMENTS'
-																).oriFileName
-															}
-														</a>
+														{formData.files &&
+														formData.files.some(
+															(file) =>
+																file.fileType === 'PATENT_DOCUMENTS'
+														) ? (
+															<a
+																href={
+																	formData.files.find(
+																		(file) =>
+																			file.fileType ===
+																			'PATENT_DOCUMENTS'
+																	).fileURL
+																}
+																download
+															>
+																{
+																	formData.files.find(
+																		(file) =>
+																			file.fileType ===
+																			'PATENT_DOCUMENTS'
+																	).oriFileName
+																}
+															</a>
+														) : (
+															'N/A'
+														)}
 													</td>
 												</>
 											)}

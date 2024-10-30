@@ -1,4 +1,4 @@
-import { Card } from "react-bootstrap";
+import { Card, Col, Row, Form } from "react-bootstrap";
 import { Bar } from "react-chartjs-2";
 
 const PlannedDisposalStatus = () => {
@@ -12,9 +12,9 @@ const PlannedDisposalStatus = () => {
       //label: '자산 수량',
       data: [7, 13, 4, 19, 2, 15, 8, 11, 0, 16, 5, 20, 3],
       backgroundColor: [
-        '#f02424da', '#f0932fdf', '#ebe82be7', '#4b8e08dd', '#2a8cc9',
-        '#1527ae', '#a842ec', '#d524d5', '#36899cea', '#1e8f80',
-        '#a43e65', '#0a4e7889', '#9ea4a2',
+        'rgba(206, 110, 15, 1)', 'rgba(206, 110, 15, 1)', 'rgba(206, 110, 15, 1)', 'rgba(206, 110, 15, 1)', 'rgba(206, 110, 15, 0.9)',
+        'rgba(206, 110, 15, 0.9)', 'rgba(206, 110, 15, 0.9)', 'rgba(206, 110, 15, 0.9)', 'rgba(206, 110, 15, 0.8)', 'rgba(206, 110, 15, 0.8)',
+        'rgba(206, 110, 15, 0.8)', 'rgba(206, 110, 15, 0.8)', 'rgba(206, 110, 15, 0.7)',
       ],
       borderColor: '#fff',
       borderWidth: 1,
@@ -32,10 +32,18 @@ const PlannedDisposalStatus = () => {
       datalabels: {
         color: "#fff",
         font: {
-          size: 14,
+          size: 17,
         },
         anchor: "center",
         align: "center",
+      },
+      tooltip: {
+        callbacks: {
+          label: function (tooltipItem) {
+            const value = tooltipItem.raw; // 각 데이터 값
+            return `${value}개`; // 툴팁에 표시할 내용
+          },
+        },
       },
     },
 
@@ -44,8 +52,22 @@ const PlannedDisposalStatus = () => {
   return (
     <Card style={{ width: '100%', height: '93%' }}>
       <Card.Body>
-        <h4 className="header-title">폐기 예정 현황(30일 내)</h4>
-        <div style={{ width: "100%", height: "93%" }}>
+        <Row>
+          <Col>
+            <h4 className="header-title">폐기 예정 현황</h4>
+          </Col>
+
+          <Col sm={4}>
+            <Form>
+              <Form.Control
+                type='month'>
+
+              </Form.Control>
+            </Form>
+          </Col>
+        </Row>
+
+        <div style={{ width: "100%", height: "87%" }}>
           <Bar data={data} options={options} />
         </div>
       </Card.Body>

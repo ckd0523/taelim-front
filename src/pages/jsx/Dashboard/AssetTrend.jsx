@@ -2,56 +2,60 @@ import React from 'react';
 import { Line } from 'react-chartjs-2';
 import { Chart as ChartJS, LineElement, PointElement, CategoryScale, LinearScale, Tooltip, Legend } from 'chart.js';
 import { useState, useEffect } from 'react';
-import { Card } from 'react-bootstrap';
-import { offset } from '@popperjs/core';
+import { Card, Col, Row, OverlayTrigger, Tooltip as Tooltip2, Button, Form } from 'react-bootstrap';
+import { AssetSummary } from './AssetSummary';
+import Select from 'react-select';
 
 // Chart.js에 필요한 요소 및 플러그인 등록
 ChartJS.register(LineElement, PointElement, CategoryScale, LinearScale, Tooltip, Legend);
 
 const AssetTrend = () => {
-  // 자산 총액 시계열 데이터
+  // 금액 포맷팅 함수
+  const formatCurrency = (value) => {
+    if (value >= 100000000) {
+      return `${(value / 100000000).toFixed(1)}억원`;
+    } else if (value >= 10000) {
+      return `${(value / 10000).toFixed(0)}만원`;
+    } else {
+      return `${value.toLocaleString()}원`;
+    }
+  };
+
   const [data, setData] = useState({
-    labels: [], // 날짜 또는 시간에 해당하는 레이블
+    labels: [],
     datasets: [
       {
-        label: '자산 총액', // 데이터셋의 라벨
-        data: [], // 자산 총액 데이터
-        borderColor: '#ff6384', // 선 색상
-        backgroundColor: 'rgba(255, 99, 132, 1)', // 배경 색상
+        data: [],
+        borderColor: '#4e79a7',
+        backgroundColor: '#5a85dc',
         borderWidth: 2,
+        pointRadius: 6,
+        pointHoverRadius: 8,
       },
     ],
   });
 
-  // 컴포넌트가 마운트될 때 데이터 생성
   useEffect(() => {
     const generateRandomData = () => {
       const labels = [];
       const totalAssets = [];
+      let currentValue = 700000000;
 
-      // 시작 값 설정
-      let currentValue = 10000000; // 1천만 원
-
-      // 예시로 12개월의 데이터 생성
       for (let i = 0; i < 12; i++) {
-        labels.push(`${i + 1} 월`);
+        labels.push(`${i + 1}월`);
 
-        // 첫 번째 하향 (예: 3개월 차)
         if (i === 2) {
-          currentValue -= Math.floor(Math.random() * 2000000); // 최대 200만 원 하향
+          currentValue -= Math.floor(Math.random() * 20000000);
         }
 
-        // 두 번째 하향 (예: 6개월 차)
         if (i === 5) {
-          currentValue -= Math.floor(Math.random() * 2000000); // 최대 200만 원 하향
+          currentValue -= Math.floor(Math.random() * 20000000);
         }
 
-        // 이후 값은 상승
         if (i > 2) {
-          currentValue += Math.floor(Math.random() * 1500000) + 250000; // 매달 50만 원에서 300만 원 상승
+          currentValue += Math.floor(Math.random() * 15000000) + 2500000;
         }
 
-        // 현재 자산 총액을 데이터에 추가
         totalAssets.push(currentValue);
       }
 
@@ -59,13 +63,12 @@ const AssetTrend = () => {
         labels,
         datasets: [
           {
-            //label: '자산 총액',
             data: totalAssets,
-            borderColor: '#ff6384',
-            backgroundColor: 'rgba(255, 99, 132, 1)',
+            borderColor: '#4e79a7',
+            backgroundColor: '#5a85dc',
             borderWidth: 2,
-            pointRadius: 6, // 점의 크기 설정
-            pointHoverRadius: 8, // 마우스 오버 시 점의 크기 설정
+            pointRadius: 6,
+            pointHoverRadius: 8,
           },
         ],
       });
@@ -76,45 +79,108 @@ const AssetTrend = () => {
 
   const options = {
     responsive: true,
-    maintainAspectRatio: false, // Card에 꽉 차도록 설정
+    maintainAspectRatio: false,
     plugins: {
       legend: {
         display: false,
       },
       datalabels: {
-        color: "#000", // 데이터 레이블 텍스트 색상 설정
-        font: {
-          size: 14,
-          //weight: "bold",
-        },
+        display: false,
         anchor: "top",
         align: "top",
-        offset: 20,
+        offset: 10,
       },
+      tooltip: {
+        callbacks: {
+          label: (context) => {
+            const value = context.raw;
+            return `${formatCurrency(value)}`;
+          }
+        }
+      }
     },
     interaction: {
-      intersect: false, //mode만 있으면 안되고 intersect가 false로 들어가야함
+      intersect: false,
       mode: 'index',
     },
     scales: {
       y: {
         title: {
           display: true,
-          text: '자산 총액(원)',
+          //text: '자산 총액',
+          font: {
+            size: 17,
+            weight: 'bold'
+          }
         },
+        ticks: {
+          callback: function (value) {
+            return formatCurrency(value);
+          },
+          font: {
+            size: 17
+          }
+        }
       },
-    },
+      x: {
+        grid: {
+          display: false
+        },
+        ticks: {
+          font: {
+            size: 17
+          }
+        }
+      }
+    }
   };
 
+  // const renderTooltip = (props) => (
+  //   <Tooltip2 id="tooltip" {...props}>
+  //     Simple tooltip
+  //   </Tooltip2>
+  // );
+
   return (
-    <Card style={{ width: '100%', height: '93%' }}>
-      <Card.Body>
-        <h4 className='header-title'>자산 총액 추이</h4>
-        <div style={{ width: "100%", height: "93%" }}>
+    <Row>
+      <Col>
+        <AssetSummary />
+      </Col>
+
+      <Col>
+        <Row>
+          <Col sm={3}>
+            <h4 className='header-title' style={{ display: 'inline' }}>자산 총액 추이</h4>
+          </Col>
+          <Col className='d-flex justify-content-end'>
+            <Select
+              options={[
+                { value: 'M', label: '월' },
+                { value: 'Y', label: '연' },
+              ]}
+              defaultValue={{ value: 'M', label: '월' }}
+            />
+            <Form>
+              <Form.Control
+                type='month'>
+
+              </Form.Control>
+            </Form>
+          </Col>
+        </Row>
+        {/* <OverlayTrigger
+          placement="top"
+          delay={{ show: 100, hide: 50 }}
+          overlay={renderTooltip}
+        >
+          <i className='ri-question-line' />
+        </OverlayTrigger> */}
+
+        <div style={{ width: "100%", height: "87%" }}>
           <Line data={data} options={options} />
         </div>
-      </Card.Body>
-    </Card >
+      </Col>
+    </Row>
   );
 };
 

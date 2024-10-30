@@ -6,17 +6,21 @@ import { CustomDatePicker2 } from '@/components';
 import { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
 import api from '@/common/api/authAxios';
+import { useAuthContext } from '@/common';
 
 const URL = import.meta.env.VITE_BASIC_URL;
 
 const RegisterButton = ({ onClickRegister }) => {
+
+  const { user } = useAuthContext();
+
   const [signUpModal, toggleSignUp] = useToggle();
 
   //useState 안에 초기 값을 null로 잡으면 백에 location이 제대로 안감
   const [selectedLocation, setLocation] = useState('');
   const [round, setRound] = useState('');
 
-  const [surveyBy, setSurveyBy] = useState('user10@example.com'); // 하드코딩된 사용자 이메일
+  const [surveyBy, setSurveyBy] = useState(user.name);
 
   const [isSubmitting, setIsSubmitting] = useState(false); // 버튼 비활성화 상태 추가
 
@@ -78,7 +82,7 @@ const RegisterButton = ({ onClickRegister }) => {
       const requestData = {
         round: round,
         location: selectedLocation,
-        email: surveyBy, // 현재 하드코딩된 이메일
+        email: user.id, //회원 id
       };
 
       console.log(requestData.location);

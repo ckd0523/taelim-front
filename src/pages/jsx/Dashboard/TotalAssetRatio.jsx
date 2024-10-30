@@ -1,27 +1,28 @@
 import { Card } from 'react-bootstrap';
 import { Doughnut } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
-//import ChartDataLabels from 'chartjs-plugin-datalabels';
+import ChartDataLabels from 'chartjs-plugin-datalabels'; // 추가
 
 // Chart.js에 필요한 요소 및 플러그인 등록
-ChartJS.register(ArcElement, Tooltip, Legend);
+ChartJS.register(ArcElement, Tooltip, Legend, ChartDataLabels); // ChartDataLabels 등록
 
 const TotalAssetRatio = () => {
 	const data = {
 		labels: [
-			'정보보호시스템', '응용프로그램', '소프트웨어', '전자정보', '문서',
-			'특허 및 상표', 'IT 장비 - 시스템', 'IT 장비 – 네트워크', '단말기',
-			'가구', '기기', '차량', '기타',
+			'A: 정보보호시스템', 'B: 응용프로그램', 'C: 소프트웨어', 'D: 전자정보', 'E: 문서',
+			'F: 특허 및 상표', 'G: IT 장비 - 시스템', 'H: IT 장비 – 네트워크', 'I: 단말기',
+			'J: 가구', 'K: 기기', 'L: 차량', 'M: 기타',
 		],
 		datasets: [{
 			data: [
-				300.56, 154.02, 154.02, 154.02, 154.02, 154.02, 154.02,
-				154.02, 154.02, 154.02, 154.02, 135.18, 100.96,
+				187, 95, 246, 133, 271, 164, 52, 299, 178, 205, 88, 152, 237,
 			],
 			backgroundColor: [
-				'#f02424da', '#f0932fdf', '#ebe82be7', '#4b8e08dd', '#2a8cc9',
-				'#1527ae', '#a842ec', '#d524d5', '#36899cea', '#1e8f80',
-				'#a43e65', '#0a4e7889', '#9ea4a2',
+				'rgba(3, 39, 103, 1)', 'rgba(3, 39, 103, 0.9)', 'rgba(3, 39, 103, 0.9)',
+				'rgba(3, 39, 103, 0.8)', 'rgba(3, 39, 103, 0.8)', 'rgba(3, 39, 103, 0.8)',
+				'rgba(3, 39, 103, 0.7)', 'rgba(3, 39, 103, 0.7)', 'rgba(3, 39, 103, 0.6)',
+				'rgba(3, 39, 103, 0.6)', 'rgba(3, 39, 103, 0.5)', 'rgba(3, 39, 103, 0.5)',
+				'rgba(3, 39, 103, 0.4)',
 			],
 			borderColor: '#fff',
 			borderWidth: 2,
@@ -30,10 +31,10 @@ const TotalAssetRatio = () => {
 
 	const options = {
 		responsive: true,
-		maintainAspectRatio: false, // 차트 크기를 부모 요소에 맞춤
+		maintainAspectRatio: false,
 		plugins: {
 			legend: {
-				position: 'right', // 범례를 오른쪽에 배치
+				position: 'right',
 				labels: {
 					font: {
 						size: 14,
@@ -42,36 +43,24 @@ const TotalAssetRatio = () => {
 			},
 			datalabels: {
 				formatter: (value, context) => {
+					const labels = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M"];
 					const total = context.dataset.data.reduce((acc, val) => acc + val, 0); // 전체 값 합산
-					const percentage = (value / total) * 100;
-					//console.log(percentage);
+					const percentage = ((value / total) * 100).toFixed(2); // 비율 계산
 
-					// 퍼센트가 5% 이상일 경우에만 텍스트 표시
-					return percentage >= 5 ? percentage.toFixed(2) + '%' : null;
+					return `     ${labels[context.dataIndex]}\n ${percentage}%`; // 알파벳과 비율 표시
 				},
-				color: '#fff', // 퍼센트 텍스트 색상
+				color: '#fff',
 				font: {
 					size: 14,
 				},
-				anchor: 'center', // 텍스트 위치
+				anchor: 'center',
 				align: 'center',
 			},
 			tooltip: {
 				callbacks: {
 					label: function (tooltipItem) {
-						const total = tooltipItem.dataset.data.reduce((acc, val) => acc + val, 0);
-						const value = tooltipItem.raw; // 각 데이터 값
-						const percentage = (value / total * 100).toFixed(2); // 퍼센트 계산
-
-						// 각 항목의 각도 계산 예시
-						//const total = data.datasets[0].data.reduce((acc, val) => acc + val, 0);
-						// const angles = data.datasets[0].data.map((value) => (value / total) * 360);
-
-						// angles.forEach((angle, index) => {
-						// 	console.log(`${data.labels[index]}: ${angle.toFixed(2)}도`);
-						// });
-
-						return `${value}개 (${percentage}%)`; // 툴팁에 표시할 내용
+						const value = tooltipItem.raw;
+						return `${value}개`; // 툴팁에 표시할 내용
 					},
 				},
 			},
@@ -82,7 +71,6 @@ const TotalAssetRatio = () => {
 		<Card style={{ width: '100%', height: '93%' }}>
 			<Card.Body>
 				<h4 className="header-title">분류별 자산 비율</h4>
-				{/* 도넛을 div나 아무거나로 감싸줘야함 */}
 				<div style={{ width: "100%", height: "93%" }}>
 					<Doughnut data={data} options={options} />
 				</div>

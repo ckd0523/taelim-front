@@ -1,51 +1,58 @@
 import { Card } from "react-bootstrap";
-import { Bar } from "react-chartjs-2";
+import { Doughnut } from "react-chartjs-2";
 
 const OwnerShipStatus = () => {
   const data = {
-    labels: ["소유", "임대"],
+    labels: ["소유", "국책과제", "기타"],
     datasets: [
       {
         label: "개수",
-        data: [423, 159],
+        data: [423, 60, 37],
         backgroundColor: [
           "#5a85dc",
           "#acaba6",
+          "#d88b3f",
         ],
         borderColor: [
           "#5a85dc",
           "#acaba6",
+          "#d88b3f",
         ],
         borderWidth: 1,
-        barThickness: 45,
       },
     ],
   };
 
   const options = {
     responsive: true,
-    maintainAspectRatio: false, // Card에 꽉 차도록 설정
+    maintainAspectRatio: false,
     plugins: {
       legend: {
-        display: false,
+        display: true, // Pie 차트에서 범례는 표시하는 것이 일반적입니다.
+        position: "bottom",
+        labels: {
+          font: {
+            size: 17,
+          },
+        },
       },
       datalabels: {
         color: "#fff",
         font: {
-          size: 14,
+          size: 17,
         },
         anchor: "center",
         align: "center",
       },
+      tooltip: {
+        callbacks: {
+          label: function (tooltipItem) {
+            const value = tooltipItem.raw; // 각 데이터 값
+            return `${value}개`; // 툴팁에 표시할 내용
+          },
+        },
+      },
     },
-    scales: {
-      y: {
-        title: {
-          display: true,
-          text: "개수",
-        }
-      }
-    }
   };
 
   return (
@@ -53,7 +60,7 @@ const OwnerShipStatus = () => {
       <Card.Body>
         <h4 className="header-title">소유권별 현황</h4>
         <div style={{ width: "100%", height: "93%" }}>
-          <Bar data={data} options={options} />
+          <Doughnut data={data} options={options} />
         </div>
       </Card.Body>
     </Card>

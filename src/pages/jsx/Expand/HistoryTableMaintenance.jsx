@@ -21,7 +21,7 @@ const HistoryTableMaintenance = ({ repairHistory }) => {
 	return (
 		<div style={{ padding: '20px', border: '1px solid #ccc' }}>
 			<BootstrapTable striped bordered hover className="table-detail">
-				<thead>
+				<thead style={{ textAlign: 'center' }}>
 					<tr>
 						<th>번호</th>
 						<th>자산코드</th>
@@ -33,7 +33,7 @@ const HistoryTableMaintenance = ({ repairHistory }) => {
 						<th>보수상태</th>
 					</tr>
 				</thead>
-				<tbody>
+				<tbody style={{ textAlign: 'center' }}>
 					{/* 유지보수 이력 데이터를 맵핑하여 출력 */}
 					{repairHistory.length > 0 ? (
 						repairHistory.map((repair, index) => (

@@ -2,21 +2,39 @@ import { Card } from 'react-bootstrap';
 import { Doughnut } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels'; // 추가
+import { assetType } from './AssetIndex';
+import { useEffect } from 'react';
+import api from '@/common/api/authAxios';
+import { useState } from 'react';
+import noData from './NoData';
+
+const URL = import.meta.env.VITE_BASIC_URL;
 
 // Chart.js에 필요한 요소 및 플러그인 등록
 ChartJS.register(ArcElement, Tooltip, Legend, ChartDataLabels); // ChartDataLabels 등록
 
 const TotalAssetRatio = () => {
+	const [ratioData, setRatioData] = useState();
+	const [isDataExist, setIsDataExist] = useState(false);
+
+	useEffect(() => {
+		const getAssetRatioData = async () => {
+			const response = await api.get(`${URL}/???`);
+			console.log(response); // 현민씨한테 백엔드 아직 못받음
+
+			setRatioData(response.data);
+			if (response.data) {
+				setIsDataExist(true);
+			}
+		};
+
+		getAssetRatioData();
+	}, []);
+
 	const data = {
-		labels: [
-			'A: 정보보호시스템', 'B: 응용프로그램', 'C: 소프트웨어', 'D: 전자정보', 'E: 문서',
-			'F: 특허 및 상표', 'G: IT 장비 - 시스템', 'H: IT 장비 – 네트워크', 'I: 단말기',
-			'J: 가구', 'K: 기기', 'L: 차량', 'M: 기타',
-		],
+		labels: assetType,
 		datasets: [{
-			data: [
-				187, 95, 246, 133, 271, 164, 52, 299, 178, 205, 88, 152, 237,
-			],
+			data: ratioData,
 			backgroundColor: [
 				'rgba(3, 39, 103, 1)', 'rgba(3, 39, 103, 0.9)', 'rgba(3, 39, 103, 0.9)',
 				'rgba(3, 39, 103, 0.8)', 'rgba(3, 39, 103, 0.8)', 'rgba(3, 39, 103, 0.8)',
@@ -34,6 +52,7 @@ const TotalAssetRatio = () => {
 		maintainAspectRatio: false,
 		plugins: {
 			legend: {
+				display: isDataExist,
 				position: 'right',
 				labels: {
 					font: {
@@ -46,6 +65,11 @@ const TotalAssetRatio = () => {
 					const labels = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M"];
 					const total = context.dataset.data.reduce((acc, val) => acc + val, 0); // 전체 값 합산
 					const percentage = ((value / total) * 100).toFixed(2); // 비율 계산
+
+					//console.log(ratioData[0] == -1);
+					if (ratioData[0] == -1) {
+						return `No Data`;
+					}
 
 					return `     ${labels[context.dataIndex]}\n ${percentage}%`; // 알파벳과 비율 표시
 				},
@@ -60,6 +84,10 @@ const TotalAssetRatio = () => {
 				callbacks: {
 					label: function (tooltipItem) {
 						const value = tooltipItem.raw;
+
+						if (ratioData[0] == -1) {
+							return `No Data`;
+						}
 						return `${value}개`; // 툴팁에 표시할 내용
 					},
 				},
@@ -67,12 +95,30 @@ const TotalAssetRatio = () => {
 		},
 	};
 
+	const plugins = [
+		{
+			afterDraw: function (chart) {
+				//console.log(chart);
+				if (chart.data.datasets[0].data.length < 1) {
+					let ctx = chart.ctx;
+					let width = chart.width;
+					let height = chart.height;
+					ctx.textAlign = "center";
+					ctx.textBaseline = "middle";
+					ctx.font = "30px Arial";
+					ctx.fillText("No data to display", width / 2, height / 2);
+					ctx.restore();
+				}
+			},
+		},
+	];
+
 	return (
 		<Card style={{ width: '100%', height: '93%' }}>
 			<Card.Body>
 				<h4 className="header-title">분류별 자산 비율</h4>
 				<div style={{ width: "100%", height: "93%" }}>
-					<Doughnut data={data} options={options} />
+					<Doughnut data={data} options={options} plugins={noData} />
 				</div>
 			</Card.Body>
 		</Card>

@@ -1,21 +1,39 @@
 import { Card } from "react-bootstrap";
 import { Doughnut } from "react-chartjs-2";
+import noData from "./NoData";
+import { useState } from "react";
+import { useEffect } from "react";
+import api from "@/common/api/authAxios";
+
+const URL = import.meta.env.VITE_BASIC_URL;
 
 const ImportantStatus = () => {
+  const [impoertantData, setImportantData] = useState();
+  const [isDataExist, setIsDataExist] = useState(false);
+
+  useEffect(() => {
+    const getImportantData = async () => {
+      const response = await api.get(`${URL}/???`);
+      console.log(response.data);
+      setImportantData(response.data);
+      if (response.data) {
+        setIsDataExist(true);
+      }
+    };
+
+    getImportantData();
+  }, []);
+
   const data = {
     labels: ["A급", "B급", "C급"],
     datasets: [
       {
-        data: [244, 111, 642],
+        data: impoertantData,
         backgroundColor: [
-          "#5a85dc",
-          "#d88b3f",
-          "#acaba6",
+          "#5a85dc", "#d88b3f", "#acaba6",
         ],
         borderColor: [
-          "#5a85dc",
-          "#d88b3f",
-          "#acaba6",
+          "#5a85dc", "#d88b3f", "#acaba6",
         ],
         borderWidth: 1,
       },
@@ -27,7 +45,7 @@ const ImportantStatus = () => {
     maintainAspectRatio: false,
     plugins: {
       legend: {
-        display: true,
+        display: isDataExist,
         position: "bottom",
         labels: {
           font: {
@@ -59,7 +77,7 @@ const ImportantStatus = () => {
       <Card.Body>
         <h4 className="header-title">중요성별 현황</h4>
         <div style={{ width: "100%", height: "93%" }}>
-          <Doughnut data={data} options={options} />
+          <Doughnut data={data} options={options} plugins={noData} />
         </div>
       </Card.Body>
     </Card>

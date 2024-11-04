@@ -268,7 +268,7 @@ const RowDetails = ({
 		if (user && user.id) {
 			setFormData((prevData) => ({
 				...prevData,
-				updateBy: user.id,
+				demandBy: user.id,
 			}));
 		}
 	}, [user]);
@@ -279,7 +279,7 @@ const RowDetails = ({
 		setFormData((prevData) => ({
 			...prevData,
 			[key]: value, // 해당 키의 값을 업데이트
-			updateBy: user.id, // 현재 접속자 ID를 updateBy에 저장
+			demandBy: user.id, // 현재 접속자 ID를 updateBy에 저장
 		}));
 	};
 	// 모달 닫기 처리
@@ -1069,8 +1069,8 @@ const RowDetails = ({
 									<Form.Label>수정 사유</Form.Label>
 									<Form.Control
 										type="text"
-										value={formData.updateReason}
-										onChange={(e) => handleInputChange(e, 'updateReason')}
+										value={formData.demandReason}
+										onChange={(e) => handleInputChange(e, 'demandReason')}
 									/>
 								</Form.Group>
 
@@ -1079,8 +1079,8 @@ const RowDetails = ({
 									<Form.Control
 										as="textarea"
 										rows={3}
-										value={formData.updateDetail}
-										onChange={(e) => handleInputChange(e, 'updateDetail')}
+										value={formData.demandDetail}
+										onChange={(e) => handleInputChange(e, 'demandDetail')}
 									/>
 								</Form.Group>
 							</Form>

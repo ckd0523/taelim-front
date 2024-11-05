@@ -4,7 +4,7 @@ import { Chart as ChartJS, LineElement, PointElement, CategoryScale, LinearScale
 import { useState, useEffect } from 'react';
 import { Card, Col, Row, OverlayTrigger, Tooltip as Tooltip2, Button, Form } from 'react-bootstrap';
 import { AssetSummary } from './AssetSummary';
-import Select from 'react-select';
+//import Select from 'react-select';
 import noData from './NoData';
 import api from '@/common/api/authAxios';
 
@@ -18,7 +18,6 @@ const AssetTrend = () => {
   const defaultMonth = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}`;
 
   const [trendData, setTrendData] = useState();
-  const [type, setType] = useState('M');
   const [month, setMonth] = useState(defaultMonth);
 
   // 금액 포맷팅 함수
@@ -32,49 +31,24 @@ const AssetTrend = () => {
     }
   };
 
-  const handleDate = async () => {
-    const response = await api.get(`${URL}/???/${type, month}`);
+  const getTrendData = async () => {
+    const response = await api.get(`${URL}/???/${month}`);
     console.log(response.data);
     setTrendData(response.data);
   };
 
-  const handleType = (selectedType) => {
-    setType(selectedType.value);
-
+  const handleDate = (selectedMonth) => {
+    console.log(selectedMonth.target.value);
+    setMonth(selectedMonth.target.value);
+    getTrendData();
   };
 
   useEffect(() => {
-    const generateRandomData = () => {
-      const labels = [];
-      const totalAssets = [];
-      let currentValue = 700000000;
-
-      for (let i = 0; i < 12; i++) {
-        labels.push(`${i + 1}월`);
-
-        if (i === 2) {
-          currentValue -= Math.floor(Math.random() * 20000000);
-        }
-
-        if (i === 5) {
-          currentValue -= Math.floor(Math.random() * 20000000);
-        }
-
-        if (i > 2) {
-          currentValue += Math.floor(Math.random() * 15000000) + 2500000;
-        }
-
-        totalAssets.push(currentValue);
-      }
-
-      setTrendData(totalAssets);
-    };
-
-    generateRandomData();
+    getTrendData();
   }, []);
 
   const data = {
-    labels: [1, 2, 3, 4, 5, 6, 7, 8],
+    labels: [1, 2, 3, 4, 5],
     datasets: [
       {
         data: trendData,
@@ -171,14 +145,6 @@ const AssetTrend = () => {
           </Col>
 
           <Col className='d-flex justify-content-end'>
-            <Select
-              options={[
-                { value: 'M', label: '월' },
-                { value: 'Y', label: '연' },
-              ]}
-              defaultValue={{ value: 'M', label: '월' }}
-              onChange={handleType}
-            />
             <Form>
               <Form.Control
                 type='month'

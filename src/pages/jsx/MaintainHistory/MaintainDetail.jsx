@@ -5,7 +5,6 @@ import { BsImage } from 'react-icons/bs';
 import Swal from 'sweetalert2';
 const urlConfig = import.meta.env.VITE_BASIC_URL;
 const MaintainDetail = ({ show, selectData, handleClose }) => {
-	// const [change, setChange] = useState(selectData.repairEndDate || '');
 	const [imgPath, setImgPath] = useState();
 	const [afterPath, setafterPath] = useState();
 	const [files, setFiles] = useState([]);
@@ -20,11 +19,7 @@ const MaintainDetail = ({ show, selectData, handleClose }) => {
 	const [showAlert, setShowAlert] = useState(false);
 	const [alertMessage, setAlertMessage] = useState('');
 
-	const handleSuccess = async () => {
-		// setFormData((prevState) => ({
-		// 	...prevState,
-		// 	formData.repairStatus: '완료',
-		// }));
+	const handleSuccess = () => {
 		Swal.fire({
 			title: '최종 확인',
 			text: '지금까지 작업을 모두 처리하시겠습니까?',
@@ -34,14 +29,20 @@ const MaintainDetail = ({ show, selectData, handleClose }) => {
 			cancelButtonColor: '#a519198e',
 			confirmButtonText: '예',
 			cancelButtonText: '아니오',
-		}).then((result) => {
+		}).then(async (result) => {
 			if (result.isConfirmed) {
-				(formData.repairStatus = '완료'), saveImages();
+				const completionData = {
+					...formData,
+					repairStatus: '완료',
+					repairEndDate: new Date().toISOString().slice(0, 10),
+				};
+				await saveComletionData(completionData);
 			}
 		});
 	};
 	const imgRef = useRef();
 	const afterImgRef = useRef();
+
 	const handleEditToggle = () => {
 		setIsEditing(!isEditing);
 
@@ -65,19 +66,6 @@ const MaintainDetail = ({ show, selectData, handleClose }) => {
 			[name]: value,
 		}));
 		setShowAlert(false);
-		if (name === 'repairEndDate') {
-			const startDate = new Date(selectData.repairStartDate);
-			const endDate = new Date(value);
-
-			if (endDate < startDate) {
-				setAlertMessage('완료일이 시작일 이전일 수는 없습니다.');
-				setShowAlert(true);
-				setFormData((prevState) => ({
-					...prevState,
-					repairEndDate: '',
-				}));
-			}
-		}
 	};
 
 	const reader = new FileReader();
@@ -111,6 +99,28 @@ const MaintainDetail = ({ show, selectData, handleClose }) => {
 		},
 		[files]
 	);
+	const saveComletionData = async (completionData) => {
+		try {
+			const response = await api.post(
+				`${urlConfig}/maintain/update/${selectData.repairNo}`,
+				completionData
+			);
+			if (response.status === 200) {
+				Swal.fire({
+					icon: 'success',
+					title: '작업이 완료되었습니다.',
+					text: '유지보수 완료 상태로 저장되었습니다.',
+				});
+			}
+		} catch (error) {
+			Swal.fire({
+				icon: 'error',
+				title: error,
+				text: '완료 데이터 저장 오류입니다.',
+			});
+		}
+		handleClose();
+	};
 	const saveImages = async () => {
 		const updateFileNames = [];
 
@@ -193,11 +203,10 @@ const MaintainDetail = ({ show, selectData, handleClose }) => {
 						/>
 						<Form.Label className="pt-2">완료일</Form.Label>
 						<Form.Control
-							type={isEditing ? 'date' : 'text'}
+							type="text"
+							readOnly
 							name="repairEndDate"
-							value={formData.repairEndDate || ''}
-							onChange={handleInputChange}
-							readOnly={!isEditing}
+							value={formData.repairEndDate}
 						/>
 						<Form.Label className="pt-2">유지보수 내용</Form.Label>
 						<Form.Control

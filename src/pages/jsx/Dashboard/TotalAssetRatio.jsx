@@ -19,10 +19,10 @@ const TotalAssetRatio = () => {
 
 	useEffect(() => {
 		const getAssetRatioData = async () => {
-			const response = await api.get(`${URL}/???`);
-			console.log(response); // 현민씨한테 백엔드 아직 못받음
+			const response = await api.get(`${URL}/chart/2`);
+			console.log("분류별 자산 비율 : " + JSON.stringify(response.data)); // 현민씨한테 백엔드 아직 못받음
 
-			setRatioData(response.data);
+			setRatioData(Object.values(response.data));
 			if (response.data) {
 				setIsDataExist(true);
 			}

@@ -17,27 +17,14 @@ const DepartmentStatus = ({ location }) => {
 
   const [departmentData, setDepartmentData] = useState();
 
-  const handleData = async (selectedValue) => {
-    // console.log(selectedValue);
-    // // 빈 배열 생성
-    // const numbers = [];
+  const handleData = async () => {
 
-    // // 13개의 랜덤 숫자 생성
-    // while (numbers.length < 13) {
-    //   // Math.random()은 0~1 사이의 난수를 생성
-    //   // Math.floor로 소수점 아래를 버림
-    //   const randomNumber = Math.floor(Math.random() * (300 - 50 + 1)) + 50;
-
-    //   // 중복되지 않는 숫자만 배열에 추가
-    //   if (!numbers.includes(randomNumber)) {
-    //     numbers.push(randomNumber);
-    //   }
-    // }
-
-    // setData(numbers);
-    const response = await api.get(`${URL}/???/${selectedValue}`);
+    const response = await api.get(`${URL}/chart/4`);
+    console.log(location.label);
     console.log(response.data);
-    setDepartmentData(response.data);
+    console.log(response.data.경영기획실);
+    const asd = location.label;
+    setDepartmentData(Object.values(response.data[asd]));
   };
 
   useEffect(() => {
@@ -75,7 +62,7 @@ const DepartmentStatus = ({ location }) => {
       tooltip: {
         callbacks: {
           label: function (tooltipItem) {
-            console.log(tooltipItem);
+            //console.log(tooltipItem);
             const label = tooltipItem.dataset.label;
             const value = tooltipItem.raw; // 각 데이터 값
             return `${value}개`; // 툴팁에 표시할 내용
@@ -116,10 +103,10 @@ const DepartmentStatus2 = () => {
 
   useEffect(() => {
     const getDepartmentData = async () => {
-      const response = await api.get(`${URL}/???`);
+      const response = await api.get(`${URL}/chart/3`);
       console.log(response.data);
 
-      setDepartmentData(response.data);
+      setDepartmentData(Object.values(response.data));
     };
 
     getDepartmentData();

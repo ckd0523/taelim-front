@@ -13,9 +13,9 @@ const ImportantStatus = () => {
 
   useEffect(() => {
     const getImportantData = async () => {
-      const response = await api.get(`${URL}/???`);
+      const response = await api.get(`${URL}/chart/8`);
       console.log(response.data);
-      setImportantData(response.data);
+      setImportantData(Object.values(response.data));
       if (response.data) {
         setIsDataExist(true);
       }

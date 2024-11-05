@@ -13,9 +13,9 @@ const OwnerShipStatus = () => {
 
   useEffect(() => {
     const getOwnerShipData = async () => {
-      const response = await api.get(`${URL}/???`);
+      const response = await api.get(`${URL}/chart/6`);
       console.log(response.data);
-      setOwnerShipData(response.data);
+      setOwnerShipData(Object.values(response.data));
       if (response.data) {
         setIsDataExist(true);
       }

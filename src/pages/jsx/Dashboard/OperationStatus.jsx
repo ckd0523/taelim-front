@@ -18,9 +18,9 @@ const OperationStatus = () => {
 
   useEffect(() => {
     const getOperationData = async () => {
-      const response = await api.get(`${URL}/???`);
+      const response = await api.get(`${URL}/chart/5`);
       console.log(response.data);
-      setOperationData(response.data);
+      setOperationData(Object.values(response.data));
       if (response.data) {
         setIsDataExist(true);
       }

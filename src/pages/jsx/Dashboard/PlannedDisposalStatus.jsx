@@ -10,23 +10,22 @@ const URL = import.meta.env.VITE_BASIC_URL;
 
 const PlannedDisposalStatus = () => {
   const today = new Date();
-  const defaultMonth = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}`;
-  //console.log(defaultMonth);
+  const defaultDate = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+  console.log(defaultDate);
 
-  const [disposalData, setDisposalData] = useState();
-  //const [disposalDate, setDisposalDate] = useState(defaultMonth);
+  const [disposalData, setDisposalData] = useState(defaultDate);
 
   const handleDate = async (selectedMonth) => {
     //selectedMonth가 뭔지 정확히 알아야함
-    console.log(selectedMonth);
-    const response = await api.get(`${URL}/???/${selectedMonth}`)
+    console.log(selectedMonth.target.value);
+    const response = await api.get(`${URL}/???/${selectedMonth.target.value}`);
     console.log(response.data);
     setDisposalData(response.data);
   };
 
   useEffect(() => {
     const getDisposalData = async () => {
-      const response = await api.get(`${URL}/???/${defaultMonth}`);
+      const response = await api.get(`${URL}/???/${defaultDate}`);
       console.log(response.data);
       setDisposalData(response.data);
     };
@@ -78,7 +77,7 @@ const PlannedDisposalStatus = () => {
 
   const renderTooltip = (props) => (
     <Tooltip id="tooltip" {...props}>
-      <span style={{ fontSize: 15 }}>날짜 기준 전후 3년 데이터</span>
+      <span style={{ fontSize: 15 }}>날짜 기준 3개월 데이터</span>
     </Tooltip>
   );
 
@@ -100,8 +99,8 @@ const PlannedDisposalStatus = () => {
           <Col sm={4}>
             <Form>
               <Form.Control
-                type='month'
-                defaultValue={defaultMonth}
+                type='date'
+                defaultValue={defaultDate}
                 onChange={handleDate}
               />
             </Form>

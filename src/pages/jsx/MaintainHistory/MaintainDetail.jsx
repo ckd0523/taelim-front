@@ -221,8 +221,8 @@ const MaintainDetail = ({ show, selectData, handleClose }) => {
 						<p>유지보수 전 사진</p>
 						{!isEditing ? (
 							selectData.repairFiles &&
-							selectData.repairFiles.filter((file) => file.repairType === '보수전')
-								.length > 0 ? (
+								selectData.repairFiles.filter((file) => file.repairType === '보수전')
+									.length > 0 ? (
 								selectData.repairFiles
 									.filter((file) => file.repairType === '보수전')
 									.map((file, index) =>
@@ -263,8 +263,8 @@ const MaintainDetail = ({ show, selectData, handleClose }) => {
 						<p className="pt-2">유지보수 후 사진</p>
 						{!isEditing ? (
 							selectData.repairFiles &&
-							selectData.repairFiles.filter((file) => file.repairType === '보수후')
-								.length > 0 ? (
+								selectData.repairFiles.filter((file) => file.repairType === '보수후')
+									.length > 0 ? (
 								selectData.repairFiles
 									.filter((file) => file.repairType === '보수후')
 									.map((file, index) =>

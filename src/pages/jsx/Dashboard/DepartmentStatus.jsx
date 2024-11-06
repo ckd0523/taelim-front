@@ -4,44 +4,28 @@ import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Toolti
 import Select from 'react-select';
 import { useState } from 'react';
 import { useEffect } from 'react';
+import { assetTypeNoAlpha } from './AssetIndex';
+import api from '@/common/api/authAxios';
+import noData from './NoData';
+
+const URL = import.meta.env.VITE_BASIC_URL;
 
 // Register required components
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
-const label = ['경영기획실', '관리팀', '영업팀', '구매팀', '품질팀', '생산팀', '기술연구소'];
-
-const locationlabel = [
-  '정보보호시스템', '응용프로그램', '소프트웨어', '전자정보', '문서',
-  '특허 및 상표', 'IT 장비 - 시스템', 'IT 장비 – 네트워크', '단말기',
-  '가구', '기기', '차량', '기타',
-];
-
 const DepartmentStatus = ({ location }) => {
-  const data1 = [
-    199, 140, 59, 97, 83, 62, 175, 240, 216, 113, 257, 180, 70,
-  ];
 
-  const handleData = (selectedValue) => {
-    console.log(selectedValue);
-    // 빈 배열 생성
-    const numbers = [];
+  const [departmentData, setDepartmentData] = useState();
 
-    // 13개의 랜덤 숫자 생성
-    while (numbers.length < 13) {
-      // Math.random()은 0~1 사이의 난수를 생성
-      // Math.floor로 소수점 아래를 버림
-      const randomNumber = Math.floor(Math.random() * (300 - 50 + 1)) + 50;
+  const handleData = async () => {
 
-      // 중복되지 않는 숫자만 배열에 추가
-      if (!numbers.includes(randomNumber)) {
-        numbers.push(randomNumber);
-      }
-    }
-
-    setData(numbers);
+    const response = await api.get(`${URL}/chart/4`);
+    console.log(location.label);
+    console.log(response.data);
+    console.log(response.data.경영기획실);
+    const asd = location.label;
+    setDepartmentData(Object.values(response.data[asd]));
   };
-
-  const [chartData, setData] = useState(data1);
 
   useEffect(() => {
     handleData();
@@ -50,9 +34,9 @@ const DepartmentStatus = ({ location }) => {
 
 
   const data = {
-    labels: locationlabel,
+    labels: assetTypeNoAlpha,
     datasets: [{
-      data: chartData,
+      data: departmentData,
       backgroundColor: [
         "rgba(24, 152, 51, 1)", "rgba(24, 152, 51, 1)", "rgba(24, 152, 51, 1)", "rgba(24, 152, 51, 1)",
         "rgba(24, 152, 51, 0.9)", "rgba(24, 152, 51, 0.9)", "rgba(24, 152, 51, 0.9)", "rgba(24, 152, 51, 0.9)",
@@ -78,7 +62,7 @@ const DepartmentStatus = ({ location }) => {
       tooltip: {
         callbacks: {
           label: function (tooltipItem) {
-            console.log(tooltipItem);
+            //console.log(tooltipItem);
             const label = tooltipItem.dataset.label;
             const value = tooltipItem.raw; // 각 데이터 값
             return `${value}개`; // 툴팁에 표시할 내용
@@ -104,7 +88,7 @@ const DepartmentStatus = ({ location }) => {
   return (
     <>
       <div style={{ width: "100%", height: "90%" }}>
-        <Bar data={data} options={options} />
+        <Bar data={data} options={options} plugins={noData} />
       </div>
     </>
   );
@@ -113,32 +97,35 @@ const DepartmentStatus = ({ location }) => {
 //---------------------------------------------------------------------------------------------
 
 const DepartmentStatus2 = () => {
+  //벨류는 현민씨 백엔드 보고 고쳐야함
   const [location, setLocation] = useState({ "value": "0", "label": "부서별 자산" });
+  const [departmentData, setDepartmentData] = useState();
 
-  // Define the data for the Chart.js bar chart
+  useEffect(() => {
+    const getDepartmentData = async () => {
+      const response = await api.get(`${URL}/chart/3`);
+      console.log(response.data);
+
+      setDepartmentData(Object.values(response.data));
+    };
+
+    getDepartmentData();
+
+  }, []);
+
   const data = {
-    labels: label,
+    labels: ['경영기획실', '관리팀', '영업팀', '구매팀', '품질팀', '생산팀', '기술연구소'],
     datasets: [
       {
         label: '개수',
-        data: [340, 122, 230, 443, 90, 150, 200], // y축 값
+        data: departmentData, // y축 값
         backgroundColor: [
-          '#4E79A7',
-          '#F28E2B',
-          '#76B7B2',
-          '#E15759',
-          '#59A14F',
-          '#acaba6',
-          '#032767',
+          '#4E79A7', '#F28E2B', '#76B7B2', '#E15759',
+          '#59A14F', '#acaba6', '#032767',
         ],
         borderColor: [
-          '#4E79A7',
-          '#F28E2B',
-          '#76B7B2',
-          '#E15759',
-          '#59A14F',
-          '#acaba6',
-          '#032767',
+          '#4E79A7', '#F28E2B', '#76B7B2', '#E15759',
+          '#59A14F', '#acaba6', '#032767',
         ],
         borderWidth: 1,
         barThickness: 45, // columnWidth 설정
@@ -160,7 +147,7 @@ const DepartmentStatus2 = () => {
         color: '#fff',
         font: {
           size: 17,
-        }
+        },
       },
       tooltip: {
         callbacks: {
@@ -197,6 +184,8 @@ const DepartmentStatus2 = () => {
     setLocation(selectedOption);
   }
 
+
+
   return (
     <Card style={{ width: '100%', height: '93%' }}>
       <Card.Body>
@@ -208,6 +197,7 @@ const DepartmentStatus2 = () => {
           <Col sm={4}>
             <Select
               options={[
+                //벨류는 현민씨 백엔드 보고 고쳐야함
                 { value: '0', label: '부서별 자산' },
                 { value: '1', label: '경영기획실' },
                 { value: '2', label: '관리팀' },
@@ -216,7 +206,6 @@ const DepartmentStatus2 = () => {
                 { value: '5', label: '품질팀' },
                 { value: '6', label: '생산팀' },
                 { value: '7', label: '기술연구소' },
-
               ]}
               defaultValue={{ value: '0', label: '부서별 자산' }}
               onChange={handleLocation}
@@ -226,7 +215,7 @@ const DepartmentStatus2 = () => {
 
         {location.value == 0 ? (
           <div style={{ width: "100%", height: "87%" }}>
-            <Bar data={data} options={options} />
+            <Bar data={data} options={options} plugins={noData} />
           </div>
         ) : (<DepartmentStatus location={location} />)}
 

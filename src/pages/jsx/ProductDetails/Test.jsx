@@ -180,12 +180,12 @@ const Test = () => {
 						<img
 							src={photo.fileURL}
 							alt={photo.oriFileName}
-							style={{ width: '300px', height: 'auto' }}
+							style={{ width: '100%', height: 'auto' }}
 						/>
 					) : (
 						<div
 							style={{
-								width: '300px',
+								width: '100%',
 								height: 'auto',
 								backgroundColor: '#f0f0f0',
 								border: '1px dashed #ccc',

@@ -1,7 +1,7 @@
 import { Container, Row, Col, Card } from 'react-bootstrap';
 import TotalAssetRatio from './TotalAssetRatio';
 import { LocationStatus, SelectedLocation } from './LocationStatus';
-import Header from './Header';
+//import Header from './Header';
 import OperationStatus from './OperationStatus';
 import { DepartmentStatus, DepartmentStatus2 } from './DepartmentStatus';
 //import AssetStatus from './AssetStatus';

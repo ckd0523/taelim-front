@@ -5,8 +5,13 @@ import { Bar } from 'react-chartjs-2';
 import { Chart as ChartJS, BarElement, CategoryScale, LinearScale, Tooltip, Legend } from 'chart.js';
 import { useState } from "react";
 import Select from 'react-select';
-import ChartLocation from './assetSurveyLocation';
+import { assetLocation } from './AssetIndex.js';
 import { useEffect } from "react";
+import { assetTypeNoAlpha } from "./AssetIndex.js";
+import api from "@/common/api/authAxios.js";
+import noData from "./NoData.js";
+
+const URL = import.meta.env.VITE_BASIC_URL;
 
 // Chart.js에 필요한 요소 및 플러그인 등록
 ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
@@ -43,11 +48,6 @@ const GridCell = styled.div`
 
 const LocationStatus = ({ setLocation }) => {
   const handleGridClick = (gridId) => {
-    // if (gridId === "1-1" || gridId === "1-2" || gridId === "1-3") {
-    //   setLocation("야임마");
-    //   alert(`Clicked grid ${gridId}`);
-    // }
-
     if (gridId === "1-1") {
       setLocation("본관");
     } else if (gridId === "1-2") {
@@ -55,7 +55,6 @@ const LocationStatus = ({ setLocation }) => {
     } else if (gridId === "1-3") {
       setLocation("공장동");
     }
-
   };
 
   return (
@@ -106,62 +105,34 @@ const LocationStatus = ({ setLocation }) => {
 };
 
 const SelectedLocation = ({ location }) => {
-  const data1 = [
-    199, 140, 59, 97, 83, 62, 175, 240, 216, 113, 257, 180, 70,
-  ];
-
-  const data2 = [
-    128, 132, 269, 114, 174, 76, 249, 290, 287, 187, 230, 143, 161,
-  ]
-
-  const data3 = [
-    206, 81, 107, 263, 180, 55, 256, 76, 297, 211, 290, 158, 65,
-  ]
 
   const [axis, setAxis] = useState('x');
-  const [chartData, setData] = useState(data1);
+  const [chartData, setData] = useState();
 
   const handleAxis = (selectedValue) => {
     setAxis(selectedValue); // 선택된 값을 상태에 저장
   };
 
-  const handleLocation = (selectedValue) => {
+  const handleLocation = async (selectedValue) => {
     console.log(selectedValue);
-    // 빈 배열 생성
-    const numbers = [];
 
-    // 13개의 랜덤 숫자 생성
-    while (numbers.length < 13) {
-      // Math.random()은 0~1 사이의 난수를 생성
-      // Math.floor로 소수점 아래를 버림
-      const randomNumber = Math.floor(Math.random() * (300 - 50 + 1)) + 50;
-
-      // 중복되지 않는 숫자만 배열에 추가
-      if (!numbers.includes(randomNumber)) {
-        numbers.push(randomNumber);
-      }
-    }
-
-    setData(numbers);
+    const response = await api.get(`${URL}/???/${selectedValue}`);
+    console.log(response.data);
+    setData(response.data);
   };
 
   useEffect(() => {
-    //console.log("이게 되나");
-    if (location == '공장동') {
-      setData(data1);
-    } else if (location == '본관') {
-      setData(data2);
-    } else {
-      setData(data3);
-    }
+    const getLocationData = async () => {
+      const response = await api.get(`${URL}/???/${location}`);
+      console.log(response.data);
+      setData(response.data);
+    };
+
+    getLocationData();
   }, [location]);
 
   const data = {
-    labels: [
-      '정보보호시스템', '응용프로그램', '소프트웨어', '전자정보', '문서',
-      '특허 및 상표', 'IT 장비 - 시스템', 'IT 장비 – 네트워크', '단말기',
-      '가구', '기기', '차량', '기타',
-    ],
+    labels: assetTypeNoAlpha,
     datasets: [{
       //label: '자산 수량',
       data: chartData,
@@ -247,19 +218,16 @@ const SelectedLocation = ({ location }) => {
               <Col>
                 <Select
                   defaultValue={{ value: 'MAIN_1F', label: '본관 1층' }}
-                  options={ChartLocation}
+                  options={assetLocation}
                   onChange={(selectedOption) => handleLocation(selectedOption.value)}
                 />
               </Col>
             )}
-
           </Row>
         </Col>
 
-
-
         <div style={{ width: "100%", height: "90%" }}>
-          <Bar data={data} options={options} />
+          <Bar data={data} options={options} plugins={noData} />
         </div>
       </Card.Body>
     </Card >

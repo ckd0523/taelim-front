@@ -137,7 +137,8 @@ const assetLocation = [
 ];
 const ownership = [
 	{ value: 'OWNED', label: '소유' },
-	{ value: 'LEASED', label: '임대' },
+	{ value: 'NATIONAL_PROJECT', label: '국책과제' },
+	{ value: 'ETC', label: '기타' },
 ];
 const useStated = [
 	{ value: 'NEW', label: '신규' },

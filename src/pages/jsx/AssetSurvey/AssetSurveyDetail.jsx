@@ -425,8 +425,7 @@ const AssetSurveyDetail = () => {
 	const QrReader = (e) => {
 		//console.log(e);
 		const QrAssetCode = e.target.value.split('/').pop();
-		e.target.value = QrAssetCode;
-		console.log(e.target.value);
+		qrInput(QrAssetCode);
 
 		const matchedRow = data.find((row) => row.assetCode === QrAssetCode);
 
@@ -447,6 +446,8 @@ const AssetSurveyDetail = () => {
 		}
 
 	};
+
+	const [qrInput, setQrInput] = useState("");
 
 	return (
 		<div>
@@ -507,6 +508,7 @@ const AssetSurveyDetail = () => {
 							) : (
 								<InputGroup>
 									<Form.Control
+										value={qrInput}
 										placeholder="QR 리더기"
 										ref={inputRef}
 										inputMode='none'

@@ -1,5 +1,6 @@
 // CellContent.jsx
 import React from 'react';
+import Select from 'react-select';
 import { Form, Button, InputGroup } from 'react-bootstrap';
 
 export const CellContent = ({
@@ -18,102 +19,132 @@ export const CellContent = ({
 	if (isEditing) {
 		// department select 설정
 		if (keyName === 'department') {
+			const departmentOptions = [
+				{ value: '경영기획실', label: '경영기획실' },
+				{ value: '관리팀', label: '관리팀' },
+				{ value: '영업팀', label: '영업팀' },
+				{ value: '구매팀', label: '구매팀' },
+				{ value: '품질팀', label: '품질팀' },
+				{ value: '생산팀', label: '생산팀' },
+				{ value: '기술연구소팀', label: '기술연구소팀' },
+				{ value: 'N/A', label: 'N/A' },
+			];
+
 			return (
-				<Form.Select
-					value={value || ''}
-					onChange={(e) => handleInputChange(e, keyName)}
-					style={{ textAlign: 'center' }}
-				>
-					<option value="IT부">IT부</option>
-					<option value="관리부">관리부</option>
-					<option value="영업부">영업부</option>
-					<option value="마케팅부">마케팅부</option>
-					<option value="생산부">생산부</option>
-					<option value="운영부">운영부</option>
-					<option value="인사부">인사부</option>
-				</Form.Select>
+				<Select
+					options={departmentOptions}
+					value={departmentOptions.find((option) => option.value === value) || null}
+					onChange={(selectedOption) =>
+						handleInputChange({ target: { value: selectedOption.value } }, keyName)
+					}
+					styles={{ control: (provided) => ({ ...provided, textAlign: 'center' }) }} // 스타일 추가
+				/>
 			);
 		}
 		// assetLocation select 설정
 		if (keyName === 'assetLocation') {
+			const assetLocationOptions = [
+				{ value: '본관 지하 문서고', label: '본관 지하 문서고' },
+				{ value: '본관 1층 접견실', label: '본관 1층 접견실' },
+				{ value: '본관 2층', label: '본관 2층' },
+				{ value: '본관 2층 사장실', label: '본관 2층 사장실' },
+				{ value: '본관 2층 기술연구소 사무실', label: '본관 2층 기술 연구소 사무실' },
+				{ value: '본관 2층 대회의실', label: '본관 2층 대회의실' },
+				{ value: '본관 2층 대표이사실', label: '본관 2층 대표 이사실' },
+				{ value: '본관 3층 창고', label: '본관 3층 창고' },
+				{ value: 'MDCG 천장', label: 'MDCG' },
+				{ value: '공장동', label: '공장동' },
+			];
+
 			return (
-				<Form.Select
-					value={value || ''}
-					onChange={(e) => handleInputChange(e, keyName)}
-					style={{ textAlign: 'center' }}
-				>
-					<option value="본관 지하 문서고">본관 지하 문서고</option>
-					@@ -36,64 +47,64 @@
-					<option value="본관 1층 접견실">본관 1층 접견실</option>
-					<option value="본관 2층">본관 2층</option>
-					<option value="본관 2층 사장실">본관 2층 사장실</option>
-					<option value="본관 2층 기술연구소 사무실">본관 2층 기술 연구소 사무실</option>
-					<option value="본관 2층 대회의실">본관 2층 대회의실</option>
-					<option value="본관 2층 대표이사실">본관 2층 대표 이사실</option>
-					<option value="본관 3층 창고">본관 3층 창고</option>
-					<option value="MDCG 천장">MDCG</option>
-					<option value="공장동">공장동</option>
-				</Form.Select>
+				<Select
+					options={assetLocationOptions}
+					value={assetLocationOptions.find((option) => option.value === value) || null}
+					onChange={(selectedOption) =>
+						handleInputChange({ target: { value: selectedOption.value } }, keyName)
+					}
+					styles={{ control: (provided) => ({ ...provided, textAlign: 'center' }) }} // 스타일 추가
+				/>
 			);
 		}
-		// owenership select 설정
+		// ownership select 설정
 		if (keyName === 'ownership') {
+			const ownershipOptions = [
+				{ value: '소유', label: '소유' },
+				{ value: '국책과제', label: '국책과제' },
+				{ value: '기타', label: '기타' },
+			];
+
 			return (
-				<Form.Select
-					value={value || ''}
-					onChange={(e) => handleInputChange(e, keyName)}
-					style={{ textAlign: 'center' }}
-				>
-					<option value="소유">소유</option>
-					<option value="임대">임대</option>
-				</Form.Select>
+				<Select
+					options={ownershipOptions}
+					value={ownershipOptions.find((option) => option.value === value) || null}
+					onChange={(selectedOption) =>
+						handleInputChange({ target: { value: selectedOption.value } }, keyName)
+					}
+					styles={{ control: (provided) => ({ ...provided, textAlign: 'center' }) }}
+				/>
 			);
 		}
 		// useState select 설정
 		if (keyName === 'useStated') {
+			const useStateOptions = [
+				{ value: '신규', label: '신규' },
+				{ value: '사용중', label: '사용중' },
+				{ value: '유지 관리 중 or 보수 작업 중', label: '유지 관리 중' },
+				{ value: '예비', label: '예비' },
+				{ value: '퇴직/폐기', label: '퇴직/폐기' },
+			];
+
 			return (
-				<Form.Select
-					value={value || ''}
-					onChange={(e) => handleInputChange(e, keyName)}
-					style={{ textAlign: 'center' }}
-				>
-					<option value="신규">신규</option>
-					<option value="사용중">사용중</option>
-					<option value="유지 관리 중 or 보수 작업 중">유지관리 중</option>
-					<option value="예비">예비</option>
-					<option value="퇴직/폐기">퇴직/폐기</option>
-				</Form.Select>
+				<Select
+					options={useStateOptions}
+					value={useStateOptions.find((option) => option.value === value) || null}
+					onChange={(selectedOption) =>
+						handleInputChange({ target: { value: selectedOption.value } }, keyName)
+					}
+					styles={{ control: (provided) => ({ ...provided, textAlign: 'center' }) }}
+				/>
 			);
 		}
 		// operationStatus select 설정
 		if (keyName === 'operationStatus') {
+			const operationStatusOptions = [
+				{ value: '가동중', label: '가동중' },
+				{ value: '미가동', label: '미가동' },
+				{ value: '고장', label: '고장' },
+			];
+
 			return (
-				<Form.Select
-					value={value || ''}
-					onChange={(e) => handleInputChange(e, keyName)}
-					style={{ textAlign: 'center' }}
-				>
-					<option value="가동중">가동중</option>
-					<option value="미가동">미가동</option>
-					<option value="고장">고장</option>
-				</Form.Select>
+				<Select
+					options={operationStatusOptions}
+					value={operationStatusOptions.find((option) => option.value === value) || null}
+					onChange={(selectedOption) =>
+						handleInputChange({ target: { value: selectedOption.value } }, keyName)
+					}
+					styles={{ control: (provided) => ({ ...provided, textAlign: 'center' }) }}
+				/>
 			);
 		}
-		// operationStatus select 설정
+		// depreciationMethod select 설정
 		if (keyName === 'depreciationMethod') {
+			const depreciationOptions = [
+				{ value: '정률법', label: '정률법' },
+				{ value: '정액법', label: '정액법' },
+			];
+
 			return (
-				<Form.Select
-					value={value || ''}
-					onChange={(e) => handleInputChange(e, keyName)}
-					style={{ textAlign: 'center' }}
-				>
-					<option value="정률법">정률법</option>
-					@@ -101,112 +112,237 @@
-				</Form.Select>
+				<Select
+					options={depreciationOptions}
+					value={depreciationOptions.find((option) => option.value === value) || null}
+					onChange={(selectedOption) =>
+						handleInputChange({ target: { value: selectedOption.value } }, keyName)
+					}
+					styles={{ control: (provided) => ({ ...provided, textAlign: 'center' }) }} // 스타일 추가
+				/>
 			);
 		}
 		// introduceDate 날짜로 설정
-
 		if (
 			[
 				'introducedDate',
@@ -161,122 +192,170 @@ export const CellContent = ({
 				/>
 			);
 		}
-		// patentTrademarkStatus select 설정
+		// documentGrade select 설정
 		if (keyName === 'documentGrade') {
+			const documentGradeOptions = [
+				{ value: '대외비', label: '대외비' },
+				{ value: '내부용', label: '내부용' },
+				{ value: '일반', label: '일반' },
+			];
+
 			return (
-				<Form.Select
-					value={value || ''}
-					onChange={(e) => handleInputChange(e, keyName)}
-					style={{ textAlign: 'center' }}
-				>
-					<option value="대외비">대외비</option>
-					<option value="내부용">내부용</option>
-					<option value="일반">일반</option>
-				</Form.Select>
+				<Select
+					options={documentGradeOptions}
+					value={documentGradeOptions.find((option) => option.value === value) || null}
+					onChange={(selectedOption) =>
+						handleInputChange({ target: { value: selectedOption.value } }, keyName)
+					}
+					styles={{ control: (provided) => ({ ...provided, textAlign: 'center' }) }} // 스타일 설정
+				/>
 			);
 		}
-		// patentTrademarkStatus select 설정
+		// documentType select 설정
 		if (keyName === 'documentType') {
+			const documentTypeOptions = [
+				{ value: '일반문서', label: '일반문서' },
+				{ value: '계약 및 법적문서', label: '계약 및 법적문서' },
+				{ value: '보고서 및 프레젠테이션', label: '보고서 및 프레젠테이션' },
+				{ value: '양식 및 서식', label: '양식 및 서식' },
+			];
+
 			return (
-				<Form.Select
-					value={value || ''}
-					onChange={(e) => handleInputChange(e, keyName)}
-					style={{ textAlign: 'center' }}
-				>
-					<option value="일반문서">일반문서</option>
-					<option value="계약 및 법적문서">계약 및 법적문서</option>
-					<option value="보고서 및 프레젠테이션">보고서 및 프레젠테이션</option>
-					<option value="양식 및 서식">양식 및 서식</option>
-				</Form.Select>
+				<Select
+					options={documentTypeOptions}
+					value={documentTypeOptions.find((option) => option.value === value) || null}
+					onChange={(selectedOption) =>
+						handleInputChange({ target: { value: selectedOption.value } }, keyName)
+					}
+					styles={{ control: (provided) => ({ ...provided, textAlign: 'center' }) }} // 스타일 설정
+				/>
 			);
 		}
 		// 특허 칼럼 설정해주기
 		// patentTrademarkStatus select 설정
 		if (keyName === 'patentTrademarkStatus') {
-			return (
-				<Form.Select
-					value={value || ''}
-					onChange={(e) => handleInputChange(e, keyName)}
-					style={{ textAlign: 'center' }}
-				>
-					<option value="PCT_APPLICATION">PCT 출원</option>
-					<option value="APPLICATION">출원</option>
-					<option value="REGISTERED">등록</option>
-					<option value="EXPIRED">만료</option>
-				</Form.Select>
-			);
-		}
-		// patentTrademarkStatus select 설정
-		if (keyName === 'countryApplication') {
-			return (
-				<Form.Select
-					value={value || ''}
-					onChange={(e) => handleInputChange(e, keyName)}
-					style={{ textAlign: 'center' }}
-				>
-					<option value="한국">한국</option>
-					<option value="미국">미국</option>
-					<option value="일본">일본</option>
-					<option value="중국">중국</option>
+			const patentTrademarkStatusOptions = [
+				{ value: 'PCT 출원', label: 'PCT 출원' },
+				{ value: '출원', label: '출원' },
+				{ value: '등록', label: '등록' },
+				{ value: '만료', label: '만료' },
+				{ value: 'N/A', label: 'N/A' },
+			];
 
-					<option value="독일">독일</option>
-				</Form.Select>
+			return (
+				<Select
+					options={patentTrademarkStatusOptions}
+					value={
+						patentTrademarkStatusOptions.find((option) => option.value === value) ||
+						null
+					}
+					onChange={(selectedOption) =>
+						handleInputChange({ target: { value: selectedOption.value } }, keyName)
+					}
+					styles={{ control: (provided) => ({ ...provided, textAlign: 'center' }) }}
+				/>
 			);
 		}
-		// patentTrademarkStatus select 설정
+
+		// countryApplication select 설정
+		if (keyName === 'countryApplication') {
+			const countryOptions = [
+				{ value: '한국', label: '한국' },
+				{ value: '미국', label: '미국' },
+				{ value: '일본', label: '일본' },
+				{ value: '중국', label: '중국' },
+				{ value: '독일', label: '독일' },
+			];
+
+			return (
+				<Select
+					options={countryOptions}
+					value={countryOptions.find((option) => option.value === value) || null}
+					onChange={(selectedOption) =>
+						handleInputChange({ target: { value: selectedOption.value } }, keyName)
+					}
+					styles={{ control: (provided) => ({ ...provided, textAlign: 'center' }) }} // 스타일 추가
+				/>
+			);
+		}
+		// patentClassification select 설정
 		if (keyName === 'patentClassification') {
+			const patentClassificationOptions = [
+				{ value: '신소재', label: '신소재' },
+				{ value: '인큐베이션', label: '인큐베이션' },
+			];
+
 			return (
-				<Form.Select
-					value={value || ''}
-					onChange={(e) => handleInputChange(e, keyName)}
-					style={{ textAlign: 'center' }}
-				>
-					<option value="NEW_MATERIALS">신소재</option>
-					<option value="INCUBATION">인큐베이션</option>
-				</Form.Select>
+				<Select
+					options={patentClassificationOptions}
+					value={
+						patentClassificationOptions.find((option) => option.value === value) || null
+					}
+					onChange={(selectedOption) =>
+						handleInputChange({ target: { value: selectedOption.value } }, keyName)
+					}
+					styles={{ control: (provided) => ({ ...provided, textAlign: 'center' }) }}
+				/>
 			);
 		}
-		// patentTrademarkStatus select 설정
+		// patentItem select 설정
 		if (keyName === 'patentItem') {
+			const patentItemOptions = [
+				{ value: '복합재', label: '복합재' },
+				{ value: '사내벤처', label: '사내벤처' },
+			];
+
 			return (
-				<Form.Select
-					value={value || ''}
-					onChange={(e) => handleInputChange(e, keyName)}
-					style={{ textAlign: 'center' }}
-				>
-					<option value="COMPOSITE_MATERIALS">복합재</option>
-					<option value="CORPORATE_VENTURE">사내벤처</option>
-				</Form.Select>
+				<Select
+					options={patentItemOptions}
+					value={patentItemOptions.find((option) => option.value === value) || null}
+					onChange={(selectedOption) =>
+						handleInputChange({ target: { value: selectedOption.value } }, keyName)
+					}
+					styles={{ control: (provided) => ({ ...provided, textAlign: 'center' }) }}
+				/>
 			);
 		}
-		// terminal select 설정
+		// engineType select 설정
 		if (keyName === 'engineType') {
+			const engineTypeOptions = [
+				{ value: '가솔린', label: '가솔린' },
+				{ value: '디젤', label: '디젤' },
+				{ value: '하이브리드', label: '하이브리드' },
+				{ value: '전기', label: '전기' },
+			];
+
 			return (
-				<Form.Select
-					value={value || ''}
-					onChange={(e) => handleInputChange(e, keyName)}
-					style={{ textAlign: 'center' }}
-				>
-					<option value="가솔린">가솔린</option>
-					<option value="디젤">디젤</option>
-					<option value="하이브리드">하이브리드</option>
-					<option value="전기">전기</option>
-				</Form.Select>
+				<Select
+					options={engineTypeOptions}
+					value={engineTypeOptions.find((option) => option.value === value) || null}
+					onChange={(selectedOption) =>
+						handleInputChange({ target: { value: selectedOption.value } }, keyName)
+					}
+					styles={{ control: (provided) => ({ ...provided, textAlign: 'center' }) }} // 스타일 설정
+				/>
 			);
 		}
-		// car select 설정
+
+		// carType select 설정
 		if (keyName === 'carType') {
+			const carTypeOptions = [
+				{ value: '승용차', label: '승용차' },
+				{ value: 'SUV', label: 'SUV' },
+				{ value: '트럭', label: '트럭' },
+				{ value: '밴', label: '밴' },
+				{ value: 'N/A', label: 'N/A' },
+			];
+
 			return (
-				<Form.Select
-					value={value || ''}
-					onChange={(e) => handleInputChange(e, keyName)}
-					style={{ textAlign: 'center' }}
-				>
-					<option value="승용차">승용차</option>
-					<option value="SUV">SUV</option>
-					<option value="트럭">트럭</option>
-					<option value="밴">밴</option>
-				</Form.Select>
+				<Select
+					options={carTypeOptions}
+					value={carTypeOptions.find((option) => option.value === value) || null}
+					onChange={(selectedOption) =>
+						handleInputChange({ target: { value: selectedOption.value } }, keyName)
+					}
+					styles={{ control: (provided) => ({ ...provided, textAlign: 'center' }) }} // 스타일 추가
+				/>
 			);
 		}
 

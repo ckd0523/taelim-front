@@ -10,16 +10,16 @@ const DisposeModal = ({
 	handleDisposeDemand,
 	handleDisposeAsset,
 }) => {
-	const [disposeReason, setDisposeReason] = useState('');
-	const [disposeDetail, setDisposeDetail] = useState('');
+	const [demandReason, setDemandResaon] = useState('');
+	const [demandDetail, setDemandDetail] = useState('');
 	const [disposeLocation, setDisposeLocation] = useState('');
 	const [disposeMethod, setDisposeMethod] = useState('');
 	const { user } = useAuthContext();
 
 	// 폐기 modal 부분 폼관련 내용 초기화 설정
 	const resetForm = () => {
-		setDisposeReason('');
-		setDisposeDetail('');
+		setDemandResaon('');
+		setDemandDetail('');
 		setDisposeLocation('');
 		setDisposeMethod('');
 	};
@@ -27,9 +27,9 @@ const DisposeModal = ({
 	// 관리 담당자 폐기 동작 받음
 	const handleRequest = async () => {
 		const disposeDto = {
-			disposeUser: user.id,
-			disposeReason,
-			disposeDetail,
+			demandBy: user.id,
+			demandReason,
+			demandDetail,
 			disposeLocation,
 			disposeMethod,
 		};
@@ -56,9 +56,9 @@ const DisposeModal = ({
 	/// 자산 관리자 폐기 동작 받음
 	const handleDispose = async () => {
 		const disposeDto = {
-			disposeUser: user.id,
-			disposeReason,
-			disposeDetail,
+			demandBy: user.id,
+			demandReason,
+			demandDetail,
 			disposeLocation,
 			disposeMethod,
 		};
@@ -98,8 +98,8 @@ const DisposeModal = ({
 						<Form.Label>폐기 사유</Form.Label>
 						<Form.Control
 							type="text"
-							value={disposeReason}
-							onChange={(e) => setDisposeReason(e.target.value)}
+							value={demandReason}
+							onChange={(e) => setDemandResaon(e.target.value)}
 						/>
 					</Form.Group>
 					<Form.Group className="mb-3">
@@ -107,8 +107,8 @@ const DisposeModal = ({
 						<Form.Control
 							as="textarea"
 							rows={3}
-							value={disposeDetail}
-							onChange={(e) => setDisposeDetail(e.target.value)}
+							value={demandDetail}
+							onChange={(e) => setDemandDetail(e.target.value)}
 						/>
 					</Form.Group>
 					<Form.Group className="mb-3">

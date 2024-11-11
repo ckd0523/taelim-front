@@ -268,7 +268,7 @@ const RowDetails = ({
 		if (user && user.id) {
 			setFormData((prevData) => ({
 				...prevData,
-				updateBy: user.id,
+				demandBy: user.id,
 			}));
 		}
 	}, [user]);
@@ -279,7 +279,7 @@ const RowDetails = ({
 		setFormData((prevData) => ({
 			...prevData,
 			[key]: value, // 해당 키의 값을 업데이트
-			updateBy: user.id, // 현재 접속자 ID를 updateBy에 저장
+			demandBy: user.id, // 현재 접속자 ID를 updateBy에 저장
 		}));
 	};
 	// 모달 닫기 처리
@@ -305,10 +305,9 @@ const RowDetails = ({
 				// 1. 수정 처리 (기존 파일 정보 포함)
 				const response = await api.post(`${urlConfig}/asset/update/${formData.assetCode}`, {
 					...formData,
-					existingFiles: formData.existingFiles, // 기존 파일 정보 추가
+					// 기존 파일 정보 추가
 				});
-
-				console.log('Update response:', response.data); // 응답 확인
+				console.log('표시', formData);
 
 				// 2. 백엔드에서 받은 메시지 처리
 				if (response.data.includes('이미 수정이 들어간 자산입니다.')) {
@@ -318,8 +317,6 @@ const RowDetails = ({
 						text: `자산 코드: ${formData.assetCode}`,
 					});
 				} else {
-					// alert(response.data); // 성공 메시지
-
 					// 3. 새 파일 업로드가 필요할 때만 실행
 					if (formData.files && formData.files.length > 0) {
 						const fileData = new FormData();
@@ -355,6 +352,7 @@ const RowDetails = ({
 							}
 						}
 					}
+
 					// 성공 메시지 후 모달 닫기
 					setShowModal(false); // 모달 닫기
 					setTimeout(() => {
@@ -411,10 +409,8 @@ const RowDetails = ({
 					`${urlConfig}/asset/updateDemand/${formData.assetCode}`,
 					{
 						...formData,
-						existingFiles: formData.existingFiles, // 기존 파일 정보 추가
 					}
 				);
-
 				console.log('UpdateDemand response:', response.data); // 응답 확인
 
 				// 2. 백엔드에서 받은 메시지 처리
@@ -1069,8 +1065,8 @@ const RowDetails = ({
 									<Form.Label>수정 사유</Form.Label>
 									<Form.Control
 										type="text"
-										value={formData.updateReason}
-										onChange={(e) => handleInputChange(e, 'updateReason')}
+										value={formData.demandReason}
+										onChange={(e) => handleInputChange(e, 'demandReason')}
 									/>
 								</Form.Group>
 
@@ -1079,8 +1075,8 @@ const RowDetails = ({
 									<Form.Control
 										as="textarea"
 										rows={3}
-										value={formData.updateDetail}
-										onChange={(e) => handleInputChange(e, 'updateDetail')}
+										value={formData.demandDetail}
+										onChange={(e) => handleInputChange(e, 'demandDetail')}
 									/>
 								</Form.Group>
 							</Form>

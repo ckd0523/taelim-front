@@ -422,10 +422,11 @@ const AssetSurveyDetail = () => {
 		}
 	}, []);
 
+	const [qrInput, setQrInput] = useState("");
 	const QrReader = (e) => {
-		//console.log(e);
 		const QrAssetCode = e.target.value.split('/').pop();
-		qrInput(QrAssetCode);
+		e.target.value = QrAssetCode;
+		setQrInput(QrAssetCode);
 
 		const matchedRow = data.find((row) => row.assetCode === QrAssetCode);
 
@@ -442,12 +443,14 @@ const AssetSurveyDetail = () => {
 			Swal.fire({
 				icon: 'error',
 				title: '해당하는 자산을 찾을 수 없습니다.',
+				allowEscapeKey: false,
+				allowOutsideClick: false,
+				allowEnterKey: false,
 			});
+			// alert('해당하는 자산을 찾을 수 없습니다.')
 		}
 
 	};
-
-	const [qrInput, setQrInput] = useState("");
 
 	return (
 		<div>

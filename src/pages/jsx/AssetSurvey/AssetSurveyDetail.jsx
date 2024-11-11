@@ -422,6 +422,32 @@ const AssetSurveyDetail = () => {
 		}
 	}, []);
 
+	const QrReader = (e) => {
+		//console.log(e);
+		const QrAssetCode = e.target.value.split('/').pop();
+		e.target.value = QrAssetCode;
+		console.log(e.target.value);
+
+		const matchedRow = data.find((row) => row.assetCode === QrAssetCode);
+
+		if (matchedRow) {
+			console.log('일치하는 행의 id : ' + matchedRow.id);
+			handleExactLocation(
+				null,
+				{ id: matchedRow.id, original: matchedRow },
+				true
+			);
+			console.log('일치하는 행 : ' + JSON.stringify(matchedRow));
+			setShowToast(true);
+		} else {
+			Swal.fire({
+				icon: 'error',
+				title: '해당하는 자산을 찾을 수 없습니다.',
+			});
+		}
+
+	};
+
 	return (
 		<div>
 			<Card></Card>
@@ -480,7 +506,13 @@ const AssetSurveyDetail = () => {
 								''
 							) : (
 								<InputGroup>
-									<Form.Control placeholder="QR 리더기" ref={inputRef} />
+									<Form.Control
+										placeholder="QR 리더기"
+										ref={inputRef}
+										inputMode='none'
+										//onKeyDown={(e) => e.preventDefault()} // 모든 키 입력 방지
+										onChange={QrReader}
+									/>
 								</InputGroup>
 							)}
 						</Col>

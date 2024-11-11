@@ -49,7 +49,7 @@ const SearchBar = ({ setData, originalData }) => {
 			<Row>
 				<Col>
 					<div>
-						<h4 className="px-2 header-title">자산 조사</h4>
+						<h4 className="d-flex justify-content-start">자산 조사</h4>
 					</div>
 				</Col>
 				<Col xs="auto" style={{ paddingRight: '0' }}>
@@ -141,8 +141,8 @@ const SearchBar = ({ setData, originalData }) => {
 												location === ''
 													? locations[0]
 													: locations.find(
-															(option) => option.label === location
-													  )
+														(option) => option.label === location
+													)
 											}
 											onChange={(selectedOption) => {
 												//백에서 location이 한글 즉 label 값으로 넘어오기 때문에 전체일 때의 경우를 한 번 더 생각

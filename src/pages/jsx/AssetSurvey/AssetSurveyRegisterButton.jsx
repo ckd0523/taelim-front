@@ -120,7 +120,7 @@ const RegisterButton = ({ onClickRegister }) => {
 
   return (
     <>
-      <Button variant="primary" className="me-1" onClick={toggleSignUp}>
+      <Button variant="primary" className="me-1" onClick={toggleSignUp} style={{ background: '#5e83bb', border: 'none' }}>
         자산 조사 등록
       </Button>
       {/* Modal */}

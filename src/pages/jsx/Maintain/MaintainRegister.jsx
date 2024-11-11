@@ -116,19 +116,19 @@ const MaintainRegister = ({ assetCode, assetNo }) => {
 		console.log('name: ', name);
 		console.log('value: ', value);
 		setShowAlert(false);
-		if (name === 'repairEndDate') {
-			const startDate = new Date(formData.repairStartDate);
-			const endDate = new Date(value);
+		// if (name === 'repairEndDate') {
+		// 	const startDate = new Date(formData.repairStartDate);
+		// 	const endDate = new Date(value);
 
-			if (endDate < startDate) {
-				setAlertMessage('완료일이 시작일 이전일 수는 없습니다.');
-				setShowAlert(true);
-				setFormData((prevState) => ({
-					...prevState,
-					repairEndDate: '',
-				}));
-			}
-		}
+		// 	if (endDate < startDate) {
+		// 		setAlertMessage('완료일이 시작일 이전일 수는 없습니다.');
+		// 		setShowAlert(true);
+		// 		setFormData((prevState) => ({
+		// 			...prevState,
+		// 			repairEndDate: '',
+		// 		}));
+		// 	}
+		// }
 	};
 	return (
 		<>
@@ -170,9 +170,9 @@ const MaintainRegister = ({ assetCode, assetNo }) => {
 							<Form.Control
 								className="mb-2"
 								name="repairEndDate"
-								value={formData.repairEndDate || ''}
-								onChange={handleChange}
-								type="date"
+								readOnly
+								value={formData.repairEndDate}
+								type="text"
 							/>
 						</Form.Group>
 						<Form.Group className="mb-2" controlId="exampleForm.ControlTextarea1">

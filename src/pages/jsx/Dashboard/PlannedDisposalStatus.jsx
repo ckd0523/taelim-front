@@ -1,16 +1,43 @@
-import { Card, Col, Row, Form } from "react-bootstrap";
+import { Card, Col, Row, Form, Tooltip, OverlayTrigger } from "react-bootstrap";
 import { Bar } from "react-chartjs-2";
+import noData from "./NoData";
+import { assetTypeNoAlpha } from "./AssetIndex";
+import { useState } from "react";
+import { useEffect } from "react";
+import api from "@/common/api/authAxios";
+
+const URL = import.meta.env.VITE_BASIC_URL;
 
 const PlannedDisposalStatus = () => {
+  const today = new Date();
+  const defaultDate = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+  console.log(defaultDate);
+
+  const [disposalData, setDisposalData] = useState(defaultDate);
+
+  const handleDate = async (selectedMonth) => {
+    //selectedMonth가 뭔지 정확히 알아야함
+    console.log(selectedMonth.target.value);
+    const response = await api.get(`${URL}/???/${selectedMonth.target.value}`);
+    console.log(response.data);
+    setDisposalData(response.data);
+  };
+
+  useEffect(() => {
+    const getDisposalData = async () => {
+      const response = await api.get(`${URL}/???/${defaultDate}`);
+      console.log(response.data);
+      setDisposalData(response.data);
+    };
+
+    getDisposalData();
+  }, []);
+
   const data = {
-    labels: [
-      '정보보호시스템', '응용프로그램', '소프트웨어', '전자정보', '문서',
-      '특허 및 상표', 'IT 장비 - 시스템', 'IT 장비 – 네트워크', '단말기',
-      '가구', '기기', '차량', '기타',
-    ],
+    labels: assetTypeNoAlpha,
     datasets: [{
       //label: '자산 수량',
-      data: [7, 13, 4, 19, 2, 15, 8, 11, 0, 16, 5, 20, 3],
+      data: disposalData,
       backgroundColor: [
         'rgba(206, 110, 15, 1)', 'rgba(206, 110, 15, 1)', 'rgba(206, 110, 15, 1)', 'rgba(206, 110, 15, 1)', 'rgba(206, 110, 15, 0.9)',
         'rgba(206, 110, 15, 0.9)', 'rgba(206, 110, 15, 0.9)', 'rgba(206, 110, 15, 0.9)', 'rgba(206, 110, 15, 0.8)', 'rgba(206, 110, 15, 0.8)',
@@ -46,29 +73,42 @@ const PlannedDisposalStatus = () => {
         },
       },
     },
-
   };
+
+  const renderTooltip = (props) => (
+    <Tooltip id="tooltip" {...props}>
+      <span style={{ fontSize: 15 }}>날짜 기준 3개월 데이터</span>
+    </Tooltip>
+  );
 
   return (
     <Card style={{ width: '100%', height: '93%' }}>
       <Card.Body>
         <Row>
           <Col>
-            <h4 className="header-title">폐기 예정 현황</h4>
+            <h4 className="header-title" style={{ display: 'inline' }}>폐기 예정 현황</h4>
+            <OverlayTrigger
+              placement="top"
+              delay={{ show: 100, hide: 50 }}
+              overlay={renderTooltip}
+            >
+              <i className='ri-question-line' />
+            </OverlayTrigger>
           </Col>
 
           <Col sm={4}>
             <Form>
               <Form.Control
-                type='month'>
-
-              </Form.Control>
+                type='date'
+                defaultValue={defaultDate}
+                onChange={handleDate}
+              />
             </Form>
           </Col>
         </Row>
 
         <div style={{ width: "100%", height: "87%" }}>
-          <Bar data={data} options={options} />
+          <Bar data={data} options={options} plugins={noData} />
         </div>
       </Card.Body>
     </Card>

@@ -36,7 +36,7 @@ export default function jsx() {
 				<Route
 					path="AssetRegister"
 					element={
-						checkPermission(['ADMIN']) ? (
+						checkPermission(['ADMIN', 'ASSET_MANAGER']) ? (
 							<AssetRegister />
 						) : (
 							<Navigate to="/jsx/dashboard" />
@@ -46,7 +46,7 @@ export default function jsx() {
 				<Route
 					path="ExcelRegister"
 					element={
-						checkPermission(['ADMIN']) ? (
+						checkPermission(['ADMIN', 'ASSET_MANAGER']) ? (
 							<ExcelRegister />
 						) : (
 							<Navigate to="/jsx/dashboard" />
@@ -56,7 +56,7 @@ export default function jsx() {
 				<Route
 					path="MaintainRegister"
 					element={
-						checkPermission(['ADMIN']) ? (
+						checkPermission(['ADMIN', 'ASSET_MANAGER']) ? (
 							<MaintainRegister />
 						) : (
 							<Navigate to="/jsx/dashboard" />
@@ -66,7 +66,7 @@ export default function jsx() {
 				<Route
 					path="MaintainHist"
 					element={
-						checkPermission(['ADMIN']) ? (
+						checkPermission(['ADMIN', 'ASSET_MANAGER']) ? (
 							<MaintainHist />
 						) : (
 							<Navigate to="/jsx/dashboard" />
@@ -90,7 +90,7 @@ export default function jsx() {
 				<Route
 					path="BackupHistory"
 					element={
-						checkPermission(['ADMIN']) ? (
+						checkPermission(['ADMIN', 'ASSET_MANAGER']) ? (
 							<BackupHistory />
 						) : (
 							<Navigate to="/jsx/dashboard" />
@@ -126,7 +126,7 @@ export default function jsx() {
 				<Route
 					path="UpdateHistory"
 					element={
-						checkPermission(['ADMIN']) ? (
+						checkPermission(['ADMIN', 'ASSET_MANAGER']) ? (
 							<UpdateHistory />
 						) : (
 							<Navigate to="/jsx/dashboard" />
@@ -136,7 +136,7 @@ export default function jsx() {
 				<Route
 					path="DeleteHistory"
 					element={
-						checkPermission(['ADMIN']) ? (
+						checkPermission(['ADMIN', 'ASSET_MANAGER']) ? (
 							<DeleteHistory />
 						) : (
 							<Navigate to="/jsx/dashboard" />

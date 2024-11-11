@@ -7,10 +7,7 @@ const Buttons = ({ onClickRegister, onDelete }) => {
 	return (
 		<Row className="row-cols-auto justify-content-end">
 			<Col>
-				<Button className="btn btn-success">엑셀 출력</Button>
-			</Col>
-			<Col>
-				<Button className="btn btn-danger" onClick={onDelete}>
+				<Button className="btn btn-danger" style={{ background: '#c66464', border: 'none' }} onClick={onDelete}>
 					자산 조사 삭제
 				</Button>
 			</Col>

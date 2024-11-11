@@ -57,18 +57,22 @@ const SearchForm = ({ onSearch }) => {
 	];
 	const departmentOptions = [
 		{ value: '', label: '전체' }, // 전체 옵션 추가
-		{ value: 'IT_DEPARTMENT', label: 'IT부' },
+		{ value: 'MANAGEMENT_PLANNING_OFFICE', label: '경영기획실' },
 		{
-			value: 'ADMINISTRATIVE_DEPARTMENT',
-			label: '관리부',
+			value: 'MANAGEMENT_TEAM',
+			label: '관리팀',
 		},
-		{ value: 'SALES_DEPARTMENT', label: '영업부' },
-		{ value: 'MARKETING_DEPARTMENT', label: '마케팅부' },
-		{ value: 'PRODUCTION_DEPARTMENT', label: '생산부' },
-		{ value: 'OPERATIONS_DEPARTMENT', label: '운영부' },
+		{ value: 'SALES_TEAM', label: '영업팀' },
+		{ value: 'PURCHASE_TEAM', label: '구매팀' },
+		{ value: 'QUALITY_TEAM', label: '품질팀' },
+		{ value: 'PRODUCTION_TEAM', label: '생산팀' },
 		{
-			value: 'HUMAN_RESOURCES_DEPARTMENT',
-			label: '인사부',
+			value: 'TECHNOLOGY_RESEARCH_TEAM',
+			label: '기술연구소팀',
+		},
+		{
+			value: 'NULL',
+			label: 'N/A',
 		},
 	];
 	// 폼 값 변경처리

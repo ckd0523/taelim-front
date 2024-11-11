@@ -317,29 +317,39 @@ const RowDetails = ({
 						text: `자산 코드: ${formData.assetCode}`,
 					});
 				} else {
-					// alert(response.data); // 성공 메시지
+					// 3. 새 파일 업로드가 필요할 때만 실행
+					if (formData.files && formData.files.length > 0) {
+						const fileData = new FormData();
 
-					// 파일 업로드 API 호출 (새 파일만 처리)
-					if (fileData.has('files')) {
-						// 파일이 존재하는 경우에만 전송
-						const fileResponse = await api.post(
-							`${urlConfig}/${formData.assetCode}/files`,
-							fileData,
-							{ headers: { 'Content-Type': 'multipart/form-data' } }
-						);
+						// 새 파일만 처리
+						for (const fileObj of formData.files) {
+							if (fileObj.file) {
+								fileData.append('files', fileObj.file); // 새 파일 추가
+								fileData.append('fileType', fileObj.fileType); // 파일 타입 추가
+							}
+						}
+						// 파일 업로드 API 호출 (새 파일만 처리)
+						if (fileData.has('files')) {
+							// 파일이 존재하는 경우에만 전송
+							const fileResponse = await api.post(
+								`${urlConfig}/${formData.assetCode}/files`,
+								fileData,
+								{ headers: { 'Content-Type': 'multipart/form-data' } }
+							);
 
-						console.log('File upload response:', fileResponse.data);
+							console.log('File upload response:', fileResponse.data);
 
-						if (fileResponse.status !== 200) {
-							console.error('File upload failed:', fileResponse.data);
-							Swal.fire({
-								icon: 'error',
-								title: '파일 업데이트 중 오류가 발생했습니다.',
-								text: `상태 코드: ${fileResponse.status}`,
-							});
-							return; // 오류 발생 시 더 이상 진행하지 않음
-						} else {
-							console.log('모든 파일이 성공적으로 업로드되었습니다.');
+							if (fileResponse.status !== 200) {
+								console.error('File upload failed:', fileResponse.data);
+								Swal.fire({
+									icon: 'error',
+									title: '파일 업데이트 중 오류가 발생했습니다.',
+									text: `상태 코드: ${fileResponse.status}`,
+								});
+								return; // 오류 발생 시 더 이상 진행하지 않음
+							} else {
+								console.log('모든 파일이 성공적으로 업로드되었습니다.');
+							}
 						}
 					}
 

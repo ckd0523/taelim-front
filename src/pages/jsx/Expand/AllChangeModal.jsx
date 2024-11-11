@@ -304,13 +304,17 @@ const ActionModal = ({
 									<Form.Label className="mb-0">부서</Form.Label>
 									<Form.Select value={department} onChange={departmentChange}>
 										<option value="">부서를 선택해주세요.</option>
-										<option value="IT_DEPARTMENT">IT부</option>
-										<option value="ADMINISTRATIVE_DEPARTMENT">관리부</option>
-										<option value="SALES_DEPARTMENT">영업부</option>
-										<option value="MARKETING_DEPARTMENT">마케팅부</option>
-										<option value="PRODUCTION_DEPARTMENT">생산부</option>
-										<option value="OPERATIONS_DEPARTMENT">운영부</option>
-										<option value="HUMAN_RESOURCES_DEPARTMENT">인사부</option>
+										<option value="MANAGEMENT_PLANNING_OFFICE">
+											경영기획실
+										</option>
+										<option value="MANAGEMENT_TEAM">관리팀</option>
+										<option value="SALES_TEAM">영업팀</option>
+										<option value="PURCHASE_TEAM">구매팀</option>
+										<option value="QUALITY_TEAM">품질팀</option>
+										<option value="PRODUCTION_TEAM">생산팀</option>
+										<option value="TECHNOLOGY_RESEARCH_TEAM">
+											기술연구소팀
+										</option>
 									</Form.Select>
 								</Form.Group>
 

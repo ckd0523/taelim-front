@@ -312,9 +312,7 @@ const ActionModal = ({
 										<option value="PURCHASE_TEAM">구매팀</option>
 										<option value="QUALITY_TEAM">품질팀</option>
 										<option value="PRODUCTION_TEAM">생산팀</option>
-										<option value="TECHNOLOGY_RESEARCH_TEAM">
-											기술연구소팀
-										</option>
+										<option value="TECHNOLOGY_RESEARCH_TEAM">기술연구소</option>
 									</Form.Select>
 								</Form.Group>
 

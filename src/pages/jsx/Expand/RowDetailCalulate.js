@@ -35,7 +35,7 @@ export const getResidualValueRate = (classification) => {
 // 잔존가치를 계산하는 함수
 export const calculateResidualValue = (formData) => {
 	if (formData) {
-		const { purchaseCost, purchaseDate, usefulLife, depreciationMethod, classification } =
+		const { purchaseCost, purchaseDate, usefulLife, depreciationMethod, assetClassification } =
 			formData;
 
 		const currentDate = new Date();
@@ -47,13 +47,14 @@ export const calculateResidualValue = (formData) => {
 		let residualValue;
 
 		if (depreciationMethod === '정액법') {
-			const residualValueRate = getResidualValueRate(classification);
-			residualValue =
-				purchaseCost * residualValueRate +
-				((purchaseCost - purchaseCost * residualValueRate) / usefulLife) * elapsedYears;
+			const residualValueRate = getResidualValueRate(assetClassification);
+
+			residualValue = purchaseCost * residualValueRate;
 		} else if (depreciationMethod === '정률법') {
-			const depreciationRate = 0.2; // 정률법의 감가상각률 예시
-			residualValue = purchaseCost * Math.pow(1 - depreciationRate, elapsedYears);
+			// 내용연수를 감가상각률로 변환
+			const depreciationRate = 1 / usefulLife; // 내용연수로 계산된 감가상각률
+
+			residualValue = purchaseCost * Math.pow(1 - depreciationRate, elapsedYears); // 경과연수 동안의 가치
 		} else {
 			throw new Error('Invalid depreciation method');
 		}
@@ -65,7 +66,7 @@ export const calculateResidualValue = (formData) => {
 // 현재가치를 계산하는 함수
 export const calculatePresentValue = (formData) => {
 	if (formData) {
-		const { purchaseCost, purchaseDate, usefulLife, depreciationMethod, classification } =
+		const { purchaseCost, purchaseDate, usefulLife, depreciationMethod, assetClassification } =
 			formData;
 
 		const currentDate = new Date();
@@ -73,17 +74,28 @@ export const calculatePresentValue = (formData) => {
 
 		// 경과 연수 계산 (일 수 기반)
 		const elapsedYears = (currentDate - purchaseDateObj) / (1000 * 60 * 60 * 24 * 365); // 경과 연수 계산
+		//
 
 		let presentValue;
 
 		if (depreciationMethod === '정액법') {
-			const annualDepreciation =
-				(purchaseCost - purchaseCost * getResidualValueRate(classification)) / usefulLife;
+			const residualValue = purchaseCost * getResidualValueRate(assetClassification);
+			const depreciationBase = purchaseCost - residualValue; // 감가상각 대상 금액
+
+			// 연간 감가상각액 계산
+			const annualDepreciation = depreciationBase / usefulLife;
+
 			const totalDepreciation = annualDepreciation * elapsedYears;
+
 			presentValue = purchaseCost - totalDepreciation;
+			// 경과연수가 내용연수를 초과하면 현재가치를 잔존가치로 대체
+			if (elapsedYears >= usefulLife) {
+				presentValue = residualValue;
+			}
 		} else if (depreciationMethod === '정률법') {
-			const depreciationRate = 0.2; // 정률법의 감가상각률 예시
-			presentValue = purchaseCost * Math.pow(1 - depreciationRate, elapsedYears);
+			// 내용연수를 감가상각률로 변환
+			const depreciationRate = 1 / usefulLife; // 내용연수로 계산된 감가상각률
+			presentValue = purchaseCost * Math.pow(1 - depreciationRate, elapsedYears); // 경과연수 동안의 가치
 		} else {
 			throw new Error('Invalid depreciation method');
 		}

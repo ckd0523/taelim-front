@@ -5,14 +5,17 @@ import { Link } from 'react-router-dom';
 
 const Buttons = ({ onClickRegister, onDelete }) => {
 	return (
-		<Row className="row-cols-auto justify-content-end">
-			<Col>
-				<Button className="btn btn-danger" style={{ background: '#c66464', border: 'none' }} onClick={onDelete}>
+		<Row className="justify-content-end mt-2">
+			<Col xs="auto" className="text-end">
+				<Button
+					className="btn btn-danger"
+					style={{ background: '#c66464', border: 'none', marginBottom: '10px' }}
+					onClick={onDelete}
+				>
 					자산 조사 삭제
 				</Button>
 			</Col>
-			<Col>
-				{/* 자산 조사 등록 버튼 */}
+			<Col xs="auto" className="text-end">
 				<RegisterButton onClickRegister={onClickRegister} />
 			</Col>
 		</Row>

@@ -20,6 +20,14 @@ const BlueprintContainer = styled.div`
   position: relative;
   width: 100%;  // Card의 가로 크기에 맞춤
   height: 100%; // Card의 세로 크기에 맞춤
+  aspect-ratio: 16 / 9; /* 이미지의 가로세로 비율을 유지 */
+`;
+
+const ImageOverlay = styled.img`
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;  // 이미지 크기를 컨테이너에 맞춤
 `;
 
 const GridOverlay = styled.div`
@@ -31,6 +39,7 @@ const GridOverlay = styled.div`
   display: grid;
   grid-template-columns: repeat(30, 1fr); /* 가로 30칸 */
   grid-template-rows: repeat(30, 1fr); /* 세로 30칸 */
+  aspect-ratio: 16 / 9; /* 이미지의 가로세로 비율을 유지 */
 `;
 
 const GridCell = styled.div`
@@ -58,11 +67,11 @@ const LocationStatus = ({ setLocation }) => {
   };
 
   return (
-    <Card>
+    <Card style={{ width: '100%', height: '95%' }}>
       <Card.Body>
         <h4 className="header-title">위치별 현황</h4>
         <BlueprintContainer>
-          <img src={bluePrint} className="img-fluid" alt="Blue Print" />
+          <ImageOverlay src={bluePrint} className="img-fluid" alt="Blue Print" />
           <GridOverlay>
             {Array.from({ length: 30 }).map((_, rowIndex) =>
               Array.from({ length: 30 }).map((_, colIndex) => {
@@ -74,11 +83,11 @@ const LocationStatus = ({ setLocation }) => {
                 let isMerged = false;
                 if (gridId === "1-1") { // 첫 번째 병합 영역
                   mergeColumns = "1 / span 4";
-                  mergeRows = "19 / span 11";
+                  mergeRows = "18 / span 11";
                   isMerged = true;
                 } else if (gridId === "1-2") { // 두 번째 병합 영역
                   mergeColumns = "6 / span 4";
-                  mergeRows = "7 / span 12";
+                  mergeRows = "7 / span 11";
                   isMerged = true;
                 } else if (gridId === "1-3") { // 세 번째 병합 영역
                   mergeColumns = "13 / span 12";

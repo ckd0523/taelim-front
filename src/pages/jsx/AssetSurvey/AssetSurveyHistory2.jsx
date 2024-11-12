@@ -13,6 +13,15 @@ const AssetSurveyHistory2 = () => {
 		window.scrollTo(0, 0);
 	}, []);
 
+	//모바일인지 확인
+	const [isMobile, setIsMobile] = useState(window.innerWidth < 640);
+
+	useEffect(() => {
+		const handleResize = () => setIsMobile(window.innerWidth < 640);
+		window.addEventListener('resize', handleResize);
+		return () => window.removeEventListener('resize', handleResize);
+	}, []);
+
 	//자산 조사 삭제를 위해 어떤 행이 선택되었는지
 	const [selectedRows, setSelectedRows] = useState([]);
 
@@ -96,7 +105,8 @@ const AssetSurveyHistory2 = () => {
 		<div>
 			<Card></Card>
 			{/* 검색 바 */}
-			<SearchBar setData={setData} originalData={originalData} />
+			{/* <SearchBar setData={setData} originalData={originalData} /> */}
+			{!isMobile && <SearchBar setData={setData} originalData={originalData} />}
 			{/* 각종 버튼 */}
 			<Buttons onClickRegister={onClickRegister} onDelete={handleDelete} />
 			{/* 자산 조사 이력 테이블 */}

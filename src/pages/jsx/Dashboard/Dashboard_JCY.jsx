@@ -74,11 +74,7 @@ const Dashboard_JCY = () => {
           </Col>
         </Row>
 
-
-
         <Row>
-
-
           <Col md={7}>
             <Row>
               <Col md={6}>

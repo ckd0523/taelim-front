@@ -49,6 +49,8 @@ export default function useLogin() {
 		} catch (error) {
 			showNotification({ message: error.toString(), type: 'error' });
 		} finally {
+			//console.log("useLogin 여기로 오나?")
+			showNotification({ message: "아이디와 비밀번호를 확인해주세요.", type: 'error' });
 			setLoading(false);
 		}
 	};

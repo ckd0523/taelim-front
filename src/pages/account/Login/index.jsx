@@ -16,7 +16,7 @@ export default function Login() {
 
       <PageBreadcrumb title="Login" />
       <AccountWrapper>
-        <div className="text-center w-75 m-auto">
+        <div className="text-center w-80 m-auto">
           <h4 className="text-dark-50 text-center mt-0 fw-bold">{t('로그인')}</h4>
           <p className="text-muted mb-4">
             {t('이메일과 비밀번호를 입력하세요.')}
@@ -26,7 +26,7 @@ export default function Login() {
         <Form
           onSubmit={login}
           schema={loginFormSchema}
-          defaultValues={{ email: 'taelim@taelim.com', password: 'taelim' }}
+          defaultValues={{ email: '', password: '' }}
         >
           <Row>
             <Col>

@@ -58,7 +58,7 @@ const LocationStatus = ({ setLocation }) => {
   };
 
   return (
-    <Card>
+    <Card style={{ width: '100%', height: '95%' }}>
       <Card.Body>
         <h4 className="header-title">위치별 현황</h4>
         <BlueprintContainer>
@@ -74,11 +74,11 @@ const LocationStatus = ({ setLocation }) => {
                 let isMerged = false;
                 if (gridId === "1-1") { // 첫 번째 병합 영역
                   mergeColumns = "1 / span 4";
-                  mergeRows = "19 / span 11";
+                  mergeRows = "18 / span 11";
                   isMerged = true;
                 } else if (gridId === "1-2") { // 두 번째 병합 영역
                   mergeColumns = "6 / span 4";
-                  mergeRows = "7 / span 12";
+                  mergeRows = "7 / span 11";
                   isMerged = true;
                 } else if (gridId === "1-3") { // 세 번째 병합 영역
                   mergeColumns = "13 / span 12";

@@ -52,22 +52,41 @@ const InfoModal = ({ show, handleClose, modalData }) => {
 	// 데이터 불러오기 (update 시)
 	useEffect(() => {
 		if (modalData && modalData.demandType === 'update') {
-			const fetchRowData = async () => {
-				setIsLoading(true);
-				console.log('modaldata', modalData);
-				try {
-					const response = await api.get(`${urlConfig}/list1/${modalData.assetNo}`);
-					const [lowestAsset, modifiedAsset] = response.data;
-					setAssetInfo(lowestAsset); // 변경 전 데이터 설정
-					setModifiedAssetInfo(modifiedAsset); // 변경 후 데이터 설정
-				} catch (error) {
-					console.error('Error fetching data:', error);
-				} finally {
-					setIsLoading(false);
-				}
-			};
+			if (modalData.demandStatus === 'APPROVE') {
+				const fetchRowData = async () => {
+					setIsLoading(true);
+					console.log('modaldata', modalData);
+					try {
+						const response = await api.get(`${urlConfig}/list/${modalData.assetNo}`);
+						const [lowestAsset, modifiedAsset] = response.data;
+						setAssetInfo(lowestAsset); // 변경 전 데이터 설정
+						setModifiedAssetInfo(modifiedAsset); // 변경 후 데이터 설정
+					} catch (error) {
+						console.error('Error fetching data:', error);
+					} finally {
+						setIsLoading(false);
+					}
+				};
 
-			fetchRowData();
+				fetchRowData();
+			} else {
+				const fetchRowData = async () => {
+					setIsLoading(true);
+					console.log('modaldata', modalData);
+					try {
+						const response = await api.get(`${urlConfig}/list1/${modalData.assetNo}`);
+						const [lowestAsset, modifiedAsset] = response.data;
+						setAssetInfo(lowestAsset); // 변경 전 데이터 설정
+						setModifiedAssetInfo(modifiedAsset); // 변경 후 데이터 설정
+					} catch (error) {
+						console.error('Error fetching data:', error);
+					} finally {
+						setIsLoading(false);
+					}
+				};
+
+				fetchRowData();
+			}
 		}
 	}, [modalData]);
 

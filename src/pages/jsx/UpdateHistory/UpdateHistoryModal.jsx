@@ -15,6 +15,11 @@ import {
 	calculateImportanceScore,
 	calculateImportanceRating,
 } from './UpdateHistoryColumn';
+import {
+	getResidualValueRate,
+	calculateResidualValue,
+	calculatePresentValue,
+} from './UpdateHistoryCalulate';
 import { ModalBasicInfo } from './ModalBasicInfo';
 import { ModalModifiedInfo } from './ModalModifiedInfo';
 import api from '@/common/api/authAxios';
@@ -38,6 +43,13 @@ const InfoModal = ({ show, handleClose, modalData, assetNo }) => {
 
 	const modifiedImportanceScore = calculateImportanceScore(modifiedAssetInfo);
 	const modifiedImportanceRating = calculateImportanceRating(modifiedImportanceScore);
+
+	// 잔존가치와 현재가치 계산
+	const residualValue = calculateResidualValue(assetInfo);
+	const currentValue = calculatePresentValue(assetInfo);
+	// 수정된 잔존가치와 현재가치 계산
+	const modifiedresidualValue = calculateResidualValue(modifiedAssetInfo);
+	const modifiedcurrentValue = calculatePresentValue(modifiedAssetInfo);
 
 	const classification = assetInfo?.assetClassification;
 	const dynamicColumns = React.useMemo(
@@ -158,6 +170,10 @@ const InfoModal = ({ show, handleClose, modalData, assetNo }) => {
 									modifiedImportanceScore={modifiedImportanceScore}
 									importanceRating={importanceRating}
 									modifiedImportanceRating={modifiedImportanceRating}
+									residualValue={residualValue}
+									currentValue={currentValue}
+									modifiedresidualValue={modifiedresidualValue}
+									modifiedcurrentValue={modifiedcurrentValue}
 								/>
 								<ModalModifiedInfo
 									assetInfo={assetInfo}
@@ -167,6 +183,10 @@ const InfoModal = ({ show, handleClose, modalData, assetNo }) => {
 									modifiedImportanceScore={modifiedImportanceScore}
 									importanceRating={importanceRating}
 									modifiedImportanceRating={modifiedImportanceRating}
+									residualValue={residualValue}
+									currentValue={currentValue}
+									modifiedresidualValue={modifiedresidualValue}
+									modifiedcurrentValue={modifiedcurrentValue}
 								/>
 							</div>
 						</>

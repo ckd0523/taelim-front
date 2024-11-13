@@ -45,12 +45,13 @@ export default function useLogin() {
 				//console.log("useLogin3 : " + localStorage.getItem('accessToken'));
 				//console.log(JSON.stringify(localStorage.getItem('accessToken')));
 				navigate(redirectUrl);
+			} else {
+				showNotification({ message: "아이디와 비밀번호를 확인해주세요.", type: 'error' });
 			}
 		} catch (error) {
 			showNotification({ message: error.toString(), type: 'error' });
 		} finally {
 			//console.log("useLogin 여기로 오나?")
-			showNotification({ message: "아이디와 비밀번호를 확인해주세요.", type: 'error' });
 			setLoading(false);
 		}
 	};

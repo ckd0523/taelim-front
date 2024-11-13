@@ -19,6 +19,11 @@ import {
 	calculateImportanceScore,
 	calculateImportanceRating,
 } from './UpdateHistoryColumn';
+import {
+	getResidualValueRate,
+	calculateResidualValue,
+	calculatePresentValue,
+} from './UpdateHistoryCalulate';
 import api from '@/common/api/authAxios';
 
 const API_URL = import.meta.env.VITE_BASIC_URL;
@@ -43,6 +48,13 @@ const InfoModal = ({ show, handleClose, modalData }) => {
 	const modifiedImportanceScore = calculateImportanceScore(modifiedAssetInfo);
 	const modifiedImportanceRating = calculateImportanceRating(modifiedImportanceScore);
 
+	// 잔존가치와 현재가치 계산
+	const residualValue = calculateResidualValue(assetInfo);
+	const currentValue = calculatePresentValue(assetInfo);
+	// 수정된 잔존가치와 현재가치 계산
+	const modifiedresidualValue = calculateResidualValue(modifiedAssetInfo);
+	const modifiedcurrentValue = calculatePresentValue(modifiedAssetInfo);
+
 	const classification = assetInfo?.assetClassification;
 	const dynamicColumns = React.useMemo(
 		() => getClassificationColumns(classification),
@@ -52,22 +64,41 @@ const InfoModal = ({ show, handleClose, modalData }) => {
 	// 데이터 불러오기 (update 시)
 	useEffect(() => {
 		if (modalData && modalData.demandType === 'update') {
-			const fetchRowData = async () => {
-				setIsLoading(true);
-				console.log('modaldata', modalData);
-				try {
-					const response = await api.get(`${urlConfig}/list1/${modalData.assetNo}`);
-					const [lowestAsset, modifiedAsset] = response.data;
-					setAssetInfo(lowestAsset); // 변경 전 데이터 설정
-					setModifiedAssetInfo(modifiedAsset); // 변경 후 데이터 설정
-				} catch (error) {
-					console.error('Error fetching data:', error);
-				} finally {
-					setIsLoading(false);
-				}
-			};
+			if (modalData.demandStatus === 'APPROVE') {
+				const fetchRowData = async () => {
+					setIsLoading(true);
+					console.log('modaldata', modalData);
+					try {
+						const response = await api.get(`${urlConfig}/list/${modalData.assetNo}`);
+						const [lowestAsset, modifiedAsset] = response.data;
+						setAssetInfo(lowestAsset); // 변경 전 데이터 설정
+						setModifiedAssetInfo(modifiedAsset); // 변경 후 데이터 설정
+					} catch (error) {
+						console.error('Error fetching data:', error);
+					} finally {
+						setIsLoading(false);
+					}
+				};
 
-			fetchRowData();
+				fetchRowData();
+			} else {
+				const fetchRowData = async () => {
+					setIsLoading(true);
+					console.log('modaldata', modalData);
+					try {
+						const response = await api.get(`${urlConfig}/list1/${modalData.assetNo}`);
+						const [lowestAsset, modifiedAsset] = response.data;
+						setAssetInfo(lowestAsset); // 변경 전 데이터 설정
+						setModifiedAssetInfo(modifiedAsset); // 변경 후 데이터 설정
+					} catch (error) {
+						console.error('Error fetching data:', error);
+					} finally {
+						setIsLoading(false);
+					}
+				};
+
+				fetchRowData();
+			}
 		}
 	}, [modalData]);
 
@@ -275,6 +306,10 @@ const InfoModal = ({ show, handleClose, modalData }) => {
 												modifiedImportanceScore={modifiedImportanceScore}
 												importanceRating={importanceRating}
 												modifiedImportanceRating={modifiedImportanceRating}
+												residualValue={residualValue}
+												currentValue={currentValue}
+												modifiedresidualValue={modifiedresidualValue}
+												modifiedcurrentValue={modifiedcurrentValue}
 											/>
 											<ModalModifiedInfo
 												assetInfo={assetInfo}
@@ -284,6 +319,10 @@ const InfoModal = ({ show, handleClose, modalData }) => {
 												modifiedImportanceScore={modifiedImportanceScore}
 												importanceRating={importanceRating}
 												modifiedImportanceRating={modifiedImportanceRating}
+												residualValue={residualValue}
+												currentValue={currentValue}
+												modifiedresidualValue={modifiedresidualValue}
+												modifiedcurrentValue={modifiedcurrentValue}
 											/>
 										</div>
 									</>

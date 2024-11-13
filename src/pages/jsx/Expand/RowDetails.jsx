@@ -58,6 +58,7 @@ const RowDetails = ({
 	const importanceScore = calculateImportanceScore(formData);
 	const importanceRating = calculateImportanceRating(importanceScore);
 	const classification = formData?.assetClassification;
+	console.log('Classification in calculation:', classification);
 	const dynamicColumns = React.useMemo(
 		() => getClassificationColumns(classification),
 		[classification]

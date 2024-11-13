@@ -13,6 +13,10 @@ const ModalBasicInfo = ({
 	modifiedImportanceScore,
 	importanceRating,
 	modifiedImportanceRating,
+	residualValue,
+	currentValue,
+	modifiedresidualValue,
+	modifiedcurrentValue,
 }) => {
 	const getCellClassName = (originalValue, modifiedValue) => {
 		return originalValue !== modifiedValue ? 'text-danger' : '';
@@ -373,19 +377,19 @@ const ModalBasicInfo = ({
 										</td>
 										<td
 											className={getCellClassName(
-												assetInfo.residualValue,
-												modifiedAssetInfo.residualValue
+												residualValue,
+												modifiedresidualValue
 											)}
 										>
-											{assetInfo.residualValue || 'N/A'}
+											{residualValue || 'N/A'}
 										</td>
 										<td
 											className={getCellClassName(
-												assetInfo.currentValue,
-												modifiedAssetInfo.currentValue
+												currentValue,
+												modifiedcurrentValue
 											)}
 										>
-											{assetInfo.currentValue || 'N/A'}
+											{currentValue || 'N/A'}
 										</td>
 									</tr>
 								</tbody>

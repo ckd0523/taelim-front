@@ -18,15 +18,6 @@ const PlannedDisposalStatus = () => {
 
 	const [disposalData, setDisposalData] = useState(defaultDate);
 
-<<<<<<< Updated upstream
-  // const handleDate = async (selectedMonth) => {
-  //   //selectedMonth가 뭔지 정확히 알아야함
-  //   console.log(selectedMonth.target.value);
-  //   const response = await api.get(`${URL}/???/${selectedMonth.target.value}`);
-  //   console.log(response.data);
-  //   setDisposalData(response.data);
-  // };
-=======
 	const handleDate = async (selectedMonth) => {
 		//selectedMonth가 뭔지 정확히 알아야함
 		console.log(selectedMonth.target.value);
@@ -34,7 +25,6 @@ const PlannedDisposalStatus = () => {
 		console.log(response.data);
 		setDisposalData(response.data);
 	};
->>>>>>> Stashed changes
 
 	useEffect(() => {
 		const getDisposalData = async () => {
@@ -133,8 +123,7 @@ const PlannedDisposalStatus = () => {
 					</Col>
 				</Row>
 
-<<<<<<< Updated upstream
-          {/* <Col sm={4}>
+				{/* <Col sm={4}>
             <Form>
               <Form.Control
                 type='date'
@@ -143,22 +132,13 @@ const PlannedDisposalStatus = () => {
               />
             </Form>
           </Col> */}
-        </Row>
 
-        <div style={{ width: "100%", height: "87%" }}>
-          <Bar data={data} options={options} plugins={noData} />
-        </div>
-      </Card.Body>
-    </Card>
-  );
-=======
 				<div style={{ width: '100%', height: '87%' }}>
 					<Bar data={data} options={options} plugins={noData} />
 				</div>
 			</Card.Body>
 		</Card>
 	);
->>>>>>> Stashed changes
 };
 
 export default PlannedDisposalStatus;

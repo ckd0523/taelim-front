@@ -80,37 +80,6 @@ const Dashboard_JCY = () => {
 								<OwnerShipStatus />
 							</Col>
 
-<<<<<<< Updated upstream
-          <Col md={6}>
-            {/* 위치별 현황 */}
-            <LocationStatus setLocation={setLocation} />
-          </Col>
-        </Row>
-
-        <Row>
-          <Col md={7}>
-            <Row>
-              <Col md={6}>
-                {/* 소유권별 현황 */}
-                <OwnerShipStatus />
-              </Col>
-
-              <Col md={6}>
-                {/* 중요성별 현황 */}
-                <ImportantStatus />
-              </Col>
-            </Row>
-          </Col>
-          <Col md={5}>
-            {/* 폐기 예정 현황 */}
-            <PlannedDisposalStatus />
-          </Col>
-        </Row>
-
-      </Container>
-    </>
-  );
-=======
 							<Col md={6}>
 								{/* 중요성별 현황 */}
 								<ImportantStatus />
@@ -125,7 +94,6 @@ const Dashboard_JCY = () => {
 			</Container>
 		</>
 	);
->>>>>>> Stashed changes
 };
 
 export { Dashboard_JCY };

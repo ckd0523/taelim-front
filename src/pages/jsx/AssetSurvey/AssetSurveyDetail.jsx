@@ -10,6 +10,7 @@ import React from 'react';
 import QRScanner from 'qr-scanner'; // qr-scanner 라이브러리 import
 import Swal from 'sweetalert2';
 import api from '@/common/api/authAxios';
+import { Table } from '../Demand/Table';
 
 const URL = import.meta.env.VITE_BASIC_URL;
 
@@ -135,13 +136,17 @@ const AssetSurveyDetail = () => {
 				icon: 'success',
 				title: '자산 조사 완료',
 				text: '자산 조사 이력으로 이동',
+			}).then(function (result) {
+				if (result.isConfirmed) {
+					window.location.href = '/jsx/AssetSurveyHistory';
+				}
 			});
 
-			setTimeout(() => {
-				window.location.replace('/jsx/AssetSurveyHistory');
-			}, 1000);
+			// setTimeout(() => {
+			// 	window.location.replace('/jsx/AssetSurveyHistory');
+			// }, 1000);
 
-			window.location.href = '/jsx/AssetSurveyHistory';
+			//window.location.href = '/jsx/AssetSurveyHistory';
 		} catch (error) {
 			console.error('자산 조사 완료 중 오류:', error);
 			Swal.fire({
@@ -159,7 +164,7 @@ const AssetSurveyDetail = () => {
 		api.get(`${URL}/assetSurveyDetail/${locationState.assetSurveyNo}`)
 			.then((response) => {
 				const data = response.data;
-				//console.log('받은 데이터 : ' + data);
+				console.log('받은 데이터 : ' + data);
 				setData(data);
 
 				const initialExactLocationStates = {};
@@ -551,13 +556,8 @@ const AssetSurveyDetail = () => {
 
 			<Card>
 				<Card.Body>
-					{/* 
-          <p>테이블 들어갈 자리</p>  */}
-					{data && data.length > 0 ? (
-						<DetailTable detailColumn={columns} detailData={data} />
-					) : (
-						<p>데이터가 없습니다.</p> // 데이터가 없을 때 보여줄 내용
-					)}
+					{/* 테이블 들어갈 자리 */}
+					<DetailTable detailColumn={columns} detailData={data} />
 				</Card.Body>
 			</Card>
 

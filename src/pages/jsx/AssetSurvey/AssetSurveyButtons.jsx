@@ -33,7 +33,7 @@ const SurveyCompleteButton = ({ onClickCompleteSurvey }) => {
 
 			{/* Modal */}
 			<Modal show={signUpModal} onHide={toggleSignUp} backdrop="static" size="sm" centered>
-				<Modal.Body className="text-center">정말 자산 조사를 완료하시겠습니까?</Modal.Body>
+				<Modal.Body className="text-center">정말 자산 조사를 <br></br>완료하시겠습니까?</Modal.Body>
 				<Modal.Footer className="justify-content-center">
 					<Button
 						style={{ background: '#5e83bb', border: 'none' }}

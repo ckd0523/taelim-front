@@ -12,6 +12,8 @@ import classNames from 'classnames';
 import { Pagination } from './Pagination';
 import { useNavigate } from 'react-router-dom';
 import Spinner from '@/components/Spinner';
+import { Alert } from 'react-bootstrap';
+
 const GlobalFilter = ({ preGlobalFilteredRows, globalFilter, setGlobalFilter, searchBoxClass }) => {
 	const count = preGlobalFilteredRows.length;
 	const [value, setValue] = useState(globalFilter);
@@ -159,7 +161,7 @@ const Table2 = (props, loading) => {
 							<div>
 								<IndeterminateCheckbox
 									{...getToggleAllPageRowsSelectedProps()}
-									/* disabled={dataTable.rows.some(row => row.original.surveyStatus === true)} */
+								/* disabled={dataTable.rows.some(row => row.original.surveyStatus === true)} */
 								/>
 							</div>
 						),
@@ -280,37 +282,38 @@ const Table2 = (props, loading) => {
 					</thead>
 					<tbody {...dataTable.getTableBodyProps()}>
 						{/* 데이터를 불러오지 못했을 때 */}
-						{isDataExist ? (
+						{rows.length === 0 && (
 							<tr>
-								<td colSpan={6} className="text-center text-danger">
-									데이터를 불러오지 못했습니다.
-								</td>
-							</tr>
-						) : /* 데이터를 불러왔지만 빈 배열일 때 */
-						props.data && props.data.length === 0 ? (
-							<tr>
-								<td colSpan={6} className="text-center">
-									불러올 자산 조사가 없습니다. 자산 조사를 등록하세요.
-								</td>
-							</tr>
-						) : (
-							// 데이터가 존재할 때는 각 행을 표시
-							rows.map((row, index) => {
-								dataTable.prepareRow(row);
-								return (
-									<tr
-										{...row.getRowProps({
-											onClick: (e) => handleCellClick(e, row),
-										})}
-										key={index}
+								<td colSpan="8" className="text-center">
+									<Alert
+										variant="warning"
+										className="mb-0 text-center d-flex align-items-center justify-content-center"
+										style={{ height: '100%' }}
 									>
-										{row.cells.map((cell) => (
-											<td {...cell.getCellProps()}>{cell.render('Cell')}</td>
-										))}
-									</tr>
-								);
-							})
+										<div>
+											<strong>데이터가 없습니다!</strong>
+											<p>자산 조사 내역 데이터가 없습니다.</p>
+										</div>
+									</Alert>
+								</td>
+							</tr>
 						)}
+						{rows.map((row, index) => {
+							dataTable.prepareRow(row);
+							return (
+								<tr
+									{...row.getRowProps({
+										onClick: (e) => handleCellClick(e, row),
+									})}
+									key={index}
+								>
+									{row.cells.map((cell) => (
+										<td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+									))}
+								</tr>
+							);
+						})}
+
 					</tbody>
 				</table>
 			</div>

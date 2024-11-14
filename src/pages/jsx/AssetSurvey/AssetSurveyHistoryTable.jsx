@@ -43,15 +43,15 @@ const tableData = [
 
 /*
 const sizePerPageList = [
-  { text: '5', value: 5 },
-  { text: '10', value: 10 },
-  { text: '25', value: 25 },
-  { text: '100', value: 100 },
+	{ text: '5', value: 5 },
+	{ text: '10', value: 10 },
+	{ text: '25', value: 25 },
+	{ text: '100', value: 100 },
 ];
 */
 
 const SurveyTable = ({ tableChange, setSelectedRows, data, setData, setOriginalData }) => {
-	const [isDataExist, setIsDataExist] = useState(false); //fetch로 데이터를 못불러 왔는지
+	//const [isDataExist, setIsDataExist] = useState(false); //fetch로 데이터를 못불러 왔는지
 	//const { removeSession } = useAuthContext();
 
 	useEffect(() => {
@@ -63,16 +63,16 @@ const SurveyTable = ({ tableChange, setSelectedRows, data, setData, setOriginalD
 				console.log(response.status);
 
 				if (response.status === 403) {
-					setData(tableData);
+					//setData(tableData);
 				} else {
 					setData(response.data); // API로부터 받은 데이터 설정
 					setOriginalData(response.data);
 				}
 			} catch (error) {
 				//console.log("자산 조사 테이블 2");
-				setData(tableData);
+				//setData(tableData);
 
-				setIsDataExist(true);
+				//setIsDataExist(true);
 				console.error('Error fetching data:', error);
 				//removeSession();
 			}
@@ -97,7 +97,7 @@ const SurveyTable = ({ tableChange, setSelectedRows, data, setData, setOriginalD
 							isSortable={true}
 							pagination={true}
 							isSelectable={true}
-							isDataExist={isDataExist}
+							//isDataExist={isDataExist}
 							setSelectedRows={setSelectedRows}
 						/>
 					</Card.Body>

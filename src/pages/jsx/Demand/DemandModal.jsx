@@ -64,7 +64,7 @@ const InfoModal = ({ show, handleClose, modalData }) => {
 	// 데이터 불러오기 (update 시)
 	useEffect(() => {
 		if (modalData && modalData.demandType === 'update') {
-			if (modalData.demandStatus === 'APPROVE') {
+			if (modalData.demandStatus === 'APPROVE' || modalData.demandStatus === 'REFUSAL') {
 				const fetchRowData = async () => {
 					setIsLoading(true);
 					console.log('modaldata', modalData);

@@ -182,7 +182,21 @@ export const CellContent = ({
 			);
 		}
 
-		if (['screenNumber', 'quantity', 'usefulLife', 'purchaseCost'].includes(keyName)) {
+		if (
+			[
+				'screenNumber',
+				'quantity',
+				'usefulLife',
+				'purchaseCost',
+				'rackUnit',
+				'expansionSlots',
+				'numberOfPorts',
+				'networkSpeed',
+				'displacement',
+				'doorsCount',
+				'modelYear',
+			].includes(keyName)
+		) {
 			return (
 				<input
 					type="number"
@@ -231,6 +245,56 @@ export const CellContent = ({
 				/>
 			);
 		}
+		// it장비시스템 monitor included
+		// monitorIncluded select 설정
+		if (keyName === 'monitorIncluded') {
+			const monitorIncludedOptions = [
+				{ value: true, label: '포함' },
+				{ value: false, label: '미포함' },
+			];
+
+			// value가 boolean 타입인지 확인하고, 문자열인 경우 boolean으로 변환
+			const normalizedValue = value === 'true' ? true : value === 'false' ? false : value;
+
+			return (
+				<Select
+					options={monitorIncludedOptions}
+					value={
+						monitorIncludedOptions.find(
+							(option) => option.value === normalizedValue // 올바르게 boolean으로 비교
+						) || null
+					}
+					onChange={(selectedOption) => {
+						console.log('Selected option:', selectedOption.value); // 디버깅용
+						handleInputChange(
+							{ target: { value: selectedOption.value } }, // 'true' 또는 'false' 값 그대로 전달
+							keyName
+						);
+					}}
+					styles={{ control: (provided) => ({ ...provided, textAlign: 'center' }) }} // 스타일 설정
+				/>
+			);
+		}
+		if (keyName === 'securityControl') {
+			const securityControlOptions = [
+				{ value: '관제중', label: '관제중' },
+				{ value: '이상감지', label: '이상감지' },
+				{ value: '관제완료', label: '관제완료' },
+				{ value: '', label: '' },
+			];
+
+			return (
+				<Select
+					options={securityControlOptions}
+					value={securityControlOptions.find((option) => option.value === value) || null}
+					onChange={(selectedOption) =>
+						handleInputChange({ target: { value: selectedOption.value } }, keyName)
+					}
+					styles={{ control: (provided) => ({ ...provided, textAlign: 'center' }) }}
+				/>
+			);
+		}
+
 		// 특허 칼럼 설정해주기
 		// patentTrademarkStatus select 설정
 		if (keyName === 'patentTrademarkStatus') {

@@ -51,7 +51,7 @@ export const getClassificationColumns = (classification) => {
 				{ title: '관련문서', data: 'relatedDocuments' },
 			];
 
-		case 'IT 장비 - 시스템':
+		case 'IT장비-시스템':
 			return [
 				{ title: '장비유형', data: 'equipmentType' },
 				{ title: '랙유닛', data: 'rackUnit' },
@@ -65,7 +65,7 @@ export const getClassificationColumns = (classification) => {
 				{ title: '모니터 포함여부', data: 'monitorIncluded' },
 			];
 
-		case 'IT 장비 – 네트워크':
+		case 'IT장비–네트워크':
 			return [
 				{ title: '장비유형', data: 'equipmentType' },
 				{ title: '포트수', data: 'numberOfPorts' },

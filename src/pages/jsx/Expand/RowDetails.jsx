@@ -934,11 +934,59 @@ const RowDetails = ({
 													<td>{renderCellContent('inventor')}</td>
 													<td>{renderCellContent('assignee')}</td>
 													<td>
-														{formData.files &&
-														formData.files.some(
-															(file) =>
-																file.fileType === 'PATENT_DOCUMENTS'
-														) ? (
+														{isEditing ? (
+															// 수정 모드일 때
+															<div>
+																{formData.files &&
+																formData.files.some(
+																	(file) =>
+																		file.fileType ===
+																		'PATENT_DOCUMENTS'
+																) ? (
+																	<>
+																		<a
+																			href={
+																				formData.files.find(
+																					(file) =>
+																						file.fileType ===
+																						'PATENT_DOCUMENTS'
+																				).fileURL
+																			}
+																			download
+																		>
+																			{
+																				formData.files.find(
+																					(file) =>
+																						file.fileType ===
+																						'PATENT_DOCUMENTS'
+																				).oriFileName
+																			}
+																		</a>
+																	</>
+																) : (
+																	<>파일 없음</>
+																)}
+																{/* 같은 줄에 파일 업로드 입력 */}
+																<input
+																	type="file"
+																	onChange={(e) =>
+																		handleFileChange(
+																			e,
+																			'PATENT_DOCUMENTS'
+																		)
+																	}
+																	style={{
+																		marginLeft: '10px', // 다운로드 링크와 약간의 간격
+																	}}
+																/>
+															</div>
+														) : // 읽기 모드일 때
+														formData.files &&
+														  formData.files.some(
+																(file) =>
+																	file.fileType ===
+																	'PATENT_DOCUMENTS'
+														  ) ? (
 															<a
 																href={
 																	formData.files.find(
@@ -958,7 +1006,7 @@ const RowDetails = ({
 																}
 															</a>
 														) : (
-															'N/A'
+															<>파일 없음</>
 														)}
 													</td>
 												</>

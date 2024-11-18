@@ -34,8 +34,9 @@ const DepartmentStatus = ({ location }) => {
 		const departmentName = location.label;
 
 		if (response.data && response.data[departmentName]) {
-			const classifications = Object.keys(response.data[departmentName]);
-			setLabel(classifications);
+			// const classifications = Object.keys(response.data[departmentName]);
+			// setLabel(classifications);
+			console.log(Object.values(response.data[departmentName]));
 
 			setDepartmentData(Object.values(response.data[departmentName]));
 		}
@@ -46,7 +47,21 @@ const DepartmentStatus = ({ location }) => {
 	}, [location]);
 
 	const data = {
-		labels: labels,
+		labels: [
+			'정보보호시스템',
+			'응용프로그램',
+			'소프트웨어',
+			'전자정보',
+			'문서',
+			'특허 및 상표',
+			'IT 장비-시스템',
+			'IT 장비–네트워크',
+			'단말기',
+			'가구',
+			'기기',
+			'차량',
+			'기타',
+		],
 		datasets: [
 			{
 				data: departmentData,
@@ -135,7 +150,7 @@ const DepartmentStatus2 = () => {
 	}, []);
 
 	const data = {
-		labels: ['경영기획실', '관리팀', '영업팀', '구매팀', '품질팀', '생산팀', '기술연구소'],
+		labels: ['구매팀', '경영기획실', '생산팀', '품질팀', '영업팀', '기술연구소', '기타', '관리팀'],
 		datasets: [
 			{
 				label: '개수',

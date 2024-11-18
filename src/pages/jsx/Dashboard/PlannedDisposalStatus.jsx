@@ -21,7 +21,7 @@ const PlannedDisposalStatus = () => {
 	const handleDate = async (selectedMonth) => {
 		//selectedMonth가 뭔지 정확히 알아야함
 		console.log(selectedMonth.target.value);
-		const response = await api.get(`${URL}/???/${selectedMonth.target.value}`);
+		const response = await api.get(`${URL}/chart/9/${selectedMonth.target.value}`);
 		console.log(response.data);
 		setDisposalData(response.data);
 	};

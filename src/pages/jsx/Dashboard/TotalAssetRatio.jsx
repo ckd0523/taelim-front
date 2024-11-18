@@ -2,7 +2,7 @@ import { Card } from 'react-bootstrap';
 import { Doughnut } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels'; // 추가
-import { assetType } from './AssetIndex';
+import { assetType2 } from './AssetIndex';
 import { useEffect } from 'react';
 import api from '@/common/api/authAxios';
 import { useState } from 'react';
@@ -32,7 +32,7 @@ const TotalAssetRatio = () => {
 	}, []);
 
 	const data = {
-		labels: assetType,
+		labels: assetType2,
 		datasets: [{
 			data: ratioData,
 			backgroundColor: [

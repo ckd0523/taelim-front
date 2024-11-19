@@ -31,20 +31,25 @@ export default function useLogin() {
 		try {
 			const res = await authApi.login(values);
 			if (res) {
-				console.log("useLogin1 : " + JSON.stringify(res));
+				//console.log("useLogin1 : " + JSON.stringify(res));
 				localStorage.setItem('accessToken', res.accessToken);
 				// 세션에 사용자 정보를 저장
 				saveSession(res); // 필요한 정보로 조정 가능
-				console.log("useLogin2 : " + res.email);
-				console.log("useLogin3 : " + res.name);
-				console.log("useLogin4 : " + res.role);
-				console.log("useLogin5 : " + res.id);
+				//console.log("useLogin2 : " + res.email);
+				//console.log("useLogin3 : " + res.name);
+				//console.log("useLogin4 : " + res.role);
+				//console.log("useLogin5 : " + res.id);
+
 				//localStorage.setItem('email', res.email);
 				//localStorage.setItem('name', res.name);
 				//localStorage.setItem('role', res.role.slice(1, -1));
 				//console.log("useLogin3 : " + localStorage.getItem('accessToken'));
 				//console.log(JSON.stringify(localStorage.getItem('accessToken')));
-				navigate(redirectUrl);
+				// 로그인 성공 후 리다이렉트
+				navigate(redirectUrl, { replace: true });
+
+				// 상태를 명시적으로 초기화
+				navigate(redirectUrl, { replace: true, state: null });
 			} else {
 				showNotification({ message: "아이디와 비밀번호를 확인해주세요.", type: 'error' });
 			}

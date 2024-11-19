@@ -23,6 +23,7 @@ ChartJS.register(LineElement, PointElement, CategoryScale, LinearScale, Tooltip,
 
 const AssetTrend = () => {
 	const today = new Date();
+	const currentYear = today.getFullYear();
 	const defaultMonth = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}`;
 
 	const [trendData, setTrendData] = useState({ labels: [], values: [] });
@@ -45,7 +46,9 @@ const AssetTrend = () => {
 			try {
 				const response = await api.get(`${URL}/chart/7?year=${year}`);
 				console.log(response.data);
-				const labels = Array.from({ length: 11 }, (_, i) => year - 5 + i);
+				const labels = Array.from({ length: 11 }, (_, i) => year - 5 + i).filter(
+					(label) => label <= currentYear
+				);
 				const values = labels.map((label) => response.data[label] || 0);
 				// const values = Object.values(response.data);
 				setTrendData({

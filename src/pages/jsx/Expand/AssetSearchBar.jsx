@@ -68,7 +68,7 @@ const SearchForm = ({ onSearch }) => {
 		{ value: 'PRODUCTION_TEAM', label: '생산팀' },
 		{
 			value: 'TECHNOLOGY_RESEARCH_TEAM',
-			label: '기술연구소팀',
+			label: '기술연구소',
 		},
 		{
 			value: 'NULL',

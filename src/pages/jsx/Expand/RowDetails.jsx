@@ -765,7 +765,7 @@ const RowDetails = ({
 											{formData?.assetClassification === '응용프로그램' && (
 												<>
 													<th>서비스범위</th>
-													<th>OS</th>
+													<th>사용 OS</th>
 													<th>관련DB</th>
 													<th>IP</th>
 													<th>화면수</th>
@@ -777,12 +777,12 @@ const RowDetails = ({
 													<th>ID</th>
 													<th>PW</th>
 													<th>담당업체</th>
-													<th>OS</th>
+													<th>사용 OS</th>
 												</>
 											)}
 											{formData?.assetClassification === '전자정보' && (
 												<>
-													<th>OS</th>
+													<th>사용 OS</th>
 													<th>시스템</th>
 													<th>DB종류</th>
 												</>
@@ -809,8 +809,7 @@ const RowDetails = ({
 													<th>관련문서</th>
 												</>
 											)}
-											{formData.assetClassification ===
-												'IT 장비 - 시스템' && (
+											{formData.assetClassification === 'IT장비-시스템' && (
 												<>
 													<th>장비유형</th>
 													<th>랙유닛</th>
@@ -824,8 +823,7 @@ const RowDetails = ({
 													<th>모니터 포함여부</th>
 												</>
 											)}
-											{formData.assetClassification ===
-												'IT 장비 – 네트워크' && (
+											{formData.assetClassification === 'IT장비–네트워크' && (
 												<>
 													<th>장비유형</th>
 													<th>포트수</th>
@@ -838,7 +836,6 @@ const RowDetails = ({
 											{formData.assetClassification === '단말기' && (
 												<>
 													<th>IP</th>
-													<th>제품 시리얼 번호</th>
 													<th>OS</th>
 													<th>보안관제</th>
 													<th>내부정보 유출 방지</th>
@@ -967,8 +964,7 @@ const RowDetails = ({
 												</>
 											)}
 
-											{formData?.assetClassification ===
-												'IT 장비 - 시스템' && (
+											{formData?.assetClassification === 'IT장비-시스템' && (
 												<>
 													<td>{renderCellContent('equipmentType')}</td>
 													<td>{renderCellContent('rackUnit')}</td>
@@ -985,7 +981,7 @@ const RowDetails = ({
 												</>
 											)}
 											{formData?.assetClassification ===
-												'IT 장비 – 네트워크' && (
+												'IT장비–네트워크' && (
 												<>
 													<td>{renderCellContent('equipmentType')}</td>
 													<td>{renderCellContent('numberOfPorts')}</td>
@@ -1000,9 +996,6 @@ const RowDetails = ({
 											{formData?.assetClassification === '단말기' && (
 												<>
 													<td>{renderCellContent('ip')}</td>
-													<td>
-														{renderCellContent('productSerialNumber')}
-													</td>
 													<td>{renderCellContent('os')}</td>
 													<td>{renderCellContent('securityControl')}</td>
 													<td>{renderCellContent('kaitsKeeper')}</td>

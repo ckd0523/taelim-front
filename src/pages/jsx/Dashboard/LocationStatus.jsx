@@ -425,11 +425,24 @@ const SelectedLocation = ({ location }) => {
 	};
 
 	const handleLocation = async (selectedValue) => {
-		console.log(selectedValue);
+		try {
+			console.log("위치별 : " + selectedValue);
+			const response = await api.get(`${URL}/chart/10/${selectedValue}`);
+			const assetLocationData = response.data;
 
-		const response = await api.get(`${URL}/chart/10/${selectedValue}`);
-		console.log(response.data);
-		setData(response.data);
+			const classifications = Object.keys(assetLocationData); // Extract asset classifications
+			setAssetClassifications(classifications);
+			const assetClassificationCounts = Object.keys(assetLocationData).map(
+				(classification) => {
+					return assetLocationData[classification];
+				}
+			);
+			// setAssetClassifiacationLabels(Object.keys(assetLocationData));
+			setData(assetClassificationCounts);
+		} catch (error) {
+			console.log(error);
+			setData([]);
+		}
 	};
 
 	const fetchData = async () => {
@@ -548,7 +561,8 @@ const SelectedLocation = ({ location }) => {
 				callbacks: {
 					label: function (tooltipItem) {
 						// const total = tooltipItem.dataset.data.reduce((acc, val) => acc + val, 0);
-						const value = tooltipItem.raw;
+						//console.log(tooltipItem);
+						const value = tooltipItem.formattedValue;
 						// const percentage = ((value / total) * 100).toFixed(2);
 						return `${value}개`;
 					},

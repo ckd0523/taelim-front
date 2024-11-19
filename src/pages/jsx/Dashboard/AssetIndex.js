@@ -26,6 +26,22 @@ const assetType = [
 	'M: 기타',
 ];
 
+const assetType2 = [
+	'A: 소프트웨어',
+	'B: 기타',
+	'C: 특허 및 상표',
+	'D: 전자정보',
+	'E: 정보보호시스템',
+	'F: 문서',
+	'G: 단말기',
+	'H: IT 장비 - 시스템',
+	'I: IT 장비 – 네트워크',
+	'J: 기기',
+	'K: 가구',
+	'L: 응용프로그램',
+	'M: 차량',
+];
+
 const assetTypeNoAlpha = [
 	'정보보호시스템',
 	'응용프로그램',
@@ -33,6 +49,8 @@ const assetTypeNoAlpha = [
 	'전자정보',
 	'문서',
 	'특허 및 상표',
+	'IT 장비-시스템',
+	'IT 장비–네트워크',
 	'단말기',
 	'가구',
 	'기기',
@@ -40,4 +58,4 @@ const assetTypeNoAlpha = [
 	'기타',
 ];
 
-export { assetLocation, assetType, assetTypeNoAlpha };
+export { assetLocation, assetType, assetType2, assetTypeNoAlpha };

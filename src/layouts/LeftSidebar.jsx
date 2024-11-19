@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import SimpleBar from 'simplebar-react';
 import AppMenu from './Menu';
-import QrPrinterComponent from './utils/QrPrinterComponet';
 
 // assets
 import file from '@/assets/images/file.png';
@@ -113,7 +112,7 @@ const SideBarContent = () => {
 										<Nav.Link eventKey="first">자산 기준 금액 설정</Nav.Link>
 									</Nav.Item>
 									<Nav.Item>
-										<Nav.Link eventKey="second">QR 프린터기 설정</Nav.Link>
+										<Nav.Link eventKey="second">설정 2</Nav.Link>
 									</Nav.Item>
 								</Nav>
 							</Col>
@@ -181,7 +180,7 @@ const SideBarContent = () => {
 									</Tab.Pane>
 
 									<Tab.Pane eventKey="second">
-										<QrPrinterComponent />
+										설정2에 필요한 것이 있으면 말씀해주세요
 										<Modal.Footer>
 											<Button variant="secondary" onClick={toggleSignUp}>
 												닫기
@@ -252,16 +251,16 @@ const LeftSidebar = ({ isCondensed, leftbarDark }) => {
 				</span>
 			</Link>
 
+
+
 			{!isCondensed && (
 				<>
-					<div className="d-flex justify-content-center">
+					<div className='d-flex justify-content-center'>
 						<p style={{ color: 'white' }}>{user.name}님 접속되었습니다.</p>
 					</div>
 
-					<div className="d-flex justify-content-center">
-						<Button className="btn btn-dark" onClick={logout}>
-							로그아웃
-						</Button>
+					<div className='d-flex justify-content-center'>
+						<Button className="btn btn-dark" onClick={logout}>로그아웃</Button>
 					</div>
 
 					<SimpleBar style={{ maxHeight: '100%' }} scrollbarMaxSize={320}>
@@ -271,15 +270,10 @@ const LeftSidebar = ({ isCondensed, leftbarDark }) => {
 			)}
 			{isCondensed && (
 				<>
-					<ul className="side-nav" style={{ marginBottom: '0' }}>
-						<li className="side-nav-item">
-							<a
-								className="side-nav-link-ref side-nav-link"
-								data-menu-key=""
-								href="#"
-								onClick={logout}
-							>
-								<i className="ri-logout-box-line" />
+					<ul className='side-nav' style={{ marginBottom: '0' }}>
+						<li className='side-nav-item'>
+							<a className='side-nav-link-ref side-nav-link' data-menu-key="" href='#' onClick={logout}>
+								<i className='ri-logout-box-line' />
 								<span>로그아웃</span>
 							</a>
 						</li>

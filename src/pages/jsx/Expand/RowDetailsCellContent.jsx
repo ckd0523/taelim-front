@@ -426,15 +426,27 @@ export const CellContent = ({
 		// 사용자 필드에 대해 수정모드인 경우 별도로 렌더링
 		if (keyName === 'assetUser') {
 			return (
-				<Form.Group className="mb-3">
-					<InputGroup>
+				<Form.Group className="mb-3" style={{ display: 'flex', justifyContent: 'center' }}>
+					<InputGroup
+						style={{
+							maxWidth: '150px',
+							display: 'flex',
+							alignItems: 'center',
+							justifyContent: 'center',
+						}}
+					>
 						<Form.Control
 							type="text"
 							value={selectedUser ? selectedUser.fullname : value || ''} // 선택된 사용자의 fullname 또는 기존 값 사용
 							disabled // 입력 필드 비활성화
-							style={{ textAlign: 'center' }} // 텍스트 가운데 정렬
+							style={{ textAlign: 'center' }} // 텍스트 가운데 정렬 및 폰트 크기 조정
 						/>
-						<Button variant="secondary" onClick={() => setShowUserModal(true)}>
+						<Button
+							variant="secondary"
+							onClick={() => setShowUserModal(true)}
+							size="sm" // 작은 크기의 버튼
+							style={{ padding: '0.25rem 0.5rem' }} // 버튼 크기 조정
+						>
 							<i className="ri-search-line font-22"></i> {/* 아이콘 추가 */}
 						</Button>
 					</InputGroup>
@@ -445,15 +457,27 @@ export const CellContent = ({
 		// 소유자 필드에 대해 수정모드인 경우 별도로 렌더링
 		if (keyName === 'assetOwner') {
 			return (
-				<Form.Group className="mb-3">
-					<InputGroup>
+				<Form.Group className="mb-3" style={{ display: 'flex', justifyContent: 'center' }}>
+					<InputGroup
+						style={{
+							maxWidth: '150px',
+							display: 'flex',
+							alignItems: 'center',
+							justifyContent: 'center',
+						}}
+					>
 						<Form.Control
 							type="text"
 							value={selectedOwner ? selectedOwner.fullname : value || ''} // 선택된 소유자의 fullname 또는 기존 값 사용
 							disabled // 입력 필드 비활성화
 							style={{ textAlign: 'center' }} // 텍스트 가운데 정렬
 						/>
-						<Button variant="secondary" onClick={() => setShowOwnerModal(true)}>
+						<Button
+							variant="secondary"
+							onClick={() => setShowOwnerModal(true)}
+							size="sm" // 작은 크기의 버튼
+							style={{ padding: '0.25rem 0.5rem' }} // 버튼 크기 조정
+						>
 							<i className="ri-search-line font-22"></i> {/* 아이콘 추가 */}
 						</Button>
 					</InputGroup>
@@ -463,8 +487,15 @@ export const CellContent = ({
 		// 보안담당자 필드에 대해 수정모드인 경우 별도로 렌더링
 		if (keyName === 'assetSecurityManager') {
 			return (
-				<Form.Group className="mb-3">
-					<InputGroup>
+				<Form.Group className="mb-3" style={{ display: 'flex', justifyContent: 'center' }}>
+					<InputGroup
+						style={{
+							maxWidth: '150px',
+							display: 'flex',
+							alignItems: 'center',
+							justifyContent: 'center',
+						}}
+					>
 						<Form.Control
 							type="text"
 							value={
@@ -478,6 +509,8 @@ export const CellContent = ({
 						<Button
 							variant="secondary"
 							onClick={() => setShowSecurityManagerModal(true)}
+							size="sm" // 작은 크기의 버튼
+							style={{ padding: '0.25rem 0.5rem' }} // 버튼 크기 조정
 						>
 							<i className="ri-search-line font-22"></i> {/* 아이콘 추가 */}
 						</Button>

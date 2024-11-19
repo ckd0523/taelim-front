@@ -138,6 +138,7 @@ const AssetRegister = () => {
 					formData.maintenancePeriod,
 					formData.purchaseCost,
 					formData.serviceScope,
+					formData.purchaseDate,
 				];
 				break;
 			case 'APPLICATION_PROGRAM':
@@ -156,6 +157,7 @@ const AssetRegister = () => {
 					formData.serviceScope,
 					formData.os,
 					formData.ip,
+					formData.purchaseDate,
 				];
 				break;
 			case 'SOFTWARE':
@@ -175,6 +177,7 @@ const AssetRegister = () => {
 					formData.ip,
 					formData.serverPassword,
 					formData.serverId,
+					formData.purchaseDate,
 				];
 				break;
 			case 'ELECTRONIC_INFORMATION':
@@ -192,7 +195,8 @@ const AssetRegister = () => {
 					formData.purchaseCost,
 					formData.os,
 					formData.system,
-					formData.DBType,
+					formData.dbtype,
+					formData.purchaseDate,
 				];
 				break;
 			case 'DOCUMENT':
@@ -211,6 +215,7 @@ const AssetRegister = () => {
 					formData.documentGrade,
 					formData.documentType,
 					formData.documentLink,
+					formData.purchaseDate,
 				];
 				break;
 			case 'PATENTS_AND_TRADEMARKS':
@@ -233,6 +238,7 @@ const AssetRegister = () => {
 					formData.applicationNo,
 					formData.inventor,
 					formData.assignee,
+					formData.purchaseDate,
 				];
 				break;
 			case 'ITSYSTEM_EQUIPMENT':
@@ -249,6 +255,7 @@ const AssetRegister = () => {
 					formData.maintenancePeriod,
 					formData.purchaseCost,
 					formData.equipmentType,
+					formData.purchaseDate,
 				];
 				break;
 			case 'ITNETWORK_EQUIPMENT':
@@ -266,6 +273,7 @@ const AssetRegister = () => {
 					formData.purchaseCost,
 					formData.equipmentType,
 					formData.serviceScope,
+					formData.purchaseDate,
 				];
 				break;
 			case 'TERMINAL':
@@ -283,6 +291,7 @@ const AssetRegister = () => {
 					formData.purchaseCost,
 					formData.ip,
 					formData.os,
+					formData.purchaseDate,
 				];
 				break;
 			case 'devices':
@@ -299,6 +308,7 @@ const AssetRegister = () => {
 					formData.maintenancePeriod,
 					formData.purchaseCost,
 					formData.deviceType,
+					formData.purchaseDate,
 				];
 				break;
 			case 'CAR':
@@ -316,6 +326,7 @@ const AssetRegister = () => {
 					formData.purchaseCost,
 					formData.carType,
 					formData.identificationNo,
+					formData.purchaseDate,
 				];
 				break;
 			default:
@@ -331,6 +342,7 @@ const AssetRegister = () => {
 					formData.depreciationMethod,
 					formData.maintenancePeriod,
 					formData.purchaseCost,
+					formData.purchaseDate,
 				];
 		}
 		for (let fields of validateInput) {

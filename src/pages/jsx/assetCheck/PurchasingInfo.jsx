@@ -90,7 +90,9 @@ const PurchasingInfo = ({ formData, handleChange, isValidated, handleSubmit }) =
 												<Form.Label className="form-label">
 													구매날짜
 												</Form.Label>
+												<Form.Label className="text-danger">＊</Form.Label>
 												<Form.Control
+													required
 													className="mb-2"
 													type="date"
 													name="purchaseDate"

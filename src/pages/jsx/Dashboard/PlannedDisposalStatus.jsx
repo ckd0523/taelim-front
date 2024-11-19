@@ -18,13 +18,13 @@ const PlannedDisposalStatus = () => {
 
 	const [disposalData, setDisposalData] = useState(defaultDate);
 
-	const handleDate = async (selectedMonth) => {
-		//selectedMonth가 뭔지 정확히 알아야함
-		console.log(selectedMonth.target.value);
-		const response = await api.get(`${URL}/chart/9/${selectedMonth.target.value}`);
-		console.log(response.data);
-		setDisposalData(response.data);
-	};
+	// const handleDate = async (selectedMonth) => {
+	// 	//selectedMonth가 뭔지 정확히 알아야함
+	// 	console.log(selectedMonth.target.value);
+	// 	const response = await api.get(`${URL}/chart/9/${selectedMonth.target.value}`);
+	// 	console.log(response.data);
+	// 	setDisposalData(response.data);
+	// };
 
 	useEffect(() => {
 		const getDisposalData = async () => {
@@ -112,7 +112,7 @@ const PlannedDisposalStatus = () => {
 						</OverlayTrigger>
 					</Col>
 
-					<Col sm={4}>
+					{/* <Col sm={4}>
 						<Form>
 							<Form.Control
 								type="date"
@@ -120,7 +120,7 @@ const PlannedDisposalStatus = () => {
 								onChange={handleDate}
 							/>
 						</Form>
-					</Col>
+					</Col> */}
 				</Row>
 
 				{/* <Col sm={4}>

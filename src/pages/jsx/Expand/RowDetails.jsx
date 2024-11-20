@@ -633,11 +633,11 @@ const RowDetails = ({
 									<th>자산기준</th>
 									<th>제조사</th>
 									<th>목적</th>
-									<th>부서</th>
-									<th>위치</th>
-									<th>사용자</th>
-									<th>소유자</th>
-									<th>보안담당자</th>
+									<th style={{ width: '300px' }}>부서</th>
+									<th style={{ width: '300px' }}>위치</th>
+									<th style={{ width: '200px' }}>사용자</th>
+									<th style={{ width: '200px' }}>소유자</th>
+									<th style={{ width: '200px' }}>보안담당자</th>
 								</tr>
 							</thead>
 							<tbody>

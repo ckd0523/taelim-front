@@ -37,7 +37,12 @@ export const CellContent = ({
 					onChange={(selectedOption) =>
 						handleInputChange({ target: { value: selectedOption.value } }, keyName)
 					}
-					styles={{ control: (provided) => ({ ...provided, textAlign: 'center' }) }} // 스타일 추가
+					styles={{
+						control: (provided) => ({
+							...provided,
+							textAlign: 'center',
+						}),
+					}} // 스타일 추가
 				/>
 			);
 		}
@@ -63,7 +68,12 @@ export const CellContent = ({
 					onChange={(selectedOption) =>
 						handleInputChange({ target: { value: selectedOption.value } }, keyName)
 					}
-					styles={{ control: (provided) => ({ ...provided, textAlign: 'center' }) }} // 스타일 추가
+					styles={{
+						control: (provided) => ({
+							...provided,
+							textAlign: 'center',
+						}),
+					}} // 스타일 추가
 				/>
 			);
 		}
@@ -185,7 +195,6 @@ export const CellContent = ({
 		if (
 			[
 				'screenNumber',
-				'quantity',
 				'usefulLife',
 				'purchaseCost',
 				'rackUnit',
@@ -203,6 +212,19 @@ export const CellContent = ({
 					defaultValue={value || ''} // formData에서 값을 가져옵니다.
 					onChange={(e) => handleInputChange(e, keyName)}
 					style={{ textAlign: 'center' }}
+				/>
+			);
+		}
+		if (['quantity'].includes(keyName)) {
+			return (
+				<input
+					type="number"
+					defaultValue={value || ''} // formData에서 값을 가져옵니다.
+					onChange={(e) => handleInputChange(e, keyName)}
+					style={{
+						textAlign: 'center',
+						width: '60px', // 원하는 너비 설정
+					}}
 				/>
 			);
 		}
@@ -426,7 +448,10 @@ export const CellContent = ({
 		// 사용자 필드에 대해 수정모드인 경우 별도로 렌더링
 		if (keyName === 'assetUser') {
 			return (
-				<Form.Group className="mb-3" style={{ display: 'flex', justifyContent: 'center' }}>
+				<Form.Group
+					className="mb-3"
+					style={{ display: 'flex', justifyContent: 'center', height: '20px' }}
+				>
 					<InputGroup
 						style={{
 							maxWidth: '150px',
@@ -457,7 +482,10 @@ export const CellContent = ({
 		// 소유자 필드에 대해 수정모드인 경우 별도로 렌더링
 		if (keyName === 'assetOwner') {
 			return (
-				<Form.Group className="mb-3" style={{ display: 'flex', justifyContent: 'center' }}>
+				<Form.Group
+					className="mb-3"
+					style={{ display: 'flex', justifyContent: 'center', height: '20px' }}
+				>
 					<InputGroup
 						style={{
 							maxWidth: '150px',
@@ -487,7 +515,10 @@ export const CellContent = ({
 		// 보안담당자 필드에 대해 수정모드인 경우 별도로 렌더링
 		if (keyName === 'assetSecurityManager') {
 			return (
-				<Form.Group className="mb-3" style={{ display: 'flex', justifyContent: 'center' }}>
+				<Form.Group
+					className="mb-3"
+					style={{ display: 'flex', justifyContent: 'center', height: '20px' }}
+				>
 					<InputGroup
 						style={{
 							maxWidth: '150px',

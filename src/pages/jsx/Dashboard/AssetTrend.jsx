@@ -44,7 +44,7 @@ const AssetTrend = () => {
 		const getTrendData = async () => {
 			const year = parseInt(month.slice(0, 4), 10);
 			try {
-				const response = await api.get(`${URL}/chart/7?year=${year - 6}`);
+				const response = await api.get(`${URL}/chart/7?year=${year}`);
 				console.log(response.data);
 				const labels = Array.from({ length: 11 }, (_, i) => year - 5 + i).filter(
 					(label) => label <= currentYear

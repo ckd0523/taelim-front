@@ -67,6 +67,17 @@ const Table = (props) => {
 	const setPageIndex = props['setPageIndex'];
 	const pageSize = props['pageSize'];
 
+	const [loading, setLoading] = useState(true);
+	const [data, setData] = useState([]);
+
+	useEffect(() => {
+		// API 호출
+		fetchData().then((result) => {
+			setData(result);
+			setLoading(false); // 로딩 완료
+		});
+	}, []);
+
 	let otherProps = {};
 
 	if (isSearchable) {
@@ -210,7 +221,16 @@ const Table = (props) => {
 						))}
 					</thead>
 					<tbody {...dataTable.getTableBodyProps()}>
-						{rows.length > 0 ? (
+						{/* 로딩 상태 */}
+						{loading ? (
+							<tr>
+								<td colSpan={13}>
+									<div className="pt-5 pb-5 d-flex justify-content-center">
+										<PropagateLoader color="#3760b3" size={20} />
+									</div>
+								</td>
+							</tr>
+						) : rows.length > 0 ? (
 							(rows || []).map((row, index) => {
 								dataTable.prepareRow(row);
 								return (
@@ -251,15 +271,14 @@ const Table = (props) => {
 								);
 							})
 						) : (
-							<>
-								<tr>
-									<td colSpan={13}>
-										<div className="pt-5 pb-5 d-flex justify-content-center">
-											<PropagateLoader color="#3760b3" size={20} />
-										</div>
-									</td>
-								</tr>
-							</>
+							/* 데이터가 없을 때 */
+							<tr>
+								<td colSpan={13}>
+									<div className="pt-5 pb-5 d-flex justify-content-center">
+										<strong>데이터가 없습니다</strong>
+									</div>
+								</td>
+							</tr>
 						)}
 					</tbody>
 				</table>

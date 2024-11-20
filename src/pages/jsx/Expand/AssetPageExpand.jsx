@@ -250,7 +250,6 @@ const AssetPageTest = (props) => {
 
 	// 엑셀 동작 넣기
 	// Excel 버튼 클릭 핸들러
-	// Excel 버튼 클릭 핸들러
 	const handleExcelClick = async (classification) => {
 		try {
 			const classificationStr = classification ? classification.name : null; // 예를 들어, classification 객체의 name 속성을 사용
@@ -283,6 +282,14 @@ const AssetPageTest = (props) => {
 				document.body.appendChild(link);
 				link.click();
 				link.remove();
+
+				// 다운로드 완료 후 팝업 표시
+				await Swal.fire({
+					title: '다운로드 완료',
+					text: '엑셀 파일이 성공적으로 다운로드되었습니다.',
+					icon: 'success',
+					confirmButtonText: '확인',
+				});
 			}
 		} catch (error) {
 			console.error('파일 다운로드 중 오류 발생:', error);

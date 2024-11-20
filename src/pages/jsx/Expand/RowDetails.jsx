@@ -633,11 +633,11 @@ const RowDetails = ({
 									<th>자산기준</th>
 									<th>제조사</th>
 									<th>목적</th>
-									<th>부서</th>
-									<th>위치</th>
-									<th>사용자</th>
-									<th>소유자</th>
-									<th>보안담당자</th>
+									<th style={{ width: '300px' }}>부서</th>
+									<th style={{ width: '300px' }}>위치</th>
+									<th style={{ width: '200px' }}>사용자</th>
+									<th style={{ width: '200px' }}>소유자</th>
+									<th style={{ width: '200px' }}>보안담당자</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -765,7 +765,7 @@ const RowDetails = ({
 											{formData?.assetClassification === '응용프로그램' && (
 												<>
 													<th>서비스범위</th>
-													<th>OS</th>
+													<th>사용 OS</th>
 													<th>관련DB</th>
 													<th>IP</th>
 													<th>화면수</th>
@@ -777,12 +777,12 @@ const RowDetails = ({
 													<th>ID</th>
 													<th>PW</th>
 													<th>담당업체</th>
-													<th>OS</th>
+													<th>사용 OS</th>
 												</>
 											)}
 											{formData?.assetClassification === '전자정보' && (
 												<>
-													<th>OS</th>
+													<th>사용 OS</th>
 													<th>시스템</th>
 													<th>DB종류</th>
 												</>
@@ -809,8 +809,7 @@ const RowDetails = ({
 													<th>관련문서</th>
 												</>
 											)}
-											{formData.assetClassification ===
-												'IT 장비 - 시스템' && (
+											{formData.assetClassification === 'IT장비-시스템' && (
 												<>
 													<th>장비유형</th>
 													<th>랙유닛</th>
@@ -824,8 +823,7 @@ const RowDetails = ({
 													<th>모니터 포함여부</th>
 												</>
 											)}
-											{formData.assetClassification ===
-												'IT 장비 – 네트워크' && (
+											{formData.assetClassification === 'IT장비–네트워크' && (
 												<>
 													<th>장비유형</th>
 													<th>포트수</th>
@@ -838,7 +836,6 @@ const RowDetails = ({
 											{formData.assetClassification === '단말기' && (
 												<>
 													<th>IP</th>
-													<th>제품 시리얼 번호</th>
 													<th>OS</th>
 													<th>보안관제</th>
 													<th>내부정보 유출 방지</th>
@@ -937,11 +934,59 @@ const RowDetails = ({
 													<td>{renderCellContent('inventor')}</td>
 													<td>{renderCellContent('assignee')}</td>
 													<td>
-														{formData.files &&
-														formData.files.some(
-															(file) =>
-																file.fileType === 'PATENT_DOCUMENTS'
-														) ? (
+														{isEditing ? (
+															// 수정 모드일 때
+															<div>
+																{formData.files &&
+																formData.files.some(
+																	(file) =>
+																		file.fileType ===
+																		'PATENT_DOCUMENTS'
+																) ? (
+																	<>
+																		<a
+																			href={
+																				formData.files.find(
+																					(file) =>
+																						file.fileType ===
+																						'PATENT_DOCUMENTS'
+																				).fileURL
+																			}
+																			download
+																		>
+																			{
+																				formData.files.find(
+																					(file) =>
+																						file.fileType ===
+																						'PATENT_DOCUMENTS'
+																				).oriFileName
+																			}
+																		</a>
+																	</>
+																) : (
+																	<>파일 없음</>
+																)}
+																{/* 같은 줄에 파일 업로드 입력 */}
+																<input
+																	type="file"
+																	onChange={(e) =>
+																		handleFileChange(
+																			e,
+																			'PATENT_DOCUMENTS'
+																		)
+																	}
+																	style={{
+																		marginLeft: '10px', // 다운로드 링크와 약간의 간격
+																	}}
+																/>
+															</div>
+														) : // 읽기 모드일 때
+														formData.files &&
+														  formData.files.some(
+																(file) =>
+																	file.fileType ===
+																	'PATENT_DOCUMENTS'
+														  ) ? (
 															<a
 																href={
 																	formData.files.find(
@@ -961,14 +1006,13 @@ const RowDetails = ({
 																}
 															</a>
 														) : (
-															'N/A'
+															<>파일 없음</>
 														)}
 													</td>
 												</>
 											)}
 
-											{formData?.assetClassification ===
-												'IT 장비 - 시스템' && (
+											{formData?.assetClassification === 'IT장비-시스템' && (
 												<>
 													<td>{renderCellContent('equipmentType')}</td>
 													<td>{renderCellContent('rackUnit')}</td>
@@ -985,7 +1029,7 @@ const RowDetails = ({
 												</>
 											)}
 											{formData?.assetClassification ===
-												'IT 장비 – 네트워크' && (
+												'IT장비–네트워크' && (
 												<>
 													<td>{renderCellContent('equipmentType')}</td>
 													<td>{renderCellContent('numberOfPorts')}</td>
@@ -1000,9 +1044,6 @@ const RowDetails = ({
 											{formData?.assetClassification === '단말기' && (
 												<>
 													<td>{renderCellContent('ip')}</td>
-													<td>
-														{renderCellContent('productSerialNumber')}
-													</td>
 													<td>{renderCellContent('os')}</td>
 													<td>{renderCellContent('securityControl')}</td>
 													<td>{renderCellContent('kaitsKeeper')}</td>

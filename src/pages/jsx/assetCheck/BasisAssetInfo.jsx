@@ -699,8 +699,9 @@ const BasisAssetInfo = ({ isValidated, formData, handleChange, handleSubmit }) =
 												placeholder="제품시리얼번호를 입력해주세요"
 												className="mb-2"
 												type="text"
+												value={formData.productSerialNumber}
 												onChange={handleChange}
-												name="manufacturingCompany"
+												name="productSerialNumber"
 											/>
 											<Form.Label>비고</Form.Label>
 											<Form.Control

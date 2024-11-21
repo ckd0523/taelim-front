@@ -70,6 +70,8 @@ const ExcelRegister = () => {
 		'목적/기능': 'purpose',
 		자산위치: 'assetLocation',
 		수량: 'quantity',
+		소유권: 'ownership',
+		제품시리얼번호: 'productSerialNumber',
 		부서: 'department',
 		가동여부: 'operationStatus',
 		도입일자: 'introducedDate',

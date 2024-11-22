@@ -33,6 +33,7 @@ const UpdateHistory = () => {
 				console.log('가져온 데이터:', response.data); // 가져온 데이터 구조 확인
 				setUpdateList(response.data); // 가져온 데이터를 저장
 				setOriginalData(response.data); // 검색을 위하 원본 데이터도 저장
+				console.log(response);
 			} catch (error) {
 				console.log('수정 이력 가져오기 실패 : ', error);
 			}
@@ -70,6 +71,11 @@ const UpdateHistory = () => {
 		selectedStartDate,
 		selectedEndDate,
 	}) => {
+		// selectedEndDate의 시간을 해당 날짜의 마지막 시간으로 설정
+		const adjustedEndDate = selectedEndDate
+			? new Date(selectedEndDate.setHours(23, 59, 59, 999))
+			: null;
+
 		const filteredData = originalData.filter((assetUpdates) => {
 			return (
 				(assetCode === '' || assetUpdates.assetCode.includes(assetCode)) &&
@@ -77,8 +83,8 @@ const UpdateHistory = () => {
 				(updateBy === '' || assetUpdates.updateBy.includes(updateBy)) &&
 				(updateReason === '' || assetUpdates.updateReason?.includes(updateReason)) &&
 				(selectedStartDate === null ||
-					new Date(assetUpdates.UpdateDate) >= selectedStartDate) &&
-				(selectedEndDate === null || new Date(assetUpdates.UpdateDate) <= selectedEndDate)
+					new Date(assetUpdates.updateDate) >= selectedStartDate) &&
+				(adjustedEndDate === null || new Date(assetUpdates.updateDate) <= adjustedEndDate)
 			);
 		});
 		setUpdateList(filteredData);

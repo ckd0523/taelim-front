@@ -38,6 +38,7 @@ const AssetPageTest = (props) => {
 		startDate: null,
 		endDate: null,
 		assetClassification: null,
+		valueStandardNo: null, // 추가된 검색 조건
 	});
 
 	// 정렬 상태 관리
@@ -83,6 +84,7 @@ const AssetPageTest = (props) => {
 	const fetchData = useCallback(
 		async (pageIndex = 0, pageSize = 10) => {
 			try {
+				console.log('검색 조건:', searchParams);
 				const response = await api.get(`${urlConfig}/getAssetSearch`, {
 					params: {
 						assetName: searchParams.assetName || null,
@@ -92,6 +94,7 @@ const AssetPageTest = (props) => {
 						startDate: searchParams.startDate || null, // 선택한 시작 날짜
 						endDate: searchParams.endDate || null, // 선택한 종료 날짜
 						assetClassification: classification || null, // classification 전달
+						valueStandardNo: searchParams.valueStandardNo || null, // 새로운 검색 조건 전달
 						page: pageIndex,
 						size: pageSize,
 						sortBy: sortBy, // 정렬 기준 추가

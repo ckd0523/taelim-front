@@ -48,6 +48,11 @@ const DeleteHistory = () => {
 		selectedStartDate,
 		selectedEndDate,
 	}) => {
+		// selectedEndDate의 시간을 해당 날짜의 마지막 시간으로 설정
+		const adjustedEndDate = selectedEndDate
+			? new Date(selectedEndDate.setHours(23, 59, 59, 999))
+			: null;
+
 		const filteredData = originalData.filter((assetDeletes) => {
 			return (
 				(assetName === '' || assetDeletes.assetName.includes(assetName)) &&
@@ -57,11 +62,10 @@ const DeleteHistory = () => {
 				(deleteMethod === '' || assetDeletes.deleteMethod.includes(deleteMethod)) &&
 				(deleteLocation === '' || assetDeletes.deleteLocation.includes(deleteLocation)) &&
 				(selectedStartDate === null ||
-					new Date(assetDeletes.DeleteDate) >= selectedStartDate) &&
-				(selectedEndDate === null || new Date(assetDeletes.DeleteDate) <= selectedEndDate)
+					new Date(assetDeletes.deleteDate) >= selectedStartDate) &&
+				(adjustedEndDate === null || new Date(assetDeletes.deleteDate) <= adjustedEndDate)
 			);
 		});
-
 		setDeleteList(filteredData);
 	};
 

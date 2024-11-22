@@ -13,6 +13,12 @@ const SearchForm = ({ onSearch }) => {
 	const [introducedDate, setIntroduceDate] = useState('');
 	const [selectedStartDate, setSelectedStartDate] = useState(null); // 이건 아직 안됨
 	const [selectedEndDate, setSelectedEndDate] = useState(null); //  이건 아직 안됨
+	const [valueStandardNo, setValueStandardNo] = useState(null);
+
+	const handleValueStandardChange = (event) => {
+		setValueStandardNo(event.target.value);
+		fetchData(0, 10, event.target.value); // 백엔드로 valueStandardNo를 전달
+	};
 
 	const assetLocationOptions = [
 		{ value: '', label: '전체' }, // 전체 옵션 추가
@@ -161,6 +167,16 @@ const SearchForm = ({ onSearch }) => {
 					<Card>
 						<CardBody>
 							<RHForm onChange={handleFormChange}>
+								<Row>
+									<Col xxl={2} xl={6} lg={6} sm={6} md={6} xs={6}>
+										<Form.Label>자산 가치</Form.Label>
+										<Select
+											name="valueStandardNo"
+											value={valueStandardNo}
+											onChange={handleValueStandardChange}
+										/>
+									</Col>
+								</Row>
 								<Row>
 									<Col xxl={2} xl={6} lg={6} sm={6} md={6} xs={6}>
 										<Form.Label>자산명</Form.Label>

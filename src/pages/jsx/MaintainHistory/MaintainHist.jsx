@@ -85,6 +85,11 @@ const MaintainHist = () => {
 	const [searchEndDate, setSearchEndDate] = useState();
 
 	const handleSearch = (e) => {
+		// searchEndDate의 시간을 23:59:59로 조정
+		const adjustedEndDate = searchEndDate
+			? new Date(searchEndDate.setHours(23, 59, 59, 999))
+			: null;
+
 		const filteredData = data.filter((item) => {
 			return (
 				(!searchAssetName ||
@@ -94,7 +99,7 @@ const MaintainHist = () => {
 				(!searchMaintainBy ||
 					item.maintainBy.toUpperCase().includes(searchMaintainBy.toUpperCase())) &&
 				(!searchStartDate || new Date(item.repairStartDate) >= searchStartDate) &&
-				(!searchEndDate || new Date(item.repairEndDate) <= searchEndDate)
+				(!adjustedEndDate || new Date(item.repairEndDate) <= adjustedEndDate)
 			);
 		});
 		setSearchData(filteredData);

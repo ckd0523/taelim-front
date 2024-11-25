@@ -15,11 +15,6 @@ const SearchForm = ({ onSearch }) => {
 	const [selectedEndDate, setSelectedEndDate] = useState(null); //  이건 아직 안됨
 	const [valueStandardNo, setValueStandardNo] = useState(null);
 
-	const handleValueStandardChange = (event) => {
-		setValueStandardNo(event.target.value);
-		fetchData(0, 10, event.target.value); // 백엔드로 valueStandardNo를 전달
-	};
-
 	const assetLocationOptions = [
 		{ value: '', label: '전체' }, // 전체 옵션 추가
 		{
@@ -81,6 +76,10 @@ const SearchForm = ({ onSearch }) => {
 			label: 'N/A',
 		},
 	];
+	const valueOptions = [
+		{ value: 'high', label: '고가치' },
+		{ value: 'low', label: '저가치' },
+	];
 	// 폼 값 변경처리
 	const handleFormChange = (e) => {
 		const { name, value } = e.target;
@@ -111,6 +110,9 @@ const SearchForm = ({ onSearch }) => {
 	// department 선택 처리
 	const handleDepartmentChange = (selectedOption1) => {
 		setSelectedDepartment(selectedOption1);
+	};
+	const handleValueStandardChange = (selectedOption2) => {
+		setValueStandardNo(selectedOption2);
 	};
 
 	// 날짜 포맷 함수
@@ -171,9 +173,10 @@ const SearchForm = ({ onSearch }) => {
 									<Col xxl={2} xl={6} lg={6} sm={6} md={6} xs={6}>
 										<Form.Label>자산 가치</Form.Label>
 										<Select
-											name="valueStandardNo"
-											value={valueStandardNo}
+											options={valueOptions}
 											onChange={handleValueStandardChange}
+											value={valueStandardNo}
+											placeholder="가치를 선택하세요"
 										/>
 									</Col>
 								</Row>

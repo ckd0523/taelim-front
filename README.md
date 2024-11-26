@@ -1,5 +1,6 @@
 # 기업연계프로젝트
 # 자산관리시스템 / Front-End
+자산의 효율적인 관리를 위한 웹프로그래밍
 ![1](https://github.com/user-attachments/assets/53763a86-3e89-4867-a9a1-5e9cc894c226)
 ![2](https://github.com/user-attachments/assets/7dd3bc73-0e28-4b91-b6d7-9dcf7e5d54d3)
 ![4](https://github.com/user-attachments/assets/ae5df6cf-e90b-4d38-92a3-bc08c49ae0f3)

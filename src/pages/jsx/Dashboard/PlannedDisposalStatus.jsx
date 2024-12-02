@@ -108,6 +108,9 @@ const PlannedDisposalStatus = () => {
 				callbacks: {
 					label: function (tooltipItem) {
 						const value = tooltipItem.formattedValue;
+						const index = tooltipItem.index; // 데이터 포인트의 인덱스
+						//const value = tooltipItem.raw;
+						//const value = tooltipItem.formattedValues;
 						return `${value}개`; // 툴팁에 표시할 내용
 					},
 				},

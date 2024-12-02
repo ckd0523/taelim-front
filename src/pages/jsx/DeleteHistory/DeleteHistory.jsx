@@ -87,7 +87,7 @@ const DeleteHistory = () => {
 									theadClass="table-dark"
 									tableClass="border-black"
 									searchBoxClass="mb-2"
-									onRowClick={() => {}} // onRowClick 이벤트를 빈 함수로 설정하여 무시
+									onRowClick={() => { }} // onRowClick 이벤트를 빈 함수로 설정하여 무시
 									setModalData={setModalData}
 									setShowModal={setShowModal}
 								/>

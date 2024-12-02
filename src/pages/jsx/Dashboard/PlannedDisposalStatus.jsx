@@ -30,7 +30,11 @@ const PlannedDisposalStatus = () => {
 	useEffect(() => {
 		const getDisposalData = async () => {
 			const response = await api.get(`${URL}/chart/9`);
+<<<<<<< Updated upstream
 			console.log('여기다', response.data);
+=======
+			console.log(response.data);
+>>>>>>> Stashed changes
 			setDisposalData(response.data);
 		};
 

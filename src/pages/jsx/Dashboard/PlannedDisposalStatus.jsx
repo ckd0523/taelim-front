@@ -30,11 +30,6 @@ const PlannedDisposalStatus = () => {
 	useEffect(() => {
 		const getDisposalData = async () => {
 			const response = await api.get(`${URL}/chart/9`);
-<<<<<<< Updated upstream
-			console.log('여기다', response.data);
-=======
-			console.log(response.data);
->>>>>>> Stashed changes
 			setDisposalData(response.data);
 		};
 
@@ -105,6 +100,8 @@ const PlannedDisposalStatus = () => {
 					label: function (tooltipItem) {
 						const index = tooltipItem.index; // 데이터 포인트의 인덱스
 						const value = disposalData[index]; // 해당 인덱스의 데이터 값 (response에서 받은 데이터)
+						//const value = tooltipItem.raw;
+						//const value = tooltipItem.formattedValues;
 						return `${value}개`; // 툴팁에 표시할 내용
 					},
 				},

@@ -40,7 +40,7 @@ const AssetSurveyHistory2 = () => {
 		if (selectedRows.length === 0) {
 			Swal.fire({
 				icon: 'error',
-				text: '한 개 이상의 자산 조사를 선택하세요.',
+				title: '한 개 이상의 자산 조사를\n선택하세요.',
 			});
 			return;
 		} else {

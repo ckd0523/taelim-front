@@ -100,8 +100,6 @@ const DepartmentStatus = ({ location }) => {
 			tooltip: {
 				callbacks: {
 					label: function (tooltipItem) {
-						//console.log(tooltipItem);
-						const label = tooltipItem.dataset.label;
 						const value = tooltipItem.raw; // 각 데이터 값
 						return `${value}개`; // 툴팁에 표시할 내용
 					},

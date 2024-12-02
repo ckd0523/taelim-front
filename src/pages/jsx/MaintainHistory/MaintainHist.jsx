@@ -1,5 +1,4 @@
 import { Row, Col, Form, Button, Card, CardBody } from 'react-bootstrap';
-import { CustomDatePicker } from '@/components';
 import { Table3 } from '@/components/table/Table3';
 import { MaintainDetail } from '@/pages/jsx/MaintainHistory/MaintainDetail';
 import { useState } from 'react';
@@ -42,22 +41,6 @@ const columns = [
 		Header: '상태',
 		accessor: 'repairStatus',
 		defaultCanSort: true,
-		// Cell: ({ row }) => {
-		// 	const { repairStartDate, repairEndDate, repairResult, repairFiles } = row.original;
-		// 	row.repairStatus = '진행중';
-		// 	const hasBeforeRepair = repairFiles?.some((file) => file.repairType === '보수전');
-		// 	const hasAfterRepair = repairFiles?.some((file) => file.repairType === '보수후');
-		// 	if (
-		// 		repairStartDate &&
-		// 		repairEndDate &&
-		// 		repairResult &&
-		// 		hasBeforeRepair &&
-		// 		hasAfterRepair
-		// 	) {
-		// 		row.repairStatus = '완료';
-		// 	}
-		// 	return row.repairStatus;
-		// },
 	},
 ];
 
@@ -80,30 +63,69 @@ const MaintainHist = () => {
 	const [data, setData] = useState([]); //기존 테이블 데이터
 	const [searchAssetName, setSearchAssetName] = useState();
 	const [searchAssetCode, setSearchAssetCode] = useState();
-	const [searchMaintainBy, setSearchMaintainBy] = useState();
-	const [searchStartDate, setSearchStartDate] = useState();
-	const [searchEndDate, setSearchEndDate] = useState();
+	const [searchRepairBy, setSearchRepairBy] = useState();
+	const [searchStartDate, setSearchStartDate] = useState(null);
+	const [searchEndDate, setSearchEndDate] = useState(null);
+	const [searchKeyword, setSearchKeyword] = useState('');
 
 	const handleSearch = (e) => {
+		e.preventDefault();
 		const filteredData = data.filter((item) => {
+			const repairStartDate = item.repairStartDate ? new Date(item.repairStartDate) : null;
+			const repairEndDate = item.repairEndDate ? new Date(item.repairEndDate) : null;
+			const searchStart = searchStartDate ? new Date(searchStartDate) : null;
+			const searchEnd = searchEndDate ? new Date(searchEndDate) : null;
+
 			return (
 				(!searchAssetName ||
-					item.assetName.toUpperCase().includes(searchAssetName.toUpperCase())) &&
+					(item.assetName || '')
+						.replace(/\s+/g, '')
+						.toLowerCase()
+						.includes(searchAssetName.replace(/\s+/g, '').toLowerCase())) &&
 				(!searchAssetCode ||
-					item.assetCode.toUpperCase().includes(searchAssetCode.toUpperCase())) &&
-				(!searchMaintainBy ||
-					item.maintainBy.toUpperCase().includes(searchMaintainBy.toUpperCase())) &&
-				(!searchStartDate || new Date(item.repairStartDate) >= searchStartDate) &&
-				(!searchEndDate || new Date(item.repairEndDate) <= searchEndDate)
+					(item.assetCode || '')
+						.replace(/\s+/g, '')
+						.toLowerCase()
+						.includes(searchAssetCode.replace(/\s+/g, '').toLowerCase())) &&
+				(!searchRepairBy ||
+					(item.repairBy || '')
+						.replace(/\s+/g, '')
+						.toLowerCase()
+						.includes(searchRepairBy.replace(/\s+/g, '').toLowerCase())) &&
+				(!searchStart || (repairStartDate && repairStartDate >= searchStart)) &&
+				(!searchEnd || (repairEndDate && repairEndDate <= searchEnd))
 			);
 		});
 		setSearchData(filteredData);
 		console.log(filteredData);
 		setSearchAssetName('');
 		setSearchAssetCode('');
-		setSearchMaintainBy('');
+		setSearchRepairBy('');
 		setSearchStartDate('');
 		setSearchEndDate('');
+	};
+
+	const handleSearch2 = (e) => {
+		e.preventDefault();
+
+		const keyword = (searchKeyword || '').replace(/\s+/g, '').toLowerCase().trim();
+
+		if (!keyword) {
+			setSearchData(data);
+			return;
+		}
+
+		const filteredData = data.filter((item) => {
+			const matchsKeyword = Object.values(item).some(
+				(value) =>
+					typeof value === 'string' &&
+					(value || '').replace(/\s+/g, '').toLowerCase().includes(keyword)
+			);
+			return matchsKeyword;
+		});
+
+		setSearchData(filteredData);
+		setSearchKeyword('');
 	};
 	const handleClick = (rowdata) => {
 		setSelectData(rowdata);
@@ -117,7 +139,7 @@ const MaintainHist = () => {
 	useEffect(() => {
 		const requestOptions = async () => {
 			try {
-				const response = await api.get('/maintain/get');
+				const response = await api.get(`${urlConfig}/maintain/get`);
 				if (Array.isArray(response.data)) {
 					console.log(response.data);
 					setData(response.data);
@@ -137,7 +159,7 @@ const MaintainHist = () => {
 	useEffect(() => {
 		const requestOptions = async () => {
 			try {
-				const response = await api.get('/maintain/get');
+				const response = await api.get(`${urlConfig}/maintain/get`);
 				if (Array.isArray(response.data)) {
 					console.log(response.data);
 					setData(response.data);
@@ -185,12 +207,15 @@ const MaintainHist = () => {
 						<fieldset style={{ display: 'flex', alignItems: 'center' }}>
 							<input
 								type="search"
+								placeholder="검색어를 입력하세요."
 								style={{
 									width: '200px',
 									height: '40px',
 									float: 'left',
 									border: 'none',
 								}}
+								value={searchKeyword}
+								onChange={(e) => setSearchKeyword(e.target.value)}
 							/>
 							<button
 								className="button"
@@ -201,7 +226,7 @@ const MaintainHist = () => {
 									float: 'left',
 									border: 'none',
 								}}
-								onClick={() => handleSearch()}
+								onClick={handleSearch2}
 							>
 								<i className="ri-search-line font-22"></i>
 							</button>
@@ -211,34 +236,12 @@ const MaintainHist = () => {
 			</Row>
 
 			{showSearchForm && (
-				<Row className="pt-3">
+				<Row className="pt-3 justify-content-between">
 					<Col>
 						<Card>
 							<CardBody>
 								<Form>
 									<Row className="align-items-center">
-										<Col xs={12} md={4} lg={2}>
-											<Form.Group as={Row}>
-												<Form.Label
-													htmlFor="assetName"
-													xs={12}
-													md={12}
-													lg={10}
-												>
-													자산명
-												</Form.Label>
-												<Col xs={12} md={12} lg={10}>
-													<Form.Control
-														type="text"
-														id="assetName"
-														value={searchAssetName}
-														onChange={(e) =>
-															setSearchAssetName(e.target.value)
-														}
-													/>
-												</Col>
-											</Form.Group>
-										</Col>
 										<Col xs={12} md={6} lg={3}>
 											<Form.Group as={Row}>
 												<Form.Label
@@ -253,7 +256,7 @@ const MaintainHist = () => {
 													<Form.Control
 														type="text"
 														id="assetCode"
-														value={searchAssetCode}
+														value={searchAssetCode || ''}
 														onChange={(e) =>
 															setSearchAssetCode(e.target.value)
 														}
@@ -261,6 +264,29 @@ const MaintainHist = () => {
 												</Col>
 											</Form.Group>
 										</Col>
+										<Col xs={12} md={4} lg={2}>
+											<Form.Group as={Row}>
+												<Form.Label
+													htmlFor="assetName"
+													xs={12}
+													md={12}
+													lg={10}
+												>
+													자산명
+												</Form.Label>
+												<Col xs={12} md={12} lg={10}>
+													<Form.Control
+														type="text"
+														id="assetName"
+														value={searchAssetName || ''}
+														onChange={(e) =>
+															setSearchAssetName(e.target.value)
+														}
+													/>
+												</Col>
+											</Form.Group>
+										</Col>
+
 										<Col xs={12} md={6} lg={3}>
 											<Form.Group as={Row}>
 												<Form.Label
@@ -275,9 +301,9 @@ const MaintainHist = () => {
 													<Form.Control
 														type="text"
 														id="repairBy"
-														value={searchMaintainBy}
+														value={searchRepairBy || ''}
 														onChange={(e) =>
-															setSearchMaintainBy(e.target.value)
+															setSearchRepairBy(e.target.value)
 														}
 													/>
 												</Col>
@@ -289,15 +315,13 @@ const MaintainHist = () => {
 												<Form.Label xs={12} md={11} lg={5}>
 													유지보수 일자
 												</Form.Label>
-												<Col xs={5} md={5} lg={5.5}>
-													<CustomDatePicker
+												<Col xs={5} md={5} lg={5}>
+													<Form.Control
 														type="date"
-														dateFormat="yyyy-MM-dd"
-														name="startDate"
-														hideAddon={true}
-														value={searchStartDate}
+														name="repairStartDate"
+														value={searchStartDate || ''}
 														onChange={(s) =>
-															setSearchStartDate(s || '')
+															setSearchStartDate(s.target.value)
 														}
 													/>
 												</Col>
@@ -309,14 +333,14 @@ const MaintainHist = () => {
 												>
 													~
 												</Col>
-												<Col xs={5} md={5} lg={5.5}>
-													<CustomDatePicker
+												<Col xs={5} md={5} lg={5}>
+													<Form.Control
 														type="date"
-														dateFormat="yyyy-MM-dd"
-														name="endDate"
-														hideAddon={true}
-														value={searchEndDate}
-														onChange={(s) => setSearchEndDate(s || '')}
+														name="repairEndDate"
+														value={searchEndDate || ''}
+														onChange={(s) =>
+															setSearchEndDate(s.target.value)
+														}
 													/>
 												</Col>
 											</Form.Group>

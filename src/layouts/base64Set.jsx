@@ -29,7 +29,8 @@ const Base64Set = () => {
 			});
 
 			// 상태 업데이트 후
-			setIsBase64Enabled(newState); // 상태를 바로 반영
+			// setIsBase64Enabled(newState); // 상태를 바로 반영
+			fetchBase64Config();
 		} catch (error) {
 			console.error('Error updating Base64 config:', error);
 		} finally {

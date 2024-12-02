@@ -14,6 +14,8 @@ const SearchForm = ({ onSearch }) => {
 	const [selectedStartDate, setSelectedStartDate] = useState(null); // 이건 아직 안됨
 	const [selectedEndDate, setSelectedEndDate] = useState(null); //  이건 아직 안됨
 	const [valueStandardNo, setValueStandardNo] = useState(null);
+	const [selectedOwnership, setSelectedOwnership] = useState(null);
+	const [selectedOperationStatus, setSelectedOperationStatus] = useState(null);
 
 	const assetLocationOptions = [
 		{ value: '', label: '전체' }, // 전체 옵션 추가
@@ -78,8 +80,15 @@ const SearchForm = ({ onSearch }) => {
 	];
 	const valueOptions = [
 		{ value: 'high', label: '고가치' },
+		{ value: 'medium', label: '중간가치' },
 		{ value: 'low', label: '저가치' },
 	];
+	const ownershipOptions = [
+		{ value: 'OWNED', label: '소유' },
+		{ value: 'NATIONAL_PROJECT', label: '국책과제' },
+		{ value: 'ETC', label: '기타' },
+	];
+
 	// 폼 값 변경처리
 	const handleFormChange = (e) => {
 		const { name, value } = e.target;
@@ -111,10 +120,12 @@ const SearchForm = ({ onSearch }) => {
 	const handleDepartmentChange = (selectedOption1) => {
 		setSelectedDepartment(selectedOption1);
 	};
-	const handleValueStandardChange = (selectedOption2) => {
-		setValueStandardNo(selectedOption2);
+	const handleValueStandardChange = (selectedOption) => {
+		setValueStandardNo(selectedOption); // selectedOption 객체 그대로 설정
 	};
-
+	const handleOwnerShipChange = (selectedOption) => {
+		setSelectedOwnership(selectedOption);
+	};
 	// 날짜 포맷 함수
 	const formatDate = (date) => {
 		if (!date) return null;
@@ -132,7 +143,10 @@ const SearchForm = ({ onSearch }) => {
 			departmentEnum: selectedDepartment?.value || '', // 선택된 부서
 			startDate: formatDate(selectedStartDate), // 선택한 시작 날짜 포맷
 			endDate: formatDate(selectedEndDate), // 선택한 종료 날짜 포맷
+			valueStandardNo: valueStandardNo?.value || '', // 선택된 고가치/저가치 값을 전달
+			owenerShipEnum: selectedOwnership?.value || '',
 		});
+		console.log('이거확인', valueStandardNo);
 	};
 
 	const handleResetClick = () => {
@@ -145,6 +159,7 @@ const SearchForm = ({ onSearch }) => {
 		setSelectedStartDate(null);
 		setSelectedEndDate(null);
 		onSearch({}); // 검색 조건 초기화 전달
+		setValueStandardNo(null);
 	};
 
 	// react-select의 스타일 커스터마이징
@@ -172,6 +187,24 @@ const SearchForm = ({ onSearch }) => {
 								<Row>
 									<Col xxl={2} xl={6} lg={6} sm={6} md={6} xs={6}>
 										<Form.Label>자산 가치</Form.Label>
+										<Select
+											options={valueOptions}
+											onChange={handleValueStandardChange}
+											value={valueStandardNo}
+											placeholder="가치를 선택하세요"
+										/>
+									</Col>
+									<Col xxl={2} xl={6} lg={6} sm={6} md={6} xs={6}>
+										<Form.Label>소유권</Form.Label>
+										<Select
+											options={ownershipOptions}
+											onChange={handleOwnerShipChange}
+											value={selectedOwnership}
+											placeholder="소유권을 선택하세요"
+										/>
+									</Col>
+									<Col xxl={2} xl={6} lg={6} sm={6} md={6} xs={6}>
+										<Form.Label>가동여부</Form.Label>
 										<Select
 											options={valueOptions}
 											onChange={handleValueStandardChange}

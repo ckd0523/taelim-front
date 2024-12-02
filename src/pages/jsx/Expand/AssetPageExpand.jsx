@@ -39,6 +39,8 @@ const AssetPageTest = (props) => {
 		endDate: null,
 		assetClassification: null,
 		valueStandardNo: null, // 추가된 검색 조건
+		ownership: null,
+		operationStatus: null,
 	});
 
 	// 정렬 상태 관리
@@ -95,6 +97,8 @@ const AssetPageTest = (props) => {
 						endDate: searchParams.endDate || null, // 선택한 종료 날짜
 						assetClassification: classification || null, // classification 전달
 						valueStandardNo: searchParams.valueStandardNo || null, // 새로운 검색 조건 전달
+						ownership: searchParams.ownership || null,
+						operationStatus: searchParams.operationStatus || null,
 						page: pageIndex,
 						size: pageSize,
 						sortBy: sortBy, // 정렬 기준 추가

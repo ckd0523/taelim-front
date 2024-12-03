@@ -18,6 +18,7 @@ const DeleteHistory = () => {
 	const [showModal, setShowModal] = useState(false);
 	const [modalData, setModalData] = useState(null);
 	const [showSearchForm, setShowSearchForm] = useState(false);
+	const [searchAssetCode, setSearchAssetCode] = useState('');
 	const [searchAssetName, setSearchAssetName] = useState();
 	const [searchDeleteReason, setSearchDeleteReason] = useState();
 	const [searchDeleteBy, setSearchDeleteBy] = useState();
@@ -37,6 +38,11 @@ const DeleteHistory = () => {
 						.replace(/\s+/g, '')
 						.toLowerCase()
 						.includes(searchAssetName.replace(/\s+/g, '').toLowerCase())) &&
+				(!searchAssetCode ||
+					(item.assetCode || '')
+						.replace(/\s+/g, '')
+						.toLowerCase()
+						.includes(searchAssetCode.replace(/\s+/g, '').toLowerCase())) &&
 				(!searchDeleteReason ||
 					(item.deleteReason || '')
 						.replace(/\s+/g, '')
@@ -54,8 +60,8 @@ const DeleteHistory = () => {
 
 		setDeleteList(filteredData);
 		console.log(filteredData);
-
 		setSearchAssetName('');
+		setSearchAssetCode('');
 		setSearchDeleteReason('');
 		setSearchDeleteBy('');
 		setSearchStartDate('');
@@ -90,6 +96,7 @@ const DeleteHistory = () => {
 		const fetchDeleteHistory = async () => {
 			try {
 				const response = await api.get(`${urlConfig}/deleteHistory`); // API 호출
+				console.log('가져온 데이터:', response.data); // 가져온 데이터 구조 확인
 				setDeleteList(response.data); // 가져온 데이터를 상태에 저장
 				setOriginalData(response.data); // 검색을 위한 원본 데이터도 저장
 			} catch (error) {
@@ -99,21 +106,18 @@ const DeleteHistory = () => {
 		fetchDeleteHistory();
 	}, []);
 
-	const handleRowClick = (rowData) => {
-		setModalData(rowData);
-		setShowModal(true);
-	};
+	// const handleRowClick = (rowData) => {
+	// 	setModalData(rowData);
+	// 	setShowModal(true);
+	// };
 
 	return (
 		<>
-			<Card></Card>
-			{/* 검색 폼 하위 컴포넌트 */}
-			<Row>
+			<Row className="pt-3 align-items-center">
 				<Col>
-					<div>
-						<h4 className="px-2 header-title">폐기이력</h4>
-					</div>
+					<h4 className="d-flex justify-content-start">폐기이력</h4>
 				</Col>
+
 				<Col xs="auto" style={{ paddingRight: '0' }}>
 					<Button
 						className="d-flex align-items-center"
@@ -138,6 +142,7 @@ const DeleteHistory = () => {
 						<fieldset style={{ display: 'flex', alignItems: 'center' }}>
 							<input
 								type="search"
+								placeholder="검색어를 입력하세요."
 								style={{
 									width: '200px',
 									height: '40px',
@@ -164,114 +169,119 @@ const DeleteHistory = () => {
 					</form>
 				</Col>
 			</Row>
+
+			<Card></Card>
 			{showSearchForm && (
-				<Row className="pt-3">
+				<Row className="pt-3 g-0">
 					<Col>
 						<Card>
 							<Card.Body>
-								<Form>
-									<Row>
-										<Col lg={2}>
-											<Form.Group as={Row}>
-												<Form.Label className="form-label">
-													자산명
-												</Form.Label>
-												<Col>
-													<Form.Control
-														type="text"
-														name="assetName"
-														value={searchAssetName || ''}
-														key="text"
-														onChange={(e) =>
-															setSearchAssetName(e.target.value)
-														}
-													/>
-												</Col>
-											</Form.Group>
-										</Col>
-										<Col lg={2}>
-											<Form.Group as={Row}>
-												<Form.Label className="form-label">
-													폐기자
-												</Form.Label>
-												<Col>
-													<Form.Control
-														type="text"
-														name="DeleteBy"
-														value={searchDeleteBy || ''}
-														key="text"
-														onChange={(e) =>
-															setSearchDeleteBy(e.target.value)
-														}
-													/>
-												</Col>
-											</Form.Group>
-										</Col>
-										<Col lg={2}>
-											<Form.Group as={Row}>
-												<Form.Label className="form-label">
-													폐기사유
-												</Form.Label>
-												<Col>
-													<Form.Control
-														type="text"
-														name="deleteReason"
-														value={searchDeleteReason || ''}
-														key="text"
-														onChange={(e) =>
-															setSearchDeleteReason(e.target.value)
-														}
-													/>
-												</Col>
-											</Form.Group>
-										</Col>
-										<Col lg={4}>
-											<div className="text-lg mt-xl-0 mt-2">
-												<Form.Group as={Row}>
-													<Form.Label className="form-label">
-														폐기일자
-													</Form.Label>
-													<Row>
-														<Col>
-															<Form.Control
-																type="date"
-																value={searchStartDate || ''}
-																onChange={(e) =>
-																	setSearchStartDate(
-																		e.target.value
-																	)
-																}
-															/>
-														</Col>
-														~
-														<Col>
-															<Form.Control
-																type="date"
-																value={searchEndDate || ''}
-																onChange={(e) =>
-																	setSearchEndDate(e.target.value)
-																}
-															/>
-														</Col>
-													</Row>
-												</Form.Group>
-											</div>
-										</Col>
+								<Row>
+									<Col lg={2}>
+										<Form.Group>
+											<Form.Label className="form-label">자산코드</Form.Label>
+											<Col lg={12}>
+												<Form.Control
+													type="text"
+													name="assetCode"
+													value={searchAssetCode || ''}
+													onChange={(e) =>
+														setSearchAssetCode(e.target.value)
+													}
+												/>
+											</Col>
+										</Form.Group>
+									</Col>
+									<Col lg={2}>
+										<Form.Group>
+											<Form.Label className="form-label">자산명</Form.Label>
+											<Col lg={12}>
+												<Form.Control
+													type="text"
+													name="assetName"
+													value={searchAssetName || ''}
+													onChange={(e) =>
+														setSearchAssetName(e.target.value)
+													}
+												/>
+											</Col>
+										</Form.Group>
+									</Col>
+									<Col lg={2}>
+										<Form.Group>
+											<Form.Label className="form-label">폐기사유</Form.Label>
+											<Col lg={12}>
+												<Form.Control
+													type="text"
+													name="deleteReason"
+													value={searchDeleteReason || ''}
+													onChange={(e) =>
+														setSearchDeleteReason(e.target.value)
+													}
+												/>
+											</Col>
+										</Form.Group>
+									</Col>
+									<Col lg={2}>
+										<Form.Group>
+											<Form.Label className="form-label">폐기자</Form.Label>
+											<Col lg={12}>
+												<Form.Control
+													type="text"
+													name="DeleteBy"
+													value={searchDeleteBy || ''}
+													onChange={(e) =>
+														setSearchDeleteBy(e.target.value)
+													}
+												/>
+											</Col>
+										</Form.Group>
+									</Col>
 
-										<Col
-											lg={2}
-											className="pt-3 d-flex align-items-center justify-content-end"
-										>
-											<Button
-												variant="dark"
-												type="button"
-												onClick={handleSearch}
+									<Col lg={3}>
+										<Form.Group as={Row}>
+											<Form.Label>폐기일자</Form.Label>
+											<Col xs={5} md={5} lg={5}>
+												<Form.Control
+													type="date"
+													value={searchStartDate || ''}
+													onChange={(e) =>
+														setSearchStartDate(e.target.value)
+													}
+													className="me-2"
+												/>
+											</Col>
+											<Col
+												xs={1}
+												md={1}
+												lg={1}
+												className="justify-content-center pt-1 text-center fw-bold"
 											>
-												검색
-											</Button>
-										</Col>
-									</Row>
-								</Form>
+												~
+											</Col>
+											<Col xs={5} md={5} lg={5}>
+												<Form.Control
+													type="date"
+													value={searchEndDate || ''}
+													onChange={(e) =>
+														setSearchEndDate(e.target.value)
+													}
+													className="ms-2"
+												/>
+											</Col>
+										</Form.Group>
+									</Col>
+
+									{/* <Col
+										lg={2}
+										className="pt-3 d-flex align-items-center justify-content-end"
+									> */}
+									<Col className="px-2 pt-3  d-flex justify-content-end" lg={1}>
+										<Button variant="dark" type="button" onClick={handleSearch}>
+											검색
+										</Button>
+									</Col>
+								</Row>
 							</Card.Body>
 						</Card>
 					</Col>

@@ -14,6 +14,8 @@ const SearchBar = ({ setData, originalData }) => {
 	const [location, setLocation] = useState('');
 	const [surveyStartDate, setSurveyStartDate] = useState(null);
 	const [surveyEndDate, setSurveyEndDate] = useState(null);
+	// 전체검색추가
+	const [searchKeyword, setSearchKeyword] = useState('');
 
 	//원본 데이터를 필터에 넣고 setData를 해줌
 	//원본 데이터는 set이 안되기 때문에 원본에서 계속 필터가 이루어짐
@@ -43,7 +45,29 @@ const SearchBar = ({ setData, originalData }) => {
 	};
 
 	//console.log("회차 : " + round);
+	// 전체검색 기능 추가
+	const handleSearch2 = (e) => {
+		e.preventDefault();
 
+		const keyword = (searchKeyword || '').replace(/\s+/g, '').toLowerCase().trim();
+
+		if (!keyword) {
+			setData(originalData);
+			return;
+		}
+
+		const filteredData = originalData.filter((item) => {
+			const matchsKeyword = Object.values(item).some(
+				(value) =>
+					typeof value === 'string' &&
+					(value || '').replace(/\s+/g, '').toLowerCase().includes(keyword)
+			);
+			return matchsKeyword;
+		});
+
+		setData(filteredData);
+		setSearchKeyword('');
+	};
 	return (
 		<>
 			<Row>
@@ -76,12 +100,15 @@ const SearchBar = ({ setData, originalData }) => {
 						<fieldset style={{ display: 'flex', alignItems: 'center' }}>
 							<input
 								type="search"
+								placeholder="검색어를 입력하세요."
 								style={{
 									width: '200px',
 									height: '40px',
 									float: 'left',
 									border: 'none',
 								}}
+								value={searchKeyword}
+								onChange={(e) => setSearchKeyword(e.target.value)}
 							/>
 							<button
 								className="button"
@@ -92,7 +119,7 @@ const SearchBar = ({ setData, originalData }) => {
 									float: 'left',
 									border: 'none',
 								}}
-								onClick={() => handleSearch()}
+								onClick={handleSearch2}
 							>
 								<i className="ri-search-line font-22"></i>
 							</button>
@@ -141,8 +168,8 @@ const SearchBar = ({ setData, originalData }) => {
 												location === ''
 													? locations[0]
 													: locations.find(
-														(option) => option.label === location
-													)
+															(option) => option.label === location
+													  )
 											}
 											onChange={(selectedOption) => {
 												//백에서 location이 한글 즉 label 값으로 넘어오기 때문에 전체일 때의 경우를 한 번 더 생각

@@ -20,10 +20,6 @@ const QrPrinterComponent = () => {
 			setPrinters(response.data);
 		} catch (error) {
 			console.error('Error fetching printers', error);
-			Swal.fire({
-				icon: 'error',
-				title: '네트워크 오류',
-			})
 		}
 	};
 

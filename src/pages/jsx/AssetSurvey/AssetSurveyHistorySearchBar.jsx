@@ -216,7 +216,8 @@ const SearchBar = ({ setData, originalData }) => {
 													/>
 												</div>
 											</Col>
-											<Col lg={3}>
+											{/* <Col lg={3}> */}
+											<Col lg="auto" className="ms-auto">
 												<Button variant="dark" onClick={setTableData}>
 													검색
 												</Button>

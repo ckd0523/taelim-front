@@ -18,6 +18,7 @@ const PlannedDisposalStatus = () => {
 
 	const [disposalData, setDisposalData] = useState(defaultDate);
 	const [dataValues, setDataValues] = useState([]);
+	const [axis, setAxis] = useState('x');
 
 	// const handleDate = async (selectedMonth) => {
 	// 	//selectedMonth가 뭔지 정확히 알아야함
@@ -65,11 +66,13 @@ const PlannedDisposalStatus = () => {
 	};
 
 	const options = {
+		indexAxis: axis,
 		responsive: true,
 		maintainAspectRatio: false,
 		// 스케일 소수점 나타내는 부분 없애는 코드
 		scales: {
 			y: {
+				stacked: true,
 				ticks: {
 					// 정수만 표시하도록 설정
 					stepSize: 1, // 눈금 간격을 1로 설정
@@ -81,6 +84,13 @@ const PlannedDisposalStatus = () => {
 						return null;
 					},
 				},
+				title: {
+					display: true,
+					text: '개수',
+				},
+			},
+			x: {
+				stacked: true,
 			},
 		},
 		//  스케일 소수점 이 사이꺼
@@ -93,14 +103,14 @@ const PlannedDisposalStatus = () => {
 				font: {
 					size: 17,
 				},
-				anchor: 'center',
-				align: 'center',
 			},
 			tooltip: {
 				callbacks: {
 					label: function (tooltipItem) {
+						const value = tooltipItem.formattedValue;
 						const index = tooltipItem.index; // 데이터 포인트의 인덱스
-						const value = disposalData[index]; // 해당 인덱스의 데이터 값 (response에서 받은 데이터)
+						//const value = tooltipItem.raw;
+						//const value = tooltipItem.formattedValues;
 						return `${value}개`; // 툴팁에 표시할 내용
 					},
 				},

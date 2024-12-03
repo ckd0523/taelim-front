@@ -38,7 +38,7 @@ const RegisterButton = ({ onClickRegister }) => {
 				if (checkResponse.status !== 200) {
 					Swal.fire({
 						icon: 'error',
-						title: '현재 위치에 대한 자산조사가 이미있습니다.',
+						title: '현재 위치에 대한 자산조사가\n이미있습니다.',
 					});
 					setLocation('');
 					//alert(checkResponse.body);
@@ -147,7 +147,7 @@ const RegisterButton = ({ onClickRegister }) => {
 										name="round"
 										value={round}
 										disabled
-										//placeholder='백엔드에서 처리하고 싶당'
+									//placeholder='백엔드에서 처리하고 싶당'
 									></Form.Control>
 								</InputGroup>
 							</Col>

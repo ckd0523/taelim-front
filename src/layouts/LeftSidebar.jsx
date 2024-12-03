@@ -12,6 +12,8 @@ import { useToggle } from '@/hooks';
 import { authApi, useAuthContext } from '@/common';
 import api from '@/common/api/authAxios';
 import QrPrinterComponent from './QrPrinterComponet';
+import EmailSetComponent from './EmailSetComponent';
+import Base64Set from './base64Set';
 
 // const UserBox = () => {
 // 	return (
@@ -110,10 +112,16 @@ const SideBarContent = () => {
 							<Col sm={3}>
 								<Nav variant="pills" className="flex-column">
 									<Nav.Item>
-										<Nav.Link eventKey="first">자산 기준 금액 설정</Nav.Link>
+										<Nav.Link eventKey="first">자산 기준 금액</Nav.Link>
 									</Nav.Item>
 									<Nav.Item>
-										<Nav.Link eventKey="second">QR 프린터기 설정</Nav.Link>
+										<Nav.Link eventKey="second">QR 프린터기</Nav.Link>
+									</Nav.Item>
+									<Nav.Item>
+										<Nav.Link eventKey="third">Email 설정</Nav.Link>
+									</Nav.Item>
+									<Nav.Item>
+										<Nav.Link eventKey="fourth">Base64 설정</Nav.Link>
 									</Nav.Item>
 								</Nav>
 							</Col>
@@ -182,6 +190,22 @@ const SideBarContent = () => {
 
 									<Tab.Pane eventKey="second">
 										<QrPrinterComponent />
+										<Modal.Footer>
+											<Button variant="secondary" onClick={toggleSignUp}>
+												닫기
+											</Button>
+										</Modal.Footer>
+									</Tab.Pane>
+									<Tab.Pane eventKey="third">
+										<EmailSetComponent />
+										<Modal.Footer>
+											<Button variant="secondary" onClick={toggleSignUp}>
+												닫기
+											</Button>
+										</Modal.Footer>
+									</Tab.Pane>
+									<Tab.Pane eventKey="fourth">
+										<Base64Set />
 										<Modal.Footer>
 											<Button variant="secondary" onClick={toggleSignUp}>
 												닫기

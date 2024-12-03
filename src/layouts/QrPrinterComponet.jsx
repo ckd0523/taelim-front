@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Modal, Form, Card, Row, Col } from 'react-bootstrap'; // React-Bootstrap에서 필요한 컴포넌트 가져오기
 import api from '@/common/api/authAxios'; // API 호출을 위한 커스텀 axios 인스턴스 가져오기
+import Swal from 'sweetalert2';
 
 const URL = import.meta.env.VITE_BASIC_URL; // 환경 변수에서 API URL 가져오기
 
@@ -34,6 +35,10 @@ const QrPrinterComponent = () => {
 			setShowEditModal(false);
 		} catch (error) {
 			console.error('Error updating printer IP:', error);
+			Swal.fire({
+				icon: 'error',
+				title: '네트워크 오류',
+			})
 		}
 	};
 
@@ -46,6 +51,10 @@ const QrPrinterComponent = () => {
 			setNewPrinter({ printerName: '', printerIp: '' });
 		} catch (error) {
 			console.error('Error adding printer', error);
+			Swal.fire({
+				icon: 'error',
+				title: '네트워크 오류',
+			})
 		}
 	};
 
@@ -55,7 +64,36 @@ const QrPrinterComponent = () => {
 			fetchPrinters();
 		} catch (error) {
 			console.error('Error selecting printer:', error);
+			Swal.fire({
+				icon: 'error',
+				title: '네트워크 오류',
+			})
 		}
+	};
+
+	const deletePrinter = async (printerId) => {
+		Swal.fire({
+			icon: 'question',
+			title: '삭제하시겠습니까?',
+			showCancelButton: true,
+			confirmButtonColor: '#3085d6',
+			cancelButtonColor: '#d33',
+			confirmButtonText: '예',
+			cancelButtonText: '아니오',
+		}).then(async (result) => {
+			if (result.isConfirmed) {
+				try {
+					await api.delete(`${URL}/printers/${printerId}/delete`);
+					fetchPrinters();
+				} catch (error) {
+					console.error("Error deleting printer:", error);
+					Swal.fire({
+						icon: 'error',
+						title: '네트워크 오류',
+					})
+				}
+			}
+		});
 	};
 
 	useEffect(() => {
@@ -89,17 +127,28 @@ const QrPrinterComponent = () => {
 									checked={printer.isSelected === true}
 									onChange={() => selectPrinter(printer.qrPrinterNo)}
 								/>
-								<Button
-									onClick={() => {
-										setSelectedPrinter(printer);
-										setEditIp(printer.printerIp);
-										setShowEditModal(true);
-									}}
-									className="mt-2"
-									variant="info"
-								>
-									IP 수정
-								</Button>
+								<div className='d-flex justify-content-between'>
+									<Button
+										onClick={() => {
+											setSelectedPrinter(printer);
+											setEditIp(printer.printerIp);
+											setShowEditModal(true);
+										}}
+										className="mt-2"
+										variant="info"
+									>
+										IP 수정
+									</Button>
+									<Button
+										onClick={() => {
+											deletePrinter(printer.qrPrinterNo);
+										}}
+										className="mt-2"
+										variant="danger"
+									>
+										삭제
+									</Button>
+								</div>
 							</Card.Body>
 						</Card>
 					</Col>

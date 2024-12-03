@@ -3,9 +3,10 @@ import { Table } from '@/components';
 import BackUpTable from './data'; // useBackUpHistory로 변경
 import { useState } from 'react';
 import { CustomDatePicker } from '@/components';
-import Select from 'react-select';
+//import Select from 'react-select';
 import classNames from 'classnames';
 import '../MaintainHistory/Searchbar.css';
+import { useEffect } from 'react';
 
 const columns = [
 	{ Header: '번호', accessor: 'backUpNo', defaultCanSort: true },
@@ -13,18 +14,74 @@ const columns = [
 	//{ Header: '백업 범위', accessor: 'backUpScope', defaultCanSort: false },
 ];
 
-const sizePerPageList = [
-	{ text: '5', value: 5 },
-	{ text: '10', value: 10 },
-	{ text: '25', value: 25 },
-	{ text: '100', value: 100 },
-];
-
 const BackUpHistory = () => {
-	const [selectedDate, setSelectedDate] = useState(new Date());
 	const [showSearchForm, setShowSearchForm] = useState(false);
+	const [searchData, setSearchData] = useState([]); //필터할 테이블
+	const [data, setData] = useState([]); // 기존 테이블
+	const [searchKeyword, setSearchKeyword] = useState('');
+	const [searchBackupStartDate, setSearchBackupStartDate] = useState(null);
+	const [searchBackupEndDate, setSearchBackupEndDate] = useState(null);
 
-	const data = BackUpTable();
+	const originalData = BackUpTable();
+	console.log('원본 데이터 : ' + JSON.stringify(originalData));
+
+	useEffect(() => {
+		setData(originalData);
+		setSearchData(originalData);
+	}, [originalData]);
+
+	//console.log("검색 데이터 : " + searchData);
+
+	const handleSearch = (e) => {
+		// const adjustedEndDate = selectedEndDate ? new Date(selectedEndDate.setHours(23, 59, 59, 999)) : null; //시작일과 종료일이 같을 때 검색이 안되는 문제 해결
+		// const filteredData = originalData.filter((backUpList) => {
+		// 	return (
+		// 		(selectedStartDate === null ||
+		// 			new Date(backUpList.backUpDate) >= selectedStartDate) &&
+		// 		(adjustedEndDate === null || new Date(backUpList.backUpDate) <= adjustedEndDate)
+		// 	);
+		// });
+
+		// setSearchData(filteredData);
+		e.preventDefault();
+		const filteredData = data.filter((item) => {
+			const backUpDate = item.backUpDate ? new Date(item.backUpDate) : null;
+			const searchStart = searchBackupStartDate ? new Date(searchBackupStartDate) : null;
+			const searchEnd = searchBackupEndDate ? new Date(searchBackupEndDate) : null;
+			return (
+				(!searchStart || (backUpDate && backUpDate >= searchStart)) &&
+				(!searchEnd || (backUpDate && backUpDate <= searchEnd))
+			);
+		});
+
+		setSearchData(filteredData);
+		console.log(filteredData);
+		setSearchBackupStartDate('');
+		setSearchBackupEndDate('');
+	};
+
+	const handleSearch2 = (e) => {
+		e.preventDefault();
+
+		const keyword = (searchKeyword || '').replace(/\s+/g, '').toLowerCase().trim();
+
+		if (!keyword) {
+			setSearchData(data);
+			return;
+		}
+
+		const filteredData = data.filter((item) => {
+			const matchsKeyword = Object.values(item).some(
+				(value) =>
+					typeof value === 'string' &&
+					(value || '').replace(/\s+/g, '').toLowerCase().includes(keyword)
+			);
+			return matchsKeyword;
+		});
+
+		setSearchData(filteredData);
+		setSearchKeyword('');
+	};
 
 	return (
 		<div className="pt-3">
@@ -64,6 +121,8 @@ const BackUpHistory = () => {
 									float: 'left',
 									border: 'none',
 								}}
+								value={searchKeyword}
+								onChange={(e) => setSearchKeyword(e.target.value)}
 							/>
 							<button
 								className="button"
@@ -74,7 +133,7 @@ const BackUpHistory = () => {
 									float: 'left',
 									border: 'none',
 								}}
-								onClick={() => handleSearch()}
+								onClick={handleSearch2}
 							>
 								<i className="ri-search-line font-22"></i>
 							</button>
@@ -89,39 +148,17 @@ const BackUpHistory = () => {
 							<Card.Body>
 								<Form>
 									<Row className="align-items-center">
-										{/* <Col xs={12} md={4} lg={2}>
-											<Form.Group as={Row}>
-												<Form.Label xs={12} md={12} lg={10}>
-													백업범위
-												</Form.Label>
-
-												<Form.Select
-													options={[
-														{ value: 'FULL', label: '전체' },
-														{ value: 'PARITAL', label: '부분' },
-													]}
-												>
-													<option value="" disabled>
-														백업 범위를 선택해주세요.
-													</option>
-													<option key="FULL" value="FULL">
-														전체
-													</option>
-													<option key="PARITAL" value="PARITAL">
-														부분
-													</option>
-												</Form.Select>
-											</Form.Group>
-										</Col> */}
 										<Col xs={12} md={12} lg={12}>
 											<Form.Group as={Row}>
 												<Form.Label>백업 날짜</Form.Label>
 												<Col xs={3} md={3} lg={3}>
 													<Form.Control
 														type="date"
-														value={selectedDate}
+														value={searchBackupStartDate || ''}
 														onChange={(date) => {
-															setSelectedDate(date);
+															setSearchBackupStartDate(
+																date.target.value
+															);
 														}}
 													/>
 												</Col>
@@ -136,9 +173,11 @@ const BackUpHistory = () => {
 												<Col xs={3} md={3} lg={3}>
 													<Form.Control
 														type="date"
-														value={selectedDate}
+														value={searchBackupEndDate || ''}
 														onChange={(date) => {
-															setSelectedDate(date);
+															setSearchBackupEndDate(
+																date.target.value
+															);
 														}}
 													/>
 												</Col>
@@ -148,7 +187,11 @@ const BackUpHistory = () => {
 													lg={5}
 													className="d-flex align-items-center justify-content-end"
 												>
-													<Button variant="dark" type="button">
+													<Button
+														variant="dark"
+														type="button"
+														onClick={handleSearch}
+													>
 														검색
 													</Button>
 												</Col>
@@ -165,13 +208,12 @@ const BackUpHistory = () => {
 				<Col>
 					<Card>
 						<Card.Body>
-							{data.length > 0 ? (
+							{searchData.length > 0 ? (
 								<Table
 									columns={columns}
-									data={data}
-									pageSize={5}
+									data={searchData}
+									pageSize={10}
 									theadClass="table-dark"
-									sizePerPageList={sizePerPageList}
 									isSortable={true}
 									pagination={true}
 								/>

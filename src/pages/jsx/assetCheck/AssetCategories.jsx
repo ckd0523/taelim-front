@@ -461,9 +461,9 @@ const AssetCategories = ({
 															placeholder="DB종류를 입력해주세요"
 															className="mb-2"
 															type="text"
-															value={formData.DBType}
+															value={formData.dbtype}
 															onChange={handleChange}
-															name="DBType"
+															name="dbtype"
 														/>
 													</Col>
 												</Row>

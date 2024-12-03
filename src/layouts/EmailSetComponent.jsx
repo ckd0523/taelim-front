@@ -74,7 +74,7 @@ const EmailSetComponent = () => {
 			<Button
 				variant="success"
 				onClick={() => setShowAddEmailSetModal(true)}
-				style={{ display: emailSets.length >= 5 ? 'none' : 'inline-block' }}
+				style={{ display: emailSets.length >= 2 ? 'none' : 'inline-block' }}
 			>
 				Email 설정 추가
 			</Button>

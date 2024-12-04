@@ -8,6 +8,14 @@ import api from '@/common/api/authAxios';
 
 const URL = import.meta.env.VITE_BASIC_URL;
 
+import ChartDataLabels from 'chartjs-plugin-datalabels';
+import {
+	Chart as ChartJS,
+} from 'chart.js';
+
+// 플러그인 등록
+ChartJS.register(ChartDataLabels);
+
 const PlannedDisposalStatus = () => {
 	const today = new Date();
 	const defaultDate = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(
@@ -32,7 +40,11 @@ const PlannedDisposalStatus = () => {
 		const getDisposalData = async () => {
 			const response = await api.get(`${URL}/chart/9`);
 			console.log('여기다', response.data);
-			setDisposalData(response.data);
+			// 데이터 변환
+			const labels = Object.keys(response.data);
+			const data = Object.values(response.data);
+
+			setDisposalData({ labels, data });
 		};
 
 		getDisposalData();
@@ -43,7 +55,7 @@ const PlannedDisposalStatus = () => {
 		datasets: [
 			{
 				//label: '자산 수량',
-				data: disposalData,
+				data: disposalData.data,
 				backgroundColor: [
 					'rgba(206, 110, 15, 1)',
 					'rgba(206, 110, 15, 1)',
@@ -99,10 +111,12 @@ const PlannedDisposalStatus = () => {
 				display: false,
 			},
 			datalabels: {
-				color: '#fff',
+				color: 'white',
 				font: {
 					size: 17,
 				},
+				anchor: "center",
+				align: "center",
 			},
 			tooltip: {
 				callbacks: {

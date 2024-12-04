@@ -284,11 +284,11 @@ const UpdateHistory = () => {
 											</div>
 										</Form.Group>
 									</Col> */}
-									<Col lg={3}>
+									<Col lg={4}>
 										<Form.Group as={Row}>
 											<Form.Label>수정일자</Form.Label>
 
-											<Col xs={5} md={5} lg={5}>
+											<Col xs={5} md={5} lg={4}>
 												<Form.Control
 													type="date"
 													value={searchStartDate || ''}
@@ -306,7 +306,7 @@ const UpdateHistory = () => {
 											>
 												~
 											</Col>
-											<Col xs={5} md={5} lg={5}>
+											<Col xs={5} md={5} lg={4}>
 												<Form.Control
 													type="date"
 													value={searchEndDate || ''}
@@ -316,13 +316,16 @@ const UpdateHistory = () => {
 													className="ms-2" // 왼쪽 여백
 												/>
 											</Col>
+											<Col lg="auto" className="ms-auto">
+												<Button
+													variant="dark"
+													type="button"
+													onClick={handleSearch}
+												>
+													검색
+												</Button>
+											</Col>
 										</Form.Group>
-									</Col>
-
-									<Col className="px-2 pt-3  d-flex justify-content-end" lg={1}>
-										<Button variant="dark" type="button" onClick={handleSearch}>
-											검색
-										</Button>
 									</Col>
 								</Row>
 							</Card.Body>

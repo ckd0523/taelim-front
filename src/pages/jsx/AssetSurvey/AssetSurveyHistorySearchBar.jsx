@@ -20,20 +20,53 @@ const SearchBar = ({ setData, originalData }) => {
 	//원본 데이터를 필터에 넣고 setData를 해줌
 	//원본 데이터는 set이 안되기 때문에 원본에서 계속 필터가 이루어짐
 	const setTableData = () => {
-		const filteredData = originalData.filter((originalData) => {
+		// Helper 함수: 시간을 제거하고 자정으로 변환
+		const normalizeDate = (date) => {
+			return date ? new Date(date.getFullYear(), date.getMonth(), date.getDate()) : null;
+		};
+
+		// 검색 날짜를 자정으로 통일
+		const normalizedStartDate = normalizeDate(
+			surveyStartDate ? new Date(surveyStartDate) : null
+		);
+		const normalizedEndDate = normalizeDate(surveyEndDate ? new Date(surveyEndDate) : null);
+
+		const filteredData = originalData.filter((item) => {
+			// 데이터 날짜를 자정으로 통일
+			const surveyStart = normalizeDate(new Date(item.assetSurveyStartDate));
+			const surveyEnd = item.assetSurveyEndDate
+				? normalizeDate(new Date(item.assetSurveyEndDate))
+				: null; // 종료 날짜가 없으면 null 처리
+
+			// 날짜 범위 조건 확인
+			const isDateInRange =
+				// 1. 시작 날짜와 종료 날짜가 모두 없으면 통과
+				(!normalizedStartDate && !normalizedEndDate) ||
+				// 2. 시작 날짜가 범위 내에 있으면 통과
+				(normalizedStartDate &&
+					surveyStart >= normalizedStartDate &&
+					surveyStart <= normalizedEndDate) ||
+				// 3. 종료 날짜가 범위 내에 있고 시작 날짜가 범위 내에 있을 경우에만 통과
+				(normalizedEndDate &&
+					surveyEnd &&
+					surveyEnd >= normalizedStartDate &&
+					surveyEnd <= normalizedEndDate &&
+					surveyStart >= normalizedStartDate) ||
+				// 4. 시작 날짜가 범위 내에 있고 종료 날짜가 범위 내에 포함될 수 있도록 통과
+				(surveyStart >= normalizedStartDate && surveyStart <= normalizedEndDate) ||
+				(surveyEnd >= normalizedStartDate && surveyEnd <= normalizedEndDate);
+
 			return (
-				//includes는 문자열만 가능!!!!!!!!!
-				(round === '' || originalData.round == round) &&
-				(surveyBy === '' || originalData.assetSurveyBy.includes(surveyBy)) &&
-				(location === '' || originalData.assetSurveyLocation === location) &&
-				(surveyStartDate === null ||
-					new Date(originalData.assetSurveyStartDate) >= surveyStartDate) &&
-				(surveyEndDate === null ||
-					new Date(originalData.assetSurveyEndDate) <= surveyEndDate)
+				(round === '' || item.round == round) &&
+				(surveyBy === '' || item.assetSurveyBy.includes(surveyBy)) &&
+				(location === '' || item.assetSurveyLocation === location) &&
+				isDateInRange // 날짜 조건
 			);
 		});
 		console.log('originalTableData' + JSON.stringify(originalData));
 		console.log('위치 label : ' + location);
+		console.log('surveyStartDate:', surveyStartDate);
+		console.log('surveyEndDate:', surveyEndDate);
 		setData(filteredData);
 
 		//검색 후 검색어 초기화

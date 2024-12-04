@@ -142,9 +142,29 @@ const DepartmentStatus2 = () => {
 			const response = await api.get(`${URL}/chart/3`);
 			console.log(response.data);
 
-			setDepartmentData(Object.values(response.data));
-		};
+			// response.data가 { "구매팀": 10, "경영기획실": 15, ... } 형태일 경우
+			if (response.data) {
+				// 부서 이름과 자산 개수를 매칭할 수 있도록 데이터 순서를 맞춰줍니다.
+				const departmentLabels = [
+					'구매팀',
+					'경영기획실',
+					'생산팀',
+					'품질팀',
+					'영업팀',
+					'기술연구소',
+					'기타',
+					'관리팀',
+				];
 
+				// 부서명 순서에 맞게 데이터 매칭
+				const sortedDepartmentData = departmentLabels.map(
+					(department) => response.data[department] || 0
+				);
+
+				// departmentData에 자산 개수 순서를 맞춰서 설정
+				setDepartmentData(sortedDepartmentData);
+			}
+		};
 		getDepartmentData();
 	}, []);
 
@@ -259,6 +279,7 @@ const DepartmentStatus2 = () => {
 								{ value: '5', label: '품질팀' },
 								{ value: '6', label: '생산팀' },
 								{ value: '7', label: '기술연구소' },
+								{ value: '8', label: '기타' },
 							]}
 							defaultValue={{ value: '0', label: '부서별 자산' }}
 							onChange={handleLocation}

@@ -238,10 +238,10 @@ const DeleteHistory = () => {
 										</Form.Group>
 									</Col>
 
-									<Col lg={3}>
+									<Col lg={4}>
 										<Form.Group as={Row}>
 											<Form.Label>폐기일자</Form.Label>
-											<Col xs={5} md={5} lg={5}>
+											<Col xs={5} md={5} lg={4}>
 												<Form.Control
 													type="date"
 													value={searchStartDate || ''}
@@ -259,7 +259,7 @@ const DeleteHistory = () => {
 											>
 												~
 											</Col>
-											<Col xs={5} md={5} lg={5}>
+											<Col xs={5} md={5} lg={4}>
 												<Form.Control
 													type="date"
 													value={searchEndDate || ''}
@@ -269,6 +269,15 @@ const DeleteHistory = () => {
 													className="ms-2"
 												/>
 											</Col>
+											<Col lg="auto" className="ms-auto">
+												<Button
+													variant="dark"
+													type="button"
+													onClick={handleSearch}
+												>
+													검색
+												</Button>
+											</Col>
 										</Form.Group>
 									</Col>
 
@@ -276,11 +285,6 @@ const DeleteHistory = () => {
 										lg={2}
 										className="pt-3 d-flex align-items-center justify-content-end"
 									> */}
-									<Col className="px-2 pt-3  d-flex justify-content-end" lg={1}>
-										<Button variant="dark" type="button" onClick={handleSearch}>
-											검색
-										</Button>
-									</Col>
 								</Row>
 							</Card.Body>
 						</Card>

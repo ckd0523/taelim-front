@@ -1,10 +1,10 @@
-import { Row, Col, Card, Button, Alert } from 'react-bootstrap';
+import { Row, Col, Card, Button, Alert, Form } from 'react-bootstrap';
 import { CustomDatePicker, TextInput, Form as RHForm } from '@/components';
 import { Table } from './Table';
 import { columns } from './ColumnsSet';
 import { useState, useEffect } from 'react';
 import { InfoModal, ActionModal, ProcessModal } from './DemandModal';
-import axios from 'axios';
+//import axios from 'axios';
 import '../MaintainHistory/Searchbar.css';
 import Swal from 'sweetalert2';
 import api from '@/common/api/authAxios';
@@ -16,12 +16,27 @@ import Select from 'react-select';
 const DemandHistory = () => {
 	const [demands, setDemands] = useState([]);
 	const [demandsList, setDemandsList] = useState([]);
+
 	const [showSearchForm, setShowSearchForm] = useState(false);
+
 	const [selectedOrderType, setSelectedOrderType] = useState('');
 	const [selectedRequester, setSelectedRequester] = useState('');
 	const [selectedStatus, setSelectedStatus] = useState('');
 	const [selectedStartDate, setSelectedStartDate] = useState(null);
 	const [selectedEndDate, setSelectedEndDate] = useState(null);
+
+	// 검색 조건 만들기
+	const [searchAssetCode, setSearchAssetCode] = useState('');
+	const [searchAssetName, setSearchAssetName] = useState('');
+	const [searchDemandBy, setSearchDemandBy] = useState('');
+	const [searchDemandType, setSearchDemandType] = useState('');
+	const [searchDemandStatus, setSearchDemandStatus] = useState('');
+	const [searchDemandReason, setSearchDemandReason] = useState('');
+	const [searchDemandDetail, setSearchDemandDetail] = useState('');
+	const [searchCommnet, setSearchComment] = useState('');
+	const [searchStartDate, setSearchStartDate] = useState(null);
+	const [searchEndDate, setSearchEndDate] = useState(null);
+	const [searchKeyword, setSearchKeyword] = useState('');
 
 	const [showModal, setShowModal] = useState(false);
 	const [modalData, setModalData] = useState(null);
@@ -42,7 +57,7 @@ const DemandHistory = () => {
 		const fetchData = async () => {
 			try {
 				const response = await api.get(`${urlConfig}/DemandHistory`);
-				console.log(response.status);
+				console.log(response);
 				setDemands(response.data);
 			} catch (error) {
 				console.error('데이터를 가져오는 중 오류 발생:', error);
@@ -118,18 +133,85 @@ const DemandHistory = () => {
 	};
 
 	//검색 함수
-	const handleSearch = () => {
+	const handleSearch = (e) => {
+		e.preventDefault();
 		const filteredData = demands.filter((demands) => {
+			const demandDate = demands.demandDate ? new Date(demands.demandDate) : null;
+			const searchStart = searchStartDate ? new Date(searchStartDate) : null;
+			const searchEnd = searchEndDate ? new Date(searchEndDate) : null;
+
 			return (
-				(selectedOrderType === '' || demands.demandType.includes(selectedOrderType)) &&
-				(selectedRequester === '' || demands.demandBy.includes(selectedRequester)) &&
-				(selectedStatus === '' || demands.demandStatus.includes(selectedStatus)) &&
-				(selectedStartDate === null || new Date(demands.demandDate) >= selectedStartDate) &&
-				(selectedEndDate === null || new Date(demands.demandDate) <= selectedEndDate)
+				(!searchAssetName ||
+					(demands.assetName || '')
+						.replace(/\s+/g, '')
+						.toLowerCase()
+						.includes(searchAssetName.replace(/\s+/g, '').toLowerCase())) &&
+				(!searchAssetCode ||
+					(demands.assetCode || '')
+						.replace(/\s+/g, '')
+						.toLowerCase()
+						.includes(searchAssetCode.replace(/\s+/g, '').toLowerCase())) &&
+				(!searchDemandBy ||
+					(demands.demandBy || '')
+						.replace(/\s+/g, '')
+						.toLowerCase()
+						.includes(searchDemandBy.replace(/\s+/g, '').toLowerCase())) &&
+				(!searchDemandReason ||
+					(demands.demandReason || '')
+						.replace(/\s+/g, '')
+						.toLowerCase()
+						.includes(searchDemandReason.replace(/\s+/g, '').toLowerCase())) &&
+				(!searchDemandDetail ||
+					(demands.demandDetail || '')
+						.replace(/\s+/g, '')
+						.toLowerCase()
+						.includes(searchDemandDetail.replace(/\s+/g, '').toLowerCase())) &&
+				(!searchCommnet ||
+					(demands.comment || '')
+						.replace(/\s+/g, '')
+						.toLowerCase()
+						.includes(searchCommnet.replace(/\s+/g, '').toLowerCase())) &&
+				(!searchStart || (demandDate && demandDate >= searchStart)) &&
+				(!searchEnd || (demandDate && demandDate <= searchEnd)) &&
+				// 요청구분에 대한 필터링 추가
+				(!searchDemandType || demands.demandType === searchDemandType) &&
+				(!searchDemandStatus || demands.demandStatus === searchDemandStatus)
 			);
 		});
 		console.log(selectedOrderType);
 		setDemandsList(filteredData);
+		setSearchAssetCode('');
+		setSearchAssetName('');
+		setSearchDemandBy('');
+		setSearchDemandType(null);
+		setSearchDemandStatus(null);
+		setSearchDemandReason('');
+		setSearchDemandDetail('');
+		setSearchComment('');
+		setSearchStartDate('');
+		setSearchEndDate('');
+	};
+
+	const handleSearch2 = (e) => {
+		e.preventDefault();
+
+		const keyword = (searchKeyword || '').replace(/\s+/g, '').toLowerCase().trim();
+
+		if (!keyword) {
+			setDemandsList(demands);
+			return;
+		}
+		const filteredData = demands.filter((item) => {
+			const matchsKeyword = Object.values(item).some(
+				(value) =>
+					typeof value === 'string' &&
+					(value || '').replace(/\s+/g, '').toLowerCase().includes(keyword)
+			);
+			return matchsKeyword;
+		});
+
+		setDemandsList(filteredData);
+		setSearchKeyword('');
 	};
 
 	return (
@@ -157,17 +239,21 @@ const DemandHistory = () => {
 						)}
 					</Button>
 				</Col>
+
 				<Col xs="auto" style={{ paddingLeft: '0' }}>
 					<form>
 						<fieldset style={{ display: 'flex', alignItems: 'center' }}>
 							<input
 								type="search"
+								placeholder="검색어를 입력하세요."
 								style={{
 									width: '200px',
 									height: '40px',
 									float: 'left',
 									border: 'none',
 								}}
+								value={searchKeyword}
+								onChange={(e) => setSearchKeyword(e.target.value)}
 							/>
 							<button
 								className="button"
@@ -178,7 +264,7 @@ const DemandHistory = () => {
 									float: 'left',
 									border: 'none',
 								}}
-								onClick={() => handleSearch()}
+								onClick={handleSearch2}
 							>
 								<i className="ri-search-line font-22"></i>
 							</button>
@@ -186,12 +272,207 @@ const DemandHistory = () => {
 					</form>
 				</Col>
 			</Row>
+
+			<Card></Card>
 			{showSearchForm && (
-				<Row className="pt-3">
+				<Row className="pt-3 g-0">
 					<Col>
 						<Card>
 							<Card.Body>
-								<RHForm onChange={handleChange}>
+								<Row>
+									<Col lg={2}>
+										<Form.Group>
+											<Form.Label className="form-label">자산코드</Form.Label>
+											<Col lg={12}>
+												<Form.Control
+													type="text"
+													name="assetCode"
+													value={searchAssetCode || ''}
+													onChange={(e) =>
+														setSearchAssetCode(e.target.value)
+													}
+												/>
+											</Col>
+										</Form.Group>
+									</Col>
+									<Col lg={2}>
+										<Form.Group>
+											<Form.Label className="form-label">자산명</Form.Label>
+											<Col lg={12}>
+												<Form.Control
+													type="text"
+													name="assetName"
+													value={searchAssetName || ''}
+													onChange={(e) =>
+														setSearchAssetName(e.target.value)
+													}
+												/>
+											</Col>
+										</Form.Group>
+									</Col>
+									<Col lg={2}>
+										<Form.Group>
+											<Form.Label className="form-label">요청자</Form.Label>
+											<Col lg={12}>
+												<Form.Control
+													type="text"
+													name="demandBy"
+													value={searchDemandBy || ''}
+													onChange={(e) =>
+														setSearchDemandBy(e.target.value)
+													}
+												/>
+											</Col>
+										</Form.Group>
+									</Col>
+									<Col lg={3}>
+										<Form.Group>
+											<Form.Label className="form-label">요청구분</Form.Label>
+											<Select
+												className="react-select"
+												classNamePrefix="react-select"
+												options={[
+													{ value: '', label: '전체' },
+													{ value: 'update', label: '수정요청' },
+													{ value: 'delete', label: '폐기요청' },
+												]}
+												value={{
+													value: searchDemandType,
+													label: searchDemandType
+														? searchDemandType === 'update'
+															? '수정요청'
+															: '폐기요청'
+														: '전체',
+												}} // 선택된 값에 맞는 라벨 표시
+												onChange={(selected) =>
+													setSearchDemandType(selected?.value || '')
+												} // 'update', 'delete', '전체' 값을 searchDemandType에 설정
+											></Select>
+										</Form.Group>
+									</Col>
+									<Col lg={3}>
+										<Form.Group>
+											<Form.Label className="form-label">요청상태</Form.Label>
+											<Select
+												className="react-select"
+												classNamePrefix="react-select"
+												options={[
+													{ value: '', label: '전체' },
+													{ value: 'UNCONFIRMED', label: '미처리' },
+													{ value: 'APPROVE', label: '승인' },
+													{ value: 'REFUSAL', label: '거절' },
+												]}
+												value={{
+													value: searchDemandStatus,
+													label: searchDemandStatus
+														? searchDemandStatus === 'UNCONFIRMED'
+															? '미처리'
+															: searchDemandStatus === 'APPROVE'
+															  ? '승인'
+															  : searchDemandStatus === 'REFUSAL'
+															    ? '거절'
+															    : '' // 기본값이 없을 때 처리
+														: '전체', // searchDemandStatus가 없으면 '전체'
+												}}
+												onChange={(selected) =>
+													setSearchDemandStatus(selected?.value || '')
+												}
+											></Select>
+										</Form.Group>
+									</Col>
+								</Row>
+								<Card></Card>
+								<Row>
+									<Col lg={2}>
+										<Form.Group>
+											<Form.Label className="form-label">요청사유</Form.Label>
+											<Col lg={12}>
+												<Form.Control
+													type="text"
+													name="demandReason "
+													value={searchDemandReason || ''}
+													onChange={(e) =>
+														setSearchDemandReason(e.target.value)
+													}
+												/>
+											</Col>
+										</Form.Group>
+									</Col>
+									<Col lg={2}>
+										<Form.Group>
+											<Form.Label className="form-label">요청내용</Form.Label>
+											<Col lg={12}>
+												<Form.Control
+													type="text"
+													name="demandDetail "
+													value={searchDemandDetail || ''}
+													onChange={(e) =>
+														setSearchDemandDetail(e.target.value)
+													}
+												/>
+											</Col>
+										</Form.Group>
+									</Col>
+									<Col lg={2}>
+										<Form.Group>
+											<Form.Label className="form-label">처리사유</Form.Label>
+											<Col lg={12}>
+												<Form.Control
+													type="text"
+													name="comment"
+													value={searchCommnet || ''}
+													onChange={(e) =>
+														setSearchComment(e.target.value)
+													}
+												/>
+											</Col>
+										</Form.Group>
+									</Col>
+									<Col lg={6}>
+										<Form.Group as={Row}>
+											<Form.Label>요청일자</Form.Label>
+
+											<Col xs={5} md={5} lg={4}>
+												<Form.Control
+													type="date"
+													value={searchStartDate || ''}
+													onChange={(e) =>
+														setSearchStartDate(e.target.value)
+													}
+													className="me-2" // 오른쪽 여백
+												/>
+											</Col>
+											<Col
+												xs={1}
+												md={1}
+												lg={1}
+												className="justify-content-center pt-1 text-center fw-bold"
+											>
+												~
+											</Col>
+											<Col xs={5} md={5} lg={4}>
+												<Form.Control
+													type="date"
+													value={searchEndDate || ''}
+													onChange={(e) =>
+														setSearchEndDate(e.target.value)
+													}
+													className="ms-2" // 왼쪽 여백
+												/>
+											</Col>
+											<Col lg="auto" className="ms-auto">
+												<Button
+													variant="dark"
+													type="button"
+													onClick={handleSearch}
+												>
+													검색
+												</Button>
+											</Col>
+										</Form.Group>
+									</Col>
+								</Row>
+								{/* <RHForm onChange={handleChange}>
 									<Row className="mb-2">
 										<Col lg={2} xs={4}>
 											<label className="form-label">요청구분</label> <br />
@@ -292,7 +573,7 @@ const DemandHistory = () => {
 											</div>
 										</Col>
 									</Row>
-								</RHForm>
+								</RHForm> */}
 							</Card.Body>
 						</Card>
 					</Col>

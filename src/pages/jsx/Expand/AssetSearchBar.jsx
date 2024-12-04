@@ -75,7 +75,7 @@ const SearchForm = ({ onSearch }) => {
 		},
 		{
 			value: 'NULL',
-			label: 'N/A',
+			label: '기타',
 		},
 	];
 	const valueOptions = [
@@ -194,7 +194,7 @@ const SearchForm = ({ onSearch }) => {
 						<CardBody>
 							<RHForm onChange={handleFormChange}>
 								<Row className="mb-3">
-									<Col xxl={2} xl={6} lg={6} sm={6} md={6} xs={6}>
+									<Col xxl={3} xl={6} lg={6} sm={6} md={6} xs={6}>
 										<Form.Label>자산명</Form.Label>
 										<Form.Control
 											name="assetName"
@@ -204,7 +204,7 @@ const SearchForm = ({ onSearch }) => {
 											onChange={handleFormChange}
 										/>
 									</Col>
-									<Col xxl={2} xl={6} lg={6} sm={6} md={6} xs={6}>
+									<Col xxl={3} xl={6} lg={6} sm={6} md={6} xs={6}>
 										<Form.Label>사용자</Form.Label>
 										<Form.Control
 											name="assetUser"
@@ -214,7 +214,7 @@ const SearchForm = ({ onSearch }) => {
 											onChange={handleFormChange}
 										/>
 									</Col>
-									<Col xxl={2} xl={6} lg={6} sm={6} md={6} xs={6}>
+									<Col xxl={3} xl={6} lg={6} sm={6} md={6} xs={6}>
 										<Form.Label>자산위치</Form.Label>
 										<Select
 											options={assetLocationOptions}
@@ -229,7 +229,7 @@ const SearchForm = ({ onSearch }) => {
 											placeholder="위치를 선택하세요" // 여기에 placeholder 추가
 										/>
 									</Col>
-									<Col xxl={2} xl={6} lg={6} sm={6} md={6} xs={6}>
+									<Col xxl={3} xl={6} lg={6} sm={6} md={6} xs={6}>
 										<Form.Label>부서</Form.Label>
 										<Select
 											options={departmentOptions}
@@ -244,10 +244,40 @@ const SearchForm = ({ onSearch }) => {
 											placeholder="부서를 선택하세요" // 여기에 placeholder 추가
 										/>
 									</Col>
-									<Col xxl={4} lg={12} sm={12} md={12} xs={12}>
+								</Row>
+
+								<Row className="mb-3">
+									<Col xxl={3} xl={6} lg={6} sm={6} md={6} xs={6}>
+										<Form.Label>자산 가치</Form.Label>
+										<Select
+											options={valueOptions}
+											onChange={handleValueStandardChange}
+											value={valueStandardNo}
+											placeholder="가치를 선택하세요"
+										/>
+									</Col>
+									<Col xxl={3} xl={6} lg={6} sm={6} md={6} xs={6}>
+										<Form.Label>소유권</Form.Label>
+										<Select
+											options={ownershipOptions}
+											onChange={handleOwnerShipChange}
+											value={selectedOwnership}
+											placeholder="소유권을 선택하세요"
+										/>
+									</Col>
+									<Col xxl={3} xl={6} lg={6} sm={6} md={6} xs={6}>
+										<Form.Label>운용상태</Form.Label>
+										<Select
+											options={operationStatusOptions}
+											onChange={handleOperationStatusChange}
+											value={selectedOperationStatus}
+											placeholder="가동여부를 선택하세요"
+										/>
+									</Col>
+									<Col xxl={3} lg={12} sm={12} md={12} xs={12}>
 										<Form.Label>취득일자</Form.Label>
 										<Row>
-											<Col lg={4} sm={4} md={4} xs={4}>
+											<Col lg={5} sm={4} md={4} xs={4}>
 												<CustomDatePicker
 													hideAddon={true}
 													dateFormat="yyyy-MM-dd"
@@ -264,7 +294,7 @@ const SearchForm = ({ onSearch }) => {
 											>
 												~
 											</Col>
-											<Col lg={4} sm={4} md={4} xs={4}>
+											<Col lg={5} sm={4} md={4} xs={4}>
 												<CustomDatePicker
 													hideAddon={true}
 													dateFormat="yyyy-MM-dd"
@@ -275,35 +305,7 @@ const SearchForm = ({ onSearch }) => {
 										</Row>
 									</Col>
 								</Row>
-
-								<Row className="mb-3">
-									<Col xxl={2} xl={6} lg={6} sm={6} md={6} xs={6}>
-										<Form.Label>자산 가치</Form.Label>
-										<Select
-											options={valueOptions}
-											onChange={handleValueStandardChange}
-											value={valueStandardNo}
-											placeholder="가치를 선택하세요"
-										/>
-									</Col>
-									<Col xxl={2} xl={6} lg={6} sm={6} md={6} xs={6}>
-										<Form.Label>소유권</Form.Label>
-										<Select
-											options={ownershipOptions}
-											onChange={handleOwnerShipChange}
-											value={selectedOwnership}
-											placeholder="소유권을 선택하세요"
-										/>
-									</Col>
-									<Col xxl={2} xl={6} lg={6} sm={6} md={6} xs={6}>
-										<Form.Label>운용상태</Form.Label>
-										<Select
-											options={operationStatusOptions}
-											onChange={handleOperationStatusChange}
-											value={selectedOperationStatus}
-											placeholder="가동여부를 선택하세요"
-										/>
-									</Col>
+								<Row>
 									<Col className="d-flex align-items-center justify-content-end mt-1">
 										<Button
 											variant="dark"

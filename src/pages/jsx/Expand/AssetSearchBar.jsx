@@ -13,6 +13,9 @@ const SearchForm = ({ onSearch }) => {
 	const [introducedDate, setIntroduceDate] = useState('');
 	const [selectedStartDate, setSelectedStartDate] = useState(null); // 이건 아직 안됨
 	const [selectedEndDate, setSelectedEndDate] = useState(null); //  이건 아직 안됨
+	const [valueStandardNo, setValueStandardNo] = useState(null);
+	const [selectedOwnership, setSelectedOwnership] = useState(null);
+	const [selectedOperationStatus, setSelectedOperationStatus] = useState(null);
 
 	const assetLocationOptions = [
 		{ value: '', label: '전체' }, // 전체 옵션 추가
@@ -72,9 +75,26 @@ const SearchForm = ({ onSearch }) => {
 		},
 		{
 			value: 'NULL',
-			label: 'N/A',
+			label: '기타',
 		},
 	];
+	const valueOptions = [
+		{ value: 'high', label: '고가치' },
+		{ value: 'medium', label: '중간가치' },
+		{ value: 'low', label: '저가치' },
+	];
+	const ownershipOptions = [
+		{ value: 'OWNED', label: '소유' },
+		{ value: 'NATIONAL_PROJECT', label: '국책과제' },
+		{ value: 'ETC', label: '기타' },
+	];
+
+	const operationStatusOptions = [
+		{ value: 'OPERATING', label: '가동중' },
+		{ value: 'NOT_OPERATING', label: '비가동' },
+		{ value: 'MALFUNCTION', label: '고장' },
+	];
+
 	// 폼 값 변경처리
 	const handleFormChange = (e) => {
 		const { name, value } = e.target;
@@ -85,15 +105,9 @@ const SearchForm = ({ onSearch }) => {
 			case 'assetName':
 				setAssetName(value);
 				break;
-			// case 'department':
-			// 	setDepartment(value);
-			// 	break;
 			case 'assetUser':
 				setAssetUser(value);
 				break;
-			// case 'assetLocation':
-			// 	setAssetLocation(value);
-			// 	break;
 			default:
 				break;
 		}
@@ -106,7 +120,18 @@ const SearchForm = ({ onSearch }) => {
 	const handleDepartmentChange = (selectedOption1) => {
 		setSelectedDepartment(selectedOption1);
 	};
-
+	// 자산가치 - 고가치 중간가치 저가치 선택 처리
+	const handleValueStandardChange = (selectedOption) => {
+		setValueStandardNo(selectedOption); // selectedOption 객체 그대로 설정
+	};
+	// ownership 선택처리
+	const handleOwnerShipChange = (selectedOption) => {
+		setSelectedOwnership(selectedOption);
+	};
+	// operationStatus 선택처리
+	const handleOperationStatusChange = (selecetdOption) => {
+		setSelectedOperationStatus(selecetdOption);
+	};
 	// 날짜 포맷 함수
 	const formatDate = (date) => {
 		if (!date) return null;
@@ -124,7 +149,11 @@ const SearchForm = ({ onSearch }) => {
 			departmentEnum: selectedDepartment?.value || '', // 선택된 부서
 			startDate: formatDate(selectedStartDate), // 선택한 시작 날짜 포맷
 			endDate: formatDate(selectedEndDate), // 선택한 종료 날짜 포맷
+			valueStandardNo: valueStandardNo?.value || '', // 선택된 고가치/저가치 값을 전달
+			ownership: selectedOwnership?.value || '',
+			operationStatus: selectedOperationStatus?.value || '',
 		});
+		console.log('이거확인', valueStandardNo);
 	};
 
 	const handleResetClick = () => {
@@ -137,6 +166,9 @@ const SearchForm = ({ onSearch }) => {
 		setSelectedStartDate(null);
 		setSelectedEndDate(null);
 		onSearch({}); // 검색 조건 초기화 전달
+		setValueStandardNo(null);
+		setSelectedOwnership(null);
+		setSelectedOperationStatus(null);
 	};
 
 	// react-select의 스타일 커스터마이징
@@ -161,8 +193,8 @@ const SearchForm = ({ onSearch }) => {
 					<Card>
 						<CardBody>
 							<RHForm onChange={handleFormChange}>
-								<Row>
-									<Col xxl={2} xl={6} lg={6} sm={6} md={6} xs={6}>
+								<Row className="mb-3">
+									<Col xxl={3} xl={6} lg={6} sm={6} md={6} xs={6}>
 										<Form.Label>자산명</Form.Label>
 										<Form.Control
 											name="assetName"
@@ -172,15 +204,18 @@ const SearchForm = ({ onSearch }) => {
 											onChange={handleFormChange}
 										/>
 									</Col>
-									<Col xxl={2} xl={6} lg={6} sm={6} md={6} xs={6}>
-										<Form.Label>자산위치</Form.Label>
-										{/* <Form.Control
-											name="assetLocation"
+									<Col xxl={3} xl={6} lg={6} sm={6} md={6} xs={6}>
+										<Form.Label>사용자</Form.Label>
+										<Form.Control
+											name="assetUser"
 											type="text"
-											placeholder="자산위치를 입력하세요"
-											// value={assetLocationOptions}
-											// onChange={handleFormChange}
-										/> */}
+											placeholder="사용자를 입력하세요"
+											value={assetUser}
+											onChange={handleFormChange}
+										/>
+									</Col>
+									<Col xxl={3} xl={6} lg={6} sm={6} md={6} xs={6}>
+										<Form.Label>자산위치</Form.Label>
 										<Select
 											options={assetLocationOptions}
 											onChange={handleAssetLocationChange}
@@ -194,19 +229,8 @@ const SearchForm = ({ onSearch }) => {
 											placeholder="위치를 선택하세요" // 여기에 placeholder 추가
 										/>
 									</Col>
-									<Col xxl={2} xl={6} lg={6} sm={6} md={6} xs={6}>
-										<Form.Label>사용자</Form.Label>
-										<Form.Control
-											name="assetUser"
-											type="text"
-											placeholder="사용자를 입력하세요"
-											value={assetUser}
-											onChange={handleFormChange}
-										/>
-									</Col>
-									<Col xxl={2} xl={6} lg={6} sm={6} md={6} xs={6}>
+									<Col xxl={3} xl={6} lg={6} sm={6} md={6} xs={6}>
 										<Form.Label>부서</Form.Label>
-
 										<Select
 											options={departmentOptions}
 											onChange={handleDepartmentChange}
@@ -220,10 +244,40 @@ const SearchForm = ({ onSearch }) => {
 											placeholder="부서를 선택하세요" // 여기에 placeholder 추가
 										/>
 									</Col>
-									<Col xxl={4} lg={12} sm={12} md={12} xs={12}>
+								</Row>
+
+								<Row className="mb-3">
+									<Col xxl={3} xl={6} lg={6} sm={6} md={6} xs={6}>
+										<Form.Label>자산 가치</Form.Label>
+										<Select
+											options={valueOptions}
+											onChange={handleValueStandardChange}
+											value={valueStandardNo}
+											placeholder="가치를 선택하세요"
+										/>
+									</Col>
+									<Col xxl={3} xl={6} lg={6} sm={6} md={6} xs={6}>
+										<Form.Label>소유권</Form.Label>
+										<Select
+											options={ownershipOptions}
+											onChange={handleOwnerShipChange}
+											value={selectedOwnership}
+											placeholder="소유권을 선택하세요"
+										/>
+									</Col>
+									<Col xxl={3} xl={6} lg={6} sm={6} md={6} xs={6}>
+										<Form.Label>운용상태</Form.Label>
+										<Select
+											options={operationStatusOptions}
+											onChange={handleOperationStatusChange}
+											value={selectedOperationStatus}
+											placeholder="가동여부를 선택하세요"
+										/>
+									</Col>
+									<Col xxl={3} lg={12} sm={12} md={12} xs={12}>
 										<Form.Label>취득일자</Form.Label>
 										<Row>
-											<Col lg={4} sm={4} md={4} xs={4}>
+											<Col lg={5} sm={4} md={4} xs={4}>
 												<CustomDatePicker
 													hideAddon={true}
 													dateFormat="yyyy-MM-dd"
@@ -240,7 +294,7 @@ const SearchForm = ({ onSearch }) => {
 											>
 												~
 											</Col>
-											<Col lg={4} sm={4} md={4} xs={4}>
+											<Col lg={5} sm={4} md={4} xs={4}>
 												<CustomDatePicker
 													hideAddon={true}
 													dateFormat="yyyy-MM-dd"
@@ -248,24 +302,26 @@ const SearchForm = ({ onSearch }) => {
 													onChange={(date) => setSelectedEndDate(date)} // 종료 날짜 상태 업데이트
 												/>
 											</Col>
-											<Col className="d-flex align-items-center justify-content-end mt-1">
-												<Button
-													variant="dark"
-													type="button"
-													onClick={handleSearchClick}
-												>
-													<i className="ri-search-line font-22"></i>
-												</Button>
-												&nbsp; &nbsp;
-												<Button
-													variant="dark"
-													type="button"
-													onClick={handleResetClick}
-												>
-													<i className=" ri-find-replace-line font-22"></i>
-												</Button>
-											</Col>
 										</Row>
+									</Col>
+								</Row>
+								<Row>
+									<Col className="d-flex align-items-center justify-content-end mt-1">
+										<Button
+											variant="dark"
+											type="button"
+											onClick={handleSearchClick}
+										>
+											<i className="ri-search-line font-22"></i>
+										</Button>
+										&nbsp; &nbsp;
+										<Button
+											variant="dark"
+											type="button"
+											onClick={handleResetClick}
+										>
+											<i className=" ri-find-replace-line font-22"></i>
+										</Button>
 									</Col>
 								</Row>
 							</RHForm>

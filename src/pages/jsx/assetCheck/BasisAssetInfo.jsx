@@ -94,6 +94,7 @@ const department = [
 		value: 'TECHNOLOGY_RESEARCH_TEAM',
 		label: '기술연구소팀',
 	},
+	{ value: 'NULL', label: '기타' },
 ];
 const assetLocation = [
 	{

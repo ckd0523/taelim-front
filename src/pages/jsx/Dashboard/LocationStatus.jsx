@@ -426,7 +426,7 @@ const SelectedLocation = ({ location }) => {
 
 	const handleLocation = async (selectedValue) => {
 		try {
-			console.log("위치별 : " + selectedValue);
+			console.log('위치별 : ' + selectedValue);
 			const response = await api.get(`${URL}/chart/10/${selectedValue}`);
 			const assetLocationData = response.data;
 
@@ -534,12 +534,16 @@ const SelectedLocation = ({ location }) => {
 				grid: {
 					display: false,
 				},
+				ticks: {
+					stepSize: 1, // 눈금 간격을 1로 설정
+				},
 			},
 			y: {
 				ticks: {
 					font: {
 						size: 14,
 					},
+					stepSize: 1, // 눈금 간격을 1로 설정
 				},
 				title: {
 					display: axis !== 'y',

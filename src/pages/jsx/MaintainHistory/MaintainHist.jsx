@@ -179,9 +179,7 @@ const MaintainHist = () => {
 		<>
 			<Row className="pt-3 align-items-center">
 				<Col>
-					<div>
-						<h4 className="d-flex justify-content-start">유지보수 이력</h4>
-					</div>
+					<h4 className="d-flex justify-content-start">유지보수 이력</h4>
 				</Col>
 				<Col xs="auto" style={{ paddingRight: '0' }}>
 					<Button
@@ -235,11 +233,13 @@ const MaintainHist = () => {
 				</Col>
 			</Row>
 
+			<Card></Card>
 			{showSearchForm && (
-				<Row className="pt-3 justify-content-between">
+				// <Row className="pt-3 justify-content-between">
+				<Row className="pt-3 g-0">
 					<Col>
 						<Card>
-							<CardBody>
+							<Card.Body>
 								<Form>
 									<Row className="align-items-center">
 										<Col xs={12} md={6} lg={3}>
@@ -252,7 +252,7 @@ const MaintainHist = () => {
 												>
 													자산코드
 												</Form.Label>
-												<Col xs={12} md={12} lg={8}>
+												<Col xs={12} md={12} lg={12}>
 													<Form.Control
 														type="text"
 														id="assetCode"
@@ -264,17 +264,17 @@ const MaintainHist = () => {
 												</Col>
 											</Form.Group>
 										</Col>
-										<Col xs={12} md={4} lg={2}>
+										<Col xs={12} md={6} lg={2}>
 											<Form.Group as={Row}>
 												<Form.Label
 													htmlFor="assetName"
 													xs={12}
 													md={12}
-													lg={10}
+													lg={2}
 												>
 													자산명
 												</Form.Label>
-												<Col xs={12} md={12} lg={10}>
+												<Col xs={12} md={12} lg={12}>
 													<Form.Control
 														type="text"
 														id="assetName"
@@ -297,7 +297,7 @@ const MaintainHist = () => {
 												>
 													유지보수자
 												</Form.Label>
-												<Col xs={12} md={7} lg={6}>
+												<Col xs={12} md={7} lg={12}>
 													<Form.Control
 														type="text"
 														id="repairBy"
@@ -328,7 +328,7 @@ const MaintainHist = () => {
 												<Col
 													xs={1}
 													md={1}
-													lg={1}
+													lg={2}
 													className="justify-content-center pt-1 text-center fw-bold"
 												>
 													~
@@ -345,7 +345,10 @@ const MaintainHist = () => {
 												</Col>
 											</Form.Group>
 										</Col>
-										<Col className="px-2 pt-3">
+										<Col
+											className="px-2 pt-3  d-flex justify-content-end"
+											lg={1}
+										>
 											<Button
 												variant="dark"
 												type="button"
@@ -356,7 +359,7 @@ const MaintainHist = () => {
 										</Col>
 									</Row>
 								</Form>
-							</CardBody>
+							</Card.Body>
 						</Card>
 					</Col>
 				</Row>

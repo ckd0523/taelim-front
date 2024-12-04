@@ -53,7 +53,7 @@ const UpdateHistory = () => {
 					(item.updateReason || '')
 						.replace(/\s+/g, '')
 						.toLowerCase()
-						.includes(searchAssetCode.replace(/\s+/g, '').toLowerCase())) &&
+						.includes(searchUpdateReason.replace(/\s+/g, '').toLowerCase())) &&
 				(!searchUpdateBy ||
 					(item.updateBy || '')
 						.replace(/\s+/g, '')
@@ -165,6 +165,7 @@ const UpdateHistory = () => {
 						<fieldset style={{ display: 'flex', alignItems: 'center' }}>
 							<input
 								type="search"
+								placeholder="검색어를 입력하세요."
 								style={{
 									width: '200px',
 									height: '40px',
@@ -203,7 +204,7 @@ const UpdateHistory = () => {
 									<Col lg={2}>
 										<Form.Group>
 											<Form.Label className="form-label">자산코드</Form.Label>
-											<Col>
+											<Col lg={12}>
 												<Form.Control
 													type="text"
 													name="assetCode"
@@ -218,7 +219,7 @@ const UpdateHistory = () => {
 									<Col lg={2}>
 										<Form.Group>
 											<Form.Label className="form-label">자산명</Form.Label>
-											<Col>
+											<Col lg={12}>
 												<Form.Control
 													type="text"
 													name="assetName"
@@ -233,7 +234,7 @@ const UpdateHistory = () => {
 									<Col lg={2}>
 										<Form.Group>
 											<Form.Label className="form-label">수정사유</Form.Label>
-											<Col>
+											<Col lg={12}>
 												<Form.Control
 													value={searchUpdateReason || ''} // 현재 선택된 값 설정
 													onChange={(e) =>
@@ -261,10 +262,10 @@ const UpdateHistory = () => {
 										</Form.Group>
 									</Col>
 
-									<Col lg={2}>
+									{/* <Col lg={3}>
 										<Form.Group>
 											<Form.Label>수정일자</Form.Label>
-											<Col>
+											<div className="d-flex align-items-center">
 												<Form.Control
 													type="date"
 													value={searchStartDate || ''}
@@ -272,9 +273,7 @@ const UpdateHistory = () => {
 														setSearchStartDate(e.target.value)
 													}
 												/>
-											</Col>
-											~
-											<Col>
+												~
 												<Form.Control
 													type="date"
 													value={searchEndDate || ''}
@@ -282,14 +281,51 @@ const UpdateHistory = () => {
 														setSearchEndDate(e.target.value)
 													}
 												/>
+											</div>
+										</Form.Group>
+									</Col> */}
+									<Col lg={4}>
+										<Form.Group as={Row}>
+											<Form.Label>수정일자</Form.Label>
+
+											<Col xs={5} md={5} lg={4}>
+												<Form.Control
+													type="date"
+													value={searchStartDate || ''}
+													onChange={(e) =>
+														setSearchStartDate(e.target.value)
+													}
+													className="me-2" // 오른쪽 여백
+												/>
+											</Col>
+											<Col
+												xs={1}
+												md={1}
+												lg={1}
+												className="justify-content-center pt-1 text-center fw-bold"
+											>
+												~
+											</Col>
+											<Col xs={5} md={5} lg={4}>
+												<Form.Control
+													type="date"
+													value={searchEndDate || ''}
+													onChange={(e) =>
+														setSearchEndDate(e.target.value)
+													}
+													className="ms-2" // 왼쪽 여백
+												/>
+											</Col>
+											<Col lg="auto" className="ms-auto">
+												<Button
+													variant="dark"
+													type="button"
+													onClick={handleSearch}
+												>
+													검색
+												</Button>
 											</Col>
 										</Form.Group>
-									</Col>
-
-									<Col className="px-2 pt-3" lg={1}>
-										<Button variant="dark" type="button" onClick={handleSearch}>
-											검색
-										</Button>
 									</Col>
 								</Row>
 							</Card.Body>
@@ -297,55 +333,63 @@ const UpdateHistory = () => {
 					</Col>
 				</Row>
 			)}
-			{/* 엑셀 출력 버튼 */}
-			<Card>
-				<Card.Body>
-					{UpdateList.length > 0 ? (
-						<Table
-							columns={columns(setModalData, setSelectedAssetNo)}
-							data={UpdateList}
-							pageSize={10}
-							//isExpandable={true}
-							isSortable={true}
-							pagination={true}
-							//isSelectable={true}
-							theadClass="table-dark"
-							tableClass="border-black"
-							searchBoxClass="mb-2"
-							onRowClick={() => {}}
-							setModalData={setModalData}
-							setSelectedAssetNo={setSelectedAssetNo}
-							setShowModal={setShowModal}
-						/>
-					) : (
-						<div className="table-responsive">
-							<table className={classNames('table table-centered react-table')}>
-								<thead style={{ background: '#313a46' }}>
-									<tr>
-										<th style={{ color: 'white' }}>번호</th>
-										<th style={{ color: 'white' }}>자산코드</th>
-										<th style={{ color: 'white' }}>자산명</th>
-										<th style={{ color: 'white' }}>수정일자</th>
-										<th style={{ color: 'white' }}>수정요청자</th>
-										<th style={{ color: 'white' }}>수정사유</th>
-									</tr>
-								</thead>
-								<tbody>
-									<tr>
-										<td colSpan="8" className="text-center">
-											<div className="alert alert-warning" role="alert">
-												<strong>데이터가 없습니다!</strong>
-												<br />
-												수정이력 데이터가 없습니다.
-											</div>
-										</td>
-									</tr>
-								</tbody>
-							</table>
-						</div>
-					)}
-				</Card.Body>
-			</Card>
+			<Row className="pt-3 align-items-center">
+				<Col>
+					<Card>
+						<Card.Body>
+							{UpdateList.length > 0 ? (
+								<Table
+									columns={columns(setModalData, setSelectedAssetNo)}
+									data={UpdateList}
+									pageSize={10}
+									//isExpandable={true}
+									isSortable={true}
+									pagination={true}
+									//isSelectable={true}
+									theadClass="table-dark"
+									tableClass="border-black"
+									searchBoxClass="mb-2"
+									onRowClick={() => {}}
+									setModalData={setModalData}
+									setSelectedAssetNo={setSelectedAssetNo}
+									setShowModal={setShowModal}
+								/>
+							) : (
+								<div className="table-responsive">
+									<table
+										className={classNames('table table-centered react-table')}
+									>
+										<thead style={{ background: '#313a46' }}>
+											<tr>
+												<th style={{ color: 'white' }}>번호</th>
+												<th style={{ color: 'white' }}>자산코드</th>
+												<th style={{ color: 'white' }}>자산명</th>
+												<th style={{ color: 'white' }}>수정일자</th>
+												<th style={{ color: 'white' }}>수정요청자</th>
+												<th style={{ color: 'white' }}>수정사유</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr>
+												<td colSpan="8" className="text-center">
+													<div
+														className="alert alert-warning"
+														role="alert"
+													>
+														<strong>데이터가 없습니다!</strong>
+														<br />
+														수정이력 데이터가 없습니다.
+													</div>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							)}
+						</Card.Body>
+					</Card>
+				</Col>
+			</Row>
 			{/* Modal */}
 			<InfoModal
 				show={showModal}

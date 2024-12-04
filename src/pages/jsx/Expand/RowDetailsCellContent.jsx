@@ -27,7 +27,7 @@ export const CellContent = ({
 				{ value: '품질팀', label: '품질팀' },
 				{ value: '생산팀', label: '생산팀' },
 				{ value: '기술연구소', label: '기술연구소' },
-				{ value: 'N/A', label: 'N/A' },
+				{ value: '기타', label: '기타' },
 			];
 
 			return (

@@ -1,333 +1,326 @@
 import React, { useRef, useEffect, forwardRef, useState } from 'react';
 import {
-  useTable,
-  useSortBy,
-  usePagination,
-  useRowSelect,
-  useGlobalFilter,
-  useAsyncDebounce,
-  useExpanded,
+	useTable,
+	useSortBy,
+	usePagination,
+	useRowSelect,
+	useGlobalFilter,
+	useAsyncDebounce,
+	useExpanded,
 } from 'react-table';
 import classNames from 'classnames';
 import { Pagination } from './Pagination';
 import { useNavigate } from 'react-router-dom';
+import Spinner from '@/components/Spinner';
+import { Alert } from 'react-bootstrap';
 
-const GlobalFilter = ({
-  preGlobalFilteredRows,
-  globalFilter,
-  setGlobalFilter,
-  searchBoxClass,
-}) => {
-  const count = preGlobalFilteredRows.length;
-  const [value, setValue] = useState(globalFilter);
-  const onChange = useAsyncDebounce((value) => {
-    setGlobalFilter(value || undefined);
-  }, 200);
+const GlobalFilter = ({ preGlobalFilteredRows, globalFilter, setGlobalFilter, searchBoxClass }) => {
+	const count = preGlobalFilteredRows.length;
+	const [value, setValue] = useState(globalFilter);
+	const onChange = useAsyncDebounce((value) => {
+		setGlobalFilter(value || undefined);
+	}, 200);
 
-  return (
-    <div className={classNames(searchBoxClass)}>
-      <span className="d-flex align-items-center">
-        Search :
-        <input
-          value={value || ''}
-          onChange={(e) => {
-            setValue(e.target.value);
-            onChange(e.target.value);
-          }}
-          placeholder={`${count} records...`}
-          className="form-control w-auto ms-1"
-        />
-      </span>
-    </div>
-  );
+	return (
+		<div className={classNames(searchBoxClass)}>
+			<span className="d-flex align-items-center">
+				Search :
+				<input
+					value={value || ''}
+					onChange={(e) => {
+						setValue(e.target.value);
+						onChange(e.target.value);
+					}}
+					placeholder={`${count} records...`}
+					className="form-control w-auto ms-1"
+				/>
+			</span>
+		</div>
+	);
 };
 
-const IndeterminateCheckbox = forwardRef(
-  ({ indeterminate, ...rest }, ref) => {
-    const defaultRef = useRef();
-    const resolvedRef = ref || defaultRef;
+const IndeterminateCheckbox = forwardRef(({ indeterminate, ...rest }, ref) => {
+	const defaultRef = useRef();
+	const resolvedRef = ref || defaultRef;
 
-    useEffect(() => {
-      resolvedRef.current.indeterminate = indeterminate;
-    }, [resolvedRef, indeterminate]);
+	useEffect(() => {
+		resolvedRef.current.indeterminate = indeterminate;
+	}, [resolvedRef, indeterminate]);
 
-    return (
-      <div className="form-check">
-        <input type="checkbox" className="form-check-input" ref={resolvedRef} {...rest} />
-        <label htmlFor="form-check-input" className="form-check-label"></label>
-      </div>
-    );
-  }
-);
+	return (
+		<div className="form-check">
+			<input type="checkbox" className="form-check-input" ref={resolvedRef} {...rest} />
+			<label htmlFor="form-check-input" className="form-check-label"></label>
+		</div>
+	);
+});
 
+const Table2 = (props, loading) => {
+	const isSearchable = props['isSearchable'] || false;
+	const isSortable = props['isSortable'] || false;
+	const pagination = props['pagination'] || false;
+	const isSelectable = props['isSelectable'] || false;
+	const isExpandable = props['isExpandable'] || false;
+	const sizePerPageList = props['sizePerPageList'] || [];
+	const isDataExist = props['isDataExist'] || false;
+	const setSelectedRows = props['setSelectedRows'] || false;
+	//const isLoading = props['loading'] || false;
 
+	const navigate = useNavigate();
 
+	// 행 클릭 이벤트 핸들러
+	const handleRowClick = (row) => {
+		//자산 조사의 위치가 없으면 row 클릭 안됨
+		//얘가 없으면 테이블이 계속 리렌더링이 되어버려서 이상한 문제들이 자꾸 생김
+		if (row.values.assetSurveyLocation === undefined) {
+			//console.log('1');
+			return;
+		}
+		//setSelectedRow(row);
+		//setShowModal(true);
 
+		//console.log(row.values.assetSurveyLocation);
+		console.log(row);
+		console.log(row.values.assetSurveyLocation);
 
-const Table2 = (props) => {
-  const isSearchable = props['isSearchable'] || false;
-  const isSortable = props['isSortable'] || false;
-  const pagination = props['pagination'] || false;
-  const isSelectable = props['isSelectable'] || false;
-  const isExpandable = props['isExpandable'] || false;
-  const sizePerPageList = props['sizePerPageList'] || [];
-  const isDataExist = props['isDataExist'] || false;
-  const setSelectedRows = props['setSelectedRows'] || false;
-  //const isLoading = props['loading'] || false;
+		//완료된 자산 조사에 기존 값이 삭제되지 않게 만들어야 disable이 풀리지 않음
+		if (row.original.surveyStatus === false) {
+			//얘를 안해주면 이전에 있던 localStorage 값이 유지가 되어 surveyStatus가 갱신되지 않음
+			localStorage.removeItem('surveyStatus'); // 기존 값 삭제
+		}
 
-  const navigate = useNavigate();
+		//const location = row.values.assetSurveyLocation;
+		navigate('/jsx/AssetSurveyDetail/', {
+			state: {
+				location: row.values.assetSurveyLocation,
+				surveyStartDate: row.values.assetSurveyStartDate,
+				surveyBy: row.values.assetSurveyBy,
+				assetSurveyNo: row.values.assetSurveyNo,
+				surveyStatus: row.values.surveyStatus,
+			},
+		}); // 클릭된 행의 location으로 페이지 이동
+	};
 
-  // 행 클릭 이벤트 핸들러
-  const handleRowClick = (row) => {
-    //자산 조사의 위치가 없으면 row 클릭 안됨
-    //얘가 없으면 테이블이 계속 리렌더링이 되어버려서 이상한 문제들이 자꾸 생김
-    if (row.values.assetSurveyLocation === undefined) {
-      //console.log('1');
-      return;
-    }
-    //setSelectedRow(row);
-    //setShowModal(true);
+	//onClick을 row 전체에 걸어버리면 checkbox를 선택했을 때 row를 선택한 것으로 인식해서 문제가 생김
+	const handleCellClick = (event, row) => {
+		// 첫 번째 컬럼이 클릭되었는지 확인
+		const clickedCell = event.target.closest('td');
+		const cells = Array.from(clickedCell.parentNode.children);
+		const cellIndex = cells.indexOf(clickedCell);
 
-    //console.log(row.values.assetSurveyLocation);
-    console.log(row);
-    console.log(row.values.assetSurveyLocation);
+		// 첫 번째 컬럼(0번 index)이 아닌 경우에만 handleRowClick 호출
+		if (cellIndex !== 0) {
+			handleRowClick(row);
+		}
+	};
 
-    //완료된 자산 조사에 기존 값이 삭제되지 않게 만들어야 disable이 풀리지 않음
-    if (row.original.surveyStatus === false) {
-      //얘를 안해주면 이전에 있던 localStorage 값이 유지가 되어 surveyStatus가 갱신되지 않음
-      localStorage.removeItem('surveyStatus');  // 기존 값 삭제
-    }
+	let otherProps = {};
 
-    //const location = row.values.assetSurveyLocation;
-    navigate('/jsx/AssetSurveyDetail/', {
-      state: {
-        location: row.values.assetSurveyLocation,
-        surveyStartDate: row.values.assetSurveyStartDate,
-        surveyBy: row.values.assetSurveyBy,
-        assetSurveyNo: row.values.assetSurveyNo,
-        surveyStatus: row.values.surveyStatus,
-      }
-    });  // 클릭된 행의 location으로 페이지 이동
-  };
+	if (isSearchable) {
+		otherProps['useGlobalFilter'] = useGlobalFilter;
+	}
+	if (isSortable) {
+		otherProps['useSortBy'] = useSortBy;
+	}
+	if (isExpandable) {
+		otherProps['useExpanded'] = useExpanded;
+	}
+	if (pagination) {
+		otherProps['usePagination'] = usePagination;
+	}
+	if (isSelectable) {
+		otherProps['useRowSelect'] = useRowSelect;
+	}
 
-  //onClick을 row 전체에 걸어버리면 checkbox를 선택했을 때 row를 선택한 것으로 인식해서 문제가 생김
-  const handleCellClick = (event, row) => {
-    // 첫 번째 컬럼이 클릭되었는지 확인
-    const clickedCell = event.target.closest('td');
-    const cells = Array.from(clickedCell.parentNode.children);
-    const cellIndex = cells.indexOf(clickedCell);
+	const dataTable = useTable(
+		{
+			columns: props.columns,
+			data: props['data'],
+			//안보이게 할 컬럼을 여기 init에 적어주면 됨.
+			initialState: {
+				pageSize: props['pageSize'] || 10,
+				hiddenColumns: ['assetSurveyNo', 'infoNo'],
+			},
+		},
 
-    // 첫 번째 컬럼(0번 index)이 아닌 경우에만 handleRowClick 호출
-    if (cellIndex !== 0) {
-      handleRowClick(row);
-    }
-  };
+		otherProps.hasOwnProperty('useGlobalFilter') && otherProps['useGlobalFilter'],
+		otherProps.hasOwnProperty('useSortBy') && otherProps['useSortBy'],
+		otherProps.hasOwnProperty('useExpanded') && otherProps['useExpanded'],
+		otherProps.hasOwnProperty('usePagination') && otherProps['usePagination'],
+		otherProps.hasOwnProperty('useRowSelect') && otherProps['useRowSelect'],
 
-  let otherProps = {};
+		(hooks) => {
+			isSelectable &&
+				hooks.visibleColumns.push((columns) => [
+					// Let's make a column for selection
+					{
+						id: 'selection',
+						// The header can use the table's getToggleAllRowsSelectedProps method
+						// to render a checkbox
+						Header: ({ getToggleAllPageRowsSelectedProps }) => (
+							<div>
+								<IndeterminateCheckbox
+									{...getToggleAllPageRowsSelectedProps()}
+								/* disabled={dataTable.rows.some(row => row.original.surveyStatus === true)} */
+								/>
+							</div>
+						),
+						// The cell can use the individual row's getToggleRowSelectedProps method
+						// to the render a checkbox
+						Cell: ({ row }) => (
+							<div>
+								{row.original.surveyStatus !== true ? (
+									<IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
+								) : null}
+							</div>
+						),
+					},
+					...columns,
+				]);
 
-  if (isSearchable) {
-    otherProps['useGlobalFilter'] = useGlobalFilter;
-  }
-  if (isSortable) {
-    otherProps['useSortBy'] = useSortBy;
-  }
-  if (isExpandable) {
-    otherProps['useExpanded'] = useExpanded;
-  }
-  if (pagination) {
-    otherProps['usePagination'] = usePagination;
-  }
-  if (isSelectable) {
-    otherProps['useRowSelect'] = useRowSelect;
-  }
+			isExpandable &&
+				hooks.visibleColumns.push((columns) => [
+					// Let's make a column for selection
+					{
+						// Build our expander column
+						id: 'expander', // Make sure it has an ID
+						Header: ({ getToggleAllRowsExpandedProps, isAllRowsExpanded }) => (
+							<span {...getToggleAllRowsExpandedProps()}>
+								{isAllRowsExpanded ? '-' : '+'}
+							</span>
+						),
+						Cell: ({ row }) =>
+							// Use the row.canExpand and row.getToggleRowExpandedProps prop getter
+							// to build the toggle for expanding a row
+							row.canExpand ? (
+								<span
+									{...row.getToggleRowExpandedProps({
+										style: {
+											// We can even use the row.depth property
+											// and paddingLeft to indicate the depth
+											// of the row
+											paddingLeft: `${row.depth * 2}rem`,
+										},
+									})}
+								>
+									{row.isExpanded ? '-' : '+'}
+								</span>
+							) : null,
+					},
+					...columns,
+				]);
+		}
+	);
 
-  const dataTable = useTable(
-    {
-      columns: props.columns,
-      data: props['data'],
-      //안보이게 할 컬럼을 여기 init에 적어주면 됨.
-      initialState: { pageSize: props['pageSize'] || 10, hiddenColumns: ['assetSurveyNo', 'infoNo'] },
-    },
+	//자산 조사 이력에서 자산 조사 삭제할 때 체크 박스 동작
+	const {
+		selectedFlatRows,
+		state: { selectedRowIds },
+		// ...other destructured values
+	} = dataTable;
 
-    otherProps.hasOwnProperty('useGlobalFilter') && otherProps['useGlobalFilter'],
-    otherProps.hasOwnProperty('useSortBy') && otherProps['useSortBy'],
-    otherProps.hasOwnProperty('useExpanded') && otherProps['useExpanded'],
-    otherProps.hasOwnProperty('usePagination') && otherProps['usePagination'],
-    otherProps.hasOwnProperty('useRowSelect') && otherProps['useRowSelect'],
+	useEffect(() => {
+		//console.log("이거 뭔데 : " + selectedRowIds);
+		//자산 조사 상세에서도 이 테이블 컴포넌트를 쓰기 때문에  row를 선택하면
+		//밑에 map을 했을 때 undifined 값이 들어가서 오류가 발생
+		//selectedRowIds가 undifined 이거나 null이면 그냥 return 하도록 함
+		if (!selectedRowIds) {
+			return;
+		}
 
-    (hooks) => {
-      isSelectable &&
-        hooks.visibleColumns.push((columns) => [
-          // Let's make a column for selection
-          {
-            id: 'selection',
-            // The header can use the table's getToggleAllRowsSelectedProps method
-            // to render a checkbox
-            Header: ({ getToggleAllPageRowsSelectedProps }) => (
-              <div>
-                <IndeterminateCheckbox {...getToggleAllPageRowsSelectedProps()}
-                  /* disabled={dataTable.rows.some(row => row.original.surveyStatus === true)} */ />
+		//전체 선택 시 완료된 자산 조사도 select가 됨
+		const selectedRowsData = selectedFlatRows.map((row) => row.original);
+		//그래서 surveyStatus가 false인 행들만 필터링
+		const validSelectedRows = selectedRowsData.filter((row) => row.surveyStatus === false);
 
-              </div>
-            ),
-            // The cell can use the individual row's getToggleRowSelectedProps method
-            // to the render a checkbox
-            Cell: ({ row }) => (
-              <div>
-                {row.original.surveyStatus !== true ? (
-                  <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
-                ) : null}
-              </div>
-            ),
-          },
-          ...columns,
-        ]);
+		//console.log("선택된 행:", JSON.stringify(validSelectedRows, null, 2));
 
-      isExpandable &&
-        hooks.visibleColumns.push((columns) => [
-          // Let's make a column for selection
-          {
-            // Build our expander column
-            id: 'expander', // Make sure it has an ID
-            Header: ({ getToggleAllRowsExpandedProps, isAllRowsExpanded }) => (
-              <span {...getToggleAllRowsExpandedProps()}>
-                {isAllRowsExpanded ? '-' : '+'}
-              </span>
-            ),
-            Cell: ({ row }) =>
-              // Use the row.canExpand and row.getToggleRowExpandedProps prop getter
-              // to build the toggle for expanding a row
-              row.canExpand ? (
-                <span
-                  {...row.getToggleRowExpandedProps({
-                    style: {
-                      // We can even use the row.depth property
-                      // and paddingLeft to indicate the depth
-                      // of the row
-                      paddingLeft: `${row.depth * 2}rem`,
-                    },
-                  })}
-                >
-                  {row.isExpanded ? '-' : '+'}
-                </span>
-              ) : null,
-          },
-          ...columns,
-        ]);
-    }
-  );
+		// assetSurveyNo만 출력
+		const assetSurveyNos = validSelectedRows.map((row) => row.assetSurveyNo);
+		//console.log("선택된 행에서 자산 조사 번호:", assetSurveyNos.join(', '));
+		setSelectedRows(assetSurveyNos);
+	}, [selectedRowIds]);
 
-  //자산 조사 이력에서 자산 조사 삭제할 때 체크 박스 동작
-  const {
-    selectedFlatRows,
-    state: { selectedRowIds },
-    // ...other destructured values
-  } = dataTable;
+	const rows = pagination ? dataTable.page : dataTable.rows;
 
-  useEffect(() => {
-    //console.log("이거 뭔데 : " + selectedRowIds);
-    //자산 조사 상세에서도 이 테이블 컴포넌트를 쓰기 때문에  row를 선택하면
-    //밑에 map을 했을 때 undifined 값이 들어가서 오류가 발생
-    //selectedRowIds가 undifined 이거나 null이면 그냥 return 하도록 함
-    if (!selectedRowIds) {
-      return;
-    }
+	return (
+		<>
+			{isSearchable && (
+				<GlobalFilter
+					preGlobalFilteredRows={dataTable.preGlobalFilteredRows}
+					globalFilter={dataTable.state.globalFilter}
+					setGlobalFilter={dataTable.setGlobalFilter}
+					searchBoxClass={props['searchBoxClass']}
+				/>
+			)}
 
-    //전체 선택 시 완료된 자산 조사도 select가 됨
-    const selectedRowsData = selectedFlatRows.map((row) => row.original);
-    //그래서 surveyStatus가 false인 행들만 필터링
-    const validSelectedRows = selectedRowsData.filter(row => row.surveyStatus === false);
+			<div className="table-responsive">
+				<table
+					{...dataTable.getTableProps()}
+					className={classNames('table table-centered react-table', props['tableClass'])}
+				>
+					<thead className={props['theadClass']}>
+						{dataTable.headerGroups.map((headerGroup, index) => (
+							<tr {...headerGroup.getHeaderGroupProps()} key={index}>
+								{headerGroup.headers.map((column, index) => (
+									<th
+										{...column.getHeaderProps(
+											column.defaultCanSort && column.getSortByToggleProps()
+										)}
+										className={classNames({
+											sorting_desc: column.isSortedDesc === true,
+											sorting_asc: column.isSortedDesc === false,
+											sortable: column.defaultCanSort === true,
+										})}
+										key={index}
+									>
+										{column.render('Header')}
+									</th>
+								))}
+							</tr>
+						))}
+					</thead>
+					<tbody {...dataTable.getTableBodyProps()}>
+						{/* 데이터를 불러오지 못했을 때 */}
+						{rows.length === 0 && (
+							<tr>
+								<td colSpan="8" className="text-center">
+									<Alert
+										variant="warning"
+										className="mb-0 text-center d-flex align-items-center justify-content-center"
+										style={{ height: '100%' }}
+									>
+										<div>
+											<strong>데이터가 없습니다!</strong>
+											<p>자산 조사 내역 데이터가 없습니다.</p>
+										</div>
+									</Alert>
+								</td>
+							</tr>
+						)}
+						{rows.map((row, index) => {
+							dataTable.prepareRow(row);
+							return (
+								<tr
+									{...row.getRowProps({
+										onClick: (e) => handleCellClick(e, row),
+									})}
+									key={index}
+								>
+									{row.cells.map((cell) => (
+										<td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+									))}
+								</tr>
+							);
+						})}
 
-    //console.log("선택된 행:", JSON.stringify(validSelectedRows, null, 2));
+					</tbody>
+				</table>
+			</div>
 
-    // assetSurveyNo만 출력
-    const assetSurveyNos = validSelectedRows.map(row => row.assetSurveyNo);
-    //console.log("선택된 행에서 자산 조사 번호:", assetSurveyNos.join(', '));
-    setSelectedRows(assetSurveyNos);
-  }, [selectedRowIds]);
-
-  const rows = pagination ? dataTable.page : dataTable.rows;
-
-  return (
-    <>
-      {isSearchable && (
-        <GlobalFilter
-          preGlobalFilteredRows={dataTable.preGlobalFilteredRows}
-          globalFilter={dataTable.state.globalFilter}
-          setGlobalFilter={dataTable.setGlobalFilter}
-          searchBoxClass={props['searchBoxClass']}
-        />
-      )}
-
-      <div className="table-responsive">
-        <table
-          {...dataTable.getTableProps()}
-          className={classNames('table table-centered react-table', props['tableClass'])}
-        >
-          <thead className={props['theadClass']}>
-            {dataTable.headerGroups.map((headerGroup, index) => (
-              <tr {...headerGroup.getHeaderGroupProps()} key={index}>
-                {headerGroup.headers.map((column, index) => (
-                  <th
-                    {...column.getHeaderProps(
-                      column.defaultCanSort && column.getSortByToggleProps()
-                    )}
-                    className={classNames({
-                      sorting_desc: column.isSortedDesc === true,
-                      sorting_asc: column.isSortedDesc === false,
-                      sortable: column.defaultCanSort === true,
-                    })}
-                    key={index}
-                  >
-                    {column.render('Header')}
-                  </th>
-                ))}
-              </tr>
-            ))}
-          </thead>
-          <tbody {...dataTable.getTableBodyProps()}>
-            {/* 데이터를 불러오지 못했을 때 */}
-            {isDataExist ? (
-              <tr>
-                <td colSpan={6} className="text-center text-danger">
-                  데이터를 불러오지 못했습니다.
-                </td>
-              </tr>
-            ) :
-              /* 데이터를 불러왔지만 빈 배열일 때 */
-              (props.data && props.data.length === 0) ? (
-                <tr>
-                  <td colSpan={6} className="text-center">
-                    불러올 자산 조사가 없습니다. 자산 조사를 등록하세요.
-                  </td>
-                </tr>
-              ) : (
-                // 데이터가 존재할 때는 각 행을 표시
-                rows.map((row, index) => {
-                  dataTable.prepareRow(row);
-                  return (
-                    <tr
-                      {...row.getRowProps({
-                        onClick: (e) => handleCellClick(e, row),
-                      })}
-                      key={index}
-                    >
-                      {row.cells.map((cell) => (
-                        <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
-                      ))}
-                    </tr>
-                  );
-                })
-              )}
-          </tbody>
-
-        </table>
-      </div>
-
-
-      {pagination && <Pagination tableProps={dataTable} sizePerPageList={sizePerPageList} />}
-    </>
-  );
+			{pagination && <Pagination tableProps={dataTable} sizePerPageList={sizePerPageList} />}
+		</>
+	);
 };
 
 export { Table2 };

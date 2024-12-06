@@ -1,19 +1,35 @@
-import HttpClient from '../helpers/httpClient';
+//import HttpClient from '../helpers/httpClient';
+import axios from 'axios';
+import api from './authAxios'
+
+const URL = import.meta.env.VITE_BASIC_URL;
 
 function AuthService() {
   return {
-    login: (values) => {
-      return HttpClient.post('/login/', values);
+    login: async (values) => {
+      try {
+        //console.log("설마 여기로?");
+        const response = await api.post(`${URL}/login`, values);
+        console.log("auth1 : " + response.data);
+        return response.data;
+      } catch (error) {
+        // 에러 처리
+        if (error.response && error.response.data) {
+          throw new Error(error.response.data.message || 'Login failed');
+        }
+        throw new Error('Login failed');
+      }
     },
-    logout() {
-      return HttpClient.post('/logout/', {});
-    },
-    register: (values) => {
-      return HttpClient.post('/register/', values);
-    },
-    forgetPassword: (values) => {
-      return HttpClient.post('/forget-password/', values);
-    },
+    logout: async () => {
+      try {
+        console.log("여기로 오잖아 임마 : " + URL);
+        const response = await axios(`${URL}/logout`, { method: "GET", withCredentials: true });
+        console.log('로그아웃 성공');
+        return response;
+      } catch (error) {
+        console.log("로그아웃 실패 : " + error);
+      }
+    }
   };
 }
 

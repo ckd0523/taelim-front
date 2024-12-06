@@ -42,7 +42,7 @@ function CustomToggle({ children, eventKey }) {
 		<button
 			className="custom-button px-3 pt-2 fw-bold"
 			type="button"
-			style={{ width: '100%', backgroundColor: '#dcefdc', textAlign: 'left' }}
+			style={{ width: '100%', backgroundColor: '#6081ab4e', textAlign: 'left' }}
 			onClick={decoratedOnClick}
 		>
 			{isOpen ? (
@@ -80,7 +80,7 @@ const FileUpload = ({ files = [], setFiles, formData, handleChange }) => {
 	}, [files]);
 
 	return (
-		<Accordion defaultActiveKey="3">
+		<Accordion defaultActiveKey="">
 			<StyledCard className="card">
 				<CustomToggle eventKey="3">첨부파일 등록</CustomToggle>
 				<Accordion.Collapse eventKey="3">

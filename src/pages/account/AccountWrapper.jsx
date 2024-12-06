@@ -29,12 +29,14 @@ export default function AccountWrapper({ bottomLinks, children }) {
 					</Row>
 				</Container>
 			</div>
+			{/*
 			<footer className="footer footer-alt">
 				2018 - {new Date().getFullYear()} © Hyper -
 				<Link to="https://coderthemes.com/" target="_blank">
 					Coderthemes.com
 				</Link>
 			</footer>
+			*/}
 		</>
 	);
 }

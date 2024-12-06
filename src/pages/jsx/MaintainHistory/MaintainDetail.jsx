@@ -1,9 +1,10 @@
+import api from '@/common/api/authAxios';
 import { useState, useRef, useEffect } from 'react';
-import { Form, FormGroup, Modal, Button, ModalFooter } from 'react-bootstrap';
+import { Form, FormGroup, Modal, Button, ModalFooter, Alert } from 'react-bootstrap';
 import { BsImage } from 'react-icons/bs';
+import Swal from 'sweetalert2';
 const urlConfig = import.meta.env.VITE_BASIC_URL;
 const MaintainDetail = ({ show, selectData, handleClose }) => {
-	// const [change, setChange] = useState(selectData.repairEndDate || '');
 	const [imgPath, setImgPath] = useState();
 	const [afterPath, setafterPath] = useState();
 	const [files, setFiles] = useState([]);
@@ -12,8 +13,33 @@ const MaintainDetail = ({ show, selectData, handleClose }) => {
 		repairStartDate: selectData.repairStartDate,
 		repairEndDate: selectData.repairEndDate || '',
 		repairResult: selectData.repairResult,
+		repairStatus: selectData.repairStatus,
 		repairFiles: selectData.repairFiles || [],
 	});
+	const [showAlert, setShowAlert] = useState(false);
+	const [alertMessage, setAlertMessage] = useState('');
+
+	const handleSuccess = () => {
+		Swal.fire({
+			title: '최종 확인',
+			text: '지금까지 작업을 모두 처리하시겠습니까?',
+			icon: 'question',
+			showCancelButton: true,
+			confirmButtonColor: '#255892a8',
+			cancelButtonColor: '#a519198e',
+			confirmButtonText: '예',
+			cancelButtonText: '아니오',
+		}).then(async (result) => {
+			if (result.isConfirmed) {
+				const completionData = {
+					...formData,
+					repairStatus: '완료',
+					repairEndDate: new Date().toISOString().slice(0, 10),
+				};
+				await saveComletionData(completionData);
+			}
+		});
+	};
 	const imgRef = useRef();
 	const afterImgRef = useRef();
 
@@ -29,36 +55,28 @@ const MaintainDetail = ({ show, selectData, handleClose }) => {
 			);
 		}
 	};
-
+	const handleFileUpload = (file, repairType) => {
+		const updateFiles = [...files, { file, repairType }];
+		setFiles(updateFiles);
+	};
 	const handleInputChange = (e) => {
 		const { name, value } = e.target;
 		setFormData((prevState) => ({
 			...prevState,
 			[name]: value,
 		}));
-
-		if (name === 'repairEndDate') {
-			const startDate = new Date(selectData.repairStartDate);
-			const endDate = new Date(value);
-
-			if (endDate < startDate) {
-				alert('완료일은 시작일보다 이전일 수 없습니다.');
-				setFormData((prevState) => ({
-					...prevState,
-					repairEndDate: '',
-				}));
-			}
-		}
+		setShowAlert(false);
 	};
+
+	const reader = new FileReader();
 	const previewImage = (e) => {
 		e.preventDefault();
 		const file = e.target.files[0];
 		if (!file) return;
 
-		const reader = new FileReader();
-
 		reader.onloadend = () => {
 			setImgPath(reader.result);
+			handleFileUpload(file, 'BEFORE_REPAIR');
 		};
 		reader.readAsDataURL(file);
 		console.log(reader);
@@ -67,27 +85,13 @@ const MaintainDetail = ({ show, selectData, handleClose }) => {
 		e.preventDefault();
 		const file = e.target.files[0];
 		if (!file) return;
-		const reader = new FileReader();
 
 		reader.onloadend = () => {
 			setafterPath(reader.result);
+			handleFileUpload(file, 'AFTER_REPAIR');
 		};
 		reader.readAsDataURL(file);
 	};
-	// const handleImageChange = (e, type) => {
-	// 	const file = e.target.files[0];
-	// 	if (!file) return;
-
-	// 	const reader = new FileReader();
-	// 	reader.onloadend = () => {
-	// 		if (type === 'BEFORE_REPAIR') {
-	// 			setImgPath(reader.path);
-	// 		} else {
-	// 			setAfterPath(reader.result);
-	// 		}
-	// 	};
-	// 	reader.readAsDataURL(file);
-	// };
 
 	useEffect(
 		() => () => {
@@ -95,67 +99,87 @@ const MaintainDetail = ({ show, selectData, handleClose }) => {
 		},
 		[files]
 	);
-	const saveImages = async () => {
-		// const updateFileNames = [];
-		// for(let {file, repairType} of files) {
-
-		// }
-		const uploadData = new FormData();
-		let imageUploadSuccess = true;
-		let endDateSaveSuccess = true;
-		if (imgRef.current.files[0]) {
-			uploadData.append('file', imgRef.current.files[0]);
-			uploadData.append('repairNo', selectData.repairNo);
-			uploadData.append('repairType', 'BEFORE_REPAIR');
-			uploadData.append('deleteExisting', 'true');
-		}
-		if (afterImgRef.current.files[0]) {
-			uploadData.append('file', afterImgRef.current.files[0]);
-			uploadData.append('repairNo', selectData.repairNo);
-			uploadData.append('repairType', 'AFTER_REPAIR');
-			uploadData.append('deleteExisting', 'true');
-		}
+	const saveComletionData = async (completionData) => {
 		try {
-			const response = await fetch(
-				`${urlConfig}/maintain/file/upload/${selectData.repairNo}`,
-				{
-					method: 'POST',
-					body: uploadData,
-				}
+			const response = await api.post(
+				`${urlConfig}/maintain/update/${selectData.repairNo}`,
+				completionData
 			);
-			if (response.ok) {
-				alert('이미지 업로드 성공');
+			if (response.status === 200) {
+				Swal.fire({
+					icon: 'success',
+					title: '작업이 완료되었습니다.',
+					text: '유지보수 완료 상태로 저장되었습니다.',
+				});
 			}
 		} catch (error) {
-			imageUploadSuccess = false;
-			console.error(error);
+			Swal.fire({
+				icon: 'error',
+				title: error,
+				text: '완료 데이터 저장 오류입니다.',
+			});
+		}
+		handleClose();
+	};
+	const saveImages = async () => {
+		const updateFileNames = [];
+
+		let imageUploadSuccess = true;
+		let endDateSaveSuccess = true;
+		for (let { file, repairType } of files) {
+			const uploadData = new FormData();
+			uploadData.append('file', file);
+			uploadData.append('repairNo', selectData.repairNo);
+			uploadData.append('repairType', repairType);
+			uploadData.append('deleteExisting', 'true');
+
+			try {
+				if (uploadData.has('file')) {
+					const response = await api.post(
+						`${urlConfig}/maintain/file/upload/${selectData.repairNo}`,
+						uploadData
+					);
+					console.log(response.status);
+					if (response.status == 200) {
+						const fileName = await response.data;
+						updateFileNames.push(fileName);
+						console.log(fileName);
+					} else {
+						Swal.fire({
+							icon: 'error',
+							title: '파일 수정을 실패하였습니다.',
+							text: '파일을 다시 확인해주세요',
+						});
+						imageUploadSuccess = false;
+					}
+				}
+			} catch (error) {
+				imageUploadSuccess = false;
+				console.error(error);
+			}
 		}
 
 		try {
-			const response = await fetch(`${urlConfig}/maintain/update/${selectData.repairNo}`, {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify(formData),
-			});
+			const response = await api.post(
+				`${urlConfig}/maintain/update/${selectData.repairNo}`,
+				formData
+			);
 
-			if (response.ok) {
-				alert('수정 성공');
-				window.location.reload();
+			if (response.status == 200) {
+				Swal.fire({
+					icon: 'success',
+					title: '유지보수가 성공적으로 수정되었습니다.',
+					text: '유지보수 이력 화면으로 이동',
+				});
+			} else {
+				endDateSaveSuccess = false;
 			}
 		} catch (error) {
 			endDateSaveSuccess = false;
 			console.error(error);
 		}
-
-		if (imageUploadSuccess || endDateSaveSuccess) {
-			alert('저장성공');
-
-			handleClose();
-		}
+		handleClose();
 	};
-
 	return (
 		<>
 			<Modal show={show} onHide={handleClose}>
@@ -163,11 +187,12 @@ const MaintainDetail = ({ show, selectData, handleClose }) => {
 					<Modal.Title>유지보수 상세</Modal.Title>
 				</Modal.Header>
 				<Modal.Body>
+					{showAlert && <Alert variant="danger">{alertMessage}</Alert>}
 					<Form.Group className="mb-3 pt-2" controlId="exampleForm.ControlInput1">
 						<Form.Label>자산코드</Form.Label>
 						<Form.Control type="text" value={selectData.assetCode} readOnly />
 						<Form.Label className="pt-2">유지보수 담당자</Form.Label>
-						<Form.Control type="text" value={selectData.maintainBy} readOnly />
+						<Form.Control type="text" value={selectData.repairBy} readOnly />
 						<Form.Label className="pt-2">시작일</Form.Label>
 						<Form.Control
 							type={isEditing ? 'date' : 'text'}
@@ -178,11 +203,10 @@ const MaintainDetail = ({ show, selectData, handleClose }) => {
 						/>
 						<Form.Label className="pt-2">완료일</Form.Label>
 						<Form.Control
-							type={isEditing ? 'date' : 'text'}
+							type="text"
+							readOnly
 							name="repairEndDate"
-							value={formData.repairEndDate || ''}
-							onChange={handleInputChange}
-							readOnly={!isEditing}
+							value={formData.repairEndDate}
 						/>
 						<Form.Label className="pt-2">유지보수 내용</Form.Label>
 						<Form.Control
@@ -197,8 +221,8 @@ const MaintainDetail = ({ show, selectData, handleClose }) => {
 						<p>유지보수 전 사진</p>
 						{!isEditing ? (
 							selectData.repairFiles &&
-							selectData.repairFiles.filter((file) => file.repairType === '보수전')
-								.length > 0 ? (
+								selectData.repairFiles.filter((file) => file.repairType === '보수전')
+									.length > 0 ? (
 								selectData.repairFiles
 									.filter((file) => file.repairType === '보수전')
 									.map((file, index) =>
@@ -239,8 +263,8 @@ const MaintainDetail = ({ show, selectData, handleClose }) => {
 						<p className="pt-2">유지보수 후 사진</p>
 						{!isEditing ? (
 							selectData.repairFiles &&
-							selectData.repairFiles.filter((file) => file.repairType === '보수후')
-								.length > 0 ? (
+								selectData.repairFiles.filter((file) => file.repairType === '보수후')
+									.length > 0 ? (
 								selectData.repairFiles
 									.filter((file) => file.repairType === '보수후')
 									.map((file, index) =>
@@ -282,17 +306,36 @@ const MaintainDetail = ({ show, selectData, handleClose }) => {
 				<ModalFooter>
 					{isEditing ? (
 						<>
-							<Button variant="primary" onClick={saveImages}>
+							<Button
+								style={{ background: '#5e83bb', border: 'none' }}
+								onClick={saveImages}
+							>
 								저장
 							</Button>
-							<Button variant="secondary" onClick={handleEditToggle}>
+							<Button
+								style={{ background: '#c66464', border: 'none' }}
+								onClick={handleEditToggle}
+							>
 								취소
 							</Button>
 						</>
 					) : (
-						<Button variant="secondary" onClick={handleEditToggle}>
-							수정
-						</Button>
+						!(formData.repairStatus === '완료') && (
+							<>
+								<div className="me-auto">
+									<Button variant="dark" onClick={handleSuccess}>
+										완료
+									</Button>
+								</div>
+
+								<Button
+									style={{ background: '#5e83bb', border: 'none' }}
+									onClick={handleEditToggle}
+								>
+									수정
+								</Button>
+							</>
+						)
 					)}
 					<Button variant="secondary" onClick={handleClose}>
 						닫기

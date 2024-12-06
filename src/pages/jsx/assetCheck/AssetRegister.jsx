@@ -1,10 +1,15 @@
 import BasisAssetInfo from './BasisAssetInfo';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import FileUpload from './FileUpload';
 import { Button, Row, Col, Container } from 'react-bootstrap';
 import styled from 'styled-components';
-import { redirect } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
+import AssetCategories from './AssetCategories';
+import PurchasingInfo from './PurchasingInfo';
+import { useFormValidation } from '@/pages/ui/forms/hooks';
+import api from '@/common/api/authAxios';
+import { FormProvider } from 'react-hook-form';
 const urlConfig = import.meta.env.VITE_BASIC_URL;
 const ResponsivePadding = styled.div`
 	@media (max-width: 768px) {
@@ -19,9 +24,13 @@ const ResponsivePadding = styled.div`
 		padding: 50px;
 	}
 `;
+
 //자산등록
 const AssetRegister = () => {
+	const navigate = useNavigate();
 	const [files, setFiles] = useState([]);
+	const { isValidated, handleSubmit } = useFormValidation();
+
 	const [formData, setFormData] = useState({
 		assetClassification: '',
 		assetName: '',
@@ -33,23 +42,23 @@ const AssetRegister = () => {
 		assetUser: '',
 		assetOwner: '',
 		assetSecurityManager: '',
-		quantity: 1,
+		quantity: '',
 		ownership: '',
-		usestate: '',
-		operationStatus: '',
-		introducedDate: new Date(),
-		confidentiality: 0,
-		integrity: 0,
-		availability: 0,
+		useStated: null,
+		operationStatus: null,
+		introducedDate: null,
+		confidentiality: '',
+		integrity: '',
+		availability: '',
 		note: '',
-		purchaseCost: 0,
-		purchaseDate: new Date(),
-		usefulLife: 0,
+		purchaseCost: '',
+		purchaseDate: null,
+		usefulLife: '',
 		depreciationMethod: '',
 		purchaseSource: '',
 		contactInformation: '',
 		acquisitionRoute: '',
-		maintenancePeriod: new Date(),
+		maintenancePeriod: null,
 		serviceScope: '',
 		os: '',
 		relatedDB: '',
@@ -57,19 +66,19 @@ const AssetRegister = () => {
 		serverId: '',
 		serverPassword: '',
 		companyManager: '',
-		screenNumber: 0,
+		screenNumber: '',
 		system: '',
-		DBType: '',
-		documentGrade: 'CONFIDENTIAL',
-		documentType: 'GENERAL_DOCUMENT',
+		dbtype: '',
+		documentGrade: null,
+		documentType: null,
 		documentLink: '',
-		applicationDate: new Date(),
-		registrationDate: new Date(),
-		expirationDate: new Date(),
-		patentTrademarkStatus: 'PCT_APPLICATION',
-		countryApplication: 'KOREA',
-		patentClassification: 'NEW_MATERIALS',
-		patentItem: 'COMPOSITE_MATERIALS',
+		applicationDate: null,
+		registrationDate: null,
+		expirationDate: null,
+		patentTrademarkStatus: '',
+		countryApplication: '',
+		patentClassification: null,
+		patentItem: null,
 		applicationNo: '',
 		inventor: '',
 		assignee: '',
@@ -89,43 +98,287 @@ const AssetRegister = () => {
 		firmwareVersion: '',
 		networkSpeed: '',
 		productSerialNumber: '',
-		securityControl: 'MONITORING',
+		securityControl: null,
 		kaitsKeeper: '',
-		V3OfficeSecurity: new Date(),
-		appCheckPro: new Date(),
-		tgate: new Date(),
+		V3OfficeSecurity: '',
+		appCheckPro: null,
+		tgate: null,
 		furnitureSize: '',
 		deviceType: '',
 		modelNumber: '',
 		connectionType: '',
 		powerSpecifications: '',
-		displacement: 0,
-		doorsCount: 0,
-		engineType: 'GASOLINE',
-		carType: 'SEDAN',
+		displacement: '',
+		doorsCount: '',
+		engineType: null,
+		carType: null,
 		identificationNo: '',
 		carColor: '',
-		modelYear: 0,
+		modelYear: '',
 		otherDescription: '',
 		usageFrequency: '',
 		warrantyDetails: '',
 		attachment: '',
 	});
-
-	const handleSubmit = async (e) => {
+	const validatedForm = (e) => {
+		let validateInput = [];
+		console.log(formData.assetClassification);
+		switch (formData.assetClassification) {
+			case 'INFORMATION_PROTECTION_SYSTEM':
+				validateInput = [
+					formData.assetBasis,
+					formData.assetName,
+					formData.purpose,
+					formData.department,
+					formData.assetLocation,
+					formData.quantity,
+					formData.ownership,
+					formData.usefulLife,
+					formData.depreciationMethod,
+					formData.maintenancePeriod,
+					formData.purchaseCost,
+					formData.serviceScope,
+					formData.purchaseDate,
+				];
+				break;
+			case 'APPLICATION_PROGRAM':
+				validateInput = [
+					formData.assetBasis,
+					formData.assetName,
+					formData.purpose,
+					formData.department,
+					formData.assetLocation,
+					formData.quantity,
+					formData.ownership,
+					formData.usefulLife,
+					formData.depreciationMethod,
+					formData.maintenancePeriod,
+					formData.purchaseCost,
+					formData.serviceScope,
+					formData.os,
+					formData.ip,
+					formData.purchaseDate,
+				];
+				break;
+			case 'SOFTWARE':
+				validateInput = [
+					formData.assetBasis,
+					formData.assetName,
+					formData.purpose,
+					formData.department,
+					formData.assetLocation,
+					formData.quantity,
+					formData.ownership,
+					formData.usefulLife,
+					formData.depreciationMethod,
+					formData.maintenancePeriod,
+					formData.purchaseCost,
+					formData.os,
+					formData.ip,
+					formData.serverPassword,
+					formData.serverId,
+					formData.purchaseDate,
+				];
+				break;
+			case 'ELECTRONIC_INFORMATION':
+				validateInput = [
+					formData.assetBasis,
+					formData.assetName,
+					formData.purpose,
+					formData.department,
+					formData.assetLocation,
+					formData.quantity,
+					formData.ownership,
+					formData.usefulLife,
+					formData.depreciationMethod,
+					formData.maintenancePeriod,
+					formData.purchaseCost,
+					formData.os,
+					formData.system,
+					formData.dbtype,
+					formData.purchaseDate,
+				];
+				break;
+			case 'DOCUMENT':
+				validateInput = [
+					formData.assetBasis,
+					formData.assetName,
+					formData.purpose,
+					formData.department,
+					formData.assetLocation,
+					formData.quantity,
+					formData.ownership,
+					formData.usefulLife,
+					formData.depreciationMethod,
+					formData.maintenancePeriod,
+					formData.purchaseCost,
+					formData.documentGrade,
+					formData.documentType,
+					formData.documentLink,
+					formData.purchaseDate,
+				];
+				break;
+			case 'PATENTS_AND_TRADEMARKS':
+				validateInput = [
+					formData.assetBasis,
+					formData.assetName,
+					formData.purpose,
+					formData.department,
+					formData.assetLocation,
+					formData.quantity,
+					formData.ownership,
+					formData.usefulLife,
+					formData.depreciationMethod,
+					formData.maintenancePeriod,
+					formData.purchaseCost,
+					formData.applicationDate,
+					formData.registrationDate,
+					formData.patentTrademarkStatus,
+					formData.countryApplication,
+					formData.applicationNo,
+					formData.inventor,
+					formData.assignee,
+					formData.purchaseDate,
+				];
+				break;
+			case 'ITSYSTEM_EQUIPMENT':
+				validateInput = [
+					formData.assetBasis,
+					formData.assetName,
+					formData.purpose,
+					formData.department,
+					formData.assetLocation,
+					formData.quantity,
+					formData.ownership,
+					formData.usefulLife,
+					formData.depreciationMethod,
+					formData.maintenancePeriod,
+					formData.purchaseCost,
+					formData.equipmentType,
+					formData.purchaseDate,
+				];
+				break;
+			case 'ITNETWORK_EQUIPMENT':
+				validateInput = [
+					formData.assetBasis,
+					formData.assetName,
+					formData.purpose,
+					formData.department,
+					formData.assetLocation,
+					formData.quantity,
+					formData.ownership,
+					formData.usefulLife,
+					formData.depreciationMethod,
+					formData.maintenancePeriod,
+					formData.purchaseCost,
+					formData.equipmentType,
+					formData.serviceScope,
+					formData.purchaseDate,
+				];
+				break;
+			case 'TERMINAL':
+				validateInput = [
+					formData.assetBasis,
+					formData.assetName,
+					formData.purpose,
+					formData.department,
+					formData.assetLocation,
+					formData.quantity,
+					formData.ownership,
+					formData.usefulLife,
+					formData.depreciationMethod,
+					formData.maintenancePeriod,
+					formData.purchaseCost,
+					formData.ip,
+					formData.os,
+					formData.purchaseDate,
+				];
+				break;
+			case 'devices':
+				validateInput = [
+					formData.assetBasis,
+					formData.assetName,
+					formData.purpose,
+					formData.department,
+					formData.assetLocation,
+					formData.quantity,
+					formData.ownership,
+					formData.usefulLife,
+					formData.depreciationMethod,
+					formData.maintenancePeriod,
+					formData.purchaseCost,
+					formData.deviceType,
+					formData.purchaseDate,
+				];
+				break;
+			case 'CAR':
+				validateInput = [
+					formData.assetBasis,
+					formData.assetName,
+					formData.purpose,
+					formData.department,
+					formData.assetLocation,
+					formData.quantity,
+					formData.ownership,
+					formData.usefulLife,
+					formData.depreciationMethod,
+					formData.maintenancePeriod,
+					formData.purchaseCost,
+					formData.carType,
+					formData.identificationNo,
+					formData.purchaseDate,
+				];
+				break;
+			default:
+				validateInput = [
+					formData.assetBasis,
+					formData.assetName,
+					formData.purpose,
+					formData.department,
+					formData.assetLocation,
+					formData.quantity,
+					formData.ownership,
+					formData.usefulLife,
+					formData.depreciationMethod,
+					formData.maintenancePeriod,
+					formData.purchaseCost,
+					formData.purchaseDate,
+				];
+		}
+		for (let fields of validateInput) {
+			if (!fields) {
+				return false;
+			}
+		}
+		return true;
+	};
+	const handleOnSubmit = async (e) => {
 		e.preventDefault(); // 페이지 새로고침 방지
-		try {
-			const assetResponse = await fetch(`${urlConfig}/asset/register`, {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify(formData), // JSON으로 변환하여 전송
+		if (isValidated === false) {
+			handleSubmit(e);
+		}
+		if (!validatedForm()) {
+			Swal.fire({
+				icon: 'error',
+				title: '필수 항목을 채워주세요.',
+				text: '모든 필수 항목을 채워야 합니다',
 			});
+			return false;
+		}
+		try {
+			const assetResponse = await api.post('/asset/register', formData);
+			console.log(assetResponse);
+			if (assetResponse.status == 200) {
+				const assetNo = assetResponse.data;
 
-			if (assetResponse.ok) {
-				const assetNo = await assetResponse.text();
-				alert('자산이 성공적으로 등록');
+				Swal.fire({
+					icon: 'success',
+					title: '자산이 성공적으로 등록되었습니다.',
+					text: '자산조회화면으로 이동',
+				});
+				setTimeout(() => {
+					window.location.replace('/jsx/Expand');
+				}, 1000);
 
 				console.log(typeof assetNo);
 
@@ -135,33 +388,37 @@ const AssetRegister = () => {
 						fileFormData.append('assetNo', assetNo);
 						fileFormData.append('file', file);
 						fileFormData.append('fileType', fileType);
-						// console.log(fileFormData.assetNo);
 						console.log('fileFormData:', fileFormData.get('file'));
 						console.log('assetNo:', fileFormData.get('assetNo'));
 						console.log('fileType:', fileFormData.get('fileType'));
 
-						const fileResponse = await fetch(`${urlConfig}/asset/file/upload`, {
-							method: 'POST',
-							body: fileFormData,
-						});
+						const fileResponse = await api.post('/asset/file/upload', fileFormData);
 
-						if (fileResponse.ok) {
-							alert('파일이 성공적으로 업로드됨');
-						} else {
-							alert('파일 업로드 실패');
+						if (!fileResponse.status == 200) {
+							Swal.fire({
+								icon: 'error',
+								title: '파일 등록에 실패하였습니다.',
+								text: '다시 업로드 시도해주세요',
+							});
 						}
 					}
 				}
-				window.location.replace('/jsx/AssetPage');
 			} else {
-				alert('자산 등록 실패');
+				Swal.fire({
+					icon: 'error',
+					title: '자산 등록을 실패하였습니다.',
+					text: '항목을 다시 확인해주세요.',
+				});
 			}
 		} catch (error) {
 			console.error('에러발생 : ', error);
-			alert('자산 등록 중 에러가 발생');
+			Swal.fire({
+				icon: 'error',
+				title: '에러가 발생하였습니다.',
+				text: error,
+			});
 		}
 	};
-
 	const handleChange = (e) => {
 		const { name, value } = e.target;
 		setFormData((prevState) => ({
@@ -171,6 +428,7 @@ const AssetRegister = () => {
 		console.log('name: ', name);
 		console.log('value: ', value);
 	};
+
 	useEffect(() => {
 		if (formData.contactInformation?.length === 10) {
 			setFormData((prevState) => ({
@@ -192,32 +450,86 @@ const AssetRegister = () => {
 		}
 	}, [formData.contactInformation]);
 	return (
-		<Container>
-			<Row>
-				<ResponsivePadding>
-					<Col xs={12} md={8} lg={12}>
-						<BasisAssetInfo formData={formData} handleChange={handleChange} />
-					</Col>
-					<Col xs={12} md={8} lg={12}>
-						<FileUpload
-							formData={formData}
-							handleChange={handleChange}
-							files={files}
-							setFiles={setFiles}
-						/>
-					</Col>
-				</ResponsivePadding>
-			</Row>
-			<div className="pt-2 d-flex justify-content-center">
-				<Button size="lg" variant="primary" type="submit" onClick={handleSubmit}>
-					저장
-				</Button>
-				<p className="px-2"></p>
-				<Button size="lg" variant="secondary" type="button">
-					취소
-				</Button>
+		<>
+			<div className="pt-3 px-2">
+				<h4 className="header-title">자산 등록</h4>
 			</div>
-		</Container>
+			<Container>
+				<FormProvider noValidate>
+					<Row>
+						<ResponsivePadding>
+							<Col xs={12} md={8} lg={12}>
+								<div>
+									<BasisAssetInfo
+										isValidated={isValidated}
+										formData={formData}
+										handleChange={handleChange}
+										handleSubmit={handleSubmit}
+									/>
+								</div>
+							</Col>
+							<Col className="pt-1" xs={12} md={8} lg={12}>
+								<div>
+									<AssetCategories
+										isValidated={isValidated}
+										formData={formData}
+										assetClassification={formData.assetClassification}
+										handleChange={handleChange}
+										files={files}
+										setFiles={setFiles}
+										handleSubmit={handleSubmit}
+									/>
+								</div>
+							</Col>
+							<Col xs={12} md={8} lg={12}>
+								<div>
+									<PurchasingInfo
+										isValidated={isValidated}
+										formData={formData}
+										handleChange={handleChange}
+										handleSubmit={handleSubmit}
+									/>
+								</div>
+							</Col>
+							<Col xs={12} md={8} lg={12}>
+								<div>
+									<FileUpload
+										formData={formData}
+										handleChange={handleChange}
+										files={files}
+										setFiles={setFiles}
+									/>
+								</div>
+							</Col>
+						</ResponsivePadding>
+					</Row>
+
+					<div className="pt-2 d-flex justify-content-center">
+						<Button
+							style={{ background: '#5e83bb', border: 'none', fontSize: 17 }}
+							className="btn-rounded"
+							variant="dark"
+							type="submit"
+							onClick={handleOnSubmit}
+						>
+							저장
+						</Button>
+						<p className="px-2"></p>
+						<Button
+							style={{ fontSize: 17 }}
+							className="btn-rounded"
+							variant="secondary"
+							type="button"
+							onClick={() => {
+								navigate('/jsx/AssetPageTest');
+							}}
+						>
+							취소
+						</Button>
+					</div>
+				</FormProvider>
+			</Container>
+		</>
 	);
 };
 

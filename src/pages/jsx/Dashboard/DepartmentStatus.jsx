@@ -114,6 +114,12 @@ const DepartmentStatus = ({ location }) => {
 					display: true,
 					text: '개수',
 				},
+				ticks: {
+					stepSize: 1, // 눈금 간격을 1로 설정
+					callback: function (value) {
+						return Number.isInteger(value) ? value : ''; // 정수만 표시
+					},
+				},
 			},
 			x: {
 				stacked: true,

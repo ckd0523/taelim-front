@@ -16,7 +16,7 @@ const PlannedDisposalStatus = () => {
 	)}-${String(today.getDate()).padStart(2, '0')}`;
 	console.log(defaultDate);
 
-	const [disposalData, setDisposalData] = useState(defaultDate);
+	const [disposalData, setDisposalData] = useState([defaultDate]);
 	const [dataValues, setDataValues] = useState([]);
 	const [axis, setAxis] = useState('x');
 
@@ -32,7 +32,8 @@ const PlannedDisposalStatus = () => {
 		const getDisposalData = async () => {
 			const response = await api.get(`${URL}/chart/9`);
 			console.log('여기다', response.data);
-			setDisposalData(response.data);
+			//setDisposalData(response.data);
+			setDisposalData(response.data || []); // API 응답 데이터가 없으면 빈 배열 설정
 		};
 
 		getDisposalData();

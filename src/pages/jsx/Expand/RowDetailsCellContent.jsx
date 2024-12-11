@@ -27,7 +27,7 @@ export const CellContent = ({
 				{ value: '품질팀', label: '품질팀' },
 				{ value: '생산팀', label: '생산팀' },
 				{ value: '기술연구소', label: '기술연구소' },
-				{ value: 'N/A', label: 'N/A' },
+				{ value: '기타', label: '기타' },
 			];
 
 			return (
@@ -50,6 +50,7 @@ export const CellContent = ({
 		if (keyName === 'assetLocation') {
 			const assetLocationOptions = [
 				{ value: '본관 지하 문서고', label: '본관 지하 문서고' },
+				{ value: '본관 1층', label: '본관 1층' },
 				{ value: '본관 1층 접견실', label: '본관 1층 접견실' },
 				{ value: '본관 2층', label: '본관 2층' },
 				{ value: '본관 2층 사장실', label: '본관 2층 사장실' },
@@ -57,7 +58,7 @@ export const CellContent = ({
 				{ value: '본관 2층 대회의실', label: '본관 2층 대회의실' },
 				{ value: '본관 2층 대표이사실', label: '본관 2층 대표 이사실' },
 				{ value: '본관 3층 창고', label: '본관 3층 창고' },
-				{ value: 'MDCG 천장', label: 'MDCG' },
+				{ value: 'MDCG 천장', label: 'MDCG 천장' },
 				{ value: '공장동', label: '공장동' },
 			];
 

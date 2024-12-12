@@ -10,6 +10,7 @@ import { bottom } from '@popperjs/core';
 import { Button, Form, Modal } from 'react-bootstrap';
 import Select from 'react-select';
 import { formatDate } from '@fullcalendar/core';
+import Swal from 'sweetalert2';
 const urlConfig = import.meta.env.VITE_BASIC_URL;
 
 const AssetSurveyHistory = () => {
@@ -83,7 +84,11 @@ const AssetSurveyHistory = () => {
 				if (row) {
 					if (row.surveyStatus === true) {
 						// "조사 완료" 상태일 때 경고창 표시
-						alert('완료된 조사는 선택 불가합니다.');
+
+						Swal.fire({
+							icon: 'error',
+							title: '완료된 조사는 선택 불가합니다.',
+						});
 						// 체크박스 선택 해제
 						$(this).prop('checked', false);
 					} else {
@@ -194,7 +199,10 @@ const AssetSurveyHistory = () => {
 				round: value, // 유효한 값만 업데이트
 			}));
 		} else {
-			alert('회차는 숫자만 입력 가능합니다.');
+			Swal.fire({
+				icon: 'error',
+				title: '회차는 숫자만 입력 가능합니다.',
+			});
 		}
 	};
 

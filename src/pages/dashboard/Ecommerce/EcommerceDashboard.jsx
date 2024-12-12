@@ -7,11 +7,9 @@ import PerformanceChart from './PerformanceChart';
 import RevenueChart from './RevenueChart';
 import RevenueByLocationChart from './RevenueByLocationChart';
 import SalesChart from './SalesChart';
-import Activity from './Activity';
-import Products from './Products';
 
 const EcommerceDashboard = () => {
-  const [selectedDate, setSelectedDate] = useState(new Date())
+	const [selectedDate, setSelectedDate] = useState(new Date());
 
 	return (
 		<>
@@ -54,23 +52,23 @@ const EcommerceDashboard = () => {
 
 			<Row>
 				<Col lg={8}>
+					<SalesChart />
+				</Col>
+			</Row>
+
+			<Row>
+				{/* <Col xl={{ span: 6, order: 1 }} lg={{ span: 12, order: 2 }}>
+					<Products />
+				</Col> */}
+				<Col lg={8}>
 					<RevenueChart />
 				</Col>
 				<Col lg={4}>
 					<RevenueByLocationChart />
 				</Col>
-			</Row>
-
-			<Row>
-				<Col xl={{ span: 6, order: 1 }} lg={{ span: 12, order: 2 }}>
-					<Products />
-				</Col>
-				<Col xl={3} lg={{ span: 6, order: 1 }}>
-					<SalesChart />
-				</Col>
-				<Col xl={3} lg={{ span: 6, order: 1 }}>
+				{/* <Col xl={3} lg={{ span: 6, order: 1 }}>
 					<Activity />
-				</Col>
+				</Col> */}
 			</Row>
 		</>
 	);

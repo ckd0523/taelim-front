@@ -172,7 +172,7 @@ const Table = (props) => {
 				/>
 			)}
 
-			<div className="table-responsive">
+			<div className="table-responsive" style={{ whiteSpace: 'nowrap' }}>
 				<table
 					{...dataTable.getTableProps()}
 					className={classNames('table table-centered react-table', props['tableClass'])}

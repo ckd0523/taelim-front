@@ -1,10 +1,10 @@
 import { ThemeSettings, useAuthContext, useThemeContext } from '@/common';
 import { lazy } from 'react';
-import { Navigate, Route, Routes as ReactRoutes } from 'react-router-dom';
+import { Navigate, Route, Routes as ReactRoutes, useLocation } from 'react-router-dom';
 import VerticalLayout from '@/layouts/Vertical';
 import HorizontalLayout from '@/layouts/Horizontal';
 import Root from './Root';
-
+//import './drag.css';
 /**
  * routes import
  */
@@ -16,6 +16,7 @@ const Error404Alt = lazy(() => import('../pages/otherpages/Error404Alt'));
 const JSX = lazy(() => import('../pages/jsx'));
 
 export default function ProtectedRoutes() {
+	const location = useLocation();
 	const { settings } = useThemeContext();
 	const Layout =
 		settings.layout.type == ThemeSettings.layout.type.vertical
@@ -37,6 +38,6 @@ export default function ProtectedRoutes() {
 			</Route>
 		</ReactRoutes>
 	) : (
-		<Navigate to="/account/login" replace />
+		<Navigate to="/account/login" replace state={{ from: location }} />
 	);
 }

@@ -1,4 +1,5 @@
 import React, { useRef, useEffect, forwardRef, useState } from 'react';
+import { Alert } from 'react-bootstrap';
 import {
 	useTable,
 	useSortBy,
@@ -10,7 +11,6 @@ import {
 } from 'react-table';
 import classNames from 'classnames';
 import { Pagination } from '@/components';
-
 const GlobalFilter = ({ preGlobalFilteredRows, globalFilter, setGlobalFilter, searchBoxClass }) => {
 	const count = preGlobalFilteredRows.length;
 	const [value, setValue] = useState(globalFilter);
@@ -88,7 +88,7 @@ const Table = (props) => {
 		const cellIndex = cells.indexOf(clickedCell);
 
 		// 첫 번째 컬럼(0번 index)이 아닌 경우에만 handleRowClick 호출
-		if (cellIndex !== 0 && cellIndex !== 1) {
+		if (cellIndex !== 0) {
 			handleRowClick(row);
 		}
 	};
@@ -138,7 +138,7 @@ const Table = (props) => {
 						// to render a checkbox
 						Header: ({ getToggleAllPageRowsSelectedProps }) => (
 							<div>
-								<IndeterminateCheckbox {...getToggleAllPageRowsSelectedProps()} />
+								{/* <IndeterminateCheckbox {...getToggleAllPageRowsSelectedProps()} /> */}
 							</div>
 						),
 						// The cell can use the individual row's getToggleRowSelectedProps method
@@ -257,7 +257,24 @@ const Table = (props) => {
 							</tr>
 						))}
 					</thead>
+
 					<tbody {...dataTable.getTableBodyProps()}>
+						{rows.length === 0 && (
+							<tr>
+								<td colSpan="8" className="text-center">
+									<Alert
+										variant="warning"
+										className="mb-0 text-center d-flex align-items-center justify-content-center"
+										style={{ height: '100%' }}
+									>
+										<div>
+											<strong>데이터가 없습니다!</strong>
+											<p>요청내역 데이터가 없습니다.</p>
+										</div>
+									</Alert>
+								</td>
+							</tr>
+						)}
 						{rows.map((row, index) => {
 							dataTable.prepareRow(row); // 각 행에 대해 한 번만 호출
 							return (
@@ -282,7 +299,11 @@ const Table = (props) => {
 				</table>
 			</div>
 
-			{pagination && <Pagination tableProps={dataTable} sizePerPageList={sizePerPageList} />}
+			<div>
+				{rows.length > 0 && (
+					<Pagination tableProps={dataTable} sizePerPageList={sizePerPageList} />
+				)}
+			</div>
 		</>
 	);
 };

@@ -1,0 +1,37 @@
+.owner-list {
+	margin: 0;
+	padding: 0;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+	list-style: none;
+	max-height: 200px;
+	overflow-y: auto;
+	transition: opacity 0.2s ease-in-out;
+	background-color: white;
+	position: absolute; /* 절대 위치 설정 */
+	z-index: 10; /* 다른 요소 위에 표시 */
+	width: 100%; /* 드롭다운이 입력 필드와 같은 너비를 가지도록 설정 */
+	top: 100%; /* 입력 필드 아래에 위치하도록 설정 */
+	position: absolute;
+	user-select: none; /* 드래그 및 선택 비활성화 */
+}
+
+.owner-list li {
+	padding: 8px 12px;
+	cursor: pointer;
+	transition: background-color 0.2s;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	color: #333;
+	font-size: 0.9rem;
+}
+
+.owner-list li:hover {
+	background-color: #f0f0f0;
+}
+
+.owner-list li:active {
+	background-color: #e2e2e2;
+}

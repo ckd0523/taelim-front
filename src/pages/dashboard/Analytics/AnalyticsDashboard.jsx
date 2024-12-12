@@ -12,7 +12,7 @@ import Engagement from './Engagement';
 import { CustomDatePicker } from '@/components';
 
 const AnalyticsDashboard = () => {
-	const [selectedDate, setSelectedDate] = useState(new Date())
+	const [selectedDate, setSelectedDate] = useState(new Date());
 	return (
 		<>
 			<Row>
